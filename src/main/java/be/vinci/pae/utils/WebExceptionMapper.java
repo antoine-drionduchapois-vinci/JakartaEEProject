@@ -11,11 +11,11 @@ public class WebExceptionMapper implements ExceptionMapper<Throwable> {
   @Override
   public Response toResponse(Throwable exception) {
     exception.printStackTrace();
-      if (exception instanceof WebApplicationException) {
-          return Response.status(((WebApplicationException) exception).getResponse().getStatus())
-              .entity(exception.getMessage())
-              .build();
-      }
+    if (exception instanceof WebApplicationException) {
+      return Response.status(((WebApplicationException) exception).getResponse().getStatus())
+          .entity(exception.getMessage())
+          .build();
+    }
     return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
         .entity(exception.getMessage())
         .build();

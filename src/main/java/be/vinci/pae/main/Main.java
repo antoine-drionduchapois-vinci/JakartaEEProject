@@ -15,11 +15,12 @@ import org.glassfish.jersey.server.ResourceConfig;
  */
 public class Main {
 
-  // Be carefull, with auto formating, line "public static final String BASE_URI = Config.getProperty("BaseUri");"
-  // place itself above
-  // static {
+  // Be carefull, with auto formating, line :
+  // "public static final String BASE_URI = Config.getProperty("BaseUri");"
+  // place itself above :
+  // "static {
   //    Config.load("dev.properties");
-  //  }
+  //  }"
   // and it throws an error
 
   static {
@@ -28,11 +29,13 @@ public class Main {
 
   // Base URI the Grizzly HTTP server will listen on
   public static final String BASE_URI = Config.getProperty("BaseUri");
+
   /**
    * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
    *
    * @return Grizzly HTTP server.
    */
+
   public static HttpServer startServer() {
 
     // create a resource config that scans for JAX-RS resources and providers
