@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Annotation utilisée pour indiquer qu'une ressource nécessite une autorisation.
+ * Annotation used to indicate that a resource requires authorization.
  */
 @NameBinding
 @Retention(RetentionPolicy.RUNTIME)

@@ -19,7 +19,7 @@ import jakarta.ws.rs.ext.Provider;
 import java.io.IOException;
 
 /**
- * Filtre de requête pour l'autorisation.
+ * Request filter for authorization.
  */
 @Singleton
 @Provider
@@ -34,10 +34,10 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
   private UserDataService myUserDataService = new UserDataServiceImpl();
 
   /**
-   * Filtre la demande pour vérifier l'autorisation.
+   * Filters the request to check for authorization.
    *
-   * @param requestContext le contexte de la requête container
-   * @throws IOException si une erreur d'entrée/sortie se produit lors du filtrage
+   * @param requestContext the container request context
+   * @throws IOException if an I/O error occurs during filtering
    */
   @Override
   public void filter(ContainerRequestContext requestContext) throws IOException {
