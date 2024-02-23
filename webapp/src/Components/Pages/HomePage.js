@@ -6,6 +6,7 @@ const HomePage = () => {
   function register() {
     console.log("Register Page");
     Navigate('/register');
+
   }
 
   function connect() {
