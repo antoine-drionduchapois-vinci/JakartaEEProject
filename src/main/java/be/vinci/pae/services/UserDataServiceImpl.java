@@ -7,18 +7,21 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+
+/**
+ * Implementation of the UserDataService interface.
+ */
 public class UserDataServiceImpl implements UserDataService {
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
-
 
   @Override
   public User getOne(String login) {
     // TODO
     return null;
   }
-
+  
   @Override
   public ObjectNode login(String email, String password) {
     User user = getOne(email);

@@ -35,7 +35,6 @@ public class Main {
    *
    * @return Grizzly HTTP server.
    */
-
   public static HttpServer startServer() {
 
     // create a resource config that scans for JAX-RS resources and providers
@@ -53,8 +52,8 @@ public class Main {
   /**
    * Main method.
    *
-   * @param args
-   * @throws IOException
+   * @param args args
+   * @throws IOException IOException
    */
   public static void main(String[] args) throws IOException {
     final HttpServer server = startServer();
