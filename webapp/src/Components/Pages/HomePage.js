@@ -24,6 +24,24 @@ const HomePage = () => {
 
   <button id="registerButton">S'inscrire</button>
   <button id="connectButton">Se connecter</button>
+  <button class="button is-primary">
+  Button
+</button>
+<button class="button is-link">
+  Button
+</button>
+<button class="button is-info">
+  Button
+</button>
+<button class="button is-success">
+  Button
+</button>
+<button class="button is-warning">
+  Button
+</button>
+<button class="button is-danger">
+  Button
+</button>
   `;
 
   main.innerHTML = bloc1;
