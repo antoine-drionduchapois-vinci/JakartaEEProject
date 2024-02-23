@@ -20,6 +20,16 @@ public class AuthsResource {
   @Inject
   private UserDataService myUserDataService;
 
+
+  /**
+   * Endpoint for user login.
+   *
+   * @param json The JSON object containing user credentials (email and password).
+   * @return Returns a JSON object representing the public user information along with a JWT token
+   * if login is successful.
+   * @throws WebApplicationException Thrown if either email or password is missing in the JSON
+   *                                 request, or if the login credentials are incorrect.
+   */
   @POST
   @Path("login")
   @Consumes(MediaType.APPLICATION_JSON)

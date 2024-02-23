@@ -34,7 +34,6 @@ public class Main {
    *
    * @return Grizzly HTTP server.
    */
-
   public static HttpServer startServer() {
 
     // create a resource config that scans for JAX-RS resources and providers
