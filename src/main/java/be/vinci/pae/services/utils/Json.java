@@ -25,7 +25,7 @@ import java.util.List;
 public class Json<T> {
 
   private static final String DB_FILE_PATH = Config.getProperty("DatabaseFilePath");
-  private final static ObjectMapper jsonMapper = new ObjectMapper();
+  private static final ObjectMapper jsonMapper = new ObjectMapper();
   private static Path pathToDb = Paths.get(DB_FILE_PATH);
   private Class<T> type;
 
@@ -53,7 +53,7 @@ public class Json<T> {
       if (allCollections.has(collectionName)) {
         ((ObjectNode) allCollections).remove(collectionName); //e.g. it leaves { users:[...]}
       }
-      // Prepare a JSON array from the list of POJOs for the collection to be updated, e.g. [{"film1",...}, ...]
+      // Prepare a JSON array from the list of POJOs for the collection to be updated
       ArrayNode updatedCollection = jsonMapper.valueToTree(items);
       // Add the JSON array in allCollections, e.g. : { users:[...], items:[...]}
       ((ObjectNode) allCollections).putArray(collectionName).addAll(updatedCollection);
@@ -71,10 +71,10 @@ public class Json<T> {
       // accessing value of the specified field of an object node,
       // e.g. the JSON array within "items" field of { users:[...], items:[...]}
       JsonNode collection = node.get(collectionName);
-        if (collection == null) // Send an empty list if there is not the requested collection
-        {
-            return (List<T>) new ArrayList<T>();
-        }
+      // Send an empty list if there is not the requested collection
+      if (collection == null) {
+        return (List<T>) new ArrayList<T>();
+      }
       // convert the JsonNode to a List of POJOs & return it
       return jsonMapper.readerForListOf(type).readValue(collection);
     } catch (FileNotFoundException e) {
@@ -143,7 +143,7 @@ public class Json<T> {
         ((ObjectNode) allCollections).remove(collectionName); //e.g. it leaves { users:[...]}
       }
 
-      // Prepare a JSON array from the list of POJOs for the collection to be updated, e.g. [{"film1",...}, ...]
+      // Prepare a JSON array from the list of POJOs for the collection to be updated
       //ArrayNode updatedCollection = jsonMapper.valueToTree(items);
 
       // Add the JSON array in allCollections, e.g. : { users:[...], items:[...]}

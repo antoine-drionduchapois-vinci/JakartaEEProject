@@ -52,8 +52,8 @@ public class Main {
   /**
    * Main method.
    *
-   * @param args
-   * @throws IOException
+   * @param args The command line arguments passed to the program.
+   * @throws IOException If an I/O error occurs while reading from the console.
    */
   public static void main(String[] args) throws IOException {
     final HttpServer server = startServer();
