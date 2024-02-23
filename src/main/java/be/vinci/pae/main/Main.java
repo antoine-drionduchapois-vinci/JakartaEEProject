@@ -15,6 +15,9 @@ import org.glassfish.jersey.server.ResourceConfig;
  */
 public class Main {
 
+  static {
+    Config.load("dev.properties");
+  }
   // Be carefull, with auto formating, line :
   // "public static final String BASE_URI = Config.getProperty("BaseUri");"
   // place itself above :
@@ -22,11 +25,7 @@ public class Main {
   //    Config.load("dev.properties");
   //  }"
   // and it throws an error
-
-  static {
-    Config.load("dev.properties");
-  }
-
+  
   // Base URI the Grizzly HTTP server will listen on
   public static final String BASE_URI = Config.getProperty("BaseUri");
 
@@ -52,8 +51,8 @@ public class Main {
   /**
    * Main method.
    *
-   * @param args args
-   * @throws IOException IOException
+   * @param args The command line arguments passed to the program.
+   * @throws IOException If an I/O error occurs while reading from the console.
    */
   public static void main(String[] args) throws IOException {
     final HttpServer server = startServer();

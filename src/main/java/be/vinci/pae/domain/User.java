@@ -1,8 +1,11 @@
 package be.vinci.pae.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 /**
  * Interface representing a user.
  */
+@JsonDeserialize(as = UserImpl.class)
 public interface User {
 
   /**
@@ -34,4 +37,16 @@ public interface User {
    * @return The hashed password.
    */
   String hashPassword(String password);
+
+  /**
+   * Enumeration representing the role of the user.
+   */
+  enum Role {
+    STUDENT("Student"), TEACHER("Teacher"), ADMIN("Admin");
+    private String value;
+
+    Role(String value) {
+      this.value = value;
+    }
+  }
 }
