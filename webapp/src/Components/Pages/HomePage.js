@@ -13,17 +13,17 @@ const HomePage = () => {
     console.log("Connection Page");
     Navigate('/login');
   }
-  
+
 
   const bloc1 = `
-  <h1 class="text-3xl font-bold underline">StageLink IPL</h1>
-<h2 class="text-xl font-semibold mt-4">Bienvenue sur StageLink IPL</h2>
-<p class="mt-2">L’application qui vous permet de gérer vos recherches de stage</p>
+  <p class="text-red-500">Hello</p>
 
-<button id="registerButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">S'inscrire</button>
-<button id="connectButton" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mt-2">Se connecter</button>
+  <h1>StageLink IPL</h1>
+  <h2>Bienvenue sur StageLink IPL</h2>
+  <p>L’application qui vous permet de gérer vos recherches de stage</p>
 
-
+  <button id="registerButton">S'inscrire</button>
+  <button id="connectButton">Se connecter</button>
   `;
 
   main.innerHTML = bloc1;
