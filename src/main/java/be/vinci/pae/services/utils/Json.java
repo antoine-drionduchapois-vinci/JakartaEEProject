@@ -17,6 +17,12 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a JSON object with a generic type parameter.
+ * This class provides functionality to work with JSON data.
+ *
+ * @param <T> the type of data stored in the JSON object
+ */
 public class Json<T> {
     private static final String DB_FILE_PATH = Config.getProperty("DatabaseFilePath");
     private final static ObjectMapper jsonMapper = new ObjectMapper();
