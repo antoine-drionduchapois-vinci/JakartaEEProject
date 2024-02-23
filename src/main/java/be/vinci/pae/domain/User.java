@@ -38,7 +38,7 @@ public interface User {
    */
   String hashPassword(String password);
 
-  public enum Role {
+  enum Role {
     STUDENT("Student"), TEACHER("Teacher"), ADMIN("Admin");
     private String value;
 

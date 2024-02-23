@@ -35,7 +35,13 @@ public class Json<T> {
     this.type = type;
   }
 
-
+  /**
+   * Serializes a list of items into JSON and writes it to a file. If the file doesn't exist,
+   * creates a new one. Updates the collection specified by collectionName.
+   *
+   * @param items          the list of items to serialize
+   * @param collectionName the name of the collection to update or create
+   */
   public void serialize(List<T> items, String collectionName) {
     try {
       // if no DB file, write a new collection to a new db file
@@ -64,6 +70,13 @@ public class Json<T> {
     }
   }
 
+  /**
+   * Parses the JSON data from the file corresponding to the specified collection name and returns a
+   * list of items.
+   *
+   * @param collectionName the name of the collection to parse
+   * @return a list of items parsed from the collection
+   */
   public List<T> parse(String collectionName) {
     try {
       // get allCollections
@@ -85,6 +98,13 @@ public class Json<T> {
     }
   }
 
+  /**
+   * Filters the JSON view to include only public fields for a list of items. Serializes the list
+   * with public view and then deserializes it back.
+   *
+   * @param list the list of items to filter
+   * @return a filtered list of items with only public fields included
+   */
   public <T> List<T> filterPublicJsonViewAsList(List<T> list) {
     try {
       JavaType type = jsonMapper.getTypeFactory().constructCollectionType(List.class, this.type);
@@ -103,6 +123,12 @@ public class Json<T> {
 
   }
 
+  /**
+   * Filters the JSON view to include only public fields for a single item.
+   *
+   * @param item the item to filter
+   * @return the filtered item with only public fields included
+   */
   public <T> T filterPublicJsonView(T item) {
     try {
       // serialize using JSON Views : public view (all fields not required in the
@@ -120,7 +146,14 @@ public class Json<T> {
 
   }
 
-  // To be used if you want to filter attributes when serializing in a JSON file
+  /**
+   * Serializes a list of items with only public information (specified by Views.Public) and writes
+   * it to the file. If the file doesn't exist, creates a new one. Updates the collection specified
+   * by collectionName.
+   *
+   * @param items          the list of items to serialize
+   * @param collectionName the name of the collection to update or create
+   */
   public void serializePublicInfoOnly(List<T> items, String collectionName) {
     try {
       String currentCollectionAsString = jsonMapper.writerWithView(Views.Public.class)
