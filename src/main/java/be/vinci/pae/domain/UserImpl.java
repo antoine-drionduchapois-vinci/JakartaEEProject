@@ -5,13 +5,8 @@ import org.mindrot.jbcrypt.BCrypt;
 class UserImpl implements User {
 
   private int userId;
-  private String name;
-  private String surname;
   private String email;
-  private String phone;
   private String password;
-  private String year;
-  private Role role;
 
   @Override
   public int getId() {
