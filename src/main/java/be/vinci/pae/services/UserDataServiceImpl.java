@@ -21,7 +21,13 @@ public class UserDataServiceImpl implements UserDataService {
     // TODO
     return null;
   }
-  
+
+  @Override
+  public User getOne(int id) {
+
+    return null;
+  }
+
   @Override
   public ObjectNode login(String email, String password) {
     User user = getOne(email);
