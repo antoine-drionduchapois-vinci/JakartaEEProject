@@ -18,6 +18,14 @@ public interface UserDataService {
   User getOne(String email);
 
   /**
+   * Retrieves a user by id.
+   *
+   * @param id The id of the user to retrieve.
+   * @return The user object if found, otherwise null.
+   */
+  User getOne(int id);
+
+  /**
    * Validates user login credentials.
    *
    * @param email    The email of the user.

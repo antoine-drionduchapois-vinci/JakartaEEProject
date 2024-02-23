@@ -25,7 +25,13 @@ public class UserDataServiceImpl implements UserDataService {
     var users = jsonDB.parse(COLLECTION_NAME);
     return users.stream().filter(user -> user.getEmail().equals(email)).findAny().orElse(null);
   }
-  
+
+  @Override
+  public User getOne(int id) {
+
+    return null;
+  }
+
   @Override
   public ObjectNode login(String email, String password) {
     User user = getOne(email);
