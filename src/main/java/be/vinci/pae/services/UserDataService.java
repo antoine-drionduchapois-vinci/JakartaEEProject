@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public interface UserDataService {
 
-    User getOne(String email);
+  User getOne(String email);
 
-    ObjectNode login(String email, String password);
+  ObjectNode login(String email, String password);
 }

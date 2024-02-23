@@ -5,20 +5,20 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 @JsonDeserialize(as = UserImpl.class)
 public interface User {
 
-    int getId();
+  int getId();
 
-    String getEmail();
+  String getEmail();
 
-    boolean checkPassword(String password);
+  boolean checkPassword(String password);
 
-    String hashPassword(String password);
+  String hashPassword(String password);
 
-    enum Role {
-        STUDENT("Student"), TEACHER("Teacher"), ADMIN("Admin");
-        private String value;
+  enum Role {
+    STUDENT("Student"), TEACHER("Teacher"), ADMIN("Admin");
+    private String value;
 
-        Role(String value) {
-            this.value = value;
-        }
+    Role(String value) {
+      this.value = value;
     }
+  }
 }

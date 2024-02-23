@@ -9,8 +9,8 @@ import org.glassfish.hk2.utilities.binding.AbstractBinder;
 @Provider
 public class ApplicationBinder extends AbstractBinder {
 
-    @Override
-    protected void configure() {
-        bind(UserDataServiceImpl.class).to(UserDataService.class).in(Singleton.class);
-    }
+  @Override
+  protected void configure() {
+    bind(UserDataServiceImpl.class).to(UserDataService.class).in(Singleton.class);
+  }
 }
