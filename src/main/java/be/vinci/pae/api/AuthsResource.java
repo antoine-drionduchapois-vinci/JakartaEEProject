@@ -13,6 +13,9 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+/**
+ * Represents the authentication resource providing endpoints related to user authentication.
+ */
 @Singleton
 @Path("/auths")
 public class AuthsResource {

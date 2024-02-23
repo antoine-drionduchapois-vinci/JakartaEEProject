@@ -38,6 +38,9 @@ public interface User {
    */
   String hashPassword(String password);
 
+  /**
+   * Enumeration representing the role of the user.
+   */
   enum Role {
     STUDENT("Student"), TEACHER("Teacher"), ADMIN("Admin");
     private String value;
