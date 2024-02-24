@@ -2,7 +2,6 @@ package be.vinci.pae.api.filters;
 
 import be.vinci.pae.domain.User;
 import be.vinci.pae.services.UserDataService;
-import be.vinci.pae.services.UserDataServiceImpl;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -31,7 +30,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
       .build();
 
   @Inject
-  private UserDataService myUserDataService = new UserDataServiceImpl();
+  private UserDataService myUserDataService;
 
   /**
    * Filters the request to check for authorization.
