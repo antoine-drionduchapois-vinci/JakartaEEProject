@@ -6,7 +6,6 @@ import be.vinci.pae.utils.JDBCManager;
 import be.vinci.pae.utils.WebExceptionMapper;
 import java.io.IOException;
 import java.net.URI;
-import java.sql.Connection;
 import java.sql.SQLException;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
@@ -68,8 +67,6 @@ public class Main {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
-
-    Connection connection = jdbcManager.getConnection();
 
     System.in.read();
     try {
