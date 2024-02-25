@@ -2,9 +2,11 @@ package be.vinci.pae.main;
 
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
+import be.vinci.pae.utils.JDBCManager;
 import be.vinci.pae.utils.WebExceptionMapper;
 import java.io.IOException;
 import java.net.URI;
+import java.sql.SQLException;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -25,7 +27,7 @@ public class Main {
   //    Config.load("dev.properties");
   //  }"
   // and it throws an error
-  
+
   // Base URI the Grizzly HTTP server will listen on
   public static final String BASE_URI = Config.getProperty("BaseUri");
 
@@ -58,7 +60,20 @@ public class Main {
     final HttpServer server = startServer();
     System.out.println(String.format("Jersey app started with WADL available at "
         + "%sapplication.wadl\nHit enter to stop it...", BASE_URI));
+
+    JDBCManager jdbcManager = null;
+    try {
+      jdbcManager = new JDBCManager();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+
     System.in.read();
+    try {
+      jdbcManager.close();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
     server.stop();
   }
 }
