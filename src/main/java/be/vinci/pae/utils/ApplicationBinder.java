@@ -19,5 +19,6 @@ public class ApplicationBinder extends AbstractBinder {
   @Override
   protected void configure() {
     bind(UserDataServiceImpl.class).to(UserDataService.class).in(Singleton.class);
+    bind(JDBCManagerImpl.class).to(JDBCManager.class).in(Singleton.class);
   }
 }

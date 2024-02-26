@@ -13,15 +13,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  */
 public class UserDataServiceImpl implements UserDataService {
 
-  //private static final String COLLECTION_NAME = "users";
-
-
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
 
   @Override
   public User getOne(String email) {
-
     return null;
   }
 
