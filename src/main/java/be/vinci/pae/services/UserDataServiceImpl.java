@@ -1,11 +1,13 @@
 package be.vinci.pae.services;
 
+import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.User;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import jakarta.inject.Inject;
 
 
 /**
@@ -13,8 +15,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  */
 public class UserDataServiceImpl implements UserDataService {
 
-  //private static final String COLLECTION_NAME = "users";
+  @Inject
+  private DomainFactory myDomainFactory;
 
+  //private static final String COLLECTION_NAME = "users";
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
