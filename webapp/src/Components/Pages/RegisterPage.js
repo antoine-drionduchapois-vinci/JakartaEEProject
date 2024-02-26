@@ -36,7 +36,7 @@ const RegisterPage = () => {
       },
       body: JSON.stringify(data)
     };
-    const reponse= await fetch('http://localhost:3000/users/add',options);
+    const reponse= await fetch('http://localhost:8080/auth/register',options);
   
     const successMessage = document.getElementById('success-message');
     const errorMessage = document.getElementById('error-message');
