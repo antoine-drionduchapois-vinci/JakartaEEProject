@@ -16,32 +16,23 @@ const HomePage = () => {
 
 
   const bloc1 = `
-  <p class="text-red-500">Hello</p>
+  <section class="section">
+  <div class="container">
+    <h1 class="title has-text-centered"><strong>StageLink IPL</strong></h1>
+    <h2 class="subtitle has-text-centered">
+    L’application qui vous permet de gérer vos recherches de stage
+  </h2>
 
-  <h1>StageLink IPL</h1>
-  <h2>Bienvenue sur StageLink IPL</h2>
-  <p>L’application qui vous permet de gérer vos recherches de stage</p>
+  </div>
+  </section>
 
-  <button id="registerButton">S'inscrire</button>
-  <button id="connectButton">Se connecter</button>
-  <button class="button is-primary">
-  Button
-</button>
-<button class="button is-link">
-  Button
-</button>
-<button class="button is-info">
-  Button
-</button>
-<button class="button is-success">
-  Button
-</button>
-<button class="button is-warning">
-  Button
-</button>
-<button class="button is-danger">
-  Button
-</button>
+
+  <div class="has-text-centered">
+  <button class="button is-light" id="registerButton">S'inscrire</button>
+  <button class="button is-light" id="connectButton">Se connecter</button>
+  </div>
+
+
   `;
 
   main.innerHTML = bloc1;
