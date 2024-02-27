@@ -29,6 +29,20 @@ public class UserDataServiceImpl implements UserDataService {
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
 
+  User createUser(ResultSet rs) throws SQLException {
+    rs.next();
+    User user = myDomainFactory.getUser();
+    user.setUserId(rs.getInt(1));
+    user.setSurname(rs.getString(2));
+    user.setName(rs.getString(3));
+    user.setEmail(rs.getString(4));
+    user.setPhone(rs.getString(5));
+    user.setPassword(rs.getString(6));
+    user.setYear(rs.getString(7));
+    user.setRole(Role.valueOf(rs.getString(8)));
+    return user;
+  }
+
   @Override
   public User getOne(String email) {
     try {
@@ -37,17 +51,7 @@ public class UserDataServiceImpl implements UserDataService {
       ps.setString(1, email);
       ps.execute();
       try (ResultSet rs = ps.getResultSet()) {
-        rs.next();
-        User user = myDomainFactory.getUser();
-        user.setUserId(rs.getInt(1));
-        user.setSurname(rs.getString(2));
-        user.setName(rs.getString(3));
-        user.setEmail(rs.getString(4));
-        user.setPhone(rs.getString(5));
-        user.setPassword(rs.getString(6));
-        user.setYear(rs.getString(7));
-        user.setRole(Role.valueOf(rs.getString(8)));
-        return user;
+        return createUser(rs);
       } catch (SQLException e) {
         e.printStackTrace();
       }
@@ -65,17 +69,7 @@ public class UserDataServiceImpl implements UserDataService {
       ps.setInt(1, id);
       ps.execute();
       try (ResultSet rs = ps.getResultSet()) {
-        rs.next();
-        User user = myDomainFactory.getUser();
-        user.setUserId(rs.getInt(1));
-        user.setSurname(rs.getString(2));
-        user.setName(rs.getString(3));
-        user.setEmail(rs.getString(4));
-        user.setPhone(rs.getString(5));
-        user.setPassword(rs.getString(6));
-        user.setYear(rs.getString(7));
-        user.setRole(Role.valueOf(rs.getString(8)));
-        return user;
+        return createUser(rs);
       } catch (SQLException e) {
         e.printStackTrace();
       }

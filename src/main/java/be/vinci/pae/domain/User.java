@@ -136,7 +136,7 @@ public interface User {
   /**
    * Enumeration representing different roles a user can have.
    */
-  public enum Role {
+  enum Role {
     STUDENT("Student"), TEACHER("Teacher"), ADMIN("Admin");
     private String value;
 
