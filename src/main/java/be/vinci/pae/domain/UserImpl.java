@@ -29,13 +29,83 @@ class UserImpl implements User {
   private Role role;
 
   @Override
-  public int getId() {
+  public int getUserId() {
     return userId;
+  }
+
+  @Override
+  public void setUserId(int userId) {
+    this.userId = userId;
+  }
+
+  @Override
+  public String getName() {
+    return name;
+  }
+
+  @Override
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  @Override
+  public String getSurname() {
+    return surname;
+  }
+
+  @Override
+  public void setSurname(String surname) {
+    this.surname = surname;
   }
 
   @Override
   public String getEmail() {
     return email;
+  }
+
+  @Override
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  @Override
+  public String getPhone() {
+    return phone;
+  }
+
+  @Override
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
+
+  @Override
+  public String getPassword() {
+    return password;
+  }
+
+  @Override
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  @Override
+  public String getYear() {
+    return year;
+  }
+
+  @Override
+  public void setYear(String year) {
+    this.year = year;
+  }
+
+  @Override
+  public Role getRole() {
+    return role;
+  }
+
+  @Override
+  public void setRole(Role role) {
+    this.role = role;
   }
 
   @Override
