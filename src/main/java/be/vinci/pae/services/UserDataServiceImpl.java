@@ -25,7 +25,6 @@ public class UserDataServiceImpl implements UserDataService {
 
   @Override
   public User getOne(String email) {
-
     return null;
   }
 
