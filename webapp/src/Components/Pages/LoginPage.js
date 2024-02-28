@@ -3,6 +3,8 @@ import { clearPage, renderPageTitle } from '../../utils/render';
 import Navbar from '../Navbar/Navbar';
 import Navigate from '../Router/Navigate';
 
+
+
 const LoginPage = () => {
   clearPage();
   renderPageTitle('Login');
@@ -91,7 +93,7 @@ async function onLogin(e) {
 
   Navbar();
 
-  Navigate('/');
+  Navigate('/dashboard');
 }
 
 export default LoginPage;

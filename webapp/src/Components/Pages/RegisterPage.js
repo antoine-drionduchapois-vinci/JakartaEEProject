@@ -1,95 +1,122 @@
-import { getRememberMe, setAuthenticatedUser, setRememberMe } from '../../utils/auths';
-import { clearPage, renderPageTitle } from '../../utils/render';
-import Navbar from '../Navbar/Navbar';
-import Navigate from '../Router/Navigate';
+import { setAuthenticatedUser } from "../../utils/auths";
+import Navigate from "../Router/Navigate";
+
+
+
 
 const RegisterPage = () => {
-  clearPage();
-  renderPageTitle('Register');
-  renderRegisterForm();
-};
-
-function renderRegisterForm() {
   const main = document.querySelector('main');
-  const form = document.createElement('form');
-  form.className = 'p-5';
-  const username = document.createElement('input');
-  username.type = 'text';
-  username.id = 'username';
-  username.placeholder = 'username';
-  username.required = true;
-  username.className = 'form-control mb-3';
-  const password = document.createElement('input');
-  password.type = 'password';
-  password.id = 'password';
-  password.required = true;
-  password.placeholder = 'password';
-  password.className = 'form-control mb-3';
-  const submit = document.createElement('input');
-  submit.value = 'Register';
-  submit.type = 'submit';
-  submit.className = 'btn btn-info';
-  const formCheckWrapper = document.createElement('div');
-  formCheckWrapper.className = 'mb-3 form-check';
 
-  const rememberme = document.createElement('input');
-  rememberme.type = 'checkbox';
-  rememberme.className = 'form-check-input';
-  rememberme.id = 'rememberme';
-  const remembered = getRememberMe();
-  rememberme.checked = remembered;
-  rememberme.addEventListener('click', onCheckboxClicked);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const name = document.getElementById('nameInput').value;
+    const firstname = document.getElementById('firstnameInput').value;
+    const email = document.getElementById('emailInput').value;
+    const telephone = document.getElementById('telInput').value;
+    const password = document.getElementById('passwordInput').value;
+  
+    if (!name || !firstname || !email || !telephone || !password) {
+      alert("Wrong info, please resubmit form");
+      return;
+    }
+  
 
-  const checkLabel = document.createElement('label');
-  checkLabel.htmlFor = 'rememberme';
-  checkLabel.className = 'form-check-label';
-  checkLabel.textContent = 'Remember me';
-
-  formCheckWrapper.appendChild(rememberme);
-  formCheckWrapper.appendChild(checkLabel);
-
-  form.appendChild(username);
-  form.appendChild(password);
-  form.appendChild(formCheckWrapper);
-  form.appendChild(submit);
-  main.appendChild(form);
-  form.addEventListener('submit', onRegister);
-}
-
-function onCheckboxClicked(e) {
-  setRememberMe(e.target.checked);
-}
-
-async function onRegister(e) {
-  e.preventDefault();
-
-  const username = document.querySelector('#username').value;
-  const password = document.querySelector('#password').value;
-
-  const options = {
-    method: 'POST',
-    body: JSON.stringify({
-      username,
-      password,
-    }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    const data = {
+      name,
+      firstname,
+      email,
+      telephone,
+      password
+    };
+  
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    };
+    const reponse= await fetch('http://localhost:8080/auth/register',options);
+  
+    const successMessage = document.getElementById('success-message');
+    const errorMessage = document.getElementById('error-message');
+  
+    if (reponse.ok) {
+      const authenticatedUser = await reponse.json();
+      setAuthenticatedUser(authenticatedUser);
+    
+      Navigate('/');
+      successMessage.style.display = 'block';
+      errorMessage.style.display = 'none';
+    } else {
+      const errorData = await reponse.json()
+      errorMessage.innerHTML = errorData.message;
+      errorMessage.style.display = 'block';
+  
+      successMessage.style.display = 'none';
+    }
   };
 
-  const response = await fetch(`${process.env.API_BASE_URL}/auths/register`, options);
 
-  if (!response.ok) throw new Error(`fetch error : ${response.status} : ${response.statusText}`);
+  
+  
+const bloc1 = `
 
-  const authenticatedUser = await response.json();
+<section class="section">
+<div class="container">
+  <h1 class="title has-text-centered"><strong>Inscription</strong></h1>
+</div>
+</section>
 
-  console.log('Newly registered & authenticated user : ', authenticatedUser);
+<form class="box">
+  <div class="field">
+  <label class="label">Nom</label>
+  <div class="control">
+  <input id="nameInput" class="input" type="text">
+  </div>
 
-  setAuthenticatedUser(authenticatedUser);
+  <div class="field">
+  <label class="label">Prénom</label>
+  <div class="control">
+  <input id="firstnameInput" class="input" type="text">
+  </div>
 
-  Navbar();
+  <div class="field">
+    <label class="label">Email</label>
+    <div class="control">
+      <input id="emailInput" class="input" type="email">
+    </div>
+  </div>
 
-  Navigate('/');
-}
+  <div class="field">
+  <label class="label">Téléphone</label>
+  <div class="control">
+    <input id="telInput" class="input" type="tel">
+  </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Mot de passe</label>
+    <div class="control">
+      <input id="passwordInput" class="input" type="password">
+    </div>
+  </div>
+
+  <button class="button is-light" id="registerButton">S'inscrire</button>
+</form>
+
+`;
+
+
+main.innerHTML = bloc1;
+
+
+
+document.getElementById('registerButton').addEventListener('click', handleSubmit );
+  
+};
+
+
+
 
 export default RegisterPage;

@@ -2,7 +2,7 @@
 import { Navbar as BootstrapNavbar } from 'bootstrap';
 import { getAuthenticatedUser, isAuthenticated } from '../../utils/auths';
 
-const SITE_NAME = 'yourSiteName';
+const SITE_NAME = 'StageLink IPL';
 
 const Navbar = () => {
   renderNavbar();
@@ -14,7 +14,7 @@ function renderNavbar() {
   const anonymousUserNavbar = `
 <nav class="navbar navbar-expand-lg navbar-light bg-info">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">${SITE_NAME}</a>
+        <a class="navbar-brand" href="#"data-uri="/">${SITE_NAME}</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -28,14 +28,6 @@ function renderNavbar() {
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#" data-uri="/">Home</a>
-            </li>      
-            <li id="loginItem" class="nav-item">
-              <a class="nav-link" href="#" data-uri="/login">Login</a>
-            </li>
-            <li id="registerItem" class="nav-item">
-              <a class="nav-link" href="#" data-uri="/register">Register</a>
             </li>            
           </ul>
         </div>
@@ -46,7 +38,7 @@ function renderNavbar() {
   const authenticatedUserNavbar = `
 <nav class="navbar navbar-expand-lg navbar-light bg-info">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">myMovies</a>
+        <a class="navbar-brand" href="#" data-uri="/">${SITE_NAME}</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -59,10 +51,7 @@ function renderNavbar() {
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#" data-uri="/">Home</a>
-            </li>            
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">           
             <li class="nav-item">
               <a class="nav-link" href="#" data-uri="/logout">Logout</a>
             </li>    
