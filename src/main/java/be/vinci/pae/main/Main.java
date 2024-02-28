@@ -3,6 +3,7 @@ package be.vinci.pae.main;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.utils.JDBCManager;
+import be.vinci.pae.utils.JDBCManagerImpl;
 import be.vinci.pae.utils.WebExceptionMapper;
 import java.io.IOException;
 import java.net.URI;
@@ -59,14 +60,10 @@ public class Main {
   public static void main(String[] args) throws IOException {
     final HttpServer server = startServer();
     System.out.println(String.format("Jersey app started with WADL available at "
-        + "%sapplication.wadl\nHit enter to stop it...", BASE_URI));
+        + BASE_URI + "\nHit enter to stop it..."));
 
     JDBCManager jdbcManager = null;
-    try {
-      jdbcManager = new JDBCManager();
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
+    jdbcManager = new JDBCManagerImpl();
 
     System.in.read();
     try {
