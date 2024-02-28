@@ -70,10 +70,9 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>3.12.4</version> <!-- Assurez-vous de vérifier la dernière version -->
+			<version>5.10.0</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 
 	<build>

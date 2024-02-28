@@ -134,6 +134,14 @@ public interface User {
   String hashPassword(String password);
 
   /**
+   * Returns a string representation of the user.
+   *
+   * @return A string representation of the user, including the user's ID, name, surname, email,
+   * phone, year, and role.
+   */
+  String toString();
+
+  /**
    * Enumeration representing different roles a user can have.
    */
   enum Role {

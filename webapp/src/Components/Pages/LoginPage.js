@@ -3,6 +3,8 @@ import { clearPage, renderPageTitle } from '../../utils/render';
 import Navbar from '../Navbar/Navbar';
 import Navigate from '../Router/Navigate';
 
+
+
 const LoginPage = () => {
   clearPage();
   renderPageTitle('Login');
@@ -14,9 +16,9 @@ function renderRegisterForm() {
   const form = document.createElement('form');
   form.className = 'p-5';
   const username = document.createElement('input');
-  username.type = 'text';
-  username.id = 'username';
-  username.placeholder = 'username';
+  username.type = 'email';
+  username.id = 'email';
+  username.placeholder = 'email';
   username.required = true;
   username.className = 'form-control mb-3';
   const password = document.createElement('input');
@@ -64,13 +66,14 @@ function onCheckboxClicked(e) {
 async function onLogin(e) {
   e.preventDefault();
 
-  const username = document.querySelector('#username').value;
+  const email = document.querySelector('#email').value;
   const password = document.querySelector('#password').value;
+  console.log(email, password);
 
   const options = {
     method: 'POST',
     body: JSON.stringify({
-      username,
+      email,
       password,
     }),
     headers: {
@@ -78,7 +81,7 @@ async function onLogin(e) {
     },
   };
 
-  const response = await fetch(`${process.env.API_BASE_URL}/auths/login`, options);
+  const response = await fetch(`http://localhost:8080/auths/login`, options);
 
   if (!response.ok) throw new Error(`fetch error : ${response.status} : ${response.statusText}`);
 
@@ -90,7 +93,7 @@ async function onLogin(e) {
 
   Navbar();
 
-  Navigate('/');
+  Navigate('/dashboard');
 }
 
 export default LoginPage;

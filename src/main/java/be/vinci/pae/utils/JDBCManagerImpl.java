@@ -5,14 +5,15 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
- * Implementation of JDBCManager interface for managing database connections.
+ * JDBCManagerImpl is an implementation of the JDBCManager interface. It provides methods for
+ * managing JDBC connections to a database.
  */
 public class JDBCManagerImpl implements JDBCManager {
 
   private Connection connection;
-  private final String URL = Config.getProperty("db.url"); // URL for the database
-  private final String USERNAME = Config.getProperty("db.username"); // Username for database access
-  private final String PASSWORD = Config.getProperty("db.password"); // Password for database access
+  private final String url = Config.getProperty("db.url");
+  private final String username = Config.getProperty("db.username");
+  private final String password = Config.getProperty("db.password");
 
   /**
    * Retrieves a connection to the database.
@@ -23,7 +24,7 @@ public class JDBCManagerImpl implements JDBCManager {
   @Override
   public Connection getConnection() throws SQLException {
     if (connection == null || connection.isClosed()) {
-      connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+      connection = DriverManager.getConnection(url, username, password);
       System.out.println("Connection open");
     }
     return connection;

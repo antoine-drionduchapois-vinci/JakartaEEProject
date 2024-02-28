@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * Interface for managing database connections.
+ * The JDBCManager interface defines methods for managing JDBC connections to a database.
  */
 public interface JDBCManager {
 
