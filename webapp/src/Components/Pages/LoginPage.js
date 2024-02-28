@@ -15,8 +15,8 @@ function renderRegisterForm() {
   form.className = 'p-5';
   const username = document.createElement('input');
   username.type = 'email';
-  username.id = 'mail';
-  username.placeholder = 'mail';
+  username.id = 'email';
+  username.placeholder = 'email';
   username.required = true;
   username.className = 'form-control mb-3';
   const password = document.createElement('input');
@@ -64,13 +64,14 @@ function onCheckboxClicked(e) {
 async function onLogin(e) {
   e.preventDefault();
 
-  const mail = document.querySelector('#mail').value;
+  const email = document.querySelector('#email').value;
   const password = document.querySelector('#password').value;
+  console.log(email, password);
 
   const options = {
     method: 'POST',
     body: JSON.stringify({
-      mail,
+      email,
       password,
     }),
     headers: {
