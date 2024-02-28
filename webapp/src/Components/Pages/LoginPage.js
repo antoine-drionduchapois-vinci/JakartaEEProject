@@ -27,6 +27,15 @@ function renderRegisterForm() {
   password.required = true;
   password.placeholder = 'password';
   password.className = 'form-control mb-3';
+  const usernameLabel = document.createElement('label');
+  usernameLabel.htmlFor = 'email';
+  usernameLabel.textContent = 'Email';
+  usernameLabel.className = 'form-label';
+
+  const passwordLabel = document.createElement('label');
+  passwordLabel.htmlFor = 'password';
+  passwordLabel.textContent = 'Password';
+  passwordLabel.className = 'form-label';
   const submit = document.createElement('input');
   submit.value = 'Login';
   submit.type = 'submit';
@@ -51,7 +60,9 @@ function renderRegisterForm() {
   formCheckWrapper.appendChild(rememberme);
   formCheckWrapper.appendChild(checkLabel);
 
+  form.appendChild(usernameLabel);
   form.appendChild(username);
+  form.appendChild(passwordLabel);
   form.appendChild(password);
   form.appendChild(formCheckWrapper);
   form.appendChild(submit);

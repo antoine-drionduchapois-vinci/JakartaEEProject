@@ -57,9 +57,6 @@ const RegisterPage = () => {
     }
   };
 
-
-  
-  
 const bloc1 = `
 
 <section class="section">
@@ -107,16 +104,10 @@ const bloc1 = `
 
 `;
 
-
 main.innerHTML = bloc1;
-
-
 
 document.getElementById('registerButton').addEventListener('click', handleSubmit );
   
 };
-
-
-
 
 export default RegisterPage;
