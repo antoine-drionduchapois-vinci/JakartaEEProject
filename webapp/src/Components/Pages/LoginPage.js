@@ -93,7 +93,7 @@ async function onLogin(e) {
 
   Navbar();
 
-  Navigate('/');
+  Navigate('/dashboard');
 }
 
 export default LoginPage;
