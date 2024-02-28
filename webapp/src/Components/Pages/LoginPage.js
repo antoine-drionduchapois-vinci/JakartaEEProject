@@ -14,9 +14,9 @@ function renderRegisterForm() {
   const form = document.createElement('form');
   form.className = 'p-5';
   const username = document.createElement('input');
-  username.type = 'text';
-  username.id = 'username';
-  username.placeholder = 'username';
+  username.type = 'email';
+  username.id = 'mail';
+  username.placeholder = 'mail';
   username.required = true;
   username.className = 'form-control mb-3';
   const password = document.createElement('input');
@@ -64,13 +64,13 @@ function onCheckboxClicked(e) {
 async function onLogin(e) {
   e.preventDefault();
 
-  const username = document.querySelector('#username').value;
+  const mail = document.querySelector('#mail').value;
   const password = document.querySelector('#password').value;
 
   const options = {
     method: 'POST',
     body: JSON.stringify({
-      username,
+      mail,
       password,
     }),
     headers: {
@@ -78,7 +78,7 @@ async function onLogin(e) {
     },
   };
 
-  const response = await fetch(`${process.env.API_BASE_URL}/auths/login`, options);
+  const response = await fetch(`http://localhost:8080/auths/login`, options);
 
   if (!response.ok) throw new Error(`fetch error : ${response.status} : ${response.statusText}`);
 
