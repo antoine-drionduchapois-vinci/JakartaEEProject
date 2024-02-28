@@ -15,6 +15,12 @@ public class JDBCManagerImpl implements JDBCManager {
   private final String username = Config.getProperty("db.username");
   private final String password = Config.getProperty("db.password");
 
+  /**
+   * Retrieves a connection to the database.
+   *
+   * @return The database connection.
+   * @throws SQLException if a database access error occurs or the URL is null
+   */
   @Override
   public Connection getConnection() throws SQLException {
     if (connection == null || connection.isClosed()) {
@@ -24,6 +30,11 @@ public class JDBCManagerImpl implements JDBCManager {
     return connection;
   }
 
+  /**
+   * Closes the database connection.
+   *
+   * @throws SQLException if a database access error occurs
+   */
   @Override
   public void close() throws SQLException {
     if (connection != null && !connection.isClosed()) {
