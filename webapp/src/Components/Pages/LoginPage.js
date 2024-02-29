@@ -108,10 +108,15 @@ async function onLogin(e) {
       'Content-Type': 'application/json',
     },
   };
-  // Sending login request to server
+  try {
+    // Sending login request to server
   const response = await fetch(`http://localhost:8080/auths/login`, options);
   // Handling non-successful response from server
-  if (!response.ok) throw new Error(`fetch error : ${response.status} : ${response.statusText}`);
+  if (!response.ok){
+    alert('Email ou mot de passe incorrect');
+    return;
+  } 
+  
   // Parsing response body as JSON
   const authenticatedUser = await response.json();
   // Logging authenticated user data
@@ -122,7 +127,11 @@ async function onLogin(e) {
   Navbar();
   // Navigating to dashboard page
   Navigate('/dashboard');
-}
+  } catch (error){
+    console.error('Error during login:', error);
+  }
+  
+} 
 
 // Exporting LoginPage component
 export default LoginPage;
