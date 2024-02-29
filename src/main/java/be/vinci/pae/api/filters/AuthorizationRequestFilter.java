@@ -42,7 +42,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
   public void filter(ContainerRequestContext requestContext) throws IOException {
     String token = requestContext.getHeaderString("Authorization");
     if (token == null) {
-      requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
+      throw new WebApplicationException(Response.status(Status.UNAUTHORIZED)
           .entity("A token is needed to access this resource").build());
     } else {
       DecodedJWT decodedToken = null;
