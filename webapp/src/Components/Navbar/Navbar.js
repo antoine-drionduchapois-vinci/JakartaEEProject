@@ -1,6 +1,5 @@
 // eslint-disable-next-line no-unused-vars
 // Importing necessary modules and functions
-import { Navbar as BootstrapNavbar } from 'bootstrap';
 import { getAuthenticatedUser, isAuthenticated } from '../../utils/auths';
 
 // Constant for site name
