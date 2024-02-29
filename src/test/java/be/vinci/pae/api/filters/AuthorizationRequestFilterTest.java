@@ -46,7 +46,8 @@ class AuthorizationRequestFilterTest {
     // Exécuter la méthode à tester
     try {
       authorizationRequestFilter.filter(requestContext);
-      // Vérifier que la méthode a bien lancé une WebApplicationException avec une réponse d'erreur 401 Unauthorized
+      // Vérifier que la méthode a bien lancé une WebApplicationException
+      // avec une réponse d'erreur 401 Unauthorized
       fail("Expected WebApplicationException to be thrown");
     } catch (WebApplicationException e) {
       // Vérifier que la réponse de l'exception est bien une erreur 401 Unauthorized
@@ -69,7 +70,7 @@ class AuthorizationRequestFilterTest {
 
     // Lorsque DomainFactory.getUser() est appelé, retourner le mock de User
     when(domainFactory.getUser()).thenReturn(userMock);
-// Définir explicitement la propriété "user" sur l'objet requestContext avec le mock de User
+    // Définir explicitement la propriété "user" sur l'objet requestContext avec le mock de User
     when(requestContext.getProperty("user")).thenReturn(userMock);
 
     // Exécuter la méthode à tester
