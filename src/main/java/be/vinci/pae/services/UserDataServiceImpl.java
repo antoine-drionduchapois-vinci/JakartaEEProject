@@ -87,7 +87,6 @@ public class UserDataServiceImpl implements UserDataService {
     try {
       token = JWT.create().withIssuer("auth0")
           .withClaim("user", user.getUserId()).sign(this.jwtAlgorithm);
-      //nom, prenom, email, telephone, mdp, annee, role
       return jsonMapper.createObjectNode()
           .put("token", token)
           .put("id", user.getUserId())
