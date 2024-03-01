@@ -20,14 +20,12 @@ import java.sql.SQLException;
  */
 public class UserDataServiceImpl implements UserDataService {
 
-  @Inject
-  private DomainFactory myDomainFactory;
-
-  @Inject
-  private JDBCManager jdbcManager;
-
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
+  @Inject
+  private DomainFactory myDomainFactory;
+  @Inject
+  private JDBCManager jdbcManager;
 
   User createUser(ResultSet rs) throws SQLException {
     rs.next();
@@ -89,10 +87,16 @@ public class UserDataServiceImpl implements UserDataService {
     try {
       token = JWT.create().withIssuer("auth0")
           .withClaim("user", user.getUserId()).sign(this.jwtAlgorithm);
+      //nom, prenom, email, telephone, mdp, annee, role
       return jsonMapper.createObjectNode()
           .put("token", token)
           .put("id", user.getUserId())
-          .put("email", user.getEmail());
+          .put("email", user.getEmail())
+          .put("name", user.getName())
+          .put("telephone", user.getPhone())
+          .put("annee", user.getYear())
+          .put("role", user.getRole().name());
+
     } catch (Exception e) {
       System.out.println("Unable to create token");
       return null;
