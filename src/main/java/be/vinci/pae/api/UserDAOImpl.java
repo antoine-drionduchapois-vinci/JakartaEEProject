@@ -1,12 +1,11 @@
 package be.vinci.pae.api;
 
-import be.vinci.pae.domain.User.Role;
+import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.domain.UserImpl;
 import be.vinci.pae.services.UserUCC;
 import be.vinci.pae.utils.DALService;
 import be.vinci.pae.utils.DALServiceImpl;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Path;
 import java.sql.PreparedStatement;
@@ -14,24 +13,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Represents the authentication resource providing endpoints related to user authentication.
+ * Represents the implementation of the UserDAO interface.
  */
-
 public class UserDAOImpl implements UserDAO {
 
-
-  //@Inject
   //private DALService myDalService;
   private DALService myDalService = new DALServiceImpl();
-  //@Inject
   //private UserDTO myUserDTO;
   private UserDTO myUserDTO = new UserImpl();
 
-
-
+  /**
+   * Retrieves a user by their email address.
+   *
+   * @param email the email address of the user to retrieve
+   * @return the user corresponding to the email address, or null if not found
+   */
   @Override
   public UserDTO getOneByEmail(String email) {
-    PreparedStatement ps = myDalService.getPSUser_email("SELECT * FROM projetae.utilisateurs WHERE email = ?");
+    PreparedStatement ps = myDalService
+        .getPSUser_email("SELECT * FROM projetae.utilisateurs WHERE email = ?");
     try {
       ps.setString(1, email);
       ps.execute();
@@ -40,18 +40,24 @@ public class UserDAOImpl implements UserDAO {
     }
 
     try (ResultSet rs = ps.getResultSet()) {
-
       return convertToDto(rs);
     } catch (SQLException e) {
       e.printStackTrace();
     }
 
-    return null; // Gérer le cas où aucun utilisateur n'est trouvé
+    return null; // Handle the case where no user is found
   }
 
+  /**
+   * Retrieves a user by their ID.
+   *
+   * @param id the ID of the user to retrieve
+   * @return the user corresponding to the ID, or null if not found
+   */
   @Override
   public UserDTO getOneByID(int id) {
-    PreparedStatement ps = myDalService.getPSUser_email("SELECT * FROM projetae.utilisateurs WHERE utilisateur_id = ?");
+    PreparedStatement ps = myDalService
+        .getPSUser_email("SELECT * FROM projetae.utilisateurs WHERE utilisateur_id = ?");
     try {
       ps.setInt(1, id);
       ps.execute();
@@ -60,17 +66,16 @@ public class UserDAOImpl implements UserDAO {
     }
 
     try (ResultSet rs = ps.getResultSet()) {
-
       return convertToDto(rs);
     } catch (SQLException e) {
       e.printStackTrace();
     }
 
-    return null; // Gérer le cas où aucun utilisateur n'est trouvé
+    return null; // Handle the case where no user is found
   }
 
-  private UserDTO convertToDto(ResultSet rs)throws SQLException {
-    // Créez un nouvel objet UserDto en utilisant les données de l'utilisateur
+  private UserDTO convertToDto(ResultSet rs) throws SQLException {
+    // Create a new UserDTO object using the user's data
     rs.next();
     myUserDTO.setUserId(rs.getInt(1));
     myUserDTO.setName(rs.getString(2));
@@ -79,11 +84,12 @@ public class UserDAOImpl implements UserDAO {
     myUserDTO.setPhone(rs.getString(5));
     myUserDTO.setPassword(rs.getString(6));
     myUserDTO.setYear(rs.getString(7));
-    myUserDTO.setRole(Role.valueOf(rs.getString(8)));
+    myUserDTO.setRole(User.Role.valueOf(rs.getString(8)));
 
+    // Close the result set
+    rs.close();
 
-    // Convertissez d'autres attributs si nécessaire
+    // Convert other attributes if necessary
     return myUserDTO;
   }
-
 }

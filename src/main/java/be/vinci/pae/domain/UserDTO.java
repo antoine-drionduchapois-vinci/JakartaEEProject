@@ -2,6 +2,9 @@ package be.vinci.pae.domain;
 
 import be.vinci.pae.domain.User.Role;
 
+/**
+ * The UserDTO interface represents a data transfer object for a user entity.
+ */
 public interface UserDTO {
 
   /**
