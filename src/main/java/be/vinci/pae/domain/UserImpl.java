@@ -6,7 +6,7 @@ import org.mindrot.jbcrypt.BCrypt;
  * Implementation of the User interface.
  */
 
-class UserImpl implements User {
+public class UserImpl implements User {
 
   private int userId;
 

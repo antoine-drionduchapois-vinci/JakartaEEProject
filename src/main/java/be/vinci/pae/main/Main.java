@@ -2,8 +2,9 @@ package be.vinci.pae.main;
 
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
-import be.vinci.pae.utils.JDBCManager;
-import be.vinci.pae.utils.JDBCManagerImpl;
+import be.vinci.pae.utils.DALService;
+import be.vinci.pae.utils.DALServiceImpl;
+
 import be.vinci.pae.utils.WebExceptionMapper;
 import java.io.IOException;
 import java.net.URI;
@@ -42,7 +43,7 @@ public class Main {
     // create a resource config that scans for JAX-RS resources and providers
     // in vinci.be package
 
-    final ResourceConfig rc = new ResourceConfig().packages("be.vinci.pae.api")
+    final ResourceConfig rc = new ResourceConfig().packages("be.vinci.pae.services")
         .register(ApplicationBinder.class)
         .register(WebExceptionMapper.class);
 
@@ -62,12 +63,11 @@ public class Main {
     System.out.println(String.format("Jersey app started with WADL available at "
         + BASE_URI + "\nHit enter to stop it..."));
 
-    JDBCManager jdbcManager = null;
-    jdbcManager = new JDBCManagerImpl();
+    DALService dalService = new DALServiceImpl();
 
     System.in.read();
     try {
-      jdbcManager.close();
+      dalService.close();
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
