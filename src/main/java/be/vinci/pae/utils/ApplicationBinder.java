@@ -1,6 +1,5 @@
 package be.vinci.pae.utils;
 
-import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.domain.UserImpl;
 import be.vinci.pae.services.UserUCC;
