@@ -1,9 +1,9 @@
 package be.vinci.pae.utils;
 
-import be.vinci.pae.domain.DomainFactory;
-import be.vinci.pae.domain.DomainFactoryImpl;
-import be.vinci.pae.services.UserDataService;
-import be.vinci.pae.services.UserDataServiceImpl;
+import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.domain.UserImpl;
+import be.vinci.pae.services.UserUCC;
+import be.vinci.pae.services.UserUCCImpl;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.ext.Provider;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -20,8 +20,8 @@ public class ApplicationBinder extends AbstractBinder {
    */
   @Override
   protected void configure() {
-    bind(DomainFactoryImpl.class).to(DomainFactory.class).in(Singleton.class);
-    bind(UserDataServiceImpl.class).to(UserDataService.class).in(Singleton.class);
-    bind(JDBCManagerImpl.class).to(JDBCManager.class).in(Singleton.class);
+    bind(UserImpl.class).to(UserDTO.class).in(Singleton.class);
+    bind(UserUCCImpl.class).to(UserUCC.class).in(Singleton.class);
+    bind(DALServiceImpl.class).to(DALService.class).in(Singleton.class);
   }
 }
