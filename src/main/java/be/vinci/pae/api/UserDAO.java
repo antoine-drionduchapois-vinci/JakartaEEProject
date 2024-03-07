@@ -1,5 +1,6 @@
 package be.vinci.pae.api;
 
+import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserDTO;
 
 /**
@@ -22,4 +23,12 @@ public interface UserDAO {
    * @return the user corresponding to the ID, or null if not found
    */
   UserDTO getOneByID(int id);
+
+  /**
+   * Adds a new user to the database.
+   *
+   * @param user the User object representing the user to be added
+   * @return the UserDTO object representing the added user
+   */
+  UserDTO addUser(User user);
 }

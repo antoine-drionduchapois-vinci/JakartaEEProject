@@ -1,10 +1,10 @@
 package be.vinci.pae.main;
 
+import be.vinci.pae.api.filters.CorsFilter;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.utils.DALService;
 import be.vinci.pae.utils.DALServiceImpl;
-
 import be.vinci.pae.utils.WebExceptionMapper;
 import java.io.IOException;
 import java.net.URI;
@@ -45,7 +45,8 @@ public class Main {
 
     final ResourceConfig rc = new ResourceConfig().packages("be.vinci.pae.services")
         .register(ApplicationBinder.class)
-        .register(WebExceptionMapper.class);
+        .register(WebExceptionMapper.class)
+        .register(CorsFilter.class);
 
     // create and start a new instance of grizzly http server
     // exposing the Jersey application at BASE_URI
