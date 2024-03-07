@@ -17,10 +17,16 @@ const RegisterPage = () => {
     const email = document.getElementById('emailInput').value;
     const telephone = document.getElementById('telInput').value;
     const password = document.getElementById('passwordInput').value;
-  
+    let role = "student";
+    if (email.endsWith('@vinci.be')) {
+      role = document.getElementById('roleSelect').value;
+    }
     // Validating form inputs
-    if (!name || !firstname || !email || !telephone || !password) {
-      alert("Wrong info, please resubmit form");
+    if (!name || !firstname || !email || !telephone || !password || !role) {
+      const errorMessage = document.getElementById('errorMessage');
+      errorMessage.textContent = "Veuillez remplir tous les champs obligatoires";
+      errorMessage.style.display = 'block';
+      errorMessage.style.fontSize = '16px';
       return;
     }
   
@@ -30,7 +36,8 @@ const RegisterPage = () => {
       firstname,
       email,
       telephone,
-      password
+      password,
+      role
     };
   
     // Creating options for fetch request
@@ -67,54 +74,92 @@ const RegisterPage = () => {
 
   // HTML block for registration form
   const bloc1 = `
-    <section class="section">
-      <div class="container">
-        <h1 class="title has-text-centered"><strong>Inscription</strong></h1>
-      </div>
-    </section>
+  <section class="section">
+  <div class="container">
+    <h1 class="title has-text-centered"><strong>Inscription</strong></h1>
+  </div>
+  </section>
 
-    <form class="box">
-      <div class="field">
-        <label class="label">Nom</label>
+  <div class="columns is-centered">
+    <div class="column is-half">
+      <form class="box">
+        <div class="field">
+          <label class="label">Nom</label>
+          <div class="control">
+            <input id="nameInput" class="input" type="text" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Prénom</label>
+          <div class="control">
+            <input id="firstnameInput" class="input" type="text" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Email</label>
+          <div class="control">
+            <input id="emailInput" class="input" type="email" required>
+          </div>
+        </div>
+
+        <div class="field">
+        <label class="label">Choix de rôle</label>
         <div class="control">
-          <input id="nameInput" class="input" type="text">
+          <div class="buttons">
+            <label class="button">
+              <input type="radio" name="role" value="Professeur" checked>
+              Professeur
+            </label>
+            <label class="button">
+              <input type="radio" name="role" value="Administrateur">
+              Administrateur
+            </label>
+          </div>
         </div>
       </div>
 
-      <div class="field">
-        <label class="label">Prénom</label>
+        <div class="field">
+          <label class="label">Téléphone</label>
+          <div class="control">
+            <input id="telInput" class="input" type="tel" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Mot de passe</label>
+          <div class="control">
+            <input id="passwordInput" class="input" type="password" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <p id="errorMessage" class="help is-danger" style="display: none;"></p>
+        </div>
+
+        <div class="field is-flex justify-content-center">
         <div class="control">
-          <input id="firstnameInput" class="input" type="text">
+          <button class="button is-dark is-rounded" id="registerButton">S'inscrire</button>
         </div>
       </div>
-
-      <div class="field">
-        <label class="label">Email</label>
-        <div class="control">
-          <input id="emailInput" class="input" type="email">
-        </div>
-      </div>
-
-      <div class="field">
-        <label class="label">Téléphone</label>
-        <div class="control">
-          <input id="telInput" class="input" type="tel">
-        </div>
-      </div>
-
-      <div class="field">
-        <label class="label">Mot de passe</label>
-        <div class="control">
-          <input id="passwordInput" class="input" type="password">
-        </div>
-      </div>
-
-      <button class="button is-light" id="registerButton">S'inscrire</button>
-    </form>
+      </form>
+    </div>
+  </div>
   `;
 
   // Setting the innerHTML of main with the registration form
   main.innerHTML = bloc1;
+
+  document.getElementById('emailInput').addEventListener('input', function() {
+    const email = this.value.trim();
+    const additionalOptions = document.getElementById('roleOptions');
+    if (email.endsWith('@vinci.be')) {
+      additionalOptions.style.display = 'block';
+    } else {
+      additionalOptions.style.display = 'none';
+    }
+  });
 
   // Adding event listener for form submission
   document.getElementById('registerButton').addEventListener('click', handleSubmit);
