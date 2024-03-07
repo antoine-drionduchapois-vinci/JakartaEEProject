@@ -24,5 +24,11 @@ public interface UserDAO {
    */
   UserDTO getOneByID(int id);
 
+  /**
+   * Adds a new user to the database.
+   *
+   * @param user the User object representing the user to be added
+   * @return the UserDTO object representing the added user
+   */
   UserDTO addUser(User user);
 }

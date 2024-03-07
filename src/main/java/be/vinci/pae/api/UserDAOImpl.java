@@ -99,7 +99,8 @@ public class UserDAOImpl implements UserDAO {
   public UserDTO addUser(User user) {
     PreparedStatement ps = myDalService
         .getPSUser_email(
-            "INSERT INTO projetae.utilisateurs (nom, prenom, email, telephone, mdp, annee, role) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            "INSERT INTO projetae.utilisateurs (nom, prenom, email, telephone, mdp, annee, role)"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)");
     LocalDate currentDate = LocalDate.now();
     int currentYear = currentDate.getYear();
     try {
