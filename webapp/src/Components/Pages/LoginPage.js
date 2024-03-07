@@ -99,7 +99,6 @@ async function onLogin(e) {
   // Getting email and password from input fields
   const email = document.querySelector('#email').value;
   const password = document.querySelector('#password').value;
-  console.log(email, password);
   // Creating options object for fetch
   const options = {
     method: 'POST',
@@ -108,6 +107,7 @@ async function onLogin(e) {
       'Content-Type': 'application/json',
     },
   };
+  console.log(JSON.stringify(options));
   try {
     // Sending login request to server
   const response = await fetch(`http://localhost:8080/auths/login`, options);

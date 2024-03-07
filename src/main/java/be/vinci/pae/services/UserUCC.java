@@ -1,5 +1,6 @@
 package be.vinci.pae.services;
 
+import be.vinci.pae.domain.User;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.ws.rs.Consumes;
@@ -17,4 +18,15 @@ public interface UserUCC {
   ObjectNode login(JsonNode json);
 
   ObjectNode login(String email, String password);
+
+  @POST
+  @Path("register")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  ObjectNode register(JsonNode json);
+
+  ObjectNode register(User user1);
+
+  User createUserAndReturn(String name, String firstname, String email, String telephone,
+      String password, String role);
 }
