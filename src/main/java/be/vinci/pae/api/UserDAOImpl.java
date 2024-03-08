@@ -28,7 +28,7 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public UserDTO getOneByEmail(String email) {
     PreparedStatement ps = myDalService
-        .getPSUser_email("SELECT * FROM projetae.utilisateurs WHERE email = ?");
+        .getPS("SELECT * FROM projetae.utilisateurs WHERE email = ?");
     try {
       ps.setString(1, email);
       ps.execute();
@@ -54,7 +54,7 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public UserDTO getOneByID(int id) {
     PreparedStatement ps = myDalService
-        .getPSUser_email("SELECT * FROM projetae.utilisateurs WHERE utilisateur_id = ?");
+        .getPS("SELECT * FROM projetae.utilisateurs WHERE utilisateur_id = ?");
     try {
       ps.setInt(1, id);
       ps.execute();
@@ -93,7 +93,7 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public int getTotalStudents() {
     try (PreparedStatement ps = myDalService
-        .getPSUser_email("SELECT COUNT(*) FROM projetae.utilisateurs");
+        .getPS("SELECT COUNT(*) FROM projetae.utilisateurs");
         ResultSet rs = ps.executeQuery()) {
 
       if (rs.next()) {
@@ -115,7 +115,7 @@ public class UserDAOImpl implements UserDAO {
         +
         "WHERE projetae.stages.stage_id IS NULL";
 
-    try (PreparedStatement ps = myDalService.getPSUser_email(sql);
+    try (PreparedStatement ps = myDalService.getPS(sql);
         ResultSet rs = ps.executeQuery()) {
 
       if (rs.next()) {

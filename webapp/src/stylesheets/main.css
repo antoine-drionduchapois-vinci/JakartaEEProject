@@ -18,4 +18,18 @@
   .button {
     padding: var(--button-padding);
   }
+/*Style for DashboardTeacher */
+  .dashboard-container{
+    display: flex;
+  }
+  .chart-container {
+    width: 60%;
+    float: left;
+  }
+  
+  .table-container {
+    width: 50%;
+    float: right;
+  }
+/*end Style DashboardTeacher */
   
