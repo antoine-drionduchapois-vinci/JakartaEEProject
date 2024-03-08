@@ -5,7 +5,6 @@ import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.utils.DALService;
 import be.vinci.pae.utils.DALServiceImpl;
-
 import be.vinci.pae.utils.WebExceptionMapper;
 import java.io.IOException;
 import java.net.URI;

@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
 
 /**
  * Represents the implementation of the UserDAO interface.
@@ -88,9 +89,34 @@ public class UserDAOImpl implements UserDAO {
     myUserDTO.setYear(rs.getString(7));
     myUserDTO.setRole(User.Role.valueOf(rs.getString(8)));
 
+      // Convertit d'autres attributs si nécessaire
+      return myUserDTO;
+    } else {
+      return null; // Aucun utilisateur trouvé, renvoie null ou effectue une autre action appropriée
+    }
+  }
 
-    // Convert other attributes if necessary
-    return myUserDTO;
+  @Override
+  public UserDTO addUser(User user) {
+    PreparedStatement ps = myDalService
+        .getPSUser_email(
+            "INSERT INTO projetae.utilisateurs (nom, prenom, email, telephone, mdp, annee, role)"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)");
+    LocalDate currentDate = LocalDate.now();
+    int currentYear = currentDate.getYear();
+    try {
+      ps.setString(1, user.getName());
+      ps.setString(2, user.getSurname());
+      ps.setString(3, user.getEmail());
+      ps.setString(4, user.getPhone());
+      ps.setString(5, user.getPassword());
+      ps.setInt(6, currentYear);
+      ps.setString(7, user.getRole().name());
+      ps.executeUpdate();
+      return getOneByEmail(user.getEmail());
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override

@@ -4,6 +4,8 @@ import be.vinci.pae.api.UserDAO;
 import be.vinci.pae.api.UserDAOImpl;
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.domain.User.Role;
+import be.vinci.pae.domain.UserImpl;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -76,6 +78,7 @@ public class UserUCCImpl implements UserUCC {
     }
   }
 
+
   /**
    * Retrieves global statistics.
    *
@@ -133,6 +136,76 @@ public class UserUCCImpl implements UserUCC {
     }
 
     return usersArray;
+  }
+
+
+  @Override
+  @POST
+  @Path("register")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public ObjectNode register(JsonNode json) {
+    // Get and check credentials
+    if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
+      throw new WebApplicationException("All fileds are required",
+          Response.status(Response.Status.BAD_REQUEST)
+              .entity("email or password required").type("text/plain").build());
+    }
+    String name = json.get("name").asText();
+    String firstname = json.get("firstname").asText();
+    String email = json.get("email").asText();
+    String telephone = json.get("telephone").asText();
+    String password = json.get("password").asText();
+    String role = json.get("role").asText();
+
+    User user = createUserAndReturn(name, firstname, email, telephone, password, role);
+
+    // Try to register
+    ObjectNode publicUser = register(user);
+    if (publicUser == null) {
+      throw new WebApplicationException(Response.status(Response.Status.CONFLICT)
+          .entity("this resource already exists").type(MediaType.TEXT_PLAIN)
+          .build());
+    }
+    return publicUser;
+  }
+
+  @Override
+  public ObjectNode register(User user1) {
+    User user = (User) myUserDAO.addUser(user1);
+    if (user == null) {
+      return null;
+    }
+    String token;
+    try {
+      token = JWT.create().withIssuer("auth0")
+          .withClaim("user", user.getUserId()).sign(this.jwtAlgorithm);
+      ObjectNode publicUser = jsonMapper.createObjectNode()
+          .put("token", token)
+          .put("id", user.getUserId())
+          .put("email", user.getEmail());
+      return publicUser;
+    } catch (Exception e) {
+      System.out.println("Unable to create token");
+      return null;
+    }
+  }
+
+  @Override
+  public User createUserAndReturn(String name, String firstname, String email, String telephone,
+      String password, String role) {
+    User tempUser = (User) myUserDAO.getOneByEmail(email);
+    if (tempUser != null) {
+      return null; // L'utilisateur existe déjà !
+    }
+    tempUser = new UserImpl();
+    tempUser.setName(name);
+    tempUser.setSurname(firstname);
+    tempUser.setEmail(email);
+    tempUser.setPhone(telephone);
+    tempUser.setPassword(tempUser.hashPassword(password));
+    tempUser.setRole(Role.valueOf(role));
+    return tempUser;
   }
 
 }
