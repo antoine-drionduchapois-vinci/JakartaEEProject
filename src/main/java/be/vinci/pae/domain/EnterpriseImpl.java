@@ -1,6 +1,10 @@
 package be.vinci.pae.domain;
 
+/**
+ * Implementation of the Enterprise interface representing an enterprise entity.
+ */
 public class EnterpriseImpl implements be.vinci.pae.domain.Enterprise {
+
   private int entrepriseId;
   private String nom;
   private String appellation;
@@ -9,8 +13,19 @@ public class EnterpriseImpl implements be.vinci.pae.domain.Enterprise {
   private boolean isBlacklist;
   private String avisProfesseur;
 
-  // Constructeur
-  public EnterpriseImpl(int entrepriseId, String nom, String appellation, String adresse, String telephone, boolean isBlacklist, String avisProfesseur) {
+  /**
+   * Constructs a new EnterpriseImpl object with the specified attributes.
+   *
+   * @param entrepriseId   The ID of the enterprise.
+   * @param nom            The name of the enterprise.
+   * @param appellation    The appellation of the enterprise.
+   * @param adresse        The address of the enterprise.
+   * @param telephone      The telephone number of the enterprise.
+   * @param isBlacklist    The blacklist status of the enterprise.
+   * @param avisProfesseur The professor's opinion about the enterprise.
+   */
+  public EnterpriseImpl(int entrepriseId, String nom, String appellation,
+      String adresse, String telephone, boolean isBlacklist, String avisProfesseur) {
     this.entrepriseId = entrepriseId;
     this.nom = nom;
     this.appellation = appellation;
@@ -20,32 +35,73 @@ public class EnterpriseImpl implements be.vinci.pae.domain.Enterprise {
     this.avisProfesseur = avisProfesseur;
   }
 
-  // Getters
-  @Override public int getEntrepriseId() {
+  /**
+   * Gets the ID of the enterprise.
+   *
+   * @return The ID of the enterprise.
+   */
+  @Override
+  public int getEntrepriseId() {
     return entrepriseId;
   }
 
-  @Override public String getNom() {
+  /**
+   * Gets the name of the enterprise.
+   *
+   * @return The name of the enterprise.
+   */
+  @Override
+  public String getNom() {
     return nom;
   }
 
-  @Override public String getAppellation() {
+  /**
+   * Gets the appellation of the enterprise.
+   *
+   * @return The appellation of the enterprise.
+   */
+  @Override
+  public String getAppellation() {
     return appellation;
   }
 
-  @Override public String getAdresse() {
+  /**
+   * Gets the address of the enterprise.
+   *
+   * @return The address of the enterprise.
+   */
+  @Override
+  public String getAdresse() {
     return adresse;
   }
 
-  @Override public String getTelephone() {
+  /**
+   * Gets the telephone number of the enterprise.
+   *
+   * @return The telephone number of the enterprise.
+   */
+  @Override
+  public String getTelephone() {
     return telephone;
   }
 
-  @Override public boolean isBlacklist() {
+  /**
+   * Checks if the enterprise is blacklisted.
+   *
+   * @return True if the enterprise is blacklisted, false otherwise.
+   */
+  @Override
+  public boolean isBlacklist() {
     return isBlacklist;
   }
 
-  @Override public String getAvisProfesseur() {
+  /**
+   * Gets the professor's opinion about the enterprise.
+   *
+   * @return The professor's opinion about the enterprise.
+   */
+  @Override
+  public String getAvisProfesseur() {
     return avisProfesseur;
   }
 }
