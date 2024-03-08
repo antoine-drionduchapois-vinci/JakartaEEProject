@@ -3,7 +3,6 @@ package be.vinci.pae.services;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -37,7 +36,7 @@ public interface UserUCC {
    */
   ObjectNode login(String email, String password);
 
-   /**
+  /**
    * get all user.
    *
    * @return all user
@@ -47,7 +46,7 @@ public interface UserUCC {
   @Produces(MediaType.APPLICATION_JSON)
   ArrayNode getUsersAsJson();
 
-   /**
+  /**
    * get statistique user stage.
    *
    * @return all stat

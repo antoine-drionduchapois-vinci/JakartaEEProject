@@ -6,6 +6,9 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
+/**
+ * Represents a enterprise Use Case Controller (UCC) for handling enterprise-related operations.
+ */
 public interface EnterpriseUCC {
 
   @GET

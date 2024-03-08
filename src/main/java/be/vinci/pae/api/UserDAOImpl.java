@@ -19,7 +19,7 @@ public class UserDAOImpl implements UserDAO {
   //private DALService myDalService;
   private DALService myDalService = new DALServiceImpl();
   //private UserDTO myUserDTO;
-  private UserDTO myUserDTO ;
+  private UserDTO myUserDTO;
 
   /**
    * Retrieves a user by their email address.
@@ -107,6 +107,7 @@ public class UserDAOImpl implements UserDAO {
     }
     return 0; // Gérer le cas où il n'y a aucun résultat
   }
+
   @Override
   public List<UserDTO> getAllStudents() {
     List<UserDTO> users = new ArrayList<>();

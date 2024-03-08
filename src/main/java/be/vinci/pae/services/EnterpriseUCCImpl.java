@@ -13,6 +13,9 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import java.util.List;
 
+/**
+ * Implementation of the Enterprise interface.
+ */
 @Singleton
 @Path("/ent")
 public class EnterpriseUCCImpl implements EnterpriseUCC {
