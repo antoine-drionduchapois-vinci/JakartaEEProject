@@ -1,35 +1,61 @@
 /* Variables de thème */
 :root {
-    --primary-color: #3498db;
-    --secondary-color: #e74c3c;
-    --text-color: #333;
-    --background-color: #f5f5f5;
-    --font-family: 'Roboto', sans-serif;
-    --button-padding: 10px 20px;
+  --primary-color: #3498db;
+  --secondary-color: #e74c3c;
+  --text-color: #333;
+  --background-color: #f5f5f5;
+  --font-family: 'Roboto', sans-serif;
+  --button-padding: 10px 20px;
+}
+
+/* Styles */
+body {
+  font-family: var(--font-family);
+  color: var(--text-color);
+  background-color: var(--background-color);
+}
+
+.button {
+  padding: var(--button-padding);
+}
+
+/* Style for DashboardTeacher */
+.dashboard-container {
+  display: flex;
+}
+
+@media screen and (max-width: 768px) {
+  .dashboard-container {
+    flex-direction: column; /* Switch to column layout when the screen is 768px wide or less */
+    align-items: center; /* Center align items when in column layout */
   }
-  
-  /* Styles */
-  body {
-    font-family: var(--font-family);
-    color: var(--text-color);
-    background-color: var(--background-color);
-  }
-  
-  .button {
-    padding: var(--button-padding);
-  }
-/*Style for DashboardTeacher */
-  .dashboard-container{
-    display: flex;
-  }
-  .chart-container {
-    width: 60%;
-    float: left;
-  }
-  
-  .table-container {
-    width: 50%;
-    float: right;
-  }
-/*end Style DashboardTeacher */
-  
+}
+
+.chart-container {
+  width: 50%; /* Adjust the width of the chart container */
+  max-width: 100%;
+  align-self: auto;
+}
+canvas {
+  max-height: 500px; /* Limite la hauteur maximale du canvas à 400px */
+  width: 100%; /* Assure que le canvas prend toute la largeur de son conteneur */
+}
+
+.table-container {
+  width: 50%; /* Adjust the width of the table container */
+  max-width: 100%; /* Ensure the table container does not exceed 100% of its parent container's width */
+}
+
+.tableUser-container {
+  margin-top: 5%;
+  display: flex;
+  flex-direction: column;
+  gap: 8%; /* Spacing between elements in column layout */
+}
+
+tbody tr:hover {
+  transform: scale(1.05); /* Increase size by 5% on hover */
+  border-radius: 10px; /* Rounded corners */
+  transition: background-color 0.3s ease; /* Smooth transition for background color */
+}
+/* End Style DashboardTeacher */

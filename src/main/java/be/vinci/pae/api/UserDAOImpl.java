@@ -8,6 +8,8 @@ import be.vinci.pae.utils.DALServiceImpl;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents the implementation of the UserDAO interface.
@@ -17,7 +19,7 @@ public class UserDAOImpl implements UserDAO {
   //private DALService myDalService;
   private DALService myDalService = new DALServiceImpl();
   //private UserDTO myUserDTO;
-  private UserDTO myUserDTO = new UserImpl();
+  private UserDTO myUserDTO ;
 
   /**
    * Retrieves a user by their email address.
@@ -37,6 +39,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     try (ResultSet rs = ps.getResultSet()) {
+      rs.next();
       return convertToDto(rs);
     } catch (SQLException e) {
       e.printStackTrace();
@@ -63,6 +66,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     try (ResultSet rs = ps.getResultSet()) {
+      rs.next();
       return convertToDto(rs);
     } catch (SQLException e) {
       e.printStackTrace();
@@ -73,7 +77,8 @@ public class UserDAOImpl implements UserDAO {
 
   private UserDTO convertToDto(ResultSet rs) throws SQLException {
     // Create a new UserDTO object using the user's data
-    rs.next();
+    myUserDTO = new UserImpl();
+
     myUserDTO.setUserId(rs.getInt(1));
     myUserDTO.setName(rs.getString(2));
     myUserDTO.setSurname(rs.getString(3));
@@ -83,8 +88,6 @@ public class UserDAOImpl implements UserDAO {
     myUserDTO.setYear(rs.getString(7));
     myUserDTO.setRole(User.Role.valueOf(rs.getString(8)));
 
-    // Close the result set
-    rs.close();
 
     // Convert other attributes if necessary
     return myUserDTO;
@@ -104,6 +107,25 @@ public class UserDAOImpl implements UserDAO {
     }
     return 0; // Gérer le cas où il n'y a aucun résultat
   }
+  @Override
+  public List<UserDTO> getAllStudents() {
+    List<UserDTO> users = new ArrayList<>();
+
+    try (PreparedStatement ps = myDalService.getPS("SELECT * FROM projetae.utilisateurs");
+        ResultSet rs = ps.executeQuery()) {
+
+      while (rs.next()) {
+        UserDTO userDTO = convertToDto(rs); // Convertir chaque ligne de résultat en UserDTO
+
+        users.add(userDTO); // Ajouter le UserDTO à la liste des utilisateurs
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    return users; // Renvoyer la liste des utilisateurs
+  }
+
 
   @Override
   public int getStudentsWithoutStage() {

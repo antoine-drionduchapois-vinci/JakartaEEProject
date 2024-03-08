@@ -1,6 +1,7 @@
 package be.vinci.pae.api;
 
 import be.vinci.pae.domain.UserDTO;
+import java.util.List;
 
 /**
  * Represents a Data Access Object (DAO) for User entities.
@@ -29,6 +30,13 @@ public interface UserDAO {
    * @return the total number of students
    */
   int getTotalStudents();
+
+  /**
+   * Retrieves all of students.
+   *
+   * @return list of students
+   */
+  List<UserDTO> getAllStudents();
 
   /**
    * Retrieves the number of students without a stage.

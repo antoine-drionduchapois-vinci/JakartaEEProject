@@ -1,7 +1,6 @@
 import Chart from 'chart.js/auto';
 import { clearPage, renderPageTitle } from '../../utils/render';
 
-
 // Fonction pour récupérer les données des entreprises
 const fetchEnterprises = async () => {
   const token = localStorage.getItem('token');
@@ -50,11 +49,33 @@ const fetchDataAndRenderChart = async () => {
   }
 };
 
+const fetchUsers = async () => {
+  const token = localStorage.getItem('token');
+  const options = {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  try {
+    const response = await fetch('http://localhost:8080/auths/All', options);
+    if (!response.ok) {
+      throw new Error('Erreur lors de la récupération des données des utilisateurs');
+    }
+
+    const data = await response.json();
+    return data; // Retourner directement le tableau d'utilisateurs de la réponse JSON
+  } catch (error) {
+    console.error('Erreur lors de la récupération des données des utilisateurs : ', error);
+    return null;
+  }
+};
+
 // Fonction pour rendre le graphique
 const renderChart = (chartContainer, noStage, total) => {
   const canvas = document.createElement('canvas');
-  canvas.width = 400;
-  canvas.height = 400;
+
   chartContainer.appendChild(canvas);
 
   const chartData = {
@@ -112,7 +133,50 @@ const renderEnterpriseTable = (tableContainer, enterprises) => {
     const enterpriseValues = Object.values(enterprise).slice(1); // Exclure le premier élément (ID)
     // Ajouter chaque valeur de l'entreprise dans une cellule de la ligne
     enterpriseValues.forEach((value) => {
-      console.log(value);
+      const cell = document.createElement('td');
+      cell.textContent = value;
+      row.appendChild(cell);
+    });
+
+    tbody.appendChild(row);
+  });
+};
+
+const renderUserTable = (tableUserContainer, users) => {
+  const table = document.createElement('table');
+  table.className = 'table is-fullwidth';
+  tableUserContainer.appendChild(table);
+
+  // Créer la première ligne pour les en-têtes de colonne
+  const thead = document.createElement('thead');
+  const headerRow = document.createElement('tr');
+  const headers = ['ID', 'Nom', 'Prénom', 'Email', 'Rôle', 'Année']; // Liste des en-têtes
+
+  // Ajouter chaque en-tête à la première ligne
+  headers.forEach((headerText) => {
+    const header = document.createElement('th');
+    header.textContent = headerText;
+    headerRow.appendChild(header);
+  });
+
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  // Créer le corps du tableau
+  const tbody = document.createElement('tbody');
+  table.appendChild(tbody);
+
+  // Convertir l'ObjectNode en objet JavaScript
+  users.forEach((user) => {
+    const userData = user;
+    const row = document.createElement('tr');
+    row.addEventListener('click', () => {
+      // Redirection vers la page de détails de l'utilisateur avec l'ID comme paramètre de requête
+      window.location.href = `user-details-page.html?id=${userData.userId}`;
+    });
+
+    // Ajouter chaque valeur de l'utilisateur dans une cellule de la ligne
+    Object.values(userData).forEach((value) => {
       const cell = document.createElement('td');
       cell.textContent = value;
       row.appendChild(cell);
@@ -141,8 +205,13 @@ const renderDashboardTeacher = async () => {
 
   // Création d'un conteneur pour le tableau
   const tableContainer = document.createElement('div');
-  tableContainer.className = 'container';
+  tableContainer.className = 'table-container';
   container.appendChild(tableContainer);
+
+  // Création d'un conteneur pour le tableau d'users
+  const tableUserContainer = document.createElement('div');
+  tableContainer.className = 'tableUser-container';
+  tableContainer.appendChild(tableUserContainer);
 
   // Appel de la fonction pour récupérer les données et rendre le graphique
   const data = await fetchDataAndRenderChart();
@@ -153,7 +222,11 @@ const renderDashboardTeacher = async () => {
   if (enterprises) {
     renderEnterpriseTable(tableContainer, enterprises);
   }
-  
+  const users = await fetchUsers();
+  if (users) {
+    
+    renderUserTable(tableUserContainer, users);
+  }
 };
 
 // Exportation de la fonction renderDashboardTeacher
