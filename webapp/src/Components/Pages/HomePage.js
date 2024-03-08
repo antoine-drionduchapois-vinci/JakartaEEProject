@@ -32,8 +32,8 @@ const HomePage = () => {
     </section>
 
     <div class="has-text-centered">
-      <button class="button is-light" id="registerButton">S'inscrire</button>
-      <button class="button is-light" id="connectButton">Se connecter</button>
+      <button class="button " id="registerButton">S'inscrire</button>
+      <button class="button " id="connectButton">Se connecter</button>
     </div>
   `;
 

@@ -89,4 +89,36 @@ public class UserDAOImpl implements UserDAO {
     // Convert other attributes if necessary
     return myUserDTO;
   }
+  @Override
+  public int getTotalStudents() {
+    try (PreparedStatement ps = myDalService
+        .getPSUser_email("SELECT COUNT(*) FROM projetae.utilisateurs");
+        ResultSet rs = ps.executeQuery()) {
+
+      if (rs.next()) {
+        return rs.getInt(1); // Retourne le résultat du COUNT(*)
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return 0; // Gérer le cas où il n'y a aucun résultat
+  }
+  @Override
+  public int getStudentsWithoutStage() {
+    String sql = "SELECT COUNT(*) FROM projetae.utilisateurs " +
+        "LEFT JOIN projetae.stages ON projetae.utilisateurs.utilisateur_id = projetae.stages.utilisateur "
+        +
+        "WHERE projetae.stages.stage_id IS NULL";
+
+    try (PreparedStatement ps = myDalService.getPSUser_email(sql);
+        ResultSet rs = ps.executeQuery()) {
+
+      if (rs.next()) {
+        return rs.getInt(1); // Retourne le résultat du COUNT(*)
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return 0; // Gérer le cas où il y a une erreur ou aucun résultat
+  }
 }

@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -70,5 +71,20 @@ public class UserUCCImpl implements UserUCC {
       System.out.println("Unable to create token");
       return null;
     }
+  }
+
+  @GET // Définir la méthode comme étant une requête GET
+  @Path("stats")
+  @Produces(MediaType.APPLICATION_JSON)
+  public ObjectNode getGlobalStats() {
+    int totalStudents = myUserDAO.getTotalStudents();
+    int studentsWithoutInternship = myUserDAO.getStudentsWithoutStage();
+
+    // Créer un objet JSON pour stocker les statistiques globales
+    ObjectNode stats = jsonMapper.createObjectNode();
+    stats.put("total", totalStudents);
+    stats.put("noStage", studentsWithoutInternship);
+
+    return stats;
   }
 }

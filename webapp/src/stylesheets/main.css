@@ -1,3 +1,21 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Variables de thème */
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #e74c3c;
+    --text-color: #333;
+    --background-color: #f5f5f5;
+    --font-family: 'Roboto', sans-serif;
+    --button-padding: 10px 20px;
+  }
+  
+  /* Styles */
+  body {
+    font-family: var(--font-family);
+    color: var(--text-color);
+    background-color: var(--background-color);
+  }
+  
+  .button {
+    padding: var(--button-padding);
+  }
+  
