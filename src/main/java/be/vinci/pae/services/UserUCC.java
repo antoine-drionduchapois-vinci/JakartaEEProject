@@ -54,5 +54,5 @@ public interface UserUCC {
   @GET
   @Path("stats")
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getGlobalStats();
+  ObjectNode getGlobalStats();
 }
