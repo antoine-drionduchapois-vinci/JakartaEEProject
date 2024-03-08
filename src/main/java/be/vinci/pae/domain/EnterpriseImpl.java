@@ -3,7 +3,7 @@ package be.vinci.pae.domain;
 /**
  * Implementation of the Enterprise interface representing an enterprise entity.
  */
-public class EnterpriseImpl implements be.vinci.pae.domain.Enterprise {
+public class EnterpriseImpl implements Enterprise {
 
   private int entrepriseId;
   private String nom;
