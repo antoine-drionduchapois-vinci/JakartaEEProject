@@ -91,15 +91,13 @@ public class UserDAOImpl implements UserDAO {
 
       // Convertit d'autres attributs si nécessaire
       return myUserDTO;
-    } else {
-      return null; // Aucun utilisateur trouvé, renvoie null ou effectue une autre action appropriée
-    }
+
   }
 
   @Override
   public UserDTO addUser(User user) {
     PreparedStatement ps = myDalService
-        .getPSUser_email(
+        .getPS(
             "INSERT INTO projetae.utilisateurs (nom, prenom, email, telephone, mdp, annee, role)"
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)");
     LocalDate currentDate = LocalDate.now();
