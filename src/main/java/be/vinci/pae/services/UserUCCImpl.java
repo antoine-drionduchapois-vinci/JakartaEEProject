@@ -73,15 +73,21 @@ public class UserUCCImpl implements UserUCC {
     }
   }
 
-  @GET // Définir la méthode comme étant une requête GET
+  /**
+   * Retrieves global statistics.
+   *
+   * @return an ObjectNode containing the global statistics
+   */
+  @GET
   @Path("stats")
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getGlobalStats() {
     int totalStudents = myUserDAO.getTotalStudents();
     int studentsWithoutInternship = myUserDAO.getStudentsWithoutStage();
 
-    // Créer un objet JSON pour stocker les statistiques globales
-    ObjectNode stats = jsonMapper.createObjectNode();
+    // Create a JSON object to store the global statistics
+    ObjectMapper mapper = new ObjectMapper();
+    ObjectNode stats = mapper.createObjectNode();
     stats.put("total", totalStudents);
     stats.put("noStage", studentsWithoutInternship);
 

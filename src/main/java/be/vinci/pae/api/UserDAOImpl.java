@@ -89,6 +89,7 @@ public class UserDAOImpl implements UserDAO {
     // Convert other attributes if necessary
     return myUserDTO;
   }
+
   @Override
   public int getTotalStudents() {
     try (PreparedStatement ps = myDalService
@@ -103,10 +104,14 @@ public class UserDAOImpl implements UserDAO {
     }
     return 0; // Gérer le cas où il n'y a aucun résultat
   }
+
   @Override
   public int getStudentsWithoutStage() {
-    String sql = "SELECT COUNT(*) FROM projetae.utilisateurs " +
-        "LEFT JOIN projetae.stages ON projetae.utilisateurs.utilisateur_id = projetae.stages.utilisateur "
+    String sql = "SELECT COUNT(*) FROM projetae.utilisateurs "
+        +
+        "LEFT JOIN projetae.stages "
+        +
+        "ON projetae.utilisateurs.utilisateur_id = projetae.stages.utilisateur "
         +
         "WHERE projetae.stages.stage_id IS NULL";
 
