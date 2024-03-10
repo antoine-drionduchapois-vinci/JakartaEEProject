@@ -39,7 +39,7 @@ public class DALServiceImpl implements DALService {
    * @throws RuntimeException if a database access error occurs
    */
   @Override
-  public PreparedStatement getPSUser_email(String sql) {
+  public PreparedStatement getPS(String sql) {
     try {
       ps = connection.prepareStatement(sql);
     } catch (SQLException e) {

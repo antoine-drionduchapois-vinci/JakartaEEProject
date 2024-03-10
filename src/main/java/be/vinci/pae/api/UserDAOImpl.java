@@ -8,6 +8,8 @@ import be.vinci.pae.utils.DALServiceImpl;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.time.LocalDate;
 
 /**
@@ -18,7 +20,7 @@ public class UserDAOImpl implements UserDAO {
   //private DALService myDalService;
   private DALService myDalService = new DALServiceImpl();
   //private UserDTO myUserDTO;
-  private UserDTO myUserDTO = new UserImpl();
+  private UserDTO myUserDTO;
 
   /**
    * Retrieves a user by their email address.
@@ -29,7 +31,7 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public UserDTO getOneByEmail(String email) {
     PreparedStatement ps = myDalService
-        .getPSUser_email("SELECT * FROM projetae.utilisateurs WHERE email = ?");
+        .getPS("SELECT * FROM projetae.utilisateurs WHERE email = ?");
     try {
       ps.setString(1, email);
       ps.execute();
@@ -38,6 +40,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     try (ResultSet rs = ps.getResultSet()) {
+      rs.next();
       return convertToDto(rs);
     } catch (SQLException e) {
       e.printStackTrace();
@@ -55,7 +58,7 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public UserDTO getOneByID(int id) {
     PreparedStatement ps = myDalService
-        .getPSUser_email("SELECT * FROM projetae.utilisateurs WHERE utilisateur_id = ?");
+        .getPS("SELECT * FROM projetae.utilisateurs WHERE utilisateur_id = ?");
     try {
       ps.setInt(1, id);
       ps.execute();
@@ -64,6 +67,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     try (ResultSet rs = ps.getResultSet()) {
+      rs.next();
       return convertToDto(rs);
     } catch (SQLException e) {
       e.printStackTrace();
@@ -74,31 +78,26 @@ public class UserDAOImpl implements UserDAO {
 
   private UserDTO convertToDto(ResultSet rs) throws SQLException {
     // Create a new UserDTO object using the user's data
-    if (rs.next()) { // Vérifie s'il y a une ligne dans le ResultSet
-      // Crée un nouvel objet UserDTO en utilisant les données de l'utilisateur
-      myUserDTO.setUserId(rs.getInt(1));
-      myUserDTO.setName(rs.getString(2));
-      myUserDTO.setSurname(rs.getString(3));
-      myUserDTO.setEmail(rs.getString(4));
-      myUserDTO.setPhone(rs.getString(5));
-      myUserDTO.setPassword(rs.getString(6));
-      myUserDTO.setYear(rs.getString(7));
-      myUserDTO.setRole(User.Role.valueOf(rs.getString(8)));
+    myUserDTO = new UserImpl();
 
-      // Ferme le ResultSet
-      rs.close();
+    myUserDTO.setUserId(rs.getInt(1));
+    myUserDTO.setName(rs.getString(2));
+    myUserDTO.setSurname(rs.getString(3));
+    myUserDTO.setEmail(rs.getString(4));
+    myUserDTO.setPhone(rs.getString(5));
+    myUserDTO.setPassword(rs.getString(6));
+    myUserDTO.setYear(rs.getString(7));
+    myUserDTO.setRole(User.Role.valueOf(rs.getString(8)));
 
       // Convertit d'autres attributs si nécessaire
       return myUserDTO;
-    } else {
-      return null; // Aucun utilisateur trouvé, renvoie null ou effectue une autre action appropriée
-    }
+
   }
 
   @Override
   public UserDTO addUser(User user) {
     PreparedStatement ps = myDalService
-        .getPSUser_email(
+        .getPS(
             "INSERT INTO projetae.utilisateurs (nom, prenom, email, telephone, mdp, annee, role)"
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)");
     LocalDate currentDate = LocalDate.now();
@@ -116,5 +115,62 @@ public class UserDAOImpl implements UserDAO {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  @Override
+  public int getTotalStudents() {
+    try (PreparedStatement ps = myDalService
+        .getPS("SELECT COUNT(*) FROM projetae.utilisateurs");
+        ResultSet rs = ps.executeQuery()) {
+
+      if (rs.next()) {
+        return rs.getInt(1); // Retourne le résultat du COUNT(*)
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return 0; // Gérer le cas où il n'y a aucun résultat
+  }
+
+  @Override
+  public List<UserDTO> getAllStudents() {
+    List<UserDTO> users = new ArrayList<>();
+
+    try (PreparedStatement ps = myDalService.getPS("SELECT * FROM projetae.utilisateurs");
+        ResultSet rs = ps.executeQuery()) {
+
+      while (rs.next()) {
+        UserDTO userDTO = convertToDto(rs); // Convertir chaque ligne de résultat en UserDTO
+
+        users.add(userDTO); // Ajouter le UserDTO à la liste des utilisateurs
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    return users; // Renvoyer la liste des utilisateurs
+  }
+
+
+  @Override
+  public int getStudentsWithoutStage() {
+    String sql = "SELECT COUNT(*) FROM projetae.utilisateurs "
+        +
+        "LEFT JOIN projetae.stages "
+        +
+        "ON projetae.utilisateurs.utilisateur_id = projetae.stages.utilisateur "
+        +
+        "WHERE projetae.stages.stage_id IS NULL";
+
+    try (PreparedStatement ps = myDalService.getPS(sql);
+        ResultSet rs = ps.executeQuery()) {
+
+      if (rs.next()) {
+        return rs.getInt(1); // Retourne le résultat du COUNT(*)
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return 0; // Gérer le cas où il y a une erreur ou aucun résultat
   }
 }

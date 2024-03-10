@@ -14,7 +14,7 @@ public interface DALService {
    * @param sql the SQL query
    * @return a prepared statement for the SQL query
    */
-  PreparedStatement getPSUser_email(String sql);
+  PreparedStatement getPS(String sql);
 
   /**
    * Closes the database connection.

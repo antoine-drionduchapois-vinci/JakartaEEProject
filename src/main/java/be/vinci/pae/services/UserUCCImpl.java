@@ -3,6 +3,7 @@ package be.vinci.pae.services;
 import be.vinci.pae.api.UserDAO;
 import be.vinci.pae.api.UserDAOImpl;
 import be.vinci.pae.domain.User;
+import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.domain.User.Role;
 import be.vinci.pae.domain.UserImpl;
 import be.vinci.pae.utils.Config;
@@ -10,15 +11,18 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.util.List;
 
 
 /**
@@ -73,6 +77,67 @@ public class UserUCCImpl implements UserUCC {
       return null;
     }
   }
+
+
+  /**
+   * Retrieves global statistics.
+   *
+   * @return an ObjectNode containing the global statistics
+   */
+  @Override
+  @GET
+  @Path("stats")
+  @Produces(MediaType.APPLICATION_JSON)
+  public ObjectNode getGlobalStats() {
+    int totalStudents = myUserDAO.getTotalStudents();
+    int studentsWithoutInternship = myUserDAO.getStudentsWithoutStage();
+
+    // Create a JSON object to store the global statistics
+    ObjectMapper mapper = new ObjectMapper();
+    ObjectNode stats = mapper.createObjectNode();
+    stats.put("total", totalStudents);
+    stats.put("noStage", studentsWithoutInternship);
+
+    return stats;
+  }
+
+  /**
+   * Retrieves all users.
+   *
+   * @return an ObjectNode containing all users
+   */
+  @Override
+  @GET
+  @Path("All")
+  @Produces(MediaType.APPLICATION_JSON)
+  public ArrayNode getUsersAsJson() {
+    ObjectMapper mapper = new ObjectMapper();
+    ArrayNode usersArray = mapper.createArrayNode();
+
+    try {
+      // Récupérer la liste complète des utilisateurs depuis votre DAO
+      List<UserDTO> userList = myUserDAO.getAllStudents();
+
+      // Parcourir chaque utilisateur et les ajouter à l'ArrayNode
+      for (UserDTO user : userList) {
+        ObjectNode userNode = mapper.createObjectNode();
+        userNode.put("userId", user.getUserId());
+        userNode.put("name", user.getName());
+        userNode.put("surname", user.getSurname());
+        userNode.put("email", user.getEmail());
+        userNode.put("role", user.getRole().name());
+        userNode.put("annee", user.getYear());
+        // Ajoutez d'autres attributs utilisateur au besoin
+        usersArray.add(userNode);
+      }
+    } catch (Exception e) {
+      // Gérer les erreurs éventuelles
+      e.printStackTrace();
+    }
+
+    return usersArray;
+  }
+
 
   @Override
   @POST
@@ -142,4 +207,5 @@ public class UserUCCImpl implements UserUCC {
     tempUser.setRole(Role.valueOf(role));
     return tempUser;
   }
+
 }
