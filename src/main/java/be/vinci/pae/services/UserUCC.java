@@ -95,5 +95,5 @@ public interface UserUCC {
   @GET
   @Path("getUserInfoById")
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getUsersByIdAsJson(JsonNode json);
+  ObjectNode getUsersByIdAsJson(JsonNode json);
 }
