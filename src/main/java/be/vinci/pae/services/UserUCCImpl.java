@@ -3,12 +3,14 @@ package be.vinci.pae.services;
 import be.vinci.pae.api.UserDAO;
 import be.vinci.pae.api.UserDAOImpl;
 import be.vinci.pae.domain.User;
-import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.domain.User.Role;
+import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.domain.UserImpl;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -33,10 +35,9 @@ import java.util.List;
 public class UserUCCImpl implements UserUCC {
 
 
-  private UserDAO myUserDAO = new UserDAOImpl();
-
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
+  private UserDAO myUserDAO = new UserDAOImpl();
 
   @Override
   @POST
@@ -207,5 +208,50 @@ public class UserUCCImpl implements UserUCC {
     tempUser.setRole(Role.valueOf(role));
     return tempUser;
   }
+
+
+  /**
+   * Retrieves users info.
+   *
+   * @return an ObjectNode containing users info
+   */
+  @Override
+  @POST
+  @Path("getUserInfoById")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public ObjectNode getUsersByIdAsJson(JsonNode json) {
+
+    try {
+      //Get token from JSON
+      String jsonToken = json.get("token").asText();
+      //Decode Token
+      DecodedJWT jwt = JWT.require(jwtAlgorithm)
+          .withIssuer("auth0")
+          .build() // create the JWTVerifier instance
+          .verify(jsonToken); // verify the token
+      //Het userId from decodedToken
+      int userId = jwt.getClaim("user").asInt();
+      // Assuming the token includes a "user" claim holding the user ID
+      if (userId == -1) {
+        throw new JWTVerificationException("User ID claim is missing");
+      }
+      UserDTO user = myUserDAO.getOneByID(userId);
+
+      ObjectMapper mapper = new ObjectMapper();
+      ObjectNode userInfo = mapper.createObjectNode();
+      userInfo.put("name", user.getName());
+      userInfo.put("surName", user.getSurname());
+      userInfo.put("phone", user.getPhone());
+      userInfo.put("year", user.getYear());
+      userInfo.put("email", user.getEmail());
+      return userInfo;
+    } catch (Exception e) {
+      // Gérer les erreurs éventuelles
+      e.printStackTrace();
+    }
+    return null;
+  }
+
 
 }

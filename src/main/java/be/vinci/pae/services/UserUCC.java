@@ -56,6 +56,7 @@ public interface UserUCC {
   @Path("stats")
   @Produces(MediaType.APPLICATION_JSON)
   ObjectNode getGlobalStats();
+
   /**
    * Registers a new user with the provided JSON data.
    *
@@ -89,4 +90,10 @@ public interface UserUCC {
    */
   User createUserAndReturn(String name, String firstname, String email, String telephone,
       String password, String role);
+
+
+  @GET
+  @Path("getUserInfoById")
+  @Produces(MediaType.APPLICATION_JSON)
+  ObjectNode getUsersByIdAsJson(JsonNode json);
 }
