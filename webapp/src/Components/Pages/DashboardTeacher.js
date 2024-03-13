@@ -99,47 +99,72 @@ const renderChart = (chartContainer, noStage, total) => {
   });
 };
 
-// Fonction pour rendre le tableau des entreprises
-const renderEnterpriseTable = (tableContainer, enterprises) => {
-  const table = document.createElement('table');
-  table.className = 'table is-fullwidth';
-  tableContainer.appendChild(table);
-
-  // Créer la première ligne pour les en-têtes de colonne
-  const thead = document.createElement('thead');
-  const headerRow = document.createElement('tr');
-  const headers = ['Nom', 'Appellation', 'Adresse', 'Téléphone', 'Blacklist', 'Avis Professeur']; // Liste des en-têtes
-
-  // Ajouter chaque en-tête à la première ligne
-  headers.forEach((headerText) => {
-    const header = document.createElement('th');
-    header.textContent = headerText;
-    headerRow.appendChild(header);
-  });
-
-  thead.appendChild(headerRow);
-  table.appendChild(thead);
-
-  // Créer le corps du tableau
-  const tbody = document.createElement('tbody');
-  table.appendChild(tbody);
-
-  enterprises.forEach((enterprise) => {
+// Fonction pour mettre à jour le tableau avec les entreprises fournies
+const updateTable = (tableBody, enterpriseList) => {
+  const tbody = tableBody; // Nouvelle variable pour stocker la référence à tableBody
+  tbody.innerHTML = ''; // Effacer le contenu actuel du tableau
+  enterpriseList.forEach((enterprise) => {
     const row = document.createElement('tr');
     row.addEventListener('click', () => {
-      // Redirection vers la page de détails de l'entreprise avec l'ID comme paramètre de requête
       window.location.href = `details-page.html?id=${enterprise.entreprise_id}`;
     });
-    const enterpriseValues = Object.values(enterprise).slice(1); // Exclure le premier élément (ID)
-    // Ajouter chaque valeur de l'entreprise dans une cellule de la ligne
+    const enterpriseValues = Object.values(enterprise).slice(1);
     enterpriseValues.forEach((value) => {
       const cell = document.createElement('td');
       cell.textContent = value;
       row.appendChild(cell);
     });
-
-    tbody.appendChild(row);
+    tableBody.appendChild(row);
   });
+};
+
+// Fonction pour rendre le tableau des entreprises avec recherche et tri
+const renderEnterpriseTable = (tableContainer, enterprises) => {
+  // Créer le tableau
+  const table = document.createElement('table');
+  table.className = 'table is-fullwidth';
+  tableContainer.appendChild(table);
+  // Créer le corps du tableau
+  const tbody = document.createElement('tbody');
+  // Fonction pour trier les colonnes
+  const sortColumn = (columnName) => {
+    const lowerColumnName = columnName.toLowerCase();
+    enterprises.sort((a, b) => {
+      // Comparaison des valeurs des colonnes
+      const valueA = a[lowerColumnName].toLowerCase();
+      const valueB = b[lowerColumnName].toLowerCase();
+  
+      // Utilisation de localeCompare pour le tri alphabétique
+      return valueA.localeCompare(valueB);
+    });
+    console.log("update T");
+    // Mettre à jour le tableau avec les entreprises triées
+    updateTable(tbody, enterprises);
+  };
+
+  // Créer la première ligne pour les en-têtes de colonne
+  const thead = document.createElement('thead');
+  const headerRow = document.createElement('tr');
+  const headers = ['Nom', 'Appellation', 'Adresse', 'Téléphone', 'Blacklist', 'Avis Professeur'];
+
+  // Ajouter chaque en-tête à la première ligne avec possibilité de tri
+  headers.forEach((headerText) => {
+    const header = document.createElement('th');
+    header.textContent = headerText;
+    header.addEventListener('click', () => {
+      sortColumn(headerText); // Fonction pour trier les colonnes
+    });
+    headerRow.appendChild(header);
+  });
+
+  // Ajouter la ligne d'en-tête au tableau
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+  // ajouter le corp au tableau
+  table.appendChild(tbody);
+
+  // Afficher le tableau avec toutes les entreprises au chargement initial
+  updateTable(tbody, enterprises);
 };
 
 const renderUserTable = (tableUserContainer, users) => {
