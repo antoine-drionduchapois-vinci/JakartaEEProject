@@ -1,5 +1,8 @@
 package be.vinci.pae.domain;
 
+/**
+ * Interface representing an responsible entity.
+ */
 public interface Responsible {
 
   /**

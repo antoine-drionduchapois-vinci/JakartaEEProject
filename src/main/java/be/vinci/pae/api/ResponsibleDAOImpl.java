@@ -8,6 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Implementation of the Responsible Data Access Object.
+ */
 public class ResponsibleDAOImpl implements ResponsibleDAO {
 
   private DALService myDalService = new DALServiceImpl();

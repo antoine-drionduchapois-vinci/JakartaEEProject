@@ -2,6 +2,9 @@ package be.vinci.pae.api;
 
 import be.vinci.pae.domain.Responsible;
 
+/**
+ * Represents a Data Access Object (DAO) for Responsible entities.
+ */
 public interface ResponsibleDAO {
 
   /**
