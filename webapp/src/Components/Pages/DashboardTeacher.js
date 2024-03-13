@@ -234,7 +234,6 @@ const renderDashboardTeacher = async () => {
   }
   
   if (users) {
-    
     renderUserTable(tableUserContainer, users);
   }
 };
