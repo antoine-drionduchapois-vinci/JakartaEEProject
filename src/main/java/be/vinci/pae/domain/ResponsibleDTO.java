@@ -3,7 +3,7 @@ package be.vinci.pae.domain;
 /**
  * Interface representing an responsible entity.
  */
-public interface Responsible {
+public interface ResponsibleDTO {
 
   /**
    * Gets the enterprise ID associated with the responsible.

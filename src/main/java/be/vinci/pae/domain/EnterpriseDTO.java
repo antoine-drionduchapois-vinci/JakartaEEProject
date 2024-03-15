@@ -3,7 +3,7 @@ package be.vinci.pae.domain;
 /**
  * Interface representing an enterprise entity.
  */
-public interface Enterprise {
+public interface EnterpriseDTO {
 
   /**
    * Gets the ID of the enterprise.

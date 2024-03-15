@@ -3,7 +3,7 @@ package be.vinci.pae.domain;
 /**
  * Interface representing an Contact entity.
  */
-public interface Contact {
+public interface ContactDTO {
 
   /**
    * Gets the ID of the contact.

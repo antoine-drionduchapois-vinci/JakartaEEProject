@@ -1,9 +1,10 @@
 package be.vinci.pae.dao;
 
-import be.vinci.pae.domain.Responsible;
-import be.vinci.pae.domain.ResponsibleImpl;
+import be.vinci.pae.domain.DomainFactory;
+import be.vinci.pae.domain.ResponsibleDTO;
 import be.vinci.pae.utils.DALService;
 import be.vinci.pae.utils.DALServiceImpl;
+import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,6 +16,9 @@ public class ResponsibleDAOImpl implements ResponsibleDAO {
 
   private DALService myDalService = new DALServiceImpl();
 
+  @Inject
+  private DomainFactory myDomainFactory;
+
   /**
    * Retrieves the responible of the enterprise.
    *
@@ -22,7 +26,7 @@ public class ResponsibleDAOImpl implements ResponsibleDAO {
    * @return the user corresponding to the ID, or null if not found
    */
   @Override
-  public Responsible getResponsibleByEnterpriseId(int id) {
+  public ResponsibleDTO getResponsibleByEnterpriseId(int id) {
     PreparedStatement ps = myDalService
         .getPS("SELECT * FROM projetae.responsables WHERE entreprise = ?");
     try {
@@ -41,9 +45,11 @@ public class ResponsibleDAOImpl implements ResponsibleDAO {
       String email = rs.getString("email");
       int enterprise = rs.getInt("  entreprise");
 
-      Responsible responsible = new ResponsibleImpl(responsibleId, name, surname, phone, email,
+      ResponsibleDTO responsibleDTO = myDomainFactory.getResponsibleDTO(responsibleId, name,
+          surname, phone,
+          email,
           enterprise);
-      return responsible;
+      return responsibleDTO;
     } catch (SQLException e) {
       e.printStackTrace();
     }

@@ -1,6 +1,6 @@
 package be.vinci.pae.dao;
 
-import be.vinci.pae.domain.Contact;
+import be.vinci.pae.domain.ContactDTO;
 import java.util.List;
 
 /**
@@ -13,5 +13,5 @@ public interface ContactDAO {
    *
    * @return A list of all contacts
    */
-  List<Contact> getAllUsersContact(int id);
+  List<ContactDTO> getAllUsersContact(int id);
 }

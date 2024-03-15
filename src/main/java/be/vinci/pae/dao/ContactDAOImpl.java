@@ -1,9 +1,10 @@
 package be.vinci.pae.dao;
 
-import be.vinci.pae.domain.Contact;
-import be.vinci.pae.domain.ContactImpl;
+import be.vinci.pae.domain.ContactDTO;
+import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.utils.DALService;
 import be.vinci.pae.utils.DALServiceImpl;
+import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,9 +21,12 @@ public class ContactDAOImpl implements ContactDAO {
    */
   private DALService myDalService = new DALServiceImpl();
 
+  @Inject
+  private DomainFactory myDomainFactory;
+
   @Override
-  public List<Contact> getAllUsersContact(int id) {
-    List<Contact> contacts = new ArrayList<>();
+  public List<ContactDTO> getAllUsersContact(int id) {
+    List<ContactDTO> contactDTOS = new ArrayList<>();
 
     String query = "SELECT * FROM projetae.contacts WHERE utilisateur = ?";
     try (PreparedStatement ps = myDalService.getPS(query)) {
@@ -39,9 +43,11 @@ public class ContactDAOImpl implements ContactDAO {
           int user = rs.getInt("utilisateur");
           int enterprise = rs.getInt("entreprise");
 
-          Contact contact = new ContactImpl(contactId, description, state, reasonRefusal, year,
+          ContactDTO contactDTO = myDomainFactory.getContactDTO(contactId, description, state,
+              reasonRefusal,
+              year,
               user, enterprise);
-          contacts.add(contact);
+          contactDTOS.add(contactDTO);
         }
       }
     } catch (SQLException e) {
@@ -49,7 +55,7 @@ public class ContactDAOImpl implements ContactDAO {
       throw new RuntimeException(e);
     }
 
-    return contacts;
+    return contactDTOS;
   }
 
 

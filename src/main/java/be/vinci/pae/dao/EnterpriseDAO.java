@@ -1,6 +1,6 @@
 package be.vinci.pae.dao;
 
-import be.vinci.pae.domain.Enterprise;
+import be.vinci.pae.domain.EnterpriseDTO;
 import java.util.List;
 
 /**
@@ -13,7 +13,7 @@ public interface EnterpriseDAO {
    *
    * @return A list of all enterprises.
    */
-  List<Enterprise> getAllEnterprises();
+  List<EnterpriseDTO> getAllEnterprises();
 
-  Enterprise getEnterpriseById(int id);
+  EnterpriseDTO getEnterpriseById(int id);
 }

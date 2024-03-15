@@ -1,15 +1,16 @@
 package be.vinci.pae.dao;
 
+import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserDTO;
-import be.vinci.pae.domain.UserImpl;
 import be.vinci.pae.utils.DALService;
 import be.vinci.pae.utils.DALServiceImpl;
+import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,10 +18,10 @@ import java.util.List;
  */
 public class UserDAOImpl implements UserDAO {
 
-  //private DALService myDalService;
   private DALService myDalService = new DALServiceImpl();
-  //private UserDTO myUserDTO;
-  private UserDTO myUserDTO;
+
+  @Inject
+  private DomainFactory myDomainFactory;
 
   /**
    * Retrieves a user by their email address.
@@ -78,7 +79,7 @@ public class UserDAOImpl implements UserDAO {
 
   private UserDTO convertToDto(ResultSet rs) throws SQLException {
     // Create a new UserDTO object using the user's data
-    myUserDTO = new UserImpl();
+    UserDTO myUserDTO = myDomainFactory.getUserDTO();
 
     myUserDTO.setUserId(rs.getInt(1));
     myUserDTO.setName(rs.getString(2));
@@ -135,7 +136,7 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public List<UserDTO> getAllStudents() {
     List<UserDTO> users = new ArrayList<>();
-    String sql ="SELECT * FROM projetae.utilisateurs WHERE projetae.utilisateurs.role='STUDENT'";
+    String sql = "SELECT * FROM projetae.utilisateurs WHERE projetae.utilisateurs.role='STUDENT'";
     try (PreparedStatement ps = myDalService.getPS(sql);
         ResultSet rs = ps.executeQuery()) {
 

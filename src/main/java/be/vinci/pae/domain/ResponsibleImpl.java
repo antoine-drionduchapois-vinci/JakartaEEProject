@@ -3,7 +3,7 @@ package be.vinci.pae.domain;
 /**
  * Implementation of the Responsible interface representing an responsible entity.
  */
-public class ResponsibleImpl implements Responsible {
+public class ResponsibleImpl implements ResponsibleDTO {
 
   private int responsibleId;
   private String name;

@@ -3,7 +3,7 @@ package be.vinci.pae.domain;
 /**
  * Implementation of the Contact interface representing a contact entity.
  */
-public class ContactImpl implements Contact {
+public class ContactImpl implements ContactDTO {
 
   private int contactId;
   private String description;
@@ -12,6 +12,9 @@ public class ContactImpl implements Contact {
   private String year;
   private int user;
   private int entreprise;
+
+  public ContactImpl() {
+  }
 
   /**
    * Constructs a new ContactImpl object with the specified attributes.
@@ -35,73 +38,66 @@ public class ContactImpl implements Contact {
     this.entreprise = entreprise;
   }
 
-  /**
-   * Gets the ID of the contact.
-   *
-   * @return The ID of the contact.
-   */
   @Override
   public int getContactId() {
     return contactId;
   }
 
-  /**
-   * Gets the ID of the enterprise associated with the contact.
-   *
-   * @return The ID of the enterprise associated with the contact.
-   */
-  @Override
-  public int getEntreprise() {
-    return entreprise;
+  public void setContactId(int contactId) {
+    this.contactId = contactId;
   }
 
-  /**
-   * Gets the ID of the user associated with the contact.
-   *
-   * @return The ID of the user associated with the contact.
-   */
-  @Override
-  public int getUser() {
-    return user;
-  }
-
-  /**
-   * Gets the description of the contact.
-   *
-   * @return The description of the contact.
-   */
   @Override
   public String getDescription() {
     return description;
   }
 
-  /**
-   * Gets the reason for refusal of the contact.
-   *
-   * @return The reason for refusal of the contact.
-   */
-  @Override
-  public String getReasonRefusal() {
-    return reasonRefusal;
+  public void setDescription(String description) {
+    this.description = description;
   }
 
-  /**
-   * Gets the state of the contact.
-   *
-   * @return The state of the contact.
-   */
   @Override
   public String getState() {
     return state;
   }
 
-  /**
-   * Gets the year of the contact.
-   *
-   * @return The year of the contact.
-   */
+  public void setState(String state) {
+    this.state = state;
+  }
+
+  @Override
+  public String getReasonRefusal() {
+    return reasonRefusal;
+  }
+
+  public void setReasonRefusal(String reasonRefusal) {
+    this.reasonRefusal = reasonRefusal;
+  }
+
   @Override
   public String getYear() {
     return year;
+  }
+
+  public void setYear(String year) {
+    this.year = year;
+  }
+
+  @Override
+  public int getUser() {
+    return user;
+  }
+
+  public void setUser(int user) {
+    this.user = user;
+  }
+
+  @Override
+  public int getEntreprise() {
+    return entreprise;
+  }
+
+  public void setEntreprise(int entreprise) {
+    this.entreprise = entreprise;
   }
 }

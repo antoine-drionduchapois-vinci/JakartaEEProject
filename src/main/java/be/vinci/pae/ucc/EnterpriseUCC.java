@@ -1,6 +1,6 @@
 package be.vinci.pae.ucc;
 
-import be.vinci.pae.domain.Enterprise;
+import be.vinci.pae.domain.EnterpriseDTO;
 import java.util.List;
 
 /**
@@ -8,7 +8,7 @@ import java.util.List;
  */
 public interface EnterpriseUCC {
 
-  List<Enterprise> getAllEnterprises();
+  List<EnterpriseDTO> getAllEnterprises();
 
-  Enterprise getEnterprisesByUserId(int userId);
+  EnterpriseDTO getEnterprisesByUserId(int userId);
 }
