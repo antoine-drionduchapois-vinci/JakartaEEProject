@@ -1,4 +1,4 @@
-package be.vinci.pae.api;
+package be.vinci.pae.dao;
 
 import be.vinci.pae.domain.Contact;
 import be.vinci.pae.domain.ContactImpl;
@@ -10,6 +10,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementation of the contactDao.
+ */
 public class ContactDAOImpl implements ContactDAO {
 
   /**

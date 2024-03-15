@@ -1,4 +1,4 @@
-package be.vinci.pae.api;
+package be.vinci.pae.dao;
 
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserDTO;
@@ -45,6 +45,7 @@ public interface UserDAO {
    * @return the number of students without a stage
    */
   int getStudentsWithoutStage();
+
   /**
    * Adds a new user to the database.
    *

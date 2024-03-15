@@ -1,4 +1,4 @@
-package be.vinci.pae.api.filters;
+package be.vinci.pae.resource.filters;
 
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerResponseContext;

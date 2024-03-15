@@ -1,8 +1,7 @@
-package be.vinci.pae.services;
+package be.vinci.pae.resource;
 
-import be.vinci.pae.api.EnterpriseDAO;
-import be.vinci.pae.api.EnterpriseDAOImpl;
 import be.vinci.pae.domain.Enterprise;
+import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -12,6 +11,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -26,11 +26,17 @@ import java.util.List;
  */
 @Singleton
 @Path("/ent")
-public class EnterpriseUCCImpl implements EnterpriseUCC {
+public class EnterpriseResourceImpl implements EnterpriseResource {
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
-  private EnterpriseDAO enterpriseDAO = new EnterpriseDAOImpl();
+  @Inject
+  private EnterpriseUCC myEnterpriseUCC;
 
+  /**
+   * Retrieves all enterprise.
+   *
+   * @return an ObjectNode containing all enterprises
+   */
   @Override
   @GET
   @Path("enterprises")
@@ -42,7 +48,7 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
 
     try {
       // Récupérer toutes les entreprises depuis votre DAO
-      List<Enterprise> enterprises = enterpriseDAO.getAllEnterprises();
+      List<Enterprise> enterprises = myEnterpriseUCC.getAllEnterprises();
 
       // Parcourir chaque entreprise et les ajouter à la réponse
       for (Enterprise enterprise : enterprises) {
@@ -95,7 +101,7 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
       }
       System.out.println("user id : " + userId);
       //get entrprise that corresponds to user intership
-      Enterprise enterprise = enterpriseDAO.getEnterpriseById(userId);
+      Enterprise enterprise = myEnterpriseUCC.getEnterprisesByUserId(userId);
 
       ObjectMapper mapper = new ObjectMapper();
       ObjectNode enterpriseNode = mapper.createObjectNode();

@@ -1,4 +1,4 @@
-package be.vinci.pae.api;
+package be.vinci.pae.dao;
 
 import be.vinci.pae.domain.Responsible;
 

@@ -1,4 +1,4 @@
-package be.vinci.pae.api;
+package be.vinci.pae.dao;
 
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserDTO;
@@ -9,8 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Represents the implementation of the UserDAO interface.
@@ -89,8 +89,8 @@ public class UserDAOImpl implements UserDAO {
     myUserDTO.setYear(rs.getString(7));
     myUserDTO.setRole(User.Role.valueOf(rs.getString(8)));
 
-      // Convertit d'autres attributs si nécessaire
-      return myUserDTO;
+    // Convertit d'autres attributs si nécessaire
+    return myUserDTO;
 
   }
 
