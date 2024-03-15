@@ -1,105 +1,123 @@
-// Importing authentication utility functions
+// Import des dépendances
 import { getRememberMe, setAuthenticatedUser, setRememberMe } from '../../utils/auths';
-// Importing rendering utility functions
 import { clearPage, renderPageTitle } from '../../utils/render';
-// Importing Navbar component
 import Navbar from '../Navbar/Navbar';
-// Importing navigation function
 import Navigate from '../Router/Navigate';
 
-// LoginPage component definition
+// Définition du composant LoginPage
 const LoginPage = () => {
-  // Clearing the page
+  // Effacer la page
   clearPage();
-  // Rendering page title as 'Login'
+  // Rendre le titre de la page "Login"
   renderPageTitle('Login');
-  // Rendering login form
+  // Rendre le formulaire de connexion
   renderLoginForm();
 };
 
-// Function to render the login form
+// Fonction pour rendre le formulaire de connexion
 function renderLoginForm() {
-  // Selecting main element from the DOM
+  // Sélectionner l'élément principal dans le DOM
   const main = document.querySelector('main');
-  // Creating form element
+
+  // Création du conteneur du formulaire centré
+  const container = document.createElement('div');
+  container.className = ' d-flex justify-content-center align-items-center vh-100';
+
+  // Création du formulaire dans un cadre avec une bordure
   const form = document.createElement('form');
-  form.className = 'p-5';
-  // Creating input field for email
-  const username = document.createElement('input');
-  username.type = 'email';
-  username.id = 'email';
-  username.placeholder = 'email';
-  username.required = true;
-  username.className = 'form-control mb-3';
-  // Creating label for email input
-  const usernameLabel = document.createElement('label');
-  usernameLabel.htmlFor = 'email';
-  usernameLabel.textContent = 'Email';
-  usernameLabel.className = 'form-label';
-  // Creating input field for password
-  const password = document.createElement('input');
-  password.type = 'password';
-  password.id = 'password';
-  password.required = true;
-  password.placeholder = 'password';
-  password.className = 'form-control mb-3';
-  // Creating label for password input
-  const passwordLabel = document.createElement('label');
-  passwordLabel.htmlFor = 'password';
-  passwordLabel.textContent = 'Password';
-  passwordLabel.className = 'form-label';
-  // Creating submit button
+  form.className = ' border rounded bg-light shadow bg-white';
+  form.style.padding = '100px';
+
+  // Création du champ d'entrée pour l'e-mail
+  const username = createInputElement('email', 'email', 'Email', true, 'form-control mb-3');
+
+  // Création du champ d'entrée pour le mot de passe
+  const password = createInputElement('password', 'password', 'Password', true, 'form-control mb-3');
+
+  // Création du bouton de soumission
+  const submit = createSubmitButton();
+
+  // Création du wrapper pour la case à cocher "Remember me"
+  const formCheckWrapper = createRememberMeCheckbox();
+
+  const registerLink = document.createElement('p');
+  registerLink.innerHTML = `Vous n'avez pas de compte ? <a id="registerLink" style="color: blue; cursor: pointer;">S'enregistrer</a>`;
+  // Ajout d'un écouteur d'événements pour la redirection vers la page d'inscription
+  registerLink.querySelector('#registerLink').addEventListener('click', () => Navigate('/register'));
+
+  // Ajout des éléments au formulaire
+  form.append(username.label, username.input, password.label, password.input, formCheckWrapper, submit, registerLink);
+
+  // Ajout du formulaire au conteneur
+  container.appendChild(form);
+
+  // Ajout du conteneur à l'élément principal
+  main.appendChild(container);
+
+  // Ajout d'un écouteur d'événements pour la soumission du formulaire
+  form.addEventListener('submit', onLogin);
+}
+
+// Créer un champ d'entrée HTML
+function createInputElement(type, id, labelText, required, className) {
+  const input = document.createElement('input');
+  input.type = type;
+  input.id = id;
+  input.required = required;
+  input.className = className;
+
+  const label = document.createElement('label');
+  label.htmlFor = id;
+  label.textContent = labelText;
+  label.className = 'form-label';
+
+  return { input, label };
+}
+
+// Créer le bouton de soumission
+function createSubmitButton() {
   const submit = document.createElement('input');
   submit.value = 'Login';
   submit.type = 'submit';
-  submit.className = 'btn btn-info';
-  // Creating wrapper for remember me checkbox
+  submit.className = 'btn btn-dark d-block mx-auto mb-4';
+
+  return submit;
+}
+
+// Créer la case à cocher "Remember me"
+function createRememberMeCheckbox() {
   const formCheckWrapper = document.createElement('div');
   formCheckWrapper.className = 'mb-3 form-check';
-  // Creating remember me checkbox
+
   const rememberme = document.createElement('input');
   rememberme.type = 'checkbox';
   rememberme.className = 'form-check-input';
   rememberme.id = 'rememberme';
-  // Getting remember me status from localStorage
-  const remembered = getRememberMe();
-  rememberme.checked = remembered;
-  // Adding event listener for checkbox click
+  rememberme.checked = getRememberMe();
   rememberme.addEventListener('click', onCheckboxClicked);
-  // Creating label for remember me checkbox
+
   const checkLabel = document.createElement('label');
   checkLabel.htmlFor = 'rememberme';
   checkLabel.className = 'form-check-label';
   checkLabel.textContent = 'Remember me';
-  // Appending elements to form
-  form.appendChild(usernameLabel);
-  form.appendChild(username);
-  form.appendChild(passwordLabel);
-  form.appendChild(password);
-  form.appendChild(formCheckWrapper);
-  form.appendChild(submit);
-  // Appending checkbox and label to form check wrapper
-  formCheckWrapper.appendChild(rememberme);
-  formCheckWrapper.appendChild(checkLabel);
-  // Appending form to main element
-  main.appendChild(form);
-  // Adding event listener for form submission
-  form.addEventListener('submit', onLogin);
+
+  formCheckWrapper.append(rememberme, checkLabel);
+
+  return formCheckWrapper;
 }
 
-// Function to handle remember me checkbox click event
+// Gérer le clic sur la case à cocher "Remember me"
 function onCheckboxClicked(e) {
-  // Setting remember me status in localStorage
   setRememberMe(e.target.checked);
 }
 
-// Function to handle login form submission
+// Gérer la soumission du formulaire de connexion
 async function onLogin(e) {
   e.preventDefault();
-  // Getting email and password from input fields
+
   const email = document.querySelector('#email').value;
   const password = document.querySelector('#password').value;
-  // Creating options object for fetch
+
   const options = {
     method: 'POST',
     body: JSON.stringify({ email, password }),
@@ -107,31 +125,23 @@ async function onLogin(e) {
       'Content-Type': 'application/json',
     },
   };
-  console.log(JSON.stringify(options));
+
   try {
-    // Sending login request to server
-  const response = await fetch(`http://localhost:8080/auths/login`, options);
-  // Handling non-successful response from server
-  if (!response.ok){
-    alert('Email ou mot de passe incorrect');
-    return;
-  } 
+    const response = await fetch(`http://localhost:8080/auths/login`, options);
+
+    if (!response.ok){
+      alert('Email or password incorrect');
+      return;
+    } 
   
-  // Parsing response body as JSON
-  const authenticatedUser = await response.json();
-  // Logging authenticated user data
-  console.log('Authenticated user : ', authenticatedUser);
-  // Setting authenticated user in localStorage
-  setAuthenticatedUser(authenticatedUser);
-  // Rendering Navbar component
-  Navbar();
-  // Navigating to dashboard page
-  Navigate('/dashboard');
+    const authenticatedUser = await response.json();
+    setAuthenticatedUser(authenticatedUser);
+    Navbar();
+    Navigate('/dashboard');
   } catch (error){
     console.error('Error during login:', error);
   }
-  
-} 
+}
 
-// Exporting LoginPage component
+// Export du composant LoginPage
 export default LoginPage;
