@@ -12,13 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Implementation of the contactDao.
+ * Represents the implementation of the ContactDAO interface.
  */
 public class ContactDAOImpl implements ContactDAO {
 
-  /**
-   * Implementation of the Contact Data Access Object.
-   */
   private DALService myDalService = new DALServiceImpl();
 
   @Inject

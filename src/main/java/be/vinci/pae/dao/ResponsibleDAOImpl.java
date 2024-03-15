@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Implementation of the Responsible Data Access Object.
+ * Represents the implementation of the ResponsibleDAO interface.
  */
 public class ResponsibleDAOImpl implements ResponsibleDAO {
 
@@ -19,12 +19,6 @@ public class ResponsibleDAOImpl implements ResponsibleDAO {
   @Inject
   private DomainFactory myDomainFactory;
 
-  /**
-   * Retrieves the responible of the enterprise.
-   *
-   * @param id the ID of the enterprise
-   * @return the user corresponding to the ID, or null if not found
-   */
   @Override
   public ResponsibleDTO getResponsibleByEnterpriseId(int id) {
     PreparedStatement ps = myDalService

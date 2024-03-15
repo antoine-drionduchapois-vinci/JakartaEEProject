@@ -8,7 +8,6 @@ import java.util.List;
 /**
  * Implementation of the Enterprise interface.
  */
-
 public class EnterpriseUCCImpl implements EnterpriseUCC {
 
   @Inject

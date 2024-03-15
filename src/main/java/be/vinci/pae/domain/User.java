@@ -34,6 +34,9 @@ public interface User extends UserDTO {
    */
   enum Role {
     STUDENT("Student"), TEACHER("Teacher"), ADMIN("Admin");
+    /**
+     * Represents the value of a ROLE
+     */
     private String value;
 
     Role(String value) {

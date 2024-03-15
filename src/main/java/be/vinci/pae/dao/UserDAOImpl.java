@@ -23,12 +23,6 @@ public class UserDAOImpl implements UserDAO {
   @Inject
   private DomainFactory myDomainFactory;
 
-  /**
-   * Retrieves a user by their email address.
-   *
-   * @param email the email address of the user to retrieve
-   * @return the user corresponding to the email address, or null if not found
-   */
   @Override
   public UserDTO getOneByEmail(String email) {
     PreparedStatement ps = myDalService
@@ -50,12 +44,6 @@ public class UserDAOImpl implements UserDAO {
     return null; // Handle the case where no user is found
   }
 
-  /**
-   * Retrieves a user by their ID.
-   *
-   * @param id the ID of the user to retrieve
-   * @return the user corresponding to the ID, or null if not found
-   */
   @Override
   public UserDTO getOneByID(int id) {
     PreparedStatement ps = myDalService

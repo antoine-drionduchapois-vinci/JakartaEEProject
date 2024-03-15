@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Implementation of the Enterprise Data Access Object.
+ * Represents the implementation of the EnterpriseDAO interface.
  */
 public class EnterpriseDAOImpl implements EnterpriseDAO {
 
@@ -22,11 +22,6 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
   @Inject
   private DomainFactory myDomainFactory;
 
-  /**
-   * Retrieves all enterprises from the database.
-   *
-   * @return A list of all enterprises.
-   */
   @Override
   public List<EnterpriseDTO> getAllEnterprises() {
     List<EnterpriseDTO> enterprises = new ArrayList<>();
