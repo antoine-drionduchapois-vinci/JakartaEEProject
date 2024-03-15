@@ -3,9 +3,6 @@ package be.vinci.pae.ucc;
 import be.vinci.pae.dao.UserDAO;
 import be.vinci.pae.dao.UserDAOImpl;
 import be.vinci.pae.domain.UserDTO;
-import be.vinci.pae.utils.Config;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 
 
