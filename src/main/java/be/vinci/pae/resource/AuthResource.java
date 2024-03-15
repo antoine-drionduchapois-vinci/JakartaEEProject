@@ -16,8 +16,10 @@ public interface AuthResource {
   /**
    * Attempts to log in a user with the provided credentials.
    *
-   * @param json A JSON object containing the user's login credentials, typically including email and password.
-   * @return An ObjectNode that includes authentication details, such as a token, upon successful authentication.
+   * @param json A JSON object containing the user's login credentials,
+   *            typically including email and password.
+   * @return An ObjectNode that includes authentication details, such as a token,
+   * upon successful authentication.
    */
   @POST
   @Path("login")
@@ -28,9 +30,11 @@ public interface AuthResource {
   /**
    * Registers a new user with the provided details.
    *
-   * @param json A JSON object containing the details of the user to register. This typically includes
-   *             the user's name, email, password, and potentially other registration-required information.
-   * @return An ObjectNode that includes authentication details, such as a token, upon successful registration.
+   * @param json A JSON object containing the details of the user to register.
+   *            This typically includes the user's name, email, password,
+   *            and potentially other registration-required information.
+   * @return An ObjectNode that includes authentication details, such as a token,
+   * upon successful registration.
    */
   @POST
   @Path("register")

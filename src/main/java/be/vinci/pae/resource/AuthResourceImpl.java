@@ -48,7 +48,8 @@ public class AuthResourceImpl implements AuthResource {
     String password = json.get("password").asText();
     ObjectNode publicUser = myAuthUCC.login(email, password);
     if (publicUser == null) {
-      throw new WebApplicationException("Login or password incorrect", Response.Status.UNAUTHORIZED);
+      throw new WebApplicationException("Login or password incorrect",
+          Response.Status.UNAUTHORIZED);
     }
     return publicUser;
   }
@@ -67,7 +68,8 @@ public class AuthResourceImpl implements AuthResource {
   public ObjectNode register(JsonNode json) {
     // Get and check credentials
     if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
-      throw new WebApplicationException("All fields are required", Response.status(Response.Status.BAD_REQUEST)
+      throw new WebApplicationException("All fields are required",
+          Response.status(Response.Status.BAD_REQUEST)
           .entity("Email or password required").type("text/plain").build());
     }
     String name = json.get("name").asText();
