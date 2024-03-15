@@ -135,7 +135,7 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public List<UserDTO> getAllStudents() {
     List<UserDTO> users = new ArrayList<>();
-    String sql ="SELECT * FROM projetae.utilisateurs AND projetae.utilisateurs.role='STUDENT'";
+    String sql ="SELECT * FROM projetae.utilisateurs WHERE projetae.utilisateurs.role='STUDENT'";
     try (PreparedStatement ps = myDalService.getPS(sql);
         ResultSet rs = ps.executeQuery()) {
 

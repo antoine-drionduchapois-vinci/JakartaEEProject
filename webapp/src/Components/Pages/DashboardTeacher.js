@@ -223,14 +223,16 @@ const renderDashboardTeacher = async () => {
 
   // Appel de la fonction pour récupérer les données et rendre le graphique
   const data = await fetchDataAndRenderChart();
-  if (data) {
-    renderChart(chartContainer, data.noStage, data.total);
-  }
   const enterprises = await fetchEnterprises();
+  const users = await fetchUsers();
+  if (data) {
+    renderChart(chartContainer, data.noStage, users.lenght);
+  }
+  
   if (enterprises) {
     renderEnterpriseTable(tableContainer, enterprises);
   }
-  const users = await fetchUsers();
+  
   if (users) {
     
     renderUserTable(tableUserContainer, users);
