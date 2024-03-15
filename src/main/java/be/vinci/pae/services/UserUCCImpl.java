@@ -122,7 +122,7 @@ public class UserUCCImpl implements UserUCC {
       // Parcourir chaque utilisateur et les ajouter à l'ArrayNode
       for (UserDTO user : userList) {
         ObjectNode userNode = mapper.createObjectNode();
-        userNode.put("userId", user.getUserId());
+        userNode.put("utilisateur_id", user.getUserId());
         userNode.put("name", user.getName());
         userNode.put("surname", user.getSurname());
         userNode.put("email", user.getEmail());

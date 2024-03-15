@@ -120,7 +120,7 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public int getTotalStudents() {
     try (PreparedStatement ps = myDalService
-        .getPS("SELECT COUNT(*) FROM projetae.utilisateurs");
+        .getPS("SELECT COUNT(*) FROM projetae.utilisateurs WHERE role='STUDENT'");
         ResultSet rs = ps.executeQuery()) {
 
       if (rs.next()) {
@@ -135,8 +135,8 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public List<UserDTO> getAllStudents() {
     List<UserDTO> users = new ArrayList<>();
-
-    try (PreparedStatement ps = myDalService.getPS("SELECT * FROM projetae.utilisateurs");
+    String sql ="SELECT * FROM projetae.utilisateurs AND projetae.utilisateurs.role='STUDENT'";
+    try (PreparedStatement ps = myDalService.getPS(sql);
         ResultSet rs = ps.executeQuery()) {
 
       while (rs.next()) {
@@ -160,7 +160,7 @@ public class UserDAOImpl implements UserDAO {
         +
         "ON projetae.utilisateurs.utilisateur_id = projetae.stages.utilisateur "
         +
-        "WHERE projetae.stages.stage_id IS NULL";
+        "WHERE projetae.stages.stage_id IS NULL AND projetae.utilisateurs.role='STUDENT'";
 
     try (PreparedStatement ps = myDalService.getPS(sql);
         ResultSet rs = ps.executeQuery()) {
