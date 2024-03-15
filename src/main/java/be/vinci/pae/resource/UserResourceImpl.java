@@ -29,7 +29,7 @@ import java.util.List;
  * Implementation of the UserDataService interface.
  */
 @Singleton
-@Path("/auths")
+@Path("/users")
 public class UserResourceImpl implements UserResource {
 
 
@@ -37,27 +37,6 @@ public class UserResourceImpl implements UserResource {
   private final ObjectMapper jsonMapper = new ObjectMapper();
   @Inject
   private UserUCC myUserUCC;
-
-  @Override
-  @POST
-  @Path("login")
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode login(JsonNode json) {
-    if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
-      throw new WebApplicationException("login or password required", Response.Status.BAD_REQUEST);
-    }
-    String email = json.get("email").asText();
-    String password = json.get("password").asText();
-    ObjectNode publicUser = myUserUCC.login(email, password);
-    if (publicUser == null) {
-      throw new WebApplicationException("Login or password incorrect",
-          Response.Status.UNAUTHORIZED);
-    }
-    return publicUser;
-  }
-
-
 
   /**
    * Retrieves global statistics.
@@ -116,38 +95,6 @@ public class UserResourceImpl implements UserResource {
     }
 
     return usersArray;
-  }
-
-
-  @Override
-  @POST
-  @Path("register")
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode register(JsonNode json) {
-    // Get and check credentials
-    if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
-      throw new WebApplicationException("All fileds are required",
-          Response.status(Response.Status.BAD_REQUEST)
-              .entity("email or password required").type("text/plain").build());
-    }
-    String name = json.get("name").asText();
-    String firstname = json.get("firstname").asText();
-    String email = json.get("email").asText();
-    String telephone = json.get("telephone").asText();
-    String password = json.get("password").asText();
-    String role = json.get("role").asText();
-
-    User user = myUserUCC.createUserAndReturn(name, firstname, email, telephone, password, role);
-
-    // Try to register
-    ObjectNode publicUser = myUserUCC.register(user);
-    if (publicUser == null) {
-      throw new WebApplicationException(Response.status(Response.Status.CONFLICT)
-          .entity("this resource already exists").type(MediaType.TEXT_PLAIN)
-          .build());
-    }
-    return publicUser;
   }
 
   /**
