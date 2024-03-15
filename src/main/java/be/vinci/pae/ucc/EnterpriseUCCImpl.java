@@ -13,7 +13,6 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
   @Inject
   private EnterpriseDAO enterpriseDAO;
 
-
   @Override
   public List<EnterpriseDTO> getAllEnterprises() {
 
@@ -22,11 +21,10 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
     return enterprises;
   }
 
-
   @Override
   public EnterpriseDTO getEnterprisesByUserId(int userId) {
 
-    //get entrprise that corresponds to user intership
+    // get entrprise that corresponds to user intership
     EnterpriseDTO enterpriseDTO = enterpriseDAO.getEnterpriseById(userId);
 
     return enterpriseDTO;

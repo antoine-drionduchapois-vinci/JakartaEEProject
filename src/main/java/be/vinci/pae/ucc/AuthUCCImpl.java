@@ -11,9 +11,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 
-
 /**
- * Implementation of the AuthUCC interface providing authentication and user management
+ * Implementation of the AuthUCC interface providing authentication and user
+ * management
  * functionality.
  */
 public class AuthUCCImpl implements AuthUCC {
@@ -28,8 +28,9 @@ public class AuthUCCImpl implements AuthUCC {
    *
    * @param email    The email of the user.
    * @param password The password of the user.
-   * @return An ObjectNode containing authentication information, including a JWT token, user ID,
-   * and email.
+   * @return An ObjectNode containing authentication information, including a JWT
+   *         token, user ID,
+   *         and email.
    */
   @Override
   public ObjectNode login(String email, String password) {
@@ -55,8 +56,9 @@ public class AuthUCCImpl implements AuthUCC {
    * Registers a new user.
    *
    * @param user1 The user to register.
-   * @return An ObjectNode containing authentication information, including a JWT token, user ID,
-   * and email.
+   * @return An ObjectNode containing authentication information, including a JWT
+   *         token, user ID,
+   *         and email.
    */
   @Override
   public ObjectNode register(User user1) {

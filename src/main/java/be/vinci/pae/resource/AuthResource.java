@@ -9,7 +9,8 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
 /**
- * Defines the RESTful resource for authentication operations including login and registration.
+ * Defines the RESTful resource for authentication operations including login
+ * and registration.
  */
 public interface AuthResource {
 
@@ -17,9 +18,9 @@ public interface AuthResource {
    * Attempts to log in a user with the provided credentials.
    *
    * @param json A JSON object containing the user's login credentials,
-   *            typically including email and password.
+   *             typically including email and password.
    * @return An ObjectNode that includes authentication details, such as a token,
-   * upon successful authentication.
+   *         upon successful authentication.
    */
   @POST
   @Path("login")
@@ -31,10 +32,10 @@ public interface AuthResource {
    * Registers a new user with the provided details.
    *
    * @param json A JSON object containing the details of the user to register.
-   *            This typically includes the user's name, email, password,
-   *            and potentially other registration-required information.
+   *             This typically includes the user's name, email, password,
+   *             and potentially other registration-required information.
    * @return An ObjectNode that includes authentication details, such as a token,
-   * upon successful registration.
+   *         upon successful registration.
    */
   @POST
   @Path("register")

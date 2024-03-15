@@ -53,7 +53,6 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
     return enterprises;
   }
 
-
   /**
    * Retrieves the entrprise that corresponds to the users internship.
    *
