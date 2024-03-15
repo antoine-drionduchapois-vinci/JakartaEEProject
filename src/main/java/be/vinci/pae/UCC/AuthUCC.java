@@ -1,4 +1,4 @@
-package be.vinci.pae.services;
+package be.vinci.pae.UCC;
 
 import be.vinci.pae.domain.User;
 import com.fasterxml.jackson.databind.node.ObjectNode;

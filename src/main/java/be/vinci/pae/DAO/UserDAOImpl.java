@@ -1,4 +1,4 @@
-package be.vinci.pae.api;
+package be.vinci.pae.DAO;
 
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserDTO;

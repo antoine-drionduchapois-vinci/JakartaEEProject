@@ -1,7 +1,7 @@
-package be.vinci.pae.services;
+package be.vinci.pae.UCC;
 
-import be.vinci.pae.api.UserDAO;
-import be.vinci.pae.api.UserDAOImpl;
+import be.vinci.pae.DAO.UserDAO;
+import be.vinci.pae.DAO.UserDAOImpl;
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.User.Role;
 import be.vinci.pae.domain.UserImpl;

@@ -1,4 +1,4 @@
-package be.vinci.pae.api;
+package be.vinci.pae.DAO;
 
 import be.vinci.pae.domain.Contact;
 import be.vinci.pae.domain.ContactImpl;

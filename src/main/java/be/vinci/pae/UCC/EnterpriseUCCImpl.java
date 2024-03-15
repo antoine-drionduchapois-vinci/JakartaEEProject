@@ -1,7 +1,7 @@
-package be.vinci.pae.services;
+package be.vinci.pae.UCC;
 
-import be.vinci.pae.api.EnterpriseDAO;
-import be.vinci.pae.api.EnterpriseDAOImpl;
+import be.vinci.pae.DAO.EnterpriseDAO;
+import be.vinci.pae.DAO.EnterpriseDAOImpl;
 import be.vinci.pae.domain.Enterprise;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.algorithms.Algorithm;

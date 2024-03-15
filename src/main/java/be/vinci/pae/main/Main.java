@@ -1,6 +1,6 @@
 package be.vinci.pae.main;
 
-import be.vinci.pae.api.filters.CorsFilter;
+import be.vinci.pae.resource.filters.CorsFilter;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.utils.DALService;
@@ -43,7 +43,7 @@ public class Main {
     // create a resource config that scans for JAX-RS resources and providers
     // in vinci.be package
 
-    final ResourceConfig rc = new ResourceConfig().packages("be.vinci.pae.services")
+    final ResourceConfig rc = new ResourceConfig().packages("be.vinci.pae.resource")
         .register(ApplicationBinder.class)
         .register(WebExceptionMapper.class)
         .register(CorsFilter.class);
