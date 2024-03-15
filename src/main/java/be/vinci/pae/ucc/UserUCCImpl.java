@@ -1,8 +1,8 @@
 package be.vinci.pae.ucc;
 
 import be.vinci.pae.dao.UserDAO;
-import be.vinci.pae.dao.UserDAOImpl;
 import be.vinci.pae.domain.UserDTO;
+import jakarta.inject.Inject;
 import java.util.List;
 
 
@@ -12,17 +12,13 @@ import java.util.List;
 
 public class UserUCCImpl implements UserUCC {
 
-
-
-  private UserDAO myUserDAO = new UserDAOImpl();
-
-
+  @Inject
+  private UserDAO myUserDAO;
+  
   @Override
   public int getGlobalStats() {
 
     int studentsWithoutInternship = myUserDAO.getStudentsWithoutStage();
-
-
 
     return studentsWithoutInternship;
   }
@@ -33,7 +29,6 @@ public class UserUCCImpl implements UserUCC {
 
     // Récupérer la liste complète des utilisateurs depuis votre DAO
     List<UserDTO> userList = myUserDAO.getAllStudents();
-
 
     return userList;
   }

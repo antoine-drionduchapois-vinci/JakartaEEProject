@@ -3,7 +3,7 @@ package be.vinci.pae.domain;
 /**
  * Implementation of the Enterprise interface representing an enterprise entity.
  */
-public class EnterpriseImpl implements Enterprise {
+public class EnterpriseDTOImpl implements EnterpriseDTO {
 
   private int entrepriseId;
   private String nom;
@@ -24,7 +24,7 @@ public class EnterpriseImpl implements Enterprise {
    * @param isBlacklist    The blacklist status of the enterprise.
    * @param avisProfesseur The professor's opinion about the enterprise.
    */
-  public EnterpriseImpl(int entrepriseId, String nom, String appellation,
+  public EnterpriseDTOImpl(int entrepriseId, String nom, String appellation,
       String adresse, String telephone, boolean isBlacklist, String avisProfesseur) {
     this.entrepriseId = entrepriseId;
     this.nom = nom;

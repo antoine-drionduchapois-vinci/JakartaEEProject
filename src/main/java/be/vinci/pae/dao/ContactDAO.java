@@ -1,17 +1,22 @@
 package be.vinci.pae.dao;
 
-import be.vinci.pae.domain.Contact;
+import be.vinci.pae.domain.ContactDTO;
 import java.util.List;
 
 /**
- * Interface defining the contract for contacts Data Access Object.
+ * The ContactDAO interface provides methods for accessing contact information
+ * from the database.
  */
 public interface ContactDAO {
 
   /**
-   * Retrieves all contacts that the user has.
+   * Retrieves a list of contact information for all users associated with the
+   * specified ID.
    *
-   * @return A list of all contacts
+   * @param id The ID of the user for whom to retrieve contact information.
+   * @return A List containing ContactDTO objects representing the contact
+   *         information of users
+   *         associated with the specified ID.
    */
-  List<Contact> getAllUsersContact(int id);
+  List<ContactDTO> getAllUsersContact(int id);
 }

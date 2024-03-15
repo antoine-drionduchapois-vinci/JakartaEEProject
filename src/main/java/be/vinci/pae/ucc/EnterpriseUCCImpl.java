@@ -1,36 +1,32 @@
 package be.vinci.pae.ucc;
 
 import be.vinci.pae.dao.EnterpriseDAO;
-import be.vinci.pae.dao.EnterpriseDAOImpl;
-import be.vinci.pae.domain.Enterprise;
+import be.vinci.pae.domain.EnterpriseDTO;
+import jakarta.inject.Inject;
 import java.util.List;
 
 /**
  * Implementation of the Enterprise interface.
  */
-
 public class EnterpriseUCCImpl implements EnterpriseUCC {
 
-
-  private EnterpriseDAO enterpriseDAO = new EnterpriseDAOImpl();
-
+  @Inject
+  private EnterpriseDAO enterpriseDAO;
 
   @Override
-  public List<Enterprise> getAllEnterprises() {
+  public List<EnterpriseDTO> getAllEnterprises() {
 
-    List<Enterprise> enterprises = enterpriseDAO.getAllEnterprises();
+    List<EnterpriseDTO> enterprises = enterpriseDAO.getAllEnterprises();
 
     return enterprises;
   }
 
-
   @Override
-  public Enterprise getEnterprisesByUserId(int userId) {
+  public EnterpriseDTO getEnterprisesByUserId(int userId) {
 
-    //get entrprise that corresponds to user intership
-    Enterprise enterprise = enterpriseDAO.getEnterpriseById(userId);
+    // get entrprise that corresponds to user intership
+    EnterpriseDTO enterpriseDTO = enterpriseDAO.getEnterpriseById(userId);
 
-
-    return enterprise;
+    return enterpriseDTO;
   }
 }

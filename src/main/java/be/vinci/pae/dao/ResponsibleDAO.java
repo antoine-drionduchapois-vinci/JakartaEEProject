@@ -1,17 +1,23 @@
 package be.vinci.pae.dao;
 
-import be.vinci.pae.domain.Responsible;
+import be.vinci.pae.domain.ResponsibleDTO;
 
 /**
- * Represents a Data Access Object (DAO) for Responsible entities.
+ * The ResponsibleDAO interface provides methods for accessing responsible
+ * information from the
+ * database.
  */
 public interface ResponsibleDAO {
 
   /**
-   * Retrieves the responible of the enterprise.
+   * Retrieves the responsible information associated with the enterprise ID.
    *
-   * @param id the ID of the enterprise
-   * @return the user corresponding to the ID, or null if not found
+   * @param id The ID of the enterprise for which to retrieve the responsible
+   *           information.
+   * @return A ResponsibleDTO object representing the responsible information
+   *         associated with the
+   *         enterprise ID, or null if no responsible information is found for the
+   *         given enterprise ID.
    */
-  Responsible getResponsibleByEnterpriseId(int id);
+  ResponsibleDTO getResponsibleByEnterpriseId(int id);
 }

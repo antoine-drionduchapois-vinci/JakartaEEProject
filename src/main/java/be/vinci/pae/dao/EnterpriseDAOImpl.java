@@ -1,9 +1,11 @@
 package be.vinci.pae.dao;
 
-import be.vinci.pae.domain.Enterprise;
-import be.vinci.pae.domain.EnterpriseImpl;
+import be.vinci.pae.domain.DomainFactory;
+import be.vinci.pae.domain.EnterpriseDTO;
+import be.vinci.pae.domain.EnterpriseDTOImpl;
 import be.vinci.pae.utils.DALService;
 import be.vinci.pae.utils.DALServiceImpl;
+import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,20 +13,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Implementation of the Enterprise Data Access Object.
+ * Represents the implementation of the EnterpriseDAO interface.
  */
 public class EnterpriseDAOImpl implements EnterpriseDAO {
 
   private DALService myDalService = new DALServiceImpl();
 
-  /**
-   * Retrieves all enterprises from the database.
-   *
-   * @return A list of all enterprises.
-   */
+  @Inject
+  private DomainFactory myDomainFactory;
+
   @Override
-  public List<Enterprise> getAllEnterprises() {
-    List<Enterprise> enterprises = new ArrayList<>();
+  public List<EnterpriseDTO> getAllEnterprises() {
+    List<EnterpriseDTO> enterprises = new ArrayList<>();
 
     try (PreparedStatement ps = myDalService
         .getPS("SELECT * FROM projetae.entreprises");
@@ -40,9 +40,10 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
         String avisProfesseur = rs.getString("avis_professeur");
 
         // Create a new EnterpriseImpl object and add it to the list
-        Enterprise enterprise = new EnterpriseImpl(entrepriseId, nom, appellation, adresse,
+        EnterpriseDTO enterpriseDTO = myDomainFactory.getEnterpriseDTO(entrepriseId, nom,
+            appellation, adresse,
             telephone, isBlacklist, avisProfesseur);
-        enterprises.add(enterprise);
+        enterprises.add(enterpriseDTO);
       }
     } catch (SQLException e) {
       // Print the stack trace if an SQLException occurs
@@ -52,14 +53,13 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
     return enterprises;
   }
 
-
   /**
    * Retrieves the entrprise that corresponds to the users internship.
    *
    * @return enterprises.
    */
   @Override
-  public Enterprise getEnterpriseById(int id) {
+  public EnterpriseDTO getEnterpriseById(int id) {
     PreparedStatement ps = myDalService
         .getPS(
             "SELECT * FROM projetae.entreprises e,"
@@ -80,14 +80,15 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
           boolean isBlacklist = rs.getBoolean("is_blacklist");
           String avisProfesseur = rs.getString("avis_professeur");
 
-          Enterprise enterprise = new EnterpriseImpl(entrepriseId, nom, appellation, adresse,
+          EnterpriseDTO enterpriseDTO = new EnterpriseDTOImpl(entrepriseId, nom, appellation,
+              adresse,
               telephone, isBlacklist, avisProfesseur);
-          if (enterprise == null) {
+          if (enterpriseDTO == null) {
             System.out.println("Entreprise is NULL");
           }
           System.out.println("entreprise : ");
-          System.out.println(enterprise);
-          return enterprise;
+          System.out.println(enterpriseDTO);
+          return enterpriseDTO;
         } else {
           // Handle the case where no enterprise is found for the user
           System.out.println("RS.next == NULL");

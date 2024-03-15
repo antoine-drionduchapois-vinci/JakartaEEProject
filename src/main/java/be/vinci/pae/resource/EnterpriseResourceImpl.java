@@ -1,6 +1,6 @@
 package be.vinci.pae.resource;
 
-import be.vinci.pae.domain.Enterprise;
+import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
@@ -48,18 +48,18 @@ public class EnterpriseResourceImpl implements EnterpriseResource {
 
     try {
       // Récupérer toutes les entreprises depuis votre DAO
-      List<Enterprise> enterprises = myEnterpriseUCC.getAllEnterprises();
+      List<EnterpriseDTO> enterprises = myEnterpriseUCC.getAllEnterprises();
 
       // Parcourir chaque entreprise et les ajouter à la réponse
-      for (Enterprise enterprise : enterprises) {
+      for (EnterpriseDTO enterpriseDTO : enterprises) {
         ObjectNode enterpriseNode = mapper.createObjectNode();
-        enterpriseNode.put("entreprise_id", enterprise.getEntrepriseId());
-        enterpriseNode.put("nom", enterprise.getNom());
-        enterpriseNode.put("appellation", enterprise.getAppellation());
-        enterpriseNode.put("adresse", enterprise.getAdresse());
-        enterpriseNode.put("telephone", enterprise.getTelephone());
-        enterpriseNode.put("is_blacklist", enterprise.isBlacklist());
-        enterpriseNode.put("avis_professeur", enterprise.getAvisProfesseur());
+        enterpriseNode.put("entreprise_id", enterpriseDTO.getEntrepriseId());
+        enterpriseNode.put("nom", enterpriseDTO.getNom());
+        enterpriseNode.put("appellation", enterpriseDTO.getAppellation());
+        enterpriseNode.put("adresse", enterpriseDTO.getAdresse());
+        enterpriseNode.put("telephone", enterpriseDTO.getTelephone());
+        enterpriseNode.put("is_blacklist", enterpriseDTO.isBlacklist());
+        enterpriseNode.put("avis_professeur", enterpriseDTO.getAvisProfesseur());
         enterprisesArray.add(enterpriseNode);
       }
 
@@ -101,17 +101,17 @@ public class EnterpriseResourceImpl implements EnterpriseResource {
       }
       System.out.println("user id : " + userId);
       //get entrprise that corresponds to user intership
-      Enterprise enterprise = myEnterpriseUCC.getEnterprisesByUserId(userId);
+      EnterpriseDTO enterpriseDTO = myEnterpriseUCC.getEnterprisesByUserId(userId);
 
       ObjectMapper mapper = new ObjectMapper();
       ObjectNode enterpriseNode = mapper.createObjectNode();
-      enterpriseNode.put("entreprise_id", enterprise.getEntrepriseId());
-      enterpriseNode.put("nom", enterprise.getNom());
-      enterpriseNode.put("appellation", enterprise.getAppellation());
-      enterpriseNode.put("adresse", enterprise.getAdresse());
-      enterpriseNode.put("telephone", enterprise.getTelephone());
-      enterpriseNode.put("is_blacklist", enterprise.isBlacklist());
-      enterpriseNode.put("avis_professeur", enterprise.getAvisProfesseur());
+      enterpriseNode.put("entreprise_id", enterpriseDTO.getEntrepriseId());
+      enterpriseNode.put("nom", enterpriseDTO.getNom());
+      enterpriseNode.put("appellation", enterpriseDTO.getAppellation());
+      enterpriseNode.put("adresse", enterpriseDTO.getAdresse());
+      enterpriseNode.put("telephone", enterpriseDTO.getTelephone());
+      enterpriseNode.put("is_blacklist", enterpriseDTO.isBlacklist());
+      enterpriseNode.put("avis_professeur", enterpriseDTO.getAvisProfesseur());
 
       return enterpriseNode;
     } catch (Exception e) {

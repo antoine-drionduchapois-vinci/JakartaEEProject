@@ -1,19 +1,29 @@
 package be.vinci.pae.dao;
 
-import be.vinci.pae.domain.Enterprise;
+import be.vinci.pae.domain.EnterpriseDTO;
 import java.util.List;
 
 /**
- * Interface defining the contract for Enterprise Data Access Object.
+ * The EnterpriseDAO interface provides methods for accessing enterprise
+ * information from the database.
  */
 public interface EnterpriseDAO {
 
   /**
-   * Retrieves all enterprises from the database.
+   * Retrieves a list of all enterprises stored in the database.
    *
-   * @return A list of all enterprises.
+   * @return A List containing EnterpriseDTO objects representing all enterprises
+   *         stored in the database.
    */
-  List<Enterprise> getAllEnterprises();
+  List<EnterpriseDTO> getAllEnterprises();
 
-  Enterprise getEnterpriseById(int id);
+  /**
+   * Retrieves the enterprise information associated with the specified ID.
+   *
+   * @param id The ID of the enterprise to retrieve information for.
+   * @return An EnterpriseDTO object representing the enterprise information
+   *         associated with the
+   *         specified ID, or null if no enterprise with the given ID is found.
+   */
+  EnterpriseDTO getEnterpriseById(int id);
 }
