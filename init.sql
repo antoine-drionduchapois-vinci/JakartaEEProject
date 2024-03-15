@@ -56,3 +56,19 @@ CREATE TABLE projetae.stages(
 INSERT INTO projetae.utilisateurs(nom, prenom, email, telephone, mdp, annee, role) VALUES
                ('Admin','Francis','admin.francis@vinci.be','05050504','$2a$10$QPhIrlyraGQ30NYZupaD8eZ/nuJYvVD5nhradLQzN6dTtxq3COXk.','1995-1996','administratif');
 --password : admin
+
+-- Insert an enterprise
+INSERT INTO projetae.entreprises(nom, appellation, adresse, telephone, is_blacklist, avis_professeur) VALUES
+    ('Tech Innovations', 'TechInnov', '123 Innovation Drive, Tech City', '123456789', FALSE, 'Highly recommended for students.');
+
+-- Insert a responsible (from the enterprise)
+INSERT INTO projetae.responsables(nom, prenom, telephone, email, entreprise) VALUES
+    ('Responsible', 'Jordan', '111222333', 'jordan.responsible@techinnov.com', 1);
+
+-- Insert a contact (related to the internship opportunity)
+INSERT INTO projetae.contacts(description, etat, motif_refus, annee, utilisateur, entreprise) VALUES
+    ('Initial Meeting', 'Confirmed', NULL, '2023-2024', 1, 1);
+
+-- Insert a stage (internship)
+INSERT INTO projetae.stages(sujet, annee, utilisateur, entreprise, responsable, contact) VALUES
+    ('Developing an Innovative Solution', '2023-2024', 1, 1, 1, 1);

@@ -14,4 +14,6 @@ public interface EnterpriseDAO {
    * @return A list of all enterprises.
    */
   List<Enterprise> getAllEnterprises();
+
+  Enterprise getEnterpriseById(int id);
 }
