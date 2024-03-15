@@ -29,8 +29,8 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
   @Override
   public Enterprise getEnterprisesByUserId(int userId) {
 
-      //get entrprise that corresponds to user intership
-      Enterprise enterprise = enterpriseDAO.getEnterpriseById(userId);
+    //get entrprise that corresponds to user intership
+    Enterprise enterprise = enterpriseDAO.getEnterpriseById(userId);
 
 
     return enterprise;

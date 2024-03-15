@@ -45,6 +45,7 @@ public interface UserDAO {
    * @return the number of students without a stage
    */
   int getStudentsWithoutStage();
+
   /**
    * Adds a new user to the database.
    *

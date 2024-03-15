@@ -62,7 +62,9 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
   public Enterprise getEnterpriseById(int id) {
     PreparedStatement ps = myDalService
         .getPS(
-            "SELECT * FROM projetae.entreprises e, projetae.stages s WHERE s.entreprise = e.entreprise_id AND s.utilisateur = ?");
+            "SELECT * FROM projetae.entreprises e,"
+                + " projetae.stages s WHERE s.entreprise = e.entreprise_id"
+                + " AND s.utilisateur = ?");
     try {
       ps.setInt(1, id);
       ps.execute();
