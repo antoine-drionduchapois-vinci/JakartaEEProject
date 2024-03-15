@@ -1,7 +1,7 @@
 package be.vinci.pae.resource;
 
 import be.vinci.pae.domain.User;
-import be.vinci.pae.UCC.AuthUCC;
+import be.vinci.pae.ucc.AuthUCC;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -17,20 +17,24 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-
 /**
- * Implementation of the UserDataService interface.
+ * Implementation of the AuthResource interface providing authentication endpoints.
  */
 @Singleton
 @Path("/auths")
 public class AuthResourceImpl implements AuthResource {
-
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
   @Inject
   private AuthUCC myAuthUCC;
 
+  /**
+   * Endpoint for user login.
+   *
+   * @param json A JSON object containing user login credentials (email and password).
+   * @return An ObjectNode containing authentication information, such as a JWT token.
+   */
   @Override
   @POST
   @Path("login")
@@ -38,25 +42,23 @@ public class AuthResourceImpl implements AuthResource {
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode login(JsonNode json) {
     if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
-      throw new WebApplicationException("login or password required", Response.Status.BAD_REQUEST);
+      throw new WebApplicationException("Login or password required", Response.Status.BAD_REQUEST);
     }
     String email = json.get("email").asText();
     String password = json.get("password").asText();
     ObjectNode publicUser = myAuthUCC.login(email, password);
     if (publicUser == null) {
-      throw new WebApplicationException("Login or password incorrect",
-          Response.Status.UNAUTHORIZED);
+      throw new WebApplicationException("Login or password incorrect", Response.Status.UNAUTHORIZED);
     }
     return publicUser;
   }
 
-
-
-
-
-
-
-
+  /**
+   * Endpoint for user registration.
+   *
+   * @param json A JSON object containing user registration information.
+   * @return An ObjectNode containing authentication information, such as a JWT token.
+   */
   @Override
   @POST
   @Path("register")
@@ -65,9 +67,8 @@ public class AuthResourceImpl implements AuthResource {
   public ObjectNode register(JsonNode json) {
     // Get and check credentials
     if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
-      throw new WebApplicationException("All fileds are required",
-          Response.status(Response.Status.BAD_REQUEST)
-              .entity("email or password required").type("text/plain").build());
+      throw new WebApplicationException("All fields are required", Response.status(Response.Status.BAD_REQUEST)
+          .entity("Email or password required").type("text/plain").build());
     }
     String name = json.get("name").asText();
     String firstname = json.get("firstname").asText();
@@ -82,13 +83,8 @@ public class AuthResourceImpl implements AuthResource {
     ObjectNode publicUser = myAuthUCC.register(user);
     if (publicUser == null) {
       throw new WebApplicationException(Response.status(Response.Status.CONFLICT)
-          .entity("this resource already exists").type(MediaType.TEXT_PLAIN)
-          .build());
+          .entity("This resource already exists").type(MediaType.TEXT_PLAIN).build());
     }
     return publicUser;
   }
-
-
-
-
 }

@@ -2,12 +2,12 @@ package be.vinci.pae.utils;
 
 import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.domain.UserImpl;
-import be.vinci.pae.UCC.AuthUCC;
-import be.vinci.pae.UCC.AuthUCCImpl;
-import be.vinci.pae.UCC.EnterpriseUCC;
-import be.vinci.pae.UCC.EnterpriseUCCImpl;
-import be.vinci.pae.UCC.UserUCC;
-import be.vinci.pae.UCC.UserUCCImpl;
+import be.vinci.pae.ucc.AuthUCC;
+import be.vinci.pae.ucc.AuthUCCImpl;
+import be.vinci.pae.ucc.EnterpriseUCC;
+import be.vinci.pae.ucc.EnterpriseUCCImpl;
+import be.vinci.pae.ucc.UserUCC;
+import be.vinci.pae.ucc.UserUCCImpl;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.ext.Provider;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;

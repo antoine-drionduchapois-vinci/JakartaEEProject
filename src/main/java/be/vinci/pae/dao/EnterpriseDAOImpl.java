@@ -1,4 +1,4 @@
-package be.vinci.pae.DAO;
+package be.vinci.pae.dao;
 
 import be.vinci.pae.domain.Enterprise;
 import be.vinci.pae.domain.EnterpriseImpl;

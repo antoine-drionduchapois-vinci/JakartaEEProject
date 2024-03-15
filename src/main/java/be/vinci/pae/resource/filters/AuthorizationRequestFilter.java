@@ -1,7 +1,7 @@
 package be.vinci.pae.resource.filters;
 
-import be.vinci.pae.DAO.UserDAO;
-import be.vinci.pae.DAO.UserDAOImpl;
+import be.vinci.pae.dao.UserDAO;
+import be.vinci.pae.dao.UserDAOImpl;
 import be.vinci.pae.domain.User;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;

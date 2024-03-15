@@ -1,7 +1,7 @@
 package be.vinci.pae.resource;
 
 import be.vinci.pae.domain.UserDTO;
-import be.vinci.pae.UCC.UserUCC;
+import be.vinci.pae.ucc.UserUCC;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

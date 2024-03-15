@@ -1,7 +1,7 @@
 package be.vinci.pae.resource;
 
 import be.vinci.pae.domain.Enterprise;
-import be.vinci.pae.UCC.EnterpriseUCC;
+import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -32,6 +32,11 @@ public class EnterpriseResourceImpl implements EnterpriseResource {
   @Inject
   private EnterpriseUCC myEnterpriseUCC;
 
+  /**
+   * Retrieves all enterprise.
+   *
+   * @return an ObjectNode containing all enterprises
+   */
   @Override
   @GET
   @Path("enterprises")

@@ -1,7 +1,10 @@
-package be.vinci.pae.UCC;
+package be.vinci.pae.ucc;
 
 import be.vinci.pae.domain.UserDTO;
 import java.util.List;
+/**
+ * Interface representing userUCC.
+ */
 
 public interface UserUCC {
 
