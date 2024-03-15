@@ -1,7 +1,7 @@
 package be.vinci.pae.domain;
 
 /**
- * Implementation of the Contact interface representing a contact entity.
+ * Implementation of the ContactDTO interface representing a contact entity.
  */
 public class ContactImpl implements ContactDTO {
 
@@ -13,6 +13,9 @@ public class ContactImpl implements ContactDTO {
   private int user;
   private int entreprise;
 
+  /**
+   * Constructs a new ContactImpl object with default values.
+   */
   public ContactImpl() {
   }
 
@@ -43,6 +46,11 @@ public class ContactImpl implements ContactDTO {
     return contactId;
   }
 
+  /**
+   * Sets the ID of the contact.
+   *
+   * @param contactId The ID of the contact.
+   */
   public void setContactId(int contactId) {
     this.contactId = contactId;
   }
@@ -52,6 +60,11 @@ public class ContactImpl implements ContactDTO {
     return description;
   }
 
+  /**
+   * Sets the description of the contact.
+   *
+   * @param description The description of the contact.
+   */
   public void setDescription(String description) {
     this.description = description;
   }
@@ -61,6 +74,11 @@ public class ContactImpl implements ContactDTO {
     return state;
   }
 
+  /**
+   * Sets the state of the contact.
+   *
+   * @param state The state of the contact.
+   */
   public void setState(String state) {
     this.state = state;
   }
@@ -70,6 +88,11 @@ public class ContactImpl implements ContactDTO {
     return reasonRefusal;
   }
 
+  /**
+   * Sets the reason for refusal of the contact.
+   *
+   * @param reasonRefusal The reason for refusal of the contact.
+   */
   public void setReasonRefusal(String reasonRefusal) {
     this.reasonRefusal = reasonRefusal;
   }
@@ -79,6 +102,11 @@ public class ContactImpl implements ContactDTO {
     return year;
   }
 
+  /**
+   * Sets the year of the contact.
+   *
+   * @param year The year of the contact.
+   */
   public void setYear(String year) {
     this.year = year;
   }
@@ -88,6 +116,11 @@ public class ContactImpl implements ContactDTO {
     return user;
   }
 
+  /**
+   * Sets the ID of the user associated with the contact.
+   *
+   * @param user The ID of the user associated with the contact.
+   */
   public void setUser(int user) {
     this.user = user;
   }
@@ -97,6 +130,11 @@ public class ContactImpl implements ContactDTO {
     return entreprise;
   }
 
+  /**
+   * Sets the ID of the enterprise associated with the contact.
+   *
+   * @param entreprise The ID of the enterprise associated with the contact.
+   */
   public void setEntreprise(int entreprise) {
     this.entreprise = entreprise;
   }
