@@ -37,7 +37,7 @@ const fetchDataAndRenderChart = async () => {
     },
   };
   try {
-    const response = await fetch('http://localhost:8080/auths/stats', options);
+    const response = await fetch('http://localhost:8080/users/stats', options);
     if (!response.ok) {
       throw new Error('Erreur lors de la récupération des données');
     }
@@ -59,7 +59,7 @@ const fetchUsers = async () => {
   };
 
   try {
-    const response = await fetch('http://localhost:8080/auths/All', options);
+    const response = await fetch('http://localhost:8080/users/All', options);
     if (!response.ok) {
       throw new Error('Erreur lors de la récupération des données des utilisateurs');
     }
@@ -99,47 +99,72 @@ const renderChart = (chartContainer, noStage, total) => {
   });
 };
 
-// Fonction pour rendre le tableau des entreprises
-const renderEnterpriseTable = (tableContainer, enterprises) => {
-  const table = document.createElement('table');
-  table.className = 'table is-fullwidth';
-  tableContainer.appendChild(table);
-
-  // Créer la première ligne pour les en-têtes de colonne
-  const thead = document.createElement('thead');
-  const headerRow = document.createElement('tr');
-  const headers = ['Nom', 'Appellation', 'Adresse', 'Téléphone', 'Blacklist', 'Avis Professeur']; // Liste des en-têtes
-
-  // Ajouter chaque en-tête à la première ligne
-  headers.forEach((headerText) => {
-    const header = document.createElement('th');
-    header.textContent = headerText;
-    headerRow.appendChild(header);
-  });
-
-  thead.appendChild(headerRow);
-  table.appendChild(thead);
-
-  // Créer le corps du tableau
-  const tbody = document.createElement('tbody');
-  table.appendChild(tbody);
-
-  enterprises.forEach((enterprise) => {
+// Fonction pour mettre à jour le tableau avec les entreprises fournies
+const updateTable = (tableBody, list) => {
+  const tbody = tableBody; // Nouvelle variable pour stocker la référence à tableBody
+  tbody.innerHTML = ''; // Effacer le contenu actuel du tableau
+  list.forEach((e) => {
     const row = document.createElement('tr');
     row.addEventListener('click', () => {
-      // Redirection vers la page de détails de l'entreprise avec l'ID comme paramètre de requête
-      window.location.href = `details-page.html?id=${enterprise.entreprise_id}`;
+      window.location.href = `details-page.html?id=${e.entreprise_id !== undefined ? e.entreprise_id : e.utilisateur_id}`;
     });
-    const enterpriseValues = Object.values(enterprise).slice(1); // Exclure le premier élément (ID)
-    // Ajouter chaque valeur de l'entreprise dans une cellule de la ligne
-    enterpriseValues.forEach((value) => {
+    const values = Object.values(e).slice(1);
+    values.forEach((value) => {
       const cell = document.createElement('td');
       cell.textContent = value;
       row.appendChild(cell);
     });
-
-    tbody.appendChild(row);
+    tableBody.appendChild(row);
   });
+};
+
+// Fonction pour rendre le tableau des entreprises avec recherche et tri
+const renderEnterpriseTable = (tableContainer, enterprises) => {
+  // Créer le tableau
+  const table = document.createElement('table');
+  table.className = 'table is-fullwidth';
+  tableContainer.appendChild(table);
+  // Créer le corps du tableau
+  const tbody = document.createElement('tbody');
+  // Fonction pour trier les colonnes
+  const sortColumn = (columnName) => {
+    const lowerColumnName = columnName.toLowerCase();
+    enterprises.sort((a, b) => {
+      // Comparaison des valeurs des colonnes
+      const valueA = a[lowerColumnName].toLowerCase();
+      const valueB = b[lowerColumnName].toLowerCase();
+  
+      // Utilisation de localeCompare pour le tri alphabétique
+      return valueA.localeCompare(valueB);
+    });
+    console.log("update T");
+    // Mettre à jour le tableau avec les entreprises triées
+    updateTable(tbody, enterprises);
+  };
+
+  // Créer la première ligne pour les en-têtes de colonne
+  const thead = document.createElement('thead');
+  const headerRow = document.createElement('tr');
+  const headers = ['Nom', 'Appellation', 'Adresse', 'Téléphone', 'Blacklist', 'Avis Professeur'];
+
+  // Ajouter chaque en-tête à la première ligne avec possibilité de tri
+  headers.forEach((headerText) => {
+    const header = document.createElement('th');
+    header.textContent = headerText;
+    header.addEventListener('click', () => {
+      sortColumn(headerText); // Fonction pour trier les colonnes
+    });
+    headerRow.appendChild(header);
+  });
+
+  // Ajouter la ligne d'en-tête au tableau
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+  // ajouter le corp au tableau
+  table.appendChild(tbody);
+
+  // Afficher le tableau avec toutes les entreprises au chargement initial
+  updateTable(tbody, enterprises);
 };
 
 const renderUserTable = (tableUserContainer, users) => {
@@ -150,7 +175,7 @@ const renderUserTable = (tableUserContainer, users) => {
   // Créer la première ligne pour les en-têtes de colonne
   const thead = document.createElement('thead');
   const headerRow = document.createElement('tr');
-  const headers = ['ID', 'Nom', 'Prénom', 'Email', 'Rôle', 'Année']; // Liste des en-têtes
+  const headers = ['Nom', 'Prénom', 'Email', 'Rôle', 'Année']; // Liste des en-têtes
 
   // Ajouter chaque en-tête à la première ligne
   headers.forEach((headerText) => {
@@ -166,24 +191,7 @@ const renderUserTable = (tableUserContainer, users) => {
   const tbody = document.createElement('tbody');
   table.appendChild(tbody);
 
-  // Convertir l'ObjectNode en objet JavaScript
-  users.forEach((user) => {
-    const userData = user;
-    const row = document.createElement('tr');
-    row.addEventListener('click', () => {
-      // Redirection vers la page de détails de l'utilisateur avec l'ID comme paramètre de requête
-      window.location.href = `user-details-page.html?id=${userData.userId}`;
-    });
-
-    // Ajouter chaque valeur de l'utilisateur dans une cellule de la ligne
-    Object.values(userData).forEach((value) => {
-      const cell = document.createElement('td');
-      cell.textContent = value;
-      row.appendChild(cell);
-    });
-
-    tbody.appendChild(row);
-  });
+  updateTable(tbody,users);
 };
 
 // Fonction pour rendre le tableau de bord de l'enseignant
