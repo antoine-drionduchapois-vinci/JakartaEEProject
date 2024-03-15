@@ -45,13 +45,12 @@ public class UserResourceImpl implements UserResource {
   @Path("stats")
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getGlobalStats() {
-    int totalStudents = 1;
+
     int studentsWithoutInternship = myUserUCC.getGlobalStats();
 
     // Create a JSON object to store the global statistics
     ObjectMapper mapper = new ObjectMapper();
     ObjectNode stats = mapper.createObjectNode();
-    stats.put("total", totalStudents);
     stats.put("noStage", studentsWithoutInternship);
 
     return stats;
