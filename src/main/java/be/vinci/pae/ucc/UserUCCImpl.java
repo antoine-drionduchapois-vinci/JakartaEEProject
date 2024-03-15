@@ -16,8 +16,7 @@ import java.util.List;
 public class UserUCCImpl implements UserUCC {
 
 
-  private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
-  private final ObjectMapper jsonMapper = new ObjectMapper();
+
   private UserDAO myUserDAO = new UserDAOImpl();
 
 
@@ -35,8 +34,8 @@ public class UserUCCImpl implements UserUCC {
   @Override
   public List<UserDTO> getUsersAsJson() {
 
-      // Récupérer la liste complète des utilisateurs depuis votre DAO
-      List<UserDTO> userList = myUserDAO.getAllStudents();
+    // Récupérer la liste complète des utilisateurs depuis votre DAO
+    List<UserDTO> userList = myUserDAO.getAllStudents();
 
 
     return userList;
@@ -45,9 +44,7 @@ public class UserUCCImpl implements UserUCC {
   @Override
   public UserDTO getUsersByIdAsJson(int userId) {
 
-
-      UserDTO user = myUserDAO.getOneByID(userId);
-
+    UserDTO user = myUserDAO.getOneByID(userId);
 
     return user;
   }

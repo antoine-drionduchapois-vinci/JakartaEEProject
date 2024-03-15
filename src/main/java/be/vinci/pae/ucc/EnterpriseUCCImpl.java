@@ -13,7 +13,7 @@ import java.util.List;
 
 public class EnterpriseUCCImpl implements EnterpriseUCC {
 
-  private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
+
   private EnterpriseDAO enterpriseDAO = new EnterpriseDAOImpl();
 
 
