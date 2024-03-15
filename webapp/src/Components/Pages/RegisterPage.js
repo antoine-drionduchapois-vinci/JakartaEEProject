@@ -74,7 +74,10 @@ const RegisterPage = () => {
         <div class="field is-flex justify-content-center">
         <div class="control">
           <button class="button is-dark is-rounded" id="registerButton">S'inscrire</button>
-        </div>
+        </div>  
+      </div>
+      <div class="field is-flex justify-content-center">
+        <p>Vous avez déjà un compte ? <a id="loginLink" style="color: blue; cursor: pointer;">Se connecter !</a></p>
       </div>
       </form>
     </div>
@@ -97,7 +100,8 @@ const RegisterPage = () => {
         additionalOptions.style.display = 'none';
         roleSelect.removeAttribute('required');
     }
-});
+  });
+  document.getElementById('loginLink').addEventListener("click", () => Navigate('/login'));
 
   // Adding event listener for form submission
   document.getElementById('registerButton').addEventListener('click', handleSubmit);
