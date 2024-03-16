@@ -46,11 +46,7 @@ public class ContactImpl implements ContactDTO {
     return contactId;
   }
 
-  /**
-   * Sets the ID of the contact.
-   *
-   * @param contactId The ID of the contact.
-   */
+  @Override
   public void setContactId(int contactId) {
     this.contactId = contactId;
   }
@@ -59,12 +55,8 @@ public class ContactImpl implements ContactDTO {
   public String getDescription() {
     return description;
   }
-
-  /**
-   * Sets the description of the contact.
-   *
-   * @param description The description of the contact.
-   */
+  
+  @Override
   public void setDescription(String description) {
     this.description = description;
   }
@@ -74,11 +66,7 @@ public class ContactImpl implements ContactDTO {
     return state;
   }
 
-  /**
-   * Sets the state of the contact.
-   *
-   * @param state The state of the contact.
-   */
+  @Override
   public void setState(String state) {
     this.state = state;
   }
@@ -88,11 +76,7 @@ public class ContactImpl implements ContactDTO {
     return reasonRefusal;
   }
 
-  /**
-   * Sets the reason for refusal of the contact.
-   *
-   * @param reasonRefusal The reason for refusal of the contact.
-   */
+  @Override
   public void setReasonRefusal(String reasonRefusal) {
     this.reasonRefusal = reasonRefusal;
   }
@@ -102,11 +86,7 @@ public class ContactImpl implements ContactDTO {
     return year;
   }
 
-  /**
-   * Sets the year of the contact.
-   *
-   * @param year The year of the contact.
-   */
+  @Override
   public void setYear(String year) {
     this.year = year;
   }
@@ -116,11 +96,7 @@ public class ContactImpl implements ContactDTO {
     return user;
   }
 
-  /**
-   * Sets the ID of the user associated with the contact.
-   *
-   * @param user The ID of the user associated with the contact.
-   */
+  @Override
   public void setUser(int user) {
     this.user = user;
   }
@@ -130,11 +106,7 @@ public class ContactImpl implements ContactDTO {
     return entreprise;
   }
 
-  /**
-   * Sets the ID of the enterprise associated with the contact.
-   *
-   * @param entreprise The ID of the enterprise associated with the contact.
-   */
+  @Override
   public void setEntreprise(int entreprise) {
     this.entreprise = entreprise;
   }
