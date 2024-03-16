@@ -19,4 +19,8 @@ public interface ContactDAO {
    *         associated with the specified ID.
    */
   List<ContactDTO> getAllUsersContact(int id);
+
+  ContactDTO create(String status, String year, int userId, int enterpriseId);
+
+  ContactDTO readOne(int userId, int enterpriseId);
 }
