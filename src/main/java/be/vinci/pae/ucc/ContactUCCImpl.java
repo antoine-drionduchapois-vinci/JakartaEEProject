@@ -30,6 +30,28 @@ public class ContactUCCImpl implements ContactUCC {
     ContactDTO contact = myContactDAO.create("initié", getCurrentYearString(), userId, enterpriseId);
     EnterpriseDTO enterprise = myEnterpriseDAO.getEnterpriseById(contact.getEntreprise());
 
+    return convertDTOsTOJson(contact, enterprise);
+  }
+
+  @Override
+  public ObjectNode initiateContact(int userId, String enterpriseName, String enterpriseLabel,
+      String enterpriseAdress, String enterpriseContact) {
+    EnterpriseDTO enterprise = myEnterpriseDAO.create(enterpriseName, enterpriseLabel,
+        enterpriseAdress, enterpriseContact);
+    ContactDTO contact = myContactDAO.create("initié", getCurrentYearString(), userId,
+        enterprise.getEntrepriseId());
+
+    return convertDTOsTOJson(contact, enterprise);
+  }
+
+  private String getCurrentYearString() {
+    LocalDate currentDate = LocalDate.now();
+    LocalDate startDate = LocalDate.of(currentDate.getYear() - 1, 9, 1);
+    LocalDate endDate = LocalDate.of(currentDate.getYear(), 9, 1);
+    return startDate.getYear() + "-" + endDate.getYear();
+  }
+
+  private ObjectNode convertDTOsTOJson(ContactDTO contact, EnterpriseDTO enterprise) {
     ObjectNode enterpriseNode = jsonMapper.createObjectNode()
         .put("enterpriseId", enterprise.getEntrepriseId())
         .put("name", enterprise.getNom())
@@ -47,12 +69,5 @@ public class ContactUCCImpl implements ContactUCC {
         .put("useriD", contact.getUser())
         .put("enterpriseId", contact.getEntreprise())
         .putPOJO("enterprise", enterpriseNode);
-  }
-
-  private String getCurrentYearString() {
-    LocalDate currentDate = LocalDate.now();
-    LocalDate startDate = LocalDate.of(currentDate.getYear() - 1, 9, 1);
-    LocalDate endDate = LocalDate.of(currentDate.getYear(), 9, 1);
-    return startDate.getYear() + "-" + endDate.getYear();
   }
 }

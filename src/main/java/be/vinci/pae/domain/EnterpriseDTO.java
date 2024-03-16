@@ -53,4 +53,18 @@ public interface EnterpriseDTO {
    * @return The professor's opinion about the enterprise.
    */
   String getAvisProfesseur();
+
+  void setEntrepriseId(int entrepriseId);
+
+  void setNom(String nom);
+
+  void setAppellation(String appellation);
+
+  void setAdresse(String adresse);
+
+  void setTelephone(String telephone);
+
+  void setBlacklist(boolean blacklist);
+
+  void setAvisProfesseur(String avisProfesseur);
 }

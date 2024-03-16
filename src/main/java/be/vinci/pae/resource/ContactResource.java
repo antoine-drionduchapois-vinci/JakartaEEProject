@@ -24,10 +24,22 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode addOne(JsonNode json) {
-    if (!json.hasNonNull("userId") || !json.hasNonNull("enterpriseId")) {
-      throw new WebApplicationException("Bad Request", Status.BAD_REQUEST);
+    if (!json.hasNonNull("userId")) {
+      throw new WebApplicationException("Bad Request", Status.BAD_REQUEST); // TODO: handle error
     }
+
+    if (json.hasNonNull("enterpriseId")) {
+      return myContactUCC.initiateContact(json.get("userId").asInt(),
+          json.get("enterpriseId").asInt());
+    }
+
+    if (!json.hasNonNull("enterpriseName") || !json.hasNonNull("enterpriseLabel")
+        || !json.hasNonNull("enterpriseAdress") || !json.hasNonNull("enterpriseContact")) {
+      throw new WebApplicationException("Bad Request", Status.BAD_REQUEST); // TODO: handle error
+    }
+
     return myContactUCC.initiateContact(json.get("userId").asInt(),
-        json.get("enterpriseId").asInt());
+        json.get("enterpriseName").asText(), json.get("enterpriseLabel").asText(),
+        json.get("enterpriseAdress").asText(), json.get("enterpriseContact").asText());
   }
 }

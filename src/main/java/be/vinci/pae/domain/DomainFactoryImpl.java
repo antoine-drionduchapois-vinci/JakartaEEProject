@@ -18,6 +18,11 @@ public class DomainFactoryImpl implements DomainFactory {
   }
 
   @Override
+  public EnterpriseDTO getEnterpriseDTO() {
+    return new EnterpriseDTOImpl();
+  }
+
+  @Override
   public EnterpriseDTO getEnterpriseDTO(int entrepriseId, String nom, String appellation,
       String adresse, String telephone, boolean isBlacklist, String avisProfesseur) {
     return new EnterpriseDTOImpl(entrepriseId, nom, appellation, adresse, telephone, isBlacklist,

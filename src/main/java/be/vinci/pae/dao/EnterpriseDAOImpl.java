@@ -23,6 +23,24 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
   private DomainFactory myDomainFactory;
 
   @Override
+  public EnterpriseDTO create(String name, String label, String adress, String contact) {
+    EnterpriseDTO enterprise = myDomainFactory.getEnterpriseDTO();
+
+    try (PreparedStatement ps = myDalService.getPS(
+        "INSERT INTO projetae.entreprises (nom, appellation, adresse, telephone) VALUES (?, ?, ?, ?) RETURNING *;")) {
+      ps.setString(1, name);
+      ps.setString(2, label);
+      ps.setString(3, adress);
+      ps.setString(4, contact);
+      ps.execute();
+      enterprise = convertRsToDTO(ps.getResultSet());
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    return enterprise;
+  }
+
+  @Override
   public List<EnterpriseDTO> getAllEnterprises() {
     List<EnterpriseDTO> enterprises = new ArrayList<>();
 
@@ -104,4 +122,23 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
     return null;
   }
 
+  private EnterpriseDTO convertRsToDTO(ResultSet rs) {
+    EnterpriseDTO enterprise = myDomainFactory.getEnterpriseDTO();
+    try {
+      if (!rs.next()) {
+        return null;
+      }
+      enterprise.setEntrepriseId(rs.getInt("entreprise_id"));
+      enterprise.setNom(rs.getString("nom"));
+      enterprise.setAppellation(rs.getString("appellation"));
+      enterprise.setAdresse(rs.getString("adresse"));
+      enterprise.setTelephone(rs.getString("telephone"));
+      enterprise.setBlacklist(rs.getBoolean("is_blacklist"));
+      enterprise.setAvisProfesseur("avis_professeur");
+    } catch (SQLException e) {
+      System.err.println(
+          "conversion from ResultSet to DTO failed : " + e); // TODO: handle error
+    }
+    return enterprise;
+  }
 }

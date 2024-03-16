@@ -13,6 +13,9 @@ public class EnterpriseDTOImpl implements EnterpriseDTO {
   private boolean isBlacklist;
   private String avisProfesseur;
 
+  public EnterpriseDTOImpl() {
+  }
+
   /**
    * Constructs a new EnterpriseImpl object with the specified attributes.
    *
@@ -103,5 +106,40 @@ public class EnterpriseDTOImpl implements EnterpriseDTO {
   @Override
   public String getAvisProfesseur() {
     return avisProfesseur;
+  }
+
+  @Override
+  public void setEntrepriseId(int entrepriseId) {
+    this.entrepriseId = entrepriseId;
+  }
+
+  @Override
+  public void setNom(String nom) {
+    this.nom = nom;
+  }
+
+  @Override
+  public void setAppellation(String appellation) {
+    this.appellation = appellation;
+  }
+
+  @Override
+  public void setAdresse(String adresse) {
+    this.adresse = adresse;
+  }
+
+  @Override
+  public void setTelephone(String telephone) {
+    this.telephone = telephone;
+  }
+
+  @Override
+  public void setBlacklist(boolean blacklist) {
+    isBlacklist = blacklist;
+  }
+
+  @Override
+  public void setAvisProfesseur(String avisProfesseur) {
+    this.avisProfesseur = avisProfesseur;
   }
 }

@@ -9,6 +9,8 @@ import java.util.List;
  */
 public interface EnterpriseDAO {
 
+  EnterpriseDTO create(String name, String label, String adress, String contact);
+
   /**
    * Retrieves a list of all enterprises stored in the database.
    *
