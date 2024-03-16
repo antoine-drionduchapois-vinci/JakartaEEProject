@@ -13,7 +13,14 @@ public interface UserUCC {
    *
    * @return An integer representing the global statistics related to users.
    */
-  int getGlobalStats();
+  int countStudentsWithoutStage();
+
+  /**
+   * Retrieves count student.
+   *
+   * @return An integer representing the global statistics related to users.
+   */
+  int countStudents();
 
   /**
    * Retrieves a list of users in JSON format.
