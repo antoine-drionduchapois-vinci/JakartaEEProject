@@ -35,9 +35,9 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public ObjectNode initiateContact(int userId, String enterpriseName, String enterpriseLabel,
-      String enterpriseAdress, String enterpriseContact) {
+      String enterpriseAddress, String enterpriseContact) {
     EnterpriseDTO enterprise = myEnterpriseDAO.create(enterpriseName, enterpriseLabel,
-        enterpriseAdress, enterpriseContact);
+        enterpriseAddress, enterpriseContact);
     ContactDTO contact = myContactDAO.create("initié", getCurrentYearString(), userId,
         enterprise.getEntrepriseId());
 

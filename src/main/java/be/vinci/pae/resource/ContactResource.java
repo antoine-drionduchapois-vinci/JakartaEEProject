@@ -34,12 +34,12 @@ public class ContactResource {
     }
 
     if (!json.hasNonNull("enterpriseName") || !json.hasNonNull("enterpriseLabel")
-        || !json.hasNonNull("enterpriseAdress") || !json.hasNonNull("enterpriseContact")) {
+        || !json.hasNonNull("enterpriseAddress") || !json.hasNonNull("enterpriseContact")) {
       throw new WebApplicationException("Bad Request", Status.BAD_REQUEST); // TODO: handle error
     }
 
     return myContactUCC.initiateContact(json.get("userId").asInt(),
         json.get("enterpriseName").asText(), json.get("enterpriseLabel").asText(),
-        json.get("enterpriseAdress").asText(), json.get("enterpriseContact").asText());
+        json.get("enterpriseAddress").asText(), json.get("enterpriseContact").asText());
   }
 }

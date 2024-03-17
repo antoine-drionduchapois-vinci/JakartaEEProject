@@ -52,14 +52,14 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
         int entrepriseId = rs.getInt("entreprise_id");
         String nom = rs.getString("nom");
         String appellation = rs.getString("appellation");
-        String adresse = rs.getString("adresse");
+        String addresse = rs.getString("adresse");
         String telephone = rs.getString("telephone");
         boolean isBlacklist = rs.getBoolean("is_blacklist");
         String avisProfesseur = rs.getString("avis_professeur");
 
         // Create a new EnterpriseImpl object and add it to the list
         EnterpriseDTO enterpriseDTO = myDomainFactory.getEnterpriseDTO(entrepriseId, nom,
-            appellation, adresse,
+            appellation, addresse,
             telephone, isBlacklist, avisProfesseur);
         enterprises.add(enterpriseDTO);
       }
@@ -93,13 +93,13 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
           int entrepriseId = rs.getInt("entreprise_id");
           String nom = rs.getString("nom");
           String appellation = rs.getString("appellation");
-          String adresse = rs.getString("adresse");
+          String addresse = rs.getString("adresse");
           String telephone = rs.getString("telephone");
           boolean isBlacklist = rs.getBoolean("is_blacklist");
           String avisProfesseur = rs.getString("avis_professeur");
 
           EnterpriseDTO enterpriseDTO = new EnterpriseDTOImpl(entrepriseId, nom, appellation,
-              adresse,
+              addresse,
               telephone, isBlacklist, avisProfesseur);
           if (enterpriseDTO == null) {
             System.out.println("Entreprise is NULL");
