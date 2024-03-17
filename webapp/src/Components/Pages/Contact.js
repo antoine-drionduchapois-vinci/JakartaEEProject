@@ -1,25 +1,17 @@
 // Importing rendering utility functions
 import { clearPage, renderPageTitle } from '../../utils/render';
+
 import { getAuthenticatedUser } from '../../utils/auths';
 import autocomplete from '../../services/autocomplete';
 
-// Fonction pour récupérer les données des entreprises
-const fetchEnterprises = async () =>
-  fetch('http://localhost:8080/ent/enterprises')
-    .then((response) => response.json())
-    .then((data) => data)
-    .catch((error) => console.error(error));
-
-const setupAutoComplete = async (element) => {
-  const array = await fetchEnterprises();
-  autocomplete(
-    element,
-    array.enterprises.map((enterprise) => enterprise.nom),
-  );
-};
-
 const initiateContact = async (data) =>
-  fetch('http://localhost:8080/contact', { method: 'POST', body: data })
+  fetch('http://localhost:8080/contact', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
     .then((response) => response.status === 200)
     .catch((error) => console.error(error));
 
@@ -56,12 +48,14 @@ const Contact = () => {
         <div class="column bg-secondary">
             <label for="enterprise">Entreprise *</label>
             <div class="autocomplete">
-              <input class="input is-primary" type="text" id="enterprise">
+              <input autocomplete="off" class="input is-primary" type="text" id="enterprise">
             </div>
         </div>
         <div class="column bg-secondary">
-        <label for="label">Appelation</label>
-            <input class="input is-primary" type="text" id="label">
+            <label for="label">Appelation</label>
+            <div class="autocomplete">
+              <input autocomplete="off" class="input is-primary" type="text" id="label">
+            </div>
         </div>
         <div class="column bg-secondary">
             <label for="address">Addresse *</label>
@@ -78,28 +72,65 @@ const Contact = () => {
   `;
 
   const enterprise = { element: document.querySelector('#enterprise'), isValid: false };
+  const label = { element: document.querySelector('#label'), isValid: false };
+  const address = { element: document.querySelector('#address'), isValid: false };
+  const contact = { element: document.querySelector('#contact'), isValid: false };
+
+  let enterprises;
+  const fetchEnterprises = async () => {
+    enterprises = await fetch('http://localhost:8080/ent/enterprises')
+      .then((response) => response.json())
+      .then((data) => data.enterprises)
+      .catch((error) => console.error(error));
+    console.log(enterprises.map((e) => ({ main: e.nom, side: e.appellation })));
+    autocomplete(enterprise.element, [...new Set(enterprises.map((e) => e.nom))]);
+  };
+  fetchEnterprises();
+
+  let foundEnterprise;
+  const autoFillFields = () => {
+    const enterpriseText = enterprise.element.value;
+    const foundEnterprises = enterprises.filter((e) => e.nom === enterpriseText);
+    if (foundEnterprises) {
+      autocomplete(
+        label.element,
+        foundEnterprises.map((e) => e.appellation),
+      );
+      const labelText = label.element.value;
+      foundEnterprise = foundEnterprises.find((e) => e.appellation === labelText);
+      if (foundEnterprise) {
+        address.element.value = foundEnterprise.adresse;
+        address.element.setAttribute('disabled', true);
+        contact.element.value = foundEnterprise.telephone;
+        contact.element.setAttribute('disabled', true);
+      } else {
+        foundEnterprise = null;
+        address.element.removeAttribute('disabled');
+        contact.element.removeAttribute('disabled');
+      }
+    }
+  };
+
   enterprise.element.addEventListener('input', (e) => {
     enterprise.value = e.target.value;
     enterprise.isValid = checkInput(e.target);
+    autoFillFields(e.target.value);
   });
-  setupAutoComplete(enterprise.element);
 
-  const label = { element: document.querySelector('#label'), isValid: false };
   label.element.addEventListener('input', (e) => {
     label.value = e.target.value;
-    checkInput(e.target);
+    label.isValid = checkInput(e.target);
+    autoFillFields(e.target.value);
   });
 
-  const address = { element: document.querySelector('#address'), isValid: false };
   address.element.addEventListener('input', (e) => {
     address.value = e.target.value;
-    checkInput(e.target);
+    address.isValid = checkInput(e.target);
   });
 
-  const contact = { element: document.querySelector('#contact'), isValid: false };
   contact.element.addEventListener('input', (e) => {
     contact.value = e.target.value;
-    checkInput(e.target);
+    contact.isValid = checkInput(e.target);
   });
 
   const user = getAuthenticatedUser();
@@ -107,6 +138,11 @@ const Contact = () => {
 
   const submit = document.querySelector('#submit');
   submit.addEventListener('click', () => {
+    if (foundEnterprise) {
+      initiateContact({ userId: user.id, enterpriseId: foundEnterprise.entreprise_id });
+      return;
+    }
+
     if (!enterprise.isValid || !label.isValid || !address.isValid || !contact.isValid) {
       checkInput(enterprise.element);
       checkInput(label.element);
