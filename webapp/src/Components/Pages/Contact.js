@@ -1,6 +1,7 @@
 // Importing rendering utility functions
 import { clearPage, renderPageTitle } from '../../utils/render';
 import { getAuthenticatedUser } from '../../utils/auths';
+import autocomplete from '../../services/autocomplete';
 
 // Fonction pour récupérer les données des entreprises
 const fetchEnterprises = async () =>
@@ -9,9 +10,12 @@ const fetchEnterprises = async () =>
     .then((data) => data)
     .catch((error) => console.error(error));
 
-const renderEnterprisesList = async () => {
-  const enterprises = await fetchEnterprises();
-  console.log('🚀 ~ renderEnterprisesList ~ enterprises:', enterprises);
+const setupAutoComplete = async (element) => {
+  const array = await fetchEnterprises();
+  autocomplete(
+    element,
+    array.enterprises.map((enterprise) => enterprise.nom),
+  );
 };
 
 const initiateContact = async (data) =>
@@ -51,7 +55,9 @@ const Contact = () => {
         </div>
         <div class="column bg-secondary">
             <label for="enterprise">Entreprise *</label>
-            <input class="input is-primary" type="text" id="enterprise">
+            <div class="autocomplete">
+              <input class="input is-primary" type="text" id="enterprise">
+            </div>
         </div>
         <div class="column bg-secondary">
         <label for="label">Appelation</label>
@@ -76,6 +82,7 @@ const Contact = () => {
     enterprise.value = e.target.value;
     enterprise.isValid = checkInput(e.target);
   });
+  setupAutoComplete(enterprise.element);
 
   const label = { element: document.querySelector('#label'), isValid: false };
   label.element.addEventListener('input', (e) => {
@@ -98,8 +105,6 @@ const Contact = () => {
   const user = getAuthenticatedUser();
   console.log('🚀 ~ Contact ~ user:', user);
 
-  renderEnterprisesList();
-
   const submit = document.querySelector('#submit');
   submit.addEventListener('click', () => {
     if (!enterprise.isValid || !label.isValid || !address.isValid || !contact.isValid) {
@@ -110,10 +115,11 @@ const Contact = () => {
       return;
     }
     initiateContact({
-      enterprise: enterprise.value,
-      label: label.value,
-      address: address.value,
-      contact: contact.value,
+      userId: user.id,
+      enterpriseName: enterprise.value,
+      enterpriseLabel: label.value,
+      enterpriseAddress: address.value,
+      enterpriseContact: contact.value,
     });
   });
 };
