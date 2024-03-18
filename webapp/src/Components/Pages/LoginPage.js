@@ -1,5 +1,6 @@
 // Dependency imports
 import { getRememberMe, setAuthenticatedUser, setRememberMe } from '../../utils/auths';
+import Redirect from '../../utils/redirect';
 import { clearPage, renderPageTitle } from '../../utils/render';
 import Navbar from '../Navbar/Navbar';
 import Navigate from '../Router/Navigate';
@@ -135,9 +136,10 @@ async function onLogin(e) {
     } 
   
     const authenticatedUser = await response.json();
+    console.log(authenticatedUser.role);
     setAuthenticatedUser(authenticatedUser);
     Navbar();
-    Navigate('/dashboard');
+    Redirect.redirect(authenticatedUser.role);
   } catch (error){
     console.error('Error during login:', error);
   }
