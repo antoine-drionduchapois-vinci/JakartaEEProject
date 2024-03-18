@@ -1,64 +1,64 @@
-// Import des dépendances
+// Dependency imports
 import { getRememberMe, setAuthenticatedUser, setRememberMe } from '../../utils/auths';
 import { clearPage, renderPageTitle } from '../../utils/render';
 import Navbar from '../Navbar/Navbar';
 import Navigate from '../Router/Navigate';
 
-// Définition du composant LoginPage
+// Definition of the LoginPage component
 const LoginPage = () => {
-  // Effacer la page
+  // Clear the page
   clearPage();
-  // Rendre le titre de la page "Login"
+  // Render page title as "Login"
   renderPageTitle('Login');
-  // Rendre le formulaire de connexion
+  // Render login form
   renderLoginForm();
 };
 
-// Fonction pour rendre le formulaire de connexion
+// Function to render the login form
 function renderLoginForm() {
-  // Sélectionner l'élément principal dans le DOM
+  // Select the main element in the DOM
   const main = document.querySelector('main');
 
-  // Création du conteneur du formulaire centré
+  // Create centered form container
   const container = document.createElement('div');
   container.className = ' d-flex justify-content-center align-items-center vh-100';
 
-  // Création du formulaire dans un cadre avec une bordure
+  // Create form within a bordered frame
   const form = document.createElement('form');
   form.className = ' border rounded bg-light shadow bg-white';
   form.style.padding = '100px';
 
-  // Création du champ d'entrée pour l'e-mail
+  // Create email input field
   const username = createInputElement('email', 'email', 'Email', true, 'form-control mb-3');
 
-  // Création du champ d'entrée pour le mot de passe
+  // Create password input field
   const password = createInputElement('password', 'password', 'Password', true, 'form-control mb-3');
 
-  // Création du bouton de soumission
+  // Create submit button
   const submit = createSubmitButton();
 
-  // Création du wrapper pour la case à cocher "Remember me"
+  // Create wrapper for "Remember me" checkbox
   const formCheckWrapper = createRememberMeCheckbox();
 
   const registerLink = document.createElement('p');
   registerLink.innerHTML = `Vous n'avez pas de compte ? <a id="registerLink" style="color: blue; cursor: pointer;">S'enregistrer</a>`;
-  // Ajout d'un écouteur d'événements pour la redirection vers la page d'inscription
+  // Add event listener for redirection to registration page
   registerLink.querySelector('#registerLink').addEventListener('click', () => Navigate('/register'));
 
-  // Ajout des éléments au formulaire
+  // Add elements to form
   form.append(username.label, username.input, password.label, password.input, formCheckWrapper, submit, registerLink);
 
-  // Ajout du formulaire au conteneur
+  // Add form to container
   container.appendChild(form);
 
-  // Ajout du conteneur à l'élément principal
+  // Add container to main element
   main.appendChild(container);
 
-  // Ajout d'un écouteur d'événements pour la soumission du formulaire
+  // Add event listener for form submission
   form.addEventListener('submit', onLogin);
 }
 
-// Créer un champ d'entrée HTML
+// Create an HTML input field
 function createInputElement(type, id, labelText, required, className) {
   const input = document.createElement('input');
   input.type = type;
@@ -74,7 +74,7 @@ function createInputElement(type, id, labelText, required, className) {
   return { input, label };
 }
 
-// Créer le bouton de soumission
+// Create the submit button
 function createSubmitButton() {
   const submit = document.createElement('input');
   submit.value = 'Login';
@@ -84,7 +84,7 @@ function createSubmitButton() {
   return submit;
 }
 
-// Créer la case à cocher "Remember me"
+// Create the "Remember me" checkbox
 function createRememberMeCheckbox() {
   const formCheckWrapper = document.createElement('div');
   formCheckWrapper.className = 'mb-3 form-check';
@@ -106,12 +106,12 @@ function createRememberMeCheckbox() {
   return formCheckWrapper;
 }
 
-// Gérer le clic sur la case à cocher "Remember me"
+// Handle click on "Remember me" checkbox
 function onCheckboxClicked(e) {
   setRememberMe(e.target.checked);
 }
 
-// Gérer la soumission du formulaire de connexion
+// Handle login form submission
 async function onLogin(e) {
   e.preventDefault();
 
@@ -143,5 +143,5 @@ async function onLogin(e) {
   }
 }
 
-// Export du composant LoginPage
+// Export the LoginPage component
 export default LoginPage;
