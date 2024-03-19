@@ -22,8 +22,10 @@ public interface ResponsibleResource {
    *             responsable information is being requested. The user ID should be supplied under a
    *             specific key, e.g., {"userId": 123}.
    * @return An {@link ObjectNode} containing the responsable information associated with the
-   *         provided user ID. The structure of the returned JSON object includes details specific to the
-   *         responsable, such as name, contact details, and any other relevant information.
+   *         provided user ID. The structure of the returned
+   *         JSON object includes details specific to the
+   *         responsable, such as name, contact details,
+   *         and any other relevant information.
    */
   @POST
   @Path("responsable")
