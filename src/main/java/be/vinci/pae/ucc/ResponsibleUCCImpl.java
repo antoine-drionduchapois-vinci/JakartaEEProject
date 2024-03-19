@@ -22,8 +22,8 @@ public class ResponsibleUCCImpl implements ResponsibleUCC {
    * @param id The unique identifier of the enterprise whose responsible is being queried. This ID
    *           should match an existing enterprise in the database.
    * @return A {@link ResponsibleDTO} object containing the responsible's detailed information if
-   * found. The DTO includes personal details, contact information, and other relevant data
-   * associated with the responsible.
+   *         found. The DTO includes personal details, contact information, and other relevant data
+   *         associated with the responsible.
    */
   @Override
   public ResponsibleDTO getResponsibleByEnterpriseId(int id) {
