@@ -8,8 +8,17 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
+/**
+ * Defines the RESTful resource for authentication operations including login
+ * and registration.
+ */
 public interface ContactResource {
 
+  /**
+   * Retrieves users all contacts.
+   *
+   * @return an ObjectNode containing contacts info
+   */
   @POST
   @Path("getContacts")
   @Consumes(MediaType.APPLICATION_JSON)
