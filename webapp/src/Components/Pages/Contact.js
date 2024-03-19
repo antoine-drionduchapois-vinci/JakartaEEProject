@@ -4,7 +4,7 @@ import InitiatedRow from '../Contact/InitiatedRow';
 
 import { getAuthenticatedUser } from '../../utils/auths';
 
-const contactId = 58; // TODO: will then be acquired by route param
+const contactId = 1; // TODO: will then be acquired by route param
 
 // Contact component definition
 const Contact = async () => {
@@ -18,9 +18,7 @@ const Contact = async () => {
   const user = getAuthenticatedUser();
 
   const contact = await fetch(`http://localhost:8080/contact?contactId=${contactId}`)
-    .then((res) => {
-      if (res.status === 200) res.json();
-    })
+    .then((res) => (res.status === 200 ? res.json() : null))
     .catch((error) => console.error(error));
 
   const enterprises = await fetch('http://localhost:8080/ent/enterprises')
