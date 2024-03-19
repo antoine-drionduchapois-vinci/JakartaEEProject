@@ -16,7 +16,7 @@ public interface ContactResource {
 
   /**
    * Retrieves users all contacts.
-   *
+   * @param json A JsonNode containing the user ID.
    * @return an ObjectNode containing contacts info
    */
   @POST
