@@ -88,3 +88,21 @@ tbody tr:hover {
   background-color: DodgerBlue !important;
   color: #ffffff;
 }
+
+/* Status circle */
+.status-circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+}
+
+.status-circle-item {
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  background: black;
+}

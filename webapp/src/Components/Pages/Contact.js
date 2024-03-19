@@ -4,6 +4,8 @@ import { clearPage, renderPageTitle } from '../../utils/render';
 import { getAuthenticatedUser } from '../../utils/auths';
 import autocomplete from '../../services/autocomplete';
 
+const contactId = 1; // TODO: will then be acquired by route param
+
 const initiateContact = async (data) =>
   fetch('http://localhost:8080/contact', {
     method: 'POST',
@@ -41,7 +43,9 @@ const Contact = () => {
     <div class="columns p-4">
         <div class="column is-one-fifth bg-primary">
             <div class="d-flex gap-2 align-items-center">
-                <div class="border border-black rounded-circle" style="width: 20px; height: 20px;"></div>
+                <div class="status-circle">
+                  <div id="initiated-circle" class="status-circle-item" hidden></div>  
+                </div>
                 Initié
             </div>
         </div>
@@ -71,6 +75,7 @@ const Contact = () => {
     </div>
   `;
 
+  const initiatedCircle = document.querySelector('#initiated-circle');
   const enterprise = { element: document.querySelector('#enterprise'), isValid: false };
   const label = { element: document.querySelector('#label'), isValid: false };
   const address = { element: document.querySelector('#address'), isValid: false };
@@ -82,10 +87,19 @@ const Contact = () => {
       .then((response) => response.json())
       .then((data) => data.enterprises)
       .catch((error) => console.error(error));
-    console.log(enterprises.map((e) => ({ main: e.nom, side: e.appellation })));
     autocomplete(enterprise.element, [...new Set(enterprises.map((e) => e.nom))]);
   };
   fetchEnterprises();
+
+  let contactObj;
+  const fetchContact = async () => {
+    contactObj = await fetch(`http://localhost:8080/contact?contactId=${contactId}`)
+      .then((data) => data.json())
+      .catch((error) => console.error(error));
+
+    if (contactObj.state === 'Confirmed') initiatedCircle.removeAttribute('hidden');
+  };
+  fetchContact();
 
   let foundEnterprise;
   const autoFillFields = () => {
