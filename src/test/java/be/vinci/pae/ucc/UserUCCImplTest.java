@@ -1,7 +1,8 @@
 package be.vinci.pae.ucc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import be.vinci.pae.TestBinder;
@@ -25,16 +26,16 @@ class UserUCCImplTest {
   void setUp() {
     ServiceLocator locator = ServiceLocatorUtilities.bind(new TestBinder());
     this.userDAO = locator.getService(UserDAO.class);
-    this.userUCC = mock(UserUCC.class);
+    this.userUCC = locator.getService(UserUCC.class);
   }
 
   @Test
   void countStudentsWithoutStage() {
     when(userDAO.getStudentsWithoutStage()).thenReturn(5);
-    when(userUCC.countStudentsWithoutStage()).thenReturn(5);
 
     int result = userUCC.countStudentsWithoutStage();
 
     assertEquals(5, result);
+    verify(userDAO, times(1)).getStudentsWithoutStage();
   }
 }
