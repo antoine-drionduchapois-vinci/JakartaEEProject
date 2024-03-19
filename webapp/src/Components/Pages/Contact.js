@@ -3,6 +3,7 @@ import { clearPage, renderPageTitle } from '../../utils/render';
 import InitiatedRow from '../Contact/InitiatedRow';
 
 import { getAuthenticatedUser } from '../../utils/auths';
+import TookRow from '../Contact/TookRow';
 
 const contactId = 1; // TODO: will then be acquired by route param
 
@@ -31,9 +32,11 @@ const Contact = async () => {
   main.appendChild(contentElement);
   contentElement.innerHTML = `
     <div id="initiated-row" class="columns p-4"></div>
+    <div id="took-row" class="columns p-4"></div>
   `;
 
   InitiatedRow(document.querySelector('#initiated-row'), user, contact, enterprises);
+  TookRow(document.querySelector('#took-row'), user, contact);
 };
 
 // Exporting Contact component
