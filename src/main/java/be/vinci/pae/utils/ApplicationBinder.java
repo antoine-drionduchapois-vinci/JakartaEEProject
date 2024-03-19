@@ -1,7 +1,5 @@
 package be.vinci.pae.utils;
 
-import be.vinci.pae.dao.ContactDAO;
-import be.vinci.pae.dao.ContactDAOImpl;
 import be.vinci.pae.dao.EnterpriseDAO;
 import be.vinci.pae.dao.EnterpriseDAOImpl;
 import be.vinci.pae.dao.ResponsibleDAO;
