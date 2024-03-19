@@ -27,7 +27,7 @@ public interface UserUCC {
    *
    * @param userId The ID of the user to retrieve in JSON format.
    * @return A UserDTO object representing the user in JSON format, or null if no user is found for
-   * the given user ID.
+   *         the given user ID.
    */
   UserDTO getUsersByIdAsJson(int userId);
 }

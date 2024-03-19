@@ -20,6 +20,9 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import java.util.List;
 
+/**
+ * Implementation of the ContactResource interface.
+ */
 @Singleton
 @Path("/contact")
 public class ContactResourceImpl implements ContactResource {
