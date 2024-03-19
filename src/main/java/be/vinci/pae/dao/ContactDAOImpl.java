@@ -74,6 +74,21 @@ public class ContactDAOImpl implements ContactDAO {
   }
 
   @Override
+  public ContactDTO readOne(int contactId) {
+    ContactDTO contact = myDomainFactory.getContactDTO();
+
+    try (PreparedStatement ps = myDalService.getPS(
+        "SELECT * FROM projetae.contacts WHERE contact_id = ?;")) {
+      ps.setInt(1, contactId);
+      ps.execute();
+      contact = convertRsToDTO(ps.getResultSet());
+    } catch (SQLException e) {
+      System.err.println("PreparedStatement failed : " + e); // TODO: handle error
+    }
+    return contact;
+  }
+
+  @Override
   public ContactDTO readOne(int userId, int enterpriseId) {
     ContactDTO contact = myDomainFactory.getContactDTO();
 

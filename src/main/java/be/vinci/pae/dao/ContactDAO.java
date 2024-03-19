@@ -22,5 +22,7 @@ public interface ContactDAO {
 
   ContactDTO create(String status, String year, int userId, int enterpriseId);
 
+  ContactDTO readOne(int contactId);
+
   ContactDTO readOne(int userId, int enterpriseId);
 }

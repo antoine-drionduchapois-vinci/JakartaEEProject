@@ -22,6 +22,16 @@ public class ContactUCCImpl implements ContactUCC {
   private final ObjectMapper jsonMapper = new ObjectMapper();
 
   @Override
+  public ObjectNode getContact(int contactid) {
+    ContactDTO contact = myContactDAO.readOne(contactid);
+    if (contact == null) {
+      return null; // TODO: handle error 404
+    }
+    EnterpriseDTO enterprise = myEnterpriseDAO.getEnterpriseById(contact.getEntreprise());
+    return convertDTOsTOJson(contact, enterprise);
+  }
+
+  @Override
   public ObjectNode initiateContact(int userId, int enterpriseId) {
     if (myContactDAO.readOne(userId, enterpriseId) != null) {
       return null;
