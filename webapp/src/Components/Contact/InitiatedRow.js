@@ -94,8 +94,18 @@ const InitiatedRow = (htmlElement, userData, contactData, enterprisesData) => {
   const contactInput = { element: document.querySelector('#contact'), isValid: false };
   const submit = document.querySelector('#submit');
 
-  if (contactData?.state === 'initié') {
+  if (contactData) {
+    console.log('🚀 ~ InitiatedRow ~ contactData:', contactData);
     initiatedCircle.removeAttribute('hidden');
+    enterpriseInput.element.value = contactData.enterprise.name;
+    enterpriseInput.element.setAttribute('disabled', true);
+    labelInput.element.value = contactData.enterprise.label;
+    labelInput.element.setAttribute('disabled', true);
+    addressInput.element.value = contactData.enterprise.adress;
+    addressInput.element.setAttribute('disabled', true);
+    contactInput.element.value = contactData.enterprise.contact;
+    contactInput.element.setAttribute('disabled', true);
+    submit.setAttribute('disabled', true);
   }
 
   autocomplete(enterpriseInput.element, [...new Set(enterprisesData.map((e) => e.nom))]);

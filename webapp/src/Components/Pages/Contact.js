@@ -4,7 +4,7 @@ import InitiatedRow from '../Contact/InitiatedRow';
 
 import { getAuthenticatedUser } from '../../utils/auths';
 
-const contactId = 1; // TODO: will then be acquired by route param
+const contactId = 58; // TODO: will then be acquired by route param
 
 // Contact component definition
 const Contact = async () => {
