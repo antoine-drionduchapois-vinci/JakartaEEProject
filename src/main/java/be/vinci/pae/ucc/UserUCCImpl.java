@@ -14,13 +14,18 @@ public class UserUCCImpl implements UserUCC {
 
   @Inject
   private UserDAO myUserDAO;
-  
+
   @Override
-  public int getGlobalStats() {
+  public int countStudentsWithoutStage() {
 
     int studentsWithoutInternship = myUserDAO.getStudentsWithoutStage();
 
     return studentsWithoutInternship;
+  }
+
+  @Override
+  public int countStudents() {
+    return myUserDAO.getTotalStudents();
   }
 
 

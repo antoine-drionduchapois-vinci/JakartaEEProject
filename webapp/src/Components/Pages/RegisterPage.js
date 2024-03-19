@@ -3,6 +3,7 @@ import { setAuthenticatedUser } from "../../utils/auths";
 import Navbar from "../Navbar/Navbar";
 // Importing navigation function
 import Navigate from "../Router/Navigate";
+import Redirect from "../../utils/redirect";
 
 // RegisterPage component definition
 const RegisterPage = () => {
@@ -167,7 +168,7 @@ async function handleSubmit (e) {
               // Render navbar components
               Navbar();
               // Navigating to home page
-              Navigate('/dashboard');
+              Redirect.redirect(authenticatedUser.role);
           })
           .catch(error => {
               console.error('Error during register:', error);
