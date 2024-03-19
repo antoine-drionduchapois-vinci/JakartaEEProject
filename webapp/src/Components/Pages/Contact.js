@@ -18,7 +18,9 @@ const Contact = async () => {
   const user = getAuthenticatedUser();
 
   const contact = await fetch(`http://localhost:8080/contact?contactId=${contactId}`)
-    .then((data) => data.json())
+    .then((res) => {
+      if (res.status === 200) res.json();
+    })
     .catch((error) => console.error(error));
 
   const enterprises = await fetch('http://localhost:8080/ent/enterprises')

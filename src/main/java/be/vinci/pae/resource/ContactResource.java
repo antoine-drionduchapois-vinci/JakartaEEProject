@@ -29,7 +29,13 @@ public class ContactResource {
     if (contactId == -1) {
       throw new WebApplicationException("contactId required", Status.BAD_REQUEST);
     }
-    return myContactUCC.getContact(contactId);
+
+    ObjectNode contact = myContactUCC.getContact(contactId);
+    if (contact == null) {
+      throw new WebApplicationException("not found", Status.NOT_FOUND);
+    }
+    
+    return contact;
   }
 
   @POST
