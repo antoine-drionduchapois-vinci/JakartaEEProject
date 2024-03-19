@@ -27,7 +27,8 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
     EnterpriseDTO enterprise = myDomainFactory.getEnterpriseDTO();
 
     try (PreparedStatement ps = myDalService.getPS(
-        "INSERT INTO projetae.entreprises (nom, appellation, adresse, telephone) VALUES (?, ?, ?, ?) RETURNING *;")) {
+        "INSERT INTO projetae.entreprises (nom, appellation, adresse, telephone)"
+            + "VALUES (?, ?, ?, ?) RETURNING *;")) {
       ps.setString(1, name);
       ps.setString(2, label);
       ps.setString(3, adress);

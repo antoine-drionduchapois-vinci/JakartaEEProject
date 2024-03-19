@@ -60,7 +60,8 @@ public class ContactDAOImpl implements ContactDAO {
     ContactDTO contact = myDomainFactory.getContactDTO();
 
     try (PreparedStatement ps = myDalService.getPS(
-        "INSERT INTO projetae.contacts (etat, annee, utilisateur, entreprise) VALUES (?, ?, ?, ?) RETURNING *;")) {
+        "INSERT INTO projetae.contacts (etat, annee, utilisateur, entreprise)"
+            + "VALUES (?, ?, ?, ?) RETURNING *;")) {
       ps.setString(1, status);
       ps.setString(2, year);
       ps.setInt(3, userId);

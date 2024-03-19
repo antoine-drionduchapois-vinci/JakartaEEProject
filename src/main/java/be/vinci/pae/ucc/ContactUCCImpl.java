@@ -10,6 +10,10 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.time.LocalDate;
 
+/**
+ * Implementation of the ContactUCC interface providing methods for managing contact-related
+ * functionality.
+ */
 @Singleton
 public class ContactUCCImpl implements ContactUCC {
 

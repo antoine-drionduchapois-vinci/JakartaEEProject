@@ -16,6 +16,10 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
 
+/**
+ * The ContactResource class represents a RESTful web service endpoint for managing contact-related
+ * functionality.
+ */
 @Singleton
 @Path("/contact")
 public class ContactResource {
@@ -23,6 +27,14 @@ public class ContactResource {
   @Inject
   private ContactUCC myContactUCC;
 
+  /**
+   * Retrieves the contact information associated with the specified contact ID.
+   *
+   * @param contactId The ID of the contact to retrieve.
+   * @return An ObjectNode containing the contact information, or throws a WebApplicationException
+   *         with status 400 (Bad Request) if the contactId is not provided, or 404 (Not Found)
+   *         if the contact is not found.
+   */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getOne(@DefaultValue("-1") @QueryParam("contactId") int contactId) {
@@ -34,16 +46,24 @@ public class ContactResource {
     if (contact == null) {
       throw new WebApplicationException("not found", Status.NOT_FOUND);
     }
-    
+
     return contact;
   }
 
+  /**
+   * Adds a new contact.
+   *
+   * @param json The JSON object representing the new contact to add.
+   * @return An ObjectNode containing the newly added contact information, or throws a
+   *         WebApplicationException with status 400 (Bad Request) if the userId is not provided
+   *         or if required enterprise information is missing.
+   */
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode addOne(JsonNode json) {
     if (!json.hasNonNull("userId")) {
-      throw new WebApplicationException("Bad Request", Status.BAD_REQUEST); // TODO: handle error
+      throw new WebApplicationException("Bad Request", Status.BAD_REQUEST);
     }
 
     if (json.hasNonNull("enterpriseId")) {
@@ -53,7 +73,7 @@ public class ContactResource {
 
     if (!json.hasNonNull("enterpriseName") || !json.hasNonNull("enterpriseLabel")
         || !json.hasNonNull("enterpriseAddress") || !json.hasNonNull("enterpriseContact")) {
-      throw new WebApplicationException("Bad Request", Status.BAD_REQUEST); // TODO: handle error
+      throw new WebApplicationException("Bad Request", Status.BAD_REQUEST);
     }
 
     return myContactUCC.initiateContact(json.get("userId").asInt(),
