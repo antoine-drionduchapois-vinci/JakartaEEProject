@@ -202,9 +202,10 @@ const renderDashboardTeacher = async () => {
   renderPageTitle('Dashboard Teacher');
 
   // Création d'un conteneur pour le graphique et le tableau
+  const main =document.querySelector('main');
   const container = document.createElement('div');
   container.className = 'dashboard-container';
-  document.body.appendChild(container);
+  main.appendChild(container);
 
   // Création d'un conteneur pour le graphique
   const chartContainer = document.createElement('div');
@@ -226,7 +227,7 @@ const renderDashboardTeacher = async () => {
   const enterprises = await fetchEnterprises();
   const users = await fetchUsers();
   if (data) {
-    renderChart(chartContainer, data.noStage, users.lenght);
+    renderChart(chartContainer, data.noStage, data.all);
   }
   
   if (enterprises) {
