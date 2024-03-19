@@ -1,4 +1,5 @@
 import autocomplete from '../../services/autocomplete';
+import checkInput from '../../services/checkInput';
 
 const initiateContact = async (data) =>
   fetch('http://localhost:8080/contact', {
@@ -10,15 +11,6 @@ const initiateContact = async (data) =>
   })
     .then((response) => response.status === 200)
     .catch((error) => console.error(error));
-
-const checkInput = (element) => {
-  if (element.value === '') {
-    element.classList.replace('is-primary', 'is-danger');
-    return false;
-  }
-  element.classList.replace('is-danger', 'is-primary');
-  return true;
-};
 
 let foundEnterprise;
 const autoFillFields = (
@@ -83,7 +75,7 @@ const InitiatedRow = (htmlElement, userData, contactData, enterprisesData) => {
     <input class="input is-primary" type="text" id="contact">
     </div>
     <div class="column bg-secondary d-flex align-items-end">
-        <button class="button is-fullwidth" id="submit">Initier</button>
+        <button class="button is-fullwidth" id="submit-initiated">Initier</button>
     </div>
 `;
 
@@ -92,11 +84,11 @@ const InitiatedRow = (htmlElement, userData, contactData, enterprisesData) => {
   const labelInput = { element: document.querySelector('#label'), isValid: false };
   const addressInput = { element: document.querySelector('#address'), isValid: false };
   const contactInput = { element: document.querySelector('#contact'), isValid: false };
-  const submit = document.querySelector('#submit');
+  const submit = document.querySelector('#submit-initiated');
 
   if (contactData) {
-    console.log('🚀 ~ InitiatedRow ~ contactData:', contactData);
-    initiatedCircle.removeAttribute('hidden');
+    if (contactData.state !== 'refusé' || contactData.state !== 'non_suivis')
+      initiatedCircle.removeAttribute('hidden');
     enterpriseInput.element.value = contactData.enterprise.name;
     enterpriseInput.element.setAttribute('disabled', true);
     labelInput.element.value = contactData.enterprise.label;
