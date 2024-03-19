@@ -11,8 +11,7 @@ public interface EnterpriseUCC {
   /**
    * Retrieves a list of all enterprises stored in the system.
    *
-   * @return A List containing EnterpriseDTO objects representing all enterprises stored in the
-   * system.
+   * @return A List containing EnterpriseDTO objects representing all enterprises stored
    */
   List<EnterpriseDTO> getAllEnterprises();
 

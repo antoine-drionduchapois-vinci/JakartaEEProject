@@ -59,13 +59,13 @@ class UserUCCImplTest {
   @Test
   void getUsersAsJson() {
     // Arrange
-    List<UserDTO> userList = new ArrayList<>();
     UserDTO user1 = mock(UserDTO.class);
     when(user1.getSurname()).thenReturn("John");
     when(user1.getName()).thenReturn("Doe");
     UserDTO user2 = mock(UserDTO.class);
     when(user2.getSurname()).thenReturn("Jane");
     when(user2.getName()).thenReturn("Smith");
+    List<UserDTO> userList = new ArrayList<>();
     userList.add(user1);
     userList.add(user2);
     when(userDAO.getAllStudents()).thenReturn(userList);
