@@ -36,13 +36,19 @@ const TookRow = (htmlElement, userData, contactData) => {
   const meetingInput = { element: document.querySelector('#meeting'), isValid: false };
   const submit = document.querySelector('#submit-took');
 
-  if (
-    contactData?.state !== 'initié' &&
-    contactData?.state !== 'refusé' &&
-    contactData?.state !== 'non_suivis'
-  ) {
-    tookCircle.removeAttribute('hidden');
+  if (!contactData || contactData.state !== 'initié') {
+    meetingInput.element.value = contactData?.description ? contactData.description : '';
+    meetingInput.element.setAttribute('disabled', true);
+    submit.setAttribute('disabled', true);
   }
+
+  if (
+    contactData &&
+    contactData.state !== 'initié' &&
+    contactData.state !== 'refusé' &&
+    contactData.state !== 'non_suivis'
+  )
+    tookCircle.removeAttribute('hidden');
 
   meetingInput.element.addEventListener('input', (e) => {
     meetingInput.value = e.target.value;
