@@ -54,17 +54,52 @@ public interface EnterpriseDTO {
    */
   String getAvisProfesseur();
 
+  /**
+   * Sets the ID of the enterprise.
+   *
+   * @param entrepriseId The ID of the enterprise to set.
+   */
   void setEntrepriseId(int entrepriseId);
 
+  /**
+   * Sets the name of the enterprise.
+   *
+   * @param nom The name of the enterprise to set.
+   */
   void setNom(String nom);
 
+  /**
+   * Sets the appellation of the enterprise.
+   *
+   * @param appellation The appellation of the enterprise to set.
+   */
   void setAppellation(String appellation);
 
+  /**
+   * Sets the address of the enterprise.
+   *
+   * @param adresse The address of the enterprise to set.
+   */
   void setAdresse(String adresse);
 
+  /**
+   * Sets the telephone number of the enterprise.
+   *
+   * @param telephone The telephone number of the enterprise to set.
+   */
   void setTelephone(String telephone);
 
+  /**
+   * Sets whether the enterprise is blacklisted.
+   *
+   * @param blacklist True if the enterprise is blacklisted, false otherwise.
+   */
   void setBlacklist(boolean blacklist);
 
+  /**
+   * Sets the professor's opinion about the enterprise.
+   *
+   * @param avisProfesseur The professor's opinion about the enterprise to set.
+   */
   void setAvisProfesseur(String avisProfesseur);
 }

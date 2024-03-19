@@ -26,6 +26,11 @@ public interface DomainFactory {
   ResponsibleDTO getResponsibleDTO(int responsibleId, String name, String surname, String phone,
       String email, int enterprise);
 
+  /**
+   * Creates a new instance of EnterpriseDTO.
+   *
+   * @return A new EnterpriseDTO object.
+   */
   EnterpriseDTO getEnterpriseDTO();
 
   /**
