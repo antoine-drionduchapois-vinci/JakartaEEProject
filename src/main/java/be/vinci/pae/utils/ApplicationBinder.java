@@ -1,5 +1,7 @@
 package be.vinci.pae.utils;
 
+import be.vinci.pae.dao.ContactDAO;
+import be.vinci.pae.dao.ContactDAOImpl;
 import be.vinci.pae.dao.EnterpriseDAO;
 import be.vinci.pae.dao.EnterpriseDAOImpl;
 import be.vinci.pae.dao.ResponsibleDAO;
@@ -42,6 +44,7 @@ public class ApplicationBinder extends AbstractBinder {
     bind(ContactUCCImpl.class).to(ContactUCC.class).in(Singleton.class);
     bind(UserDAOImpl.class).to(UserDAO.class).in(Singleton.class);
     bind(EnterpriseDAOImpl.class).to(EnterpriseDAO.class).in(Singleton.class);
+    bind(ContactDAOImpl.class).to(ContactDAO.class).in(Singleton.class);
     bind(ResponsibleDAOImpl.class).to(ResponsibleDAO.class).in(Singleton.class);
     bind(DALServiceImpl.class).to(DALService.class).in(Singleton.class);
   }
