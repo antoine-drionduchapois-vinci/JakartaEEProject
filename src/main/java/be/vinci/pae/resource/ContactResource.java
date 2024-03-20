@@ -76,8 +76,14 @@ public class ContactResource {
       throw new WebApplicationException("Bad Request", Status.BAD_REQUEST);
     }
 
-    return myContactUCC.initiateContact(json.get("userId").asInt(),
+    ObjectNode contact = myContactUCC.initiateContact(json.get("userId").asInt(),
         json.get("enterpriseName").asText(), json.get("enterpriseLabel").asText(),
         json.get("enterpriseAddress").asText(), json.get("enterpriseContact").asText());
+
+    if (contact == null) {
+      throw new WebApplicationException("not found", Status.NOT_FOUND);
+    }
+
+    return contact;
   }
 }

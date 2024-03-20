@@ -23,6 +23,21 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
   private DomainFactory myDomainFactory;
 
   @Override
+  public EnterpriseDTO readOne(int enterpriseId) {
+    EnterpriseDTO enterprise = myDomainFactory.getEnterpriseDTO();
+
+    try (PreparedStatement ps = myDalService.getPS(
+        "SELECT * FROM projetae.entreprises WHERE entreprise_id = ?;")) {
+      ps.setInt(1, enterpriseId);
+      ps.execute();
+      enterprise = convertRsToDTO(ps.getResultSet());
+    } catch (SQLException e) {
+      System.err.println(e); // TODO: handle error
+    }
+    return enterprise;
+  }
+
+  @Override
   public EnterpriseDTO create(String name, String label, String adress, String contact) {
     EnterpriseDTO enterprise = myDomainFactory.getEnterpriseDTO();
 

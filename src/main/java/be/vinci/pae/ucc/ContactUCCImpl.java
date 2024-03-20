@@ -31,7 +31,7 @@ public class ContactUCCImpl implements ContactUCC {
     if (contact == null) {
       return null; // TODO: handle error 404
     }
-    EnterpriseDTO enterprise = myEnterpriseDAO.getEnterpriseById(contact.getEntreprise());
+    EnterpriseDTO enterprise = myEnterpriseDAO.readOne(contact.getEntreprise());
     return convertDTOsTOJson(contact, enterprise);
   }
 
@@ -42,7 +42,7 @@ public class ContactUCCImpl implements ContactUCC {
       // TODO: handle error
     }
     ContactDTO contact = myContactDAO.create("initié", getCurrentYearString(), userId, enterpriseId);
-    EnterpriseDTO enterprise = myEnterpriseDAO.getEnterpriseById(contact.getEntreprise());
+    EnterpriseDTO enterprise = myEnterpriseDAO.readOne(contact.getEntreprise());
 
     return convertDTOsTOJson(contact, enterprise);
   }
