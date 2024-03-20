@@ -26,4 +26,6 @@ public interface ContactUCC {
       String enterpriseAddress, String enterpriseContact);
 
   ObjectNode meetEnterprise(int contactId, String meetingPoint);
+
+  ObjectNode indicateAsRefused(int contactId, String reason);
 }

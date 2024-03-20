@@ -182,4 +182,23 @@ public class ContactResource {
 
     return contact;
   }
+
+  @POST
+  @Path("/refuse")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public ObjectNode refuse(JsonNode json) {
+    if (!json.hasNonNull("contactId") || !json.hasNonNull("reason")) {
+      throw new WebApplicationException("contactId, meetingPoint required", Status.BAD_REQUEST);
+    }
+
+    ObjectNode contact = myContactUCC.indicateAsRefused(json.get("contactId").asInt(),
+        json.get("reason").asText());
+
+    if (contact == null) {
+      throw new WebApplicationException("not found", Status.NOT_FOUND);
+    }
+
+    return contact;
+  }
 }
