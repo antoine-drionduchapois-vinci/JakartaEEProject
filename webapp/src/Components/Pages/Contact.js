@@ -4,6 +4,7 @@ import InitiatedRow from '../Contact/InitiatedRow';
 
 import { getAuthenticatedUser } from '../../utils/auths';
 import TookRow from '../Contact/TookRow';
+import RefusedRow from '../Contact/RefusedRow';
 
 const contactId = 1; // TODO: will then be acquired by route param
 
@@ -33,10 +34,12 @@ const Contact = async () => {
   contentElement.innerHTML = `
     <div id="initiated-row" class="columns p-4"></div>
     <div id="took-row" class="columns p-4"></div>
+    <div id="refused-row" class="columns p-4"></div>
   `;
 
   InitiatedRow(document.querySelector('#initiated-row'), user, contact, enterprises);
   TookRow(document.querySelector('#took-row'), user, contact);
+  RefusedRow(document.querySelector('#refused-row'), contact);
 };
 
 // Exporting Contact component
