@@ -103,10 +103,13 @@ const renderChart = (chartContainer, noStage, total) => {
 const updateTable = (tableBody, list) => {
   const tbody = tableBody; // Nouvelle variable pour stocker la référence à tableBody
   tbody.innerHTML = ''; // Effacer le contenu actuel du tableau
+
   list.forEach((e) => {
     const row = document.createElement('tr');
     row.addEventListener('click', () => {
-      window.location.href = `details-page.html?id=${e.entreprise_id !== undefined ? e.entreprise_id : e.utilisateur_id}`;
+      window.location.href = `details-page.html?id=${
+        e.entreprise_id !== undefined ? e.entreprise_id : e.utilisateur_id
+      }`;
     });
     const values = Object.values(e).slice(1);
     values.forEach((value) => {
@@ -117,6 +120,108 @@ const updateTable = (tableBody, list) => {
     tableBody.appendChild(row);
   });
 };
+
+const renderForm = (formContainer, users,tableUserContainer) => {
+  // Créer le formulaire
+  const form = document.createElement('form');
+  form.className = 'form';
+  form.style.display = 'flex'; // Utiliser Flexbox
+  form.style.flexWrap = 'wrap'; // Permettre le retour à la ligne si nécessaire
+  form.style.paddingBottom = '10px'; // Ajouter le padding-bottom
+  form.style.gap = '5%'; // Ajouter un espace entre les éléments
+
+  // Créer le champ input avec Bulma
+  const inputFieldDiv = document.createElement('div');
+  inputFieldDiv.className = 'field';
+  const inputLabel = document.createElement('label');
+  inputLabel.className = 'label';
+  inputLabel.textContent = 'Nom';
+  const inputControlDiv = document.createElement('div');
+  inputControlDiv.className = 'control';
+  const inputField = document.createElement('input');
+  inputField.className = 'input';
+  inputField.type = 'text';
+  inputField.placeholder = 'Entrez le nom';
+  inputControlDiv.appendChild(inputField);
+  inputFieldDiv.appendChild(inputLabel);
+  inputFieldDiv.appendChild(inputControlDiv);
+
+  // Créer la checkbox avec Bulma
+  const checkboxDiv = document.createElement('div');
+  checkboxDiv.className = 'field';
+  const checkboxControlDiv = document.createElement('div');
+  checkboxControlDiv.className = 'control';
+  const checkboxLabel = document.createElement('label');
+  checkboxLabel.className = 'checkbox';
+  const checkboxField = document.createElement('input');
+  checkboxField.type = 'checkbox';
+  checkboxField.id = 'isStudent'; // Modifier l'ID de la case à cocher
+  checkboxLabel.appendChild(checkboxField);
+  checkboxLabel.append(' Is Student'); // Modifier le texte de l'étiquette
+  checkboxControlDiv.appendChild(checkboxLabel);
+  checkboxDiv.appendChild(checkboxControlDiv);
+
+  // Créer le menu déroulant (select) avec Bulma
+  const selectDiv = document.createElement('div');
+  selectDiv.className = 'field';
+  const selectLabel = document.createElement('label');
+  selectLabel.className = 'label';
+  selectLabel.textContent = 'Option';
+  const selectControlDiv = document.createElement('div');
+  selectControlDiv.className = 'control';
+  const selectField = document.createElement('select');
+  selectField.className = 'input';
+  // Récupérer l'année actuelle
+  const currentYear = new Date().getFullYear();
+  // Créer une option vide par défaut
+  const defaultOption = document.createElement('option');
+  defaultOption.textContent = 'Sélectionnez une année';
+  defaultOption.value = null; // Valeur vide
+  selectField.appendChild(defaultOption);
+
+  // Générer les options pour les années de 2000 à l'année actuelle
+  for (let year = 2000; year <= currentYear; year += 1) {
+    const option = document.createElement('option');
+    option.textContent = year.toString(); // Convertir l'année en chaîne de caractères
+    selectField.appendChild(option);
+  }
+
+  selectControlDiv.appendChild(selectField);
+  selectDiv.appendChild(selectLabel);
+  selectDiv.appendChild(selectControlDiv);
+
+  // Ajouter les éléments au formulaire
+  form.appendChild(inputFieldDiv);
+  form.appendChild(checkboxDiv);
+  form.appendChild(selectDiv);
+
+  // Gestionnaire d'événement pour les champs d'entrée du formulaire
+  [inputField, checkboxField, selectField].forEach((field) => {
+    field.addEventListener('input', () => {
+      // Récupérer les valeurs du formulaire
+      const name = inputField.value.trim();
+      const isStudent = checkboxField.checked;
+      const selectedYear = parseInt(selectField.value, 10);
+
+      // Filtrer les utilisateurs en fonction des critères
+      const filteredUsers = users.filter((user) => {
+        const matchesName = !name || user.name.toLowerCase().includes(name.toLowerCase());
+        const matchesIsStudent = !isStudent || user.role === 'STUDENT';
+        const matchesYear = Number.isNaN(selectedYear) || user.year === selectedYear;
+        return matchesName && matchesIsStudent && matchesYear;
+      });
+      updateTable(tableUserContainer,filteredUsers);
+
+      // Afficher les utilisateurs filtrés (vous pouvez appeler une fonction appropriée ici)
+      console.log(filteredUsers);
+    });
+  });
+
+  // Ajouter le formulaire au conteneur fourni
+  formContainer.appendChild(form);
+};
+
+
 
 // Fonction pour rendre le tableau des entreprises avec recherche et tri
 const renderEnterpriseTable = (tableContainer, enterprises) => {
@@ -133,11 +238,11 @@ const renderEnterpriseTable = (tableContainer, enterprises) => {
       // Comparaison des valeurs des colonnes
       const valueA = a[lowerColumnName].toLowerCase();
       const valueB = b[lowerColumnName].toLowerCase();
-  
+
       // Utilisation de localeCompare pour le tri alphabétique
       return valueA.localeCompare(valueB);
     });
-    console.log("update T");
+    console.log('update T');
     // Mettre à jour le tableau avec les entreprises triées
     updateTable(tbody, enterprises);
   };
@@ -168,8 +273,16 @@ const renderEnterpriseTable = (tableContainer, enterprises) => {
 };
 
 const renderUserTable = (tableUserContainer, users) => {
+  const formContainer = document.createElement('div');
+  tableUserContainer.appendChild(formContainer);
   const table = document.createElement('table');
   table.className = 'table is-fullwidth';
+
+    // Créer le corps du tableau
+  const tbody = document.createElement('tbody');
+  renderForm(formContainer, users,tbody);
+
+
   tableUserContainer.appendChild(table);
 
   // Créer la première ligne pour les en-têtes de colonne
@@ -187,11 +300,10 @@ const renderUserTable = (tableUserContainer, users) => {
   thead.appendChild(headerRow);
   table.appendChild(thead);
 
-  // Créer le corps du tableau
-  const tbody = document.createElement('tbody');
+
   table.appendChild(tbody);
 
-  updateTable(tbody,users);
+  updateTable(tbody, users);
 };
 
 // Fonction pour rendre le tableau de bord de l'enseignant
@@ -228,13 +340,12 @@ const renderDashboardTeacher = async () => {
   if (data) {
     renderChart(chartContainer, data.noStage, users.lenght);
   }
-  
+
   if (enterprises) {
     renderEnterpriseTable(tableContainer, enterprises);
   }
-  
+
   if (users) {
-    
     renderUserTable(tableUserContainer, users);
   }
 };
