@@ -38,11 +38,13 @@ public class ApplicationBinder extends AbstractBinder {
   protected void configure() {
     bind(DomainFactoryImpl.class).to(DomainFactory.class).in(Singleton.class);
     bind(UserUCCImpl.class).to(UserUCC.class).in(Singleton.class);
+    bind(ContactUCCImpl.class).to(ContactUCC.class).in(Singleton.class);
     bind(ResponsibleUCCImpl.class).to(ResponsibleUCC.class).in(Singleton.class);
     bind(EnterpriseUCCImpl.class).to(EnterpriseUCC.class).in(Singleton.class);
     bind(AuthUCCImpl.class).to(AuthUCC.class).in(Singleton.class);
     bind(ContactUCCImpl.class).to(ContactUCC.class).in(Singleton.class);
     bind(UserDAOImpl.class).to(UserDAO.class).in(Singleton.class);
+    bind(ContactDAOImpl.class).to(ContactDAO.class).in(Singleton.class);
     bind(EnterpriseDAOImpl.class).to(EnterpriseDAO.class).in(Singleton.class);
     bind(ContactDAOImpl.class).to(ContactDAO.class).in(Singleton.class);
     bind(ResponsibleDAOImpl.class).to(ResponsibleDAO.class).in(Singleton.class);

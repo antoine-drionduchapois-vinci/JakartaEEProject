@@ -9,10 +9,20 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Implementation of the ContactUCC interface providing methods for managing contact-related
  * functionality.
+=======
+import be.vinci.pae.domain.ContactDTO;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import java.util.List;
+
+/**
+ * Implementation of the Contact UCC interface.
+>>>>>>> master
  */
 @Singleton
 public class ContactUCCImpl implements ContactUCC {
@@ -24,6 +34,15 @@ public class ContactUCCImpl implements ContactUCC {
 
 
   private final ObjectMapper jsonMapper = new ObjectMapper();
+
+  @Override
+  public List<ContactDTO> getAllUsersContact(int id) {
+
+    // Récupérer la liste complète des contacts de user depuis votre DAO
+    List<ContactDTO> getAllUsersContact = myContactDAO.getAllUsersContact(id);
+
+    return getAllUsersContact;
+  }
 
   @Override
   public ObjectNode getContact(int contactid) {
