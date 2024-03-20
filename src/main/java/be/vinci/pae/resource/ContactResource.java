@@ -201,4 +201,23 @@ public class ContactResource {
 
     return contact;
   }
+
+  @POST
+  @Path("/meet")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public ObjectNode meet(JsonNode json) {
+    if (!json.hasNonNull("contactId") || !json.hasNonNull("meetingPoint")) {
+      throw new WebApplicationException("contactId, meetingPoint required", Status.BAD_REQUEST);
+    }
+
+    ObjectNode contact = myContactUCC.meetEnterprise(json.get("contactId").asInt(),
+        json.get("meetingPoint").asText());
+
+    if (contact == null) {
+      throw new WebApplicationException("not found", Status.NOT_FOUND);
+    }
+
+    return contact;
+  }
 }
