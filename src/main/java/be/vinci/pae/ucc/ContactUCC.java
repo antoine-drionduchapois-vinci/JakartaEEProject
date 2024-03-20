@@ -28,4 +28,6 @@ public interface ContactUCC {
   ObjectNode meetEnterprise(int contactId, String meetingPoint);
 
   ObjectNode indicateAsRefused(int contactId, String reason);
+
+  ObjectNode unfollow(int contactId);
 }

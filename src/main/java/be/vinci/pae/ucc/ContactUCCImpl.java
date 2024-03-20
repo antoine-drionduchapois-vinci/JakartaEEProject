@@ -124,6 +124,31 @@ public class ContactUCCImpl implements ContactUCC {
     return convertDTOsTOJson(newContact, enterprise);
   }
 
+  @Override
+  public ObjectNode unfollow(int contactId) {
+    ContactDTO contact = myContactDAO.readOne(contactId);
+    if (contact == null) {
+      return null;
+    }
+
+    if (contact.getState().equals("non_suivis")) {
+      System.err.println("Conflict");
+      return null; // TODO: handle error
+    }
+
+    if (!contact.getState().equals("initié") && !contact.getState().equals("pris")) {
+      System.err.println("Forbidden");
+      return null; // TODO: handle error
+    }
+
+    contact.setState("non_suivis");
+
+    ContactDTO newContact = myContactDAO.update(contact);
+    EnterpriseDTO enterprise = myEnterpriseDAO.getEnterpriseById(newContact.getEntreprise());
+
+    return convertDTOsTOJson(newContact, enterprise);
+  }
+
   private String getCurrentYearString() {
     LocalDate currentDate = LocalDate.now();
     LocalDate startDate = LocalDate.of(currentDate.getYear() - 1, 9, 1);
