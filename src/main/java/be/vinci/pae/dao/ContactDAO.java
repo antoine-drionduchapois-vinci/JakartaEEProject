@@ -46,4 +46,6 @@ public interface ContactDAO {
    *         found for the given user ID and enterprise ID.
    */
   ContactDTO readOne(int userId, int enterpriseId);
+
+  ContactDTO update(ContactDTO newContact);
 }
