@@ -54,6 +54,27 @@ public class ContactUCCImpl implements ContactUCC {
     return convertDTOsTOJson(contact, enterprise);
   }
 
+  @Override
+  public ObjectNode meetEnterprise(int contactId, String meetingPoint) {
+    ContactDTO contact = myContactDAO.readOne(contactId);
+    if (contact == null) {
+      return null;
+    }
+
+    if (!contact.getState().equals("initié")) {
+      System.err.println("Conflict");
+      return null; // TODO: handle error
+    }
+
+    contact.setDescription(meetingPoint);
+    contact.setState("pris");
+
+    ContactDTO newContact = myContactDAO.update(contact);
+    EnterpriseDTO enterprise = myEnterpriseDAO.getEnterpriseById(newContact.getEntreprise());
+
+    return convertDTOsTOJson(newContact, enterprise);
+  }
+
   private String getCurrentYearString() {
     LocalDate currentDate = LocalDate.now();
     LocalDate startDate = LocalDate.of(currentDate.getYear() - 1, 9, 1);

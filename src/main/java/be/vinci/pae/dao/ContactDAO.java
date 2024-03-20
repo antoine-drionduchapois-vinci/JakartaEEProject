@@ -25,4 +25,6 @@ public interface ContactDAO {
   ContactDTO readOne(int contactId);
 
   ContactDTO readOne(int userId, int enterpriseId);
+
+  ContactDTO update(ContactDTO newContact);
 }
