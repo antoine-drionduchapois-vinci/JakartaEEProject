@@ -61,7 +61,7 @@ const TookRow = (htmlElement, userData, contactData) => {
       return;
     }
 
-    meetEnterprise({ meetingPoint: meetingInput.value });
+    meetEnterprise({ contactId: contactData.contactId, meetingPoint: meetingInput.value });
   });
 };
 
