@@ -79,6 +79,32 @@ public class ContactUCCImpl implements ContactUCC {
     return convertDTOsTOJson(newContact, enterprise);
   }
 
+  @Override
+  public ObjectNode indicateAsRefused(int contactId, String reason) {
+    ContactDTO contact = myContactDAO.readOne(contactId);
+    if (contact == null) {
+      return null;
+    }
+
+    if (contact.getState().equals("refusé")) {
+      System.err.println("Conflict");
+      return null; // TODO: handle error
+    }
+
+    if (!contact.getState().equals("initié") && !contact.getState().equals("pris")) {
+      System.err.println("Forbidden");
+      return null; // TODO: handle error
+    }
+
+    contact.setReasonRefusal(reason);
+    contact.setState("refusé");
+
+    ContactDTO newContact = myContactDAO.update(contact);
+    EnterpriseDTO enterprise = myEnterpriseDAO.getEnterpriseById(newContact.getEntreprise());
+
+    return convertDTOsTOJson(newContact, enterprise);
+  }
+
   private String getCurrentYearString() {
     LocalDate currentDate = LocalDate.now();
     LocalDate startDate = LocalDate.of(currentDate.getYear() - 1, 9, 1);
