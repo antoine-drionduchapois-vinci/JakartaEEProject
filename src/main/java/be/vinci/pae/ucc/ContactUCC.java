@@ -24,4 +24,6 @@ public interface ContactUCC {
 
   ObjectNode initiateContact(int userId, String enterpriseName, String enterpriseLabel,
       String enterpriseAddress, String enterpriseContact);
+
+  ObjectNode meetEnterprise(int contactId, String meetingPoint);
 }
