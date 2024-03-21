@@ -4,7 +4,8 @@ import be.vinci.pae.domain.EnterpriseDTO;
 import java.util.List;
 
 /**
- * The EnterpriseUCC interface provides methods for managing enterprise-related functionality.
+ * The EnterpriseUCC interface provides methods for managing enterprise-related
+ * functionality.
  */
 public interface EnterpriseUCC {
 

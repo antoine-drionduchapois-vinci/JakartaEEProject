@@ -59,3 +59,50 @@ tbody tr:hover {
   transition: background-color 0.3s ease; /* Smooth transition for background color */
 }
 /* End Style DashboardTeacher */
+
+/* Autocomplete credit: https://www.w3schools.com/howto/howto_js_autocomplete.asp */
+.autocomplete {
+  position: relative;
+  display: inline-block;
+}
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+.autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff;
+  border-bottom: 1px solid #d4d4d4;
+}
+.autocomplete-items div:hover {
+  background-color: #e9e9e9;
+}
+.autocomplete-active {
+  background-color: DodgerBlue !important;
+  color: #ffffff;
+}
+
+/* Status circle */
+.status-circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+}
+
+.status-circle-item {
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  background: black;
+}

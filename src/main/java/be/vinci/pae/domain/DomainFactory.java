@@ -27,6 +27,13 @@ public interface DomainFactory {
       String email, int enterprise);
 
   /**
+   * Creates a new instance of EnterpriseDTO.
+   *
+   * @return A new EnterpriseDTO object.
+   */
+  EnterpriseDTO getEnterpriseDTO();
+
+  /**
    * Creates a new instance of EnterpriseDTO with the specified parameters.
    *
    * @param entrepriseId   The ID of the enterprise.

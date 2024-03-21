@@ -1,6 +1,7 @@
 package be.vinci.pae.ucc;
 
 import be.vinci.pae.domain.ContactDTO;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.List;
 
 /**
@@ -16,4 +17,11 @@ public interface ContactUCC {
    *         system related to the user.
    */
   List<ContactDTO> getAllUsersContact(int id);
+
+  ObjectNode getContact(int contactid);
+
+  ObjectNode initiateContact(int userId, int enterpriseId);
+
+  ObjectNode initiateContact(int userId, String enterpriseName, String enterpriseLabel,
+      String enterpriseAddress, String enterpriseContact);
 }
