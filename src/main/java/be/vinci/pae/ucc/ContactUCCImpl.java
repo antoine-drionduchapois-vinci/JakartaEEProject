@@ -93,7 +93,7 @@ public class ContactUCCImpl implements ContactUCC {
     contact.setState("pris");
 
     ContactDTO newContact = myContactDAO.update(contact);
-    EnterpriseDTO enterprise = myEnterpriseDAO.getEnterpriseById(newContact.getEntreprise());
+    EnterpriseDTO enterprise = myEnterpriseDAO.readOne(newContact.getEntreprise());
 
     return convertDTOsTOJson(newContact, enterprise);
   }
@@ -119,7 +119,7 @@ public class ContactUCCImpl implements ContactUCC {
     contact.setState("refusé");
 
     ContactDTO newContact = myContactDAO.update(contact);
-    EnterpriseDTO enterprise = myEnterpriseDAO.getEnterpriseById(newContact.getEntreprise());
+    EnterpriseDTO enterprise = myEnterpriseDAO.readOne(newContact.getEntreprise());
 
     return convertDTOsTOJson(newContact, enterprise);
   }
@@ -144,7 +144,7 @@ public class ContactUCCImpl implements ContactUCC {
     contact.setState("non_suivis");
 
     ContactDTO newContact = myContactDAO.update(contact);
-    EnterpriseDTO enterprise = myEnterpriseDAO.getEnterpriseById(newContact.getEntreprise());
+    EnterpriseDTO enterprise = myEnterpriseDAO.readOne(newContact.getEntreprise());
 
     return convertDTOsTOJson(newContact, enterprise);
   }
