@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 import be.vinci.pae.TestBinder;
 import be.vinci.pae.dao.UserDAO;
 import be.vinci.pae.domain.UserDTO;
-import be.vinci.pae.utils.Config;
 import java.util.ArrayList;
 import java.util.List;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -21,10 +20,6 @@ class UserUCCImplTest {
 
   private UserUCC userUCC;
   private UserDAO userDAO;
-
-  static {
-    Config.load("dev.properties");
-  }
 
   @BeforeEach
   void setUp() {

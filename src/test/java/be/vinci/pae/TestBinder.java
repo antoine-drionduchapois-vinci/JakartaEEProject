@@ -3,6 +3,8 @@ package be.vinci.pae;
 import static org.mockito.Mockito.mock;
 
 import be.vinci.pae.dao.UserDAO;
+import be.vinci.pae.ucc.AuthUCC;
+import be.vinci.pae.ucc.AuthUCCImpl;
 import be.vinci.pae.ucc.UserUCC;
 import be.vinci.pae.ucc.UserUCCImpl;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -21,6 +23,7 @@ public class TestBinder extends AbstractBinder {
     UserDAO userDAOMock = mock(UserDAO.class);
     bind(userDAOMock).to(UserDAO.class);
     bind(UserUCCImpl.class).to(UserUCC.class);
+    bind(AuthUCCImpl.class).to(AuthUCC.class);
 
     // Vous pouvez ajouter d'autres liaisons pour d'autres mocks si nécessaire
   }
