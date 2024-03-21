@@ -207,7 +207,7 @@ const renderForm = (formContainer, users,tableUserContainer) => {
       const filteredUsers = users.filter((user) => {
         const matchesName = !name || user.name.toLowerCase().includes(name.toLowerCase());
         const matchesIsStudent = !isStudent || user.role === 'STUDENT';
-        const matchesYear = Number.isNaN(selectedYear) || user.year === selectedYear;
+        const matchesYear = Number.isNaN(selectedYear) || user.annee === selectedYear.toString();
         return matchesName && matchesIsStudent && matchesYear;
       });
       updateTable(tableUserContainer,filteredUsers);
