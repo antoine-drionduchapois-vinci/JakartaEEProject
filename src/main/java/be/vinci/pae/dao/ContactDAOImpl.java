@@ -122,7 +122,7 @@ public class ContactDAOImpl implements ContactDAO {
       ps.execute();
       contact = convertRsToDTO(ps.getResultSet());
     } catch (SQLException e) {
-      throw new RuntimeException(e); //TODO: handle error
+      throw new RuntimeException(e); // TODO: handle error
     }
 
     return contact;

@@ -26,7 +26,8 @@ import jakarta.ws.rs.core.Response.Status;
 import java.util.List;
 
 /**
- * The ContactResource class represents a RESTful web service endpoint for managing contact-related
+ * The ContactResource class represents a RESTful web service endpoint for
+ * managing contact-related
  * functionality.
  */
 @Singleton
@@ -39,9 +40,12 @@ public class ContactResource {
   private ContactUCC myContactUCC;
 
   /**
-   * Retrieves users info.
-   *
-   * @return an ObjectNode containing users info
+   * Retrieves the contacts associated with the authenticated user.
+   * 
+   * @param json The JSON object containing the authentication token.
+   * @return An ObjectNode containing the contacts associated with the
+   *         authenticated user,
+   *         or an error response if an exception occurs during processing.
    */
   @POST
   @Path("getContacts")
@@ -50,14 +54,14 @@ public class ContactResource {
   public ObjectNode getUsersContacts(JsonNode json) {
 
     try {
-      //Get token from JSON
+      // Get token from JSON
       String jsonToken = json.get("token").asText();
-      //Decode Token
+      // Decode Token
       DecodedJWT jwt = JWT.require(jwtAlgorithm)
           .withIssuer("auth0")
           .build() // create the JWTVerifier instance
           .verify(jsonToken); // verify the token
-      //Het userId from decodedToken
+      // Het userId from decodedToken
       int userId = jwt.getClaim("user").asInt();
       // Assuming the token includes a "user" claim holding the user ID
       if (userId == -1) {
@@ -108,8 +112,10 @@ public class ContactResource {
    * Retrieves the contact information associated with the specified contact ID.
    *
    * @param contactId The ID of the contact to retrieve.
-   * @return An ObjectNode containing the contact information, or throws a WebApplicationException
-   *         with status 400 (Bad Request) if the contactId is not provided, or 404 (Not Found)
+   * @return An ObjectNode containing the contact information, or throws a
+   *         WebApplicationException
+   *         with status 400 (Bad Request) if the contactId is not provided, or
+   *         404 (Not Found)
    *         if the contact is not found.
    */
   @GET
@@ -131,8 +137,10 @@ public class ContactResource {
    * Adds a new contact.
    *
    * @param json The JSON object representing the new contact to add.
-   * @return An ObjectNode containing the newly added contact information, or throws a
-   *         WebApplicationException with status 400 (Bad Request) if the userId is not provided
+   * @return An ObjectNode containing the newly added contact information, or
+   *         throws a
+   *         WebApplicationException with status 400 (Bad Request) if the userId
+   *         is not provided
    *         or if required enterprise information is missing.
    */
   @POST
@@ -164,11 +172,19 @@ public class ContactResource {
     return contact;
   }
 
+  /**
+   * Handles the meeting with an enterprise.
+   *
+   * @param json The JSON object containing the contact ID and meeting point.
+   * @return An ObjectNode representing the updated contact information.
+   * @throws WebApplicationException If the contactId or meetingPoint is not
+   *                                 provided, or if the contact is not found.
+   */
   @POST
   @Path("/meet")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode meet(JsonNode json) {
+  public ObjectNode meet(JsonNode json) throws WebApplicationException {
     if (!json.hasNonNull("contactId") || !json.hasNonNull("meetingPoint")) {
       throw new WebApplicationException("contactId, meetingPoint required", Status.BAD_REQUEST);
     }
@@ -183,6 +199,14 @@ public class ContactResource {
     return contact;
   }
 
+  /**
+   * Handles indicating contact as refused.
+   *
+   * @param json The JSON object containing the contact ID and reason for refusal.
+   * @return An ObjectNode representing the updated contact information.
+   * @throws WebApplicationException If the contactId or reason is not provided,
+   *                                 or if the contact is not found.
+   */
   @POST
   @Path("/refuse")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -202,6 +226,14 @@ public class ContactResource {
     return contact;
   }
 
+  /**
+   * Handles unfollowing a contact.
+   *
+   * @param json The JSON object containing the contact ID.
+   * @return An ObjectNode representing the updated contact information.
+   * @throws WebApplicationException If the contactId is not provided, or if the
+   *                                 contact is not found.
+   */
   @POST
   @Path("/unfollow")
   @Consumes(MediaType.APPLICATION_JSON)
