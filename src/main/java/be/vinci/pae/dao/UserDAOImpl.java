@@ -107,7 +107,7 @@ public class UserDAOImpl implements UserDAO {
         +
         "LEFT JOIN projetae.internships "
         +
-        "ON projetae.users.user_id = projetae.interships.user "
+        "ON projetae.users.user_id = projetae.internships.user "
         +
         "WHERE projetae.internships.internship_id IS NULL AND projetae.users.role='STUDENT'";
 
