@@ -1,7 +1,7 @@
 package be.vinci.pae.utils;
 
 /**
- * The DALService interface defines methods for managing database access.
+ * The DALService interface defines methods for starting and commit database access.
  */
 public interface DALService {
 
@@ -11,7 +11,8 @@ public interface DALService {
   void start();
 
   /**
-   * Commits the transaction.
+   * Commits the transaction and close the connection. If there is an error, make a rollback of the
+   * transaction.
    **/
   void commit();
 }
