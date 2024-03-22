@@ -1,6 +1,6 @@
 package be.vinci.pae.utils;
 
-import be.vinci.pae.domain.User.Role;
+import be.vinci.pae.domain.UserDTO.Role;
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.SQLException;

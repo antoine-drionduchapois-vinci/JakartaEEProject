@@ -2,7 +2,7 @@ package be.vinci.pae.ucc;
 
 import be.vinci.pae.dao.UserDAO;
 import be.vinci.pae.domain.User;
-import be.vinci.pae.domain.User.Role;
+import be.vinci.pae.domain.UserDTO.Role;
 import be.vinci.pae.domain.UserImpl;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
