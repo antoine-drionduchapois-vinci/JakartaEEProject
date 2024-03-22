@@ -115,6 +115,7 @@ public class EnterpriseResource {
     enterpriseNode.put("email", enterpriseDTO.getEmail());
     enterpriseNode.put("is_blacklist", enterpriseDTO.isBlacklisted());
     enterpriseNode.put("avis_professeur", enterpriseDTO.getBlacklistedReason());
+    return enterpriseNode;
   }
 
 }
