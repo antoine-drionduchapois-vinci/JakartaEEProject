@@ -4,7 +4,6 @@ import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.Enterprise;
 import be.vinci.pae.domain.EnterpriseImpl;
 import be.vinci.pae.utils.DALBackService;
-import be.vinci.pae.utils.DALServiceImpl;
 import be.vinci.pae.utils.ResultSetMapper;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
@@ -16,7 +15,8 @@ import java.util.List;
  */
 public class EnterpriseDAOImpl implements EnterpriseDAO {
 
-  private DALBackService myDalService = new DALServiceImpl();
+  @Inject
+  private DALBackService myDalService;
 
   private final ResultSetMapper<Enterprise, EnterpriseImpl> enterpriseMapper =
       new ResultSetMapper<>();

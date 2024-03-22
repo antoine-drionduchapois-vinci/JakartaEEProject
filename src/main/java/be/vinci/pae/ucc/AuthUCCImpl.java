@@ -5,6 +5,7 @@ import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserDTO.Role;
 import be.vinci.pae.domain.UserImpl;
 import be.vinci.pae.utils.Config;
+import be.vinci.pae.utils.DALService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,9 +22,16 @@ public class AuthUCCImpl implements AuthUCC {
   @Inject
   private UserDAO myUserDAO;
 
+  @Inject
+  private DALService myDALService;
+
   @Override
   public ObjectNode login(String email, String password) {
+    myDALService.start();
+
     User user = myUserDAO.getOneByEmail(email);
+
+    myDALService.commit();
     if (user == null || !user.checkPassword(password)) {
       return null;
     }
@@ -47,7 +55,9 @@ public class AuthUCCImpl implements AuthUCC {
 
   @Override
   public ObjectNode register(User user1) {
+    myDALService.start();
     User user = (User) myUserDAO.addUser(user1);
+    myDALService.commit();
     if (user == null) {
       return null;
     }

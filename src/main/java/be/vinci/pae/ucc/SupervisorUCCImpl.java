@@ -2,6 +2,7 @@ package be.vinci.pae.ucc;
 
 import be.vinci.pae.dao.SupervisorDAO;
 import be.vinci.pae.domain.Supervisor;
+import be.vinci.pae.utils.DALService;
 import jakarta.inject.Inject;
 
 /**
@@ -13,6 +14,9 @@ public class SupervisorUCCImpl implements SupervisorUCC {
 
   @Inject
   private SupervisorDAO supervisorDAO;
+
+  @Inject
+  private DALService myDALService;
 
   /**
    * Retrieves detailed information about the responsible associated with a given enterprise ID.
@@ -27,7 +31,9 @@ public class SupervisorUCCImpl implements SupervisorUCC {
    */
   @Override
   public Supervisor getResponsibleByEnterpriseId(int id) {
+    myDALService.start();
     Supervisor supervisor = supervisorDAO.getResponsibleByEnterpriseId(id);
+    myDALService.commit();
     return supervisor;
   }
 

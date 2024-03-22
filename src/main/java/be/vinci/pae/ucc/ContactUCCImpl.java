@@ -5,6 +5,7 @@ import be.vinci.pae.dao.EnterpriseDAO;
 import be.vinci.pae.domain.Contact;
 import be.vinci.pae.domain.ContactDTO;
 import be.vinci.pae.domain.Enterprise;
+import be.vinci.pae.utils.DALService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
@@ -23,11 +24,15 @@ public class ContactUCCImpl implements ContactUCC {
   @Inject
   EnterpriseDAO myEnterpriseDAO;
 
+  @Inject
+  private DALService myDALService;
   private final ObjectMapper jsonMapper = new ObjectMapper();
 
   @Override
   public List<ContactDTO> getContacts(int userId) {
+    myDALService.start();
     List<ContactDTO> contactDTOS = myContactDAO.readMany(userId);
+    myDALService.commit();
     if (contactDTOS == null) {
       return null;
     }
@@ -36,11 +41,13 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public ObjectNode getContact(int contactId) {
+    myDALService.start();
     ContactDTO contactDTO = myContactDAO.readOne(contactId);
     if (contactDTO == null) {
       return null;
     }
     Enterprise enterprise = myEnterpriseDAO.readOne(contactDTO.getEnterprise());
+    myDALService.commit();
     if (enterprise == null) {
       return null; // TODO: handle error
     }
@@ -50,6 +57,7 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public ObjectNode initiateContact(int userId, int enterpriseId) {
+    myDALService.start();
     if (myContactDAO.readOne(userId, enterpriseId) != null) {
       return null;
       // TODO: handle conflict
@@ -57,6 +65,7 @@ public class ContactUCCImpl implements ContactUCC {
     ContactDTO contactDTO = myContactDAO.create("initié", getCurrentYearString(), userId,
         enterpriseId);
     Enterprise enterprise = myEnterpriseDAO.readOne(contactDTO.getEnterprise());
+    myDALService.commit();
     if (enterprise == null) {
       return null; // TODO: handle error
     }
@@ -67,6 +76,7 @@ public class ContactUCCImpl implements ContactUCC {
   @Override
   public ObjectNode initiateContact(int userId, String enterpriseName, String enterpriseLabel,
       String enterpriseAddress, String enterpriseContact) {
+    myDALService.start();
     if (myEnterpriseDAO.readOne(enterpriseName, enterpriseLabel) != null) {
       return null; // TODO: handle conflict
     }
@@ -77,12 +87,14 @@ public class ContactUCCImpl implements ContactUCC {
     }
     ContactDTO contactDTO = myContactDAO.create("initié", getCurrentYearString(), userId,
         enterprise.getEnterpriseId());
+    myDALService.commit();
     contactDTO.setEnterpriseDTO(enterprise);
     return convertDTOToJson(contactDTO);
   }
 
   @Override
   public ObjectNode meetEnterprise(int contactId, String meetingPoint) {
+    myDALService.start();
     Contact contact = (Contact) myContactDAO.readOne(contactId);
     if (contact == null) {
       return null;
@@ -94,6 +106,7 @@ public class ContactUCCImpl implements ContactUCC {
 
     ContactDTO updatedContactDTO = myContactDAO.update(contact);
     Enterprise enterprise = myEnterpriseDAO.readOne(updatedContactDTO.getEnterprise());
+    myDALService.commit();
     if (enterprise == null) {
       return null; // TODO: handle error
     }
@@ -103,6 +116,7 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public ObjectNode indicateAsRefused(int contactId, String refusalReason) {
+    myDALService.start();
     Contact contact = (Contact) myContactDAO.readOne(contactId);
     if (contact == null) {
       return null;
@@ -112,6 +126,7 @@ public class ContactUCCImpl implements ContactUCC {
 
     ContactDTO updatedContactDTO = myContactDAO.update(contact);
     Enterprise enterprise = myEnterpriseDAO.readOne(updatedContactDTO.getEnterprise());
+    myDALService.commit();
     if (enterprise == null) {
       return null; // TODO: handle error
     }
@@ -122,6 +137,7 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public ObjectNode unfollow(int contactId) {
+    myDALService.start();
     Contact contact = (Contact) myContactDAO.readOne(contactId);
     if (contact == null) {
       return null;
@@ -131,6 +147,7 @@ public class ContactUCCImpl implements ContactUCC {
 
     ContactDTO updatedContactDTO = myContactDAO.update(contact);
     Enterprise enterprise = myEnterpriseDAO.readOne(updatedContactDTO.getEnterprise());
+    myDALService.commit();
     if (enterprise == null) {
       return null; // TODO: handle error
     }
