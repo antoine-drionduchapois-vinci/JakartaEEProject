@@ -21,7 +21,8 @@ public class ContactDAOImpl implements ContactDAO {
   @Inject
   private DomainFactory myDomainFactory;
 
-  private final ResultSetMapper<Contact, ContactImpl> contactMapper = new ResultSetMapper<>();
+  @Inject
+  private ResultSetMapper<Contact, ContactImpl> contactMapper = new ResultSetMapper<>();
 
   @Override
   public Contact readOne(int contactId) {
