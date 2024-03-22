@@ -1,6 +1,7 @@
 package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.Enterprise;
+import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
@@ -52,16 +53,7 @@ public class EnterpriseResource {
 
       // Parcourir chaque entreprise et les ajouter à la réponse
       for (Enterprise enterpriseDTO : enterprises) {
-        ObjectNode enterpriseNode = mapper.createObjectNode();
-        enterpriseNode.put("entreprise_id", enterpriseDTO.getEnterpriseId());
-        enterpriseNode.put("nom", enterpriseDTO.getName());
-        enterpriseNode.put("appellation", enterpriseDTO.getLabel());
-        enterpriseNode.put("adresse", enterpriseDTO.getAddress());
-        enterpriseNode.put("telephone", enterpriseDTO.getPhone());
-        enterpriseNode.put("email", enterpriseDTO.getEmail());
-        enterpriseNode.put("is_blacklist", enterpriseDTO.isBlacklisted());
-        enterpriseNode.put("avis_professeur", enterpriseDTO.getBlacklistedReason());
-        enterprisesArray.add(enterpriseNode);
+        enterprisesArray.add(convertDTOToJson(enterpriseDTO));
       }
 
       // Ajouter le tableau d'entreprises à la réponse
@@ -104,22 +96,25 @@ public class EnterpriseResource {
       // get entrprise that corresponds to user intership
       Enterprise enterpriseDTO = myEnterpriseUCC.getEnterprisesByUserId(userId);
 
-      ObjectMapper mapper = new ObjectMapper();
-      ObjectNode enterpriseNode = mapper.createObjectNode();
-      enterpriseNode.put("entreprise_id", enterpriseDTO.getEnterpriseId());
-      enterpriseNode.put("nom", enterpriseDTO.getName());
-      enterpriseNode.put("appellation", enterpriseDTO.getLabel());
-      enterpriseNode.put("adresse", enterpriseDTO.getAddress());
-      enterpriseNode.put("telephone", enterpriseDTO.getPhone());
-      enterpriseNode.put("email", enterpriseDTO.getEmail());
-      enterpriseNode.put("is_blacklist", enterpriseDTO.isBlacklisted());
-      enterpriseNode.put("avis_professeur", enterpriseDTO.getBlacklistedReason());
-
-      return enterpriseNode;
+      return convertDTOToJson(enterpriseDTO);
     } catch (Exception e) {
       // Gérer les erreurs éventuelles
       e.printStackTrace();
     }
     return null;
   }
+
+  private ObjectNode convertDTOToJson(EnterpriseDTO enterpriseDTO) {
+    ObjectMapper mapper = new ObjectMapper();
+    ObjectNode enterpriseNode = mapper.createObjectNode();
+    enterpriseNode.put("entreprise_id", enterpriseDTO.getEnterpriseId());
+    enterpriseNode.put("nom", enterpriseDTO.getName());
+    enterpriseNode.put("appellation", enterpriseDTO.getLabel());
+    enterpriseNode.put("adresse", enterpriseDTO.getAddress());
+    enterpriseNode.put("telephone", enterpriseDTO.getPhone());
+    enterpriseNode.put("email", enterpriseDTO.getEmail());
+    enterpriseNode.put("is_blacklist", enterpriseDTO.isBlacklisted());
+    enterpriseNode.put("avis_professeur", enterpriseDTO.getBlacklistedReason());
+  }
+
 }
