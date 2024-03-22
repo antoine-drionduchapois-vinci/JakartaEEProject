@@ -13,6 +13,9 @@ public class EnterpriseDTOImpl implements EnterpriseDTO {
   private boolean isBlacklist;
   private String avisProfesseur;
 
+  /**
+   * Constructs a new EnterpriseDTOImpl object.
+   */
   public EnterpriseDTOImpl() {
   }
 

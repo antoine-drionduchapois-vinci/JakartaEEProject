@@ -105,6 +105,29 @@ public class ContactDAOImpl implements ContactDAO {
     return contact;
   }
 
+  @Override
+  public ContactDTO update(ContactDTO newContact) {
+    ContactDTO contact = myDomainFactory.getContactDTO();
+
+    try (PreparedStatement ps = myDalService.getPS(
+        "UPDATE projetae.contacts SET description = ?, etat = ?, motif_refus = ?,"
+            + " annee = ?, utilisateur = ?, entreprise = ? WHERE contact_id = ? RETURNING *;")) {
+      ps.setString(1, newContact.getDescription());
+      ps.setString(2, newContact.getState());
+      ps.setString(3, newContact.getReasonRefusal());
+      ps.setString(4, newContact.getYear());
+      ps.setInt(5, newContact.getUser());
+      ps.setInt(6, newContact.getEntreprise());
+      ps.setInt(7, newContact.getContactId());
+      ps.execute();
+      contact = convertRsToDTO(ps.getResultSet());
+    } catch (SQLException e) {
+      throw new RuntimeException(e); // TODO: handle error
+    }
+
+    return contact;
+  }
+
   private ContactDTO convertRsToDTO(ResultSet rs) {
     ContactDTO contact = myDomainFactory.getContactDTO();
     try {

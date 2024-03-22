@@ -77,6 +77,78 @@ public class ContactUCCImpl implements ContactUCC {
     return convertDTOsTOJson(contact, enterprise);
   }
 
+  @Override
+  public ObjectNode meetEnterprise(int contactId, String meetingPoint) {
+    ContactDTO contact = myContactDAO.readOne(contactId);
+    if (contact == null) {
+      return null;
+    }
+
+    if (!contact.getState().equals("initié")) {
+      System.err.println("Conflict");
+      return null; // TODO: handle error
+    }
+
+    contact.setDescription(meetingPoint);
+    contact.setState("pris");
+
+    ContactDTO newContact = myContactDAO.update(contact);
+    EnterpriseDTO enterprise = myEnterpriseDAO.readOne(newContact.getEntreprise());
+
+    return convertDTOsTOJson(newContact, enterprise);
+  }
+
+  @Override
+  public ObjectNode indicateAsRefused(int contactId, String reason) {
+    ContactDTO contact = myContactDAO.readOne(contactId);
+    if (contact == null) {
+      return null;
+    }
+
+    if (contact.getState().equals("refusé")) {
+      System.err.println("Conflict");
+      return null; // TODO: handle error
+    }
+
+    if (!contact.getState().equals("initié") && !contact.getState().equals("pris")) {
+      System.err.println("Forbidden");
+      return null; // TODO: handle error
+    }
+
+    contact.setReasonRefusal(reason);
+    contact.setState("refusé");
+
+    ContactDTO newContact = myContactDAO.update(contact);
+    EnterpriseDTO enterprise = myEnterpriseDAO.readOne(newContact.getEntreprise());
+
+    return convertDTOsTOJson(newContact, enterprise);
+  }
+
+  @Override
+  public ObjectNode unfollow(int contactId) {
+    ContactDTO contact = myContactDAO.readOne(contactId);
+    if (contact == null) {
+      return null;
+    }
+
+    if (contact.getState().equals("non_suivis")) {
+      System.err.println("Conflict");
+      return null; // TODO: handle error
+    }
+
+    if (!contact.getState().equals("initié") && !contact.getState().equals("pris")) {
+      System.err.println("Forbidden");
+      return null; // TODO: handle error
+    }
+
+    contact.setState("non_suivis");
+
+    ContactDTO newContact = myContactDAO.update(contact);
+    EnterpriseDTO enterprise = myEnterpriseDAO.readOne(newContact.getEntreprise());
+
+    return convertDTOsTOJson(newContact, enterprise);
+  }
+
   private String getCurrentYearString() {
     LocalDate currentDate = LocalDate.now();
     LocalDate startDate = LocalDate.of(currentDate.getYear() - 1, 9, 1);
