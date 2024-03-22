@@ -1,12 +1,12 @@
 package be.vinci.pae.domain;
 
 /**
- * The Contact interface represents contact information.
+ * The Contact interface represents contact methods.
  */
 public interface Contact extends ContactDTO {
 
   /**
-   * set the contact as "pris"
+   * set the contact as "pris".
    *
    * @param meetingPoint The meeting point to set.
    * @return True if the contact successfully changed to "pris" state.

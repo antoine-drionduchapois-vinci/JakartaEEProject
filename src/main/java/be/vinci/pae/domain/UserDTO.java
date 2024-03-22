@@ -1,5 +1,8 @@
 package be.vinci.pae.domain;
 
+/**
+ * The UserDTO interface represents user informations.
+ */
 public interface UserDTO {
 
   /**

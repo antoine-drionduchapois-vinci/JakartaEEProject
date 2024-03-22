@@ -30,28 +30,12 @@ public class ResultSetMapper<T, U> {
    */
   public T mapResultSetToObject(ResultSet rs, Class<U> clazz, Supplier<T> factoryFunction)
       throws SQLException, IllegalAccessException {
-    T object = factoryFunction.get();
     Field[] fields = clazz.getDeclaredFields();
 
     if (!rs.next()) {
       return null;
     }
-    for (Field field : fields) {
-      if (field.getType() != String.class && field.getType() != int.class
-          && field.getType() != Role.class) {
-        continue;
-      }
-      field.setAccessible(true);
-      String columnName = camelToSnakeCase(field.getName());
-      if (rs.findColumn(columnName) != 0) {
-        Object value = rs.getObject(columnName);
-        if (field.getType() == Role.class) {
-          value = Role.valueOf((String) value);
-        }
-        field.set(object, value);
-      }
-    }
-    return object;
+    return mapFields(fields, rs, factoryFunction);
   }
 
   /**
@@ -74,23 +58,7 @@ public class ResultSetMapper<T, U> {
     Field[] fields = clazz.getDeclaredFields();
 
     while (rs.next()) {
-      T object = factoryFunction.get();
-      for (Field field : fields) {
-        if (field.getType() != String.class && field.getType() != int.class
-            && field.getType() != Role.class) {
-          continue;
-        }
-        field.setAccessible(true);
-        String columnName = camelToSnakeCase(field.getName());
-        if (rs.findColumn(columnName) != 0) {
-          Object value = rs.getObject(columnName);
-          if (field.getType() == Role.class) {
-            value = Role.valueOf((String) value);
-          }
-          field.set(object, value);
-        }
-      }
-      objects.add(object);
+      objects.add(mapFields(fields, rs, factoryFunction));
     }
     return objects;
   }
@@ -116,6 +84,27 @@ public class ResultSetMapper<T, U> {
       }
     }
     return result.toString();
+  }
+
+  private T mapFields(Field[] fields, ResultSet rs, Supplier<T> factoryFunction)
+      throws SQLException, IllegalAccessException {
+    T object = factoryFunction.get();
+    for (Field field : fields) {
+      if (field.getType() != String.class && field.getType() != int.class
+          && field.getType() != Role.class) {
+        continue;
+      }
+      field.setAccessible(true);
+      String columnName = camelToSnakeCase(field.getName());
+      if (rs.findColumn(columnName) != 0) {
+        Object value = rs.getObject(columnName);
+        if (field.getType() == Role.class) {
+          value = Role.valueOf((String) value);
+        }
+        field.set(object, value);
+      }
+    }
+    return object;
   }
 
 }

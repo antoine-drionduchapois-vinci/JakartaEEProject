@@ -1,5 +1,8 @@
 package be.vinci.pae.domain;
 
+/**
+ * The Contact interface represents contact informations.
+ */
 public interface ContactDTO {
 
   /**
