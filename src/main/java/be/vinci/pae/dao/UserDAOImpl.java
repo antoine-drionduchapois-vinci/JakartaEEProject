@@ -28,7 +28,7 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public User getOneByEmail(String email) {
     try (PreparedStatement ps = myDalService.getPS(
-        "SELECT * FROM projetae.utilisateurs WHERE email = ?");) {
+        "SELECT * FROM projetae.users WHERE email = ?");) {
       ps.setString(1, email);
       ps.execute();
       return userMapper.mapResultSetToObject(ps.getResultSet(), UserImpl.class,
@@ -41,7 +41,7 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public User getOneByID(int id) {
     try (PreparedStatement ps = myDalService.getPS(
-        "SELECT * FROM projetae.utilisateurs WHERE utilisateur_id = ?");) {
+        "SELECT * FROM projetae.users WHERE user_id = ?");) {
       ps.setInt(1, id);
       ps.execute();
       return userMapper.mapResultSetToObject(ps.getResultSet(), UserImpl.class,
@@ -54,7 +54,7 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public User addUser(User user) {
     PreparedStatement ps = myDalService.getPS(
-        "INSERT INTO projetae.utilisateurs (nom, prenom, email, telephone, mdp, annee, role)"
+        "INSERT INTO projetae.users (name, surname, email, phone, password, year, role)"
             + "VALUES (?, ?, ?, ?, ?, ?, ?)");
     LocalDate currentDate = LocalDate.now();
     int currentYear = currentDate.getYear();
@@ -76,7 +76,7 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public int getTotalStudents() {
     try (PreparedStatement ps = myDalService
-        .getPS("SELECT COUNT(*) FROM projetae.utilisateurs WHERE role='STUDENT'");
+        .getPS("SELECT COUNT(*) FROM projetae.users WHERE role='STUDENT'");
         ResultSet rs = ps.executeQuery()) {
 
       if (rs.next()) {
@@ -103,13 +103,13 @@ public class UserDAOImpl implements UserDAO {
 
   @Override
   public int getStudentsWithoutStage() {
-    String sql = "SELECT COUNT(*) FROM projetae.utilisateurs "
+    String sql = "SELECT COUNT(*) FROM projetae.users "
         +
-        "LEFT JOIN projetae.stages "
+        "LEFT JOIN projetae.internships "
         +
-        "ON projetae.utilisateurs.utilisateur_id = projetae.stages.utilisateur "
+        "ON projetae.users.user_id = projetae.interships.user "
         +
-        "WHERE projetae.stages.stage_id IS NULL AND projetae.utilisateurs.role='STUDENT'";
+        "WHERE projetae.internships.internship_id IS NULL AND projetae.users.role='STUDENT'";
 
     try (PreparedStatement ps = myDalService.getPS(sql);
         ResultSet rs = ps.executeQuery()) {
