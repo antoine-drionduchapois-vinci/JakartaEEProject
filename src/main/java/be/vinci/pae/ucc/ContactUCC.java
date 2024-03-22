@@ -1,12 +1,23 @@
 package be.vinci.pae.ucc;
 
+import be.vinci.pae.domain.Contact;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.util.List;
 
 /**
  * The ContactUCC interface provides methods for managing contact-related
  * functionality.
  */
 public interface ContactUCC {
+
+  /**
+   * Retrieves a list of contacts associated with the specified user ID.
+   *
+   * @param userId The ID of the user whose contacts are to be retrieved.
+   * @return A list of contacts associated with the specified user ID, or null if no contacts are
+   * found.
+   */
+  List<Contact> getContacts(int userId);
 
   /**
    * Retrieves the contact information associated with the specified contact ID.

@@ -9,13 +9,29 @@ import java.util.function.Supplier;
 
 public class ResultSetMapper<T, U> {
 
-  public T mapResultSetToObject(ResultSet rs, Class<U> clazz, Supplier<T> factoryFunction) throws SQLException, IllegalAccessException, InstantiationException {
+  /**
+   * Maps the data from a ResultSet to an object of type T using reflection.
+   *
+   * @param rs              The ResultSet containing the data to be mapped.
+   * @param clazz           The Class object representing the type of object to be created.
+   * @param factoryFunction A supplier function that creates a new instance of type T.
+   * @return An object of type T mapped from the ResultSet, or null if no data is found in the
+   * ResultSet.
+   * @throws SQLException           If a database access error occurs.
+   * @throws IllegalAccessException If the class or its nullary constructor is not accessible.
+   */
+  public T mapResultSetToObject(ResultSet rs, Class<U> clazz, Supplier<T> factoryFunction)
+      throws SQLException, IllegalAccessException {
     T object = factoryFunction.get();
     Field[] fields = clazz.getDeclaredFields();
 
-    if (!rs.next()) return null;
+    if (!rs.next()) {
+      return null;
+    }
     for (Field field : fields) {
-      if (field.getType() != String.class && field.getType() != int.class) continue;
+      if (field.getType() != String.class && field.getType() != int.class) {
+        continue;
+      }
       field.setAccessible(true);
       String columnName = camelToSnakeCase(field.getName());
       if (rs.findColumn(columnName) != 0) {
@@ -26,14 +42,27 @@ public class ResultSetMapper<T, U> {
     return object;
   }
 
-  public List<T> mapResultSetToObjectList(ResultSet rs, Class<U> clazz, Supplier<T> factoryFunction) throws SQLException, IllegalAccessException, InstantiationException {
+  /**
+   * Maps the data from a ResultSet to a list of objects of type T using reflection.
+   *
+   * @param rs              The ResultSet containing the data to be mapped.
+   * @param clazz           The Class object representing the type of object to be created.
+   * @param factoryFunction A supplier function that creates a new instance of type T.
+   * @return A list of objects of type T mapped from the ResultSet.
+   * @throws SQLException           If a database access error occurs.
+   * @throws IllegalAccessException If the class or its nullary constructor is not accessible.
+   */
+  public List<T> mapResultSetToObjectList(ResultSet rs, Class<U> clazz, Supplier<T> factoryFunction)
+      throws SQLException, IllegalAccessException {
     List<T> objects = new ArrayList<>();
     Field[] fields = clazz.getDeclaredFields();
 
     while (rs.next()) {
       T object = factoryFunction.get();
       for (Field field : fields) {
-        if (field.getType() != String.class && field.getType() != int.class) continue;
+        if (field.getType() != String.class && field.getType() != int.class) {
+          continue;
+        }
         field.setAccessible(true);
         String columnName = camelToSnakeCase(field.getName());
         if (rs.findColumn(columnName) != 0) {
@@ -46,6 +75,12 @@ public class ResultSetMapper<T, U> {
     return objects;
   }
 
+  /**
+   * Converts a camelCase string to snake_case.
+   *
+   * @param str The string to convert.
+   * @return The string converted to snake_case.
+   */
   private static String camelToSnakeCase(String str) {
     if (str == null || str.isEmpty()) {
       return str;
@@ -62,4 +97,5 @@ public class ResultSetMapper<T, U> {
     }
     return result.toString();
   }
+
 }

@@ -1,5 +1,8 @@
 package be.vinci.pae.domain;
 
+/**
+ * Implementation of the DomainFactory interface providing methods for creating domain objects.
+ */
 public class DomainFactoryImpl implements DomainFactory {
 
   @Override

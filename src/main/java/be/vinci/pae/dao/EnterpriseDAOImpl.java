@@ -18,7 +18,8 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
 
   private DALService myDalService = new DALServiceImpl();
 
-  private final ResultSetMapper<Enterprise, EnterpriseImpl> enterpriseMapper = new ResultSetMapper<>();
+  private final ResultSetMapper<Enterprise, EnterpriseImpl> enterpriseMapper =
+      new ResultSetMapper<>();
 
   @Inject
   private DomainFactory myDomainFactory;
@@ -31,7 +32,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       ps.execute();
       return enterpriseMapper.mapResultSetToObject(ps.getResultSet(), EnterpriseImpl.class,
           myDomainFactory::getEnterprise);
-    } catch (SQLException | IllegalAccessException | InstantiationException e) {
+    } catch (SQLException | IllegalAccessException e) {
       throw new RuntimeException(e); // TODO: handle error
     }
   }
@@ -45,7 +46,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       ps.execute();
       return enterpriseMapper.mapResultSetToObject(ps.getResultSet(), EnterpriseImpl.class,
           myDomainFactory::getEnterprise);
-    } catch (SQLException | IllegalAccessException | InstantiationException e) {
+    } catch (SQLException | IllegalAccessException e) {
       throw new RuntimeException(e); // TODO: handle error
     }
   }
@@ -62,7 +63,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       ps.execute();
       return enterpriseMapper.mapResultSetToObject(ps.getResultSet(), EnterpriseImpl.class,
           myDomainFactory::getEnterprise);
-    } catch (SQLException | IllegalAccessException | InstantiationException e) {
+    } catch (SQLException | IllegalAccessException e) {
       throw new RuntimeException(e); // TODO: handle error
     }
   }
@@ -73,7 +74,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       ps.execute();
       return enterpriseMapper.mapResultSetToObjectList(ps.getResultSet(), EnterpriseImpl.class,
           myDomainFactory::getEnterprise);
-    } catch (SQLException | IllegalAccessException | InstantiationException e) {
+    } catch (SQLException | IllegalAccessException e) {
       throw new RuntimeException(e); // TODO: handle error
     }
   }
@@ -93,7 +94,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       ps.execute();
       return enterpriseMapper.mapResultSetToObject(ps.getResultSet(), EnterpriseImpl.class,
           myDomainFactory::getEnterprise);
-    } catch (SQLException | IllegalAccessException | InstantiationException e) {
+    } catch (SQLException | IllegalAccessException e) {
       throw new RuntimeException(e); // TODO: handle error
     }
   }

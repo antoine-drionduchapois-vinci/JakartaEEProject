@@ -11,7 +11,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,7 +33,7 @@ public class UserDAOImpl implements UserDAO {
       ps.execute();
       return userMapper.mapResultSetToObject(ps.getResultSet(), UserImpl.class,
           myDomainFactory::getUser);
-    } catch (SQLException | IllegalAccessException | InstantiationException e) {
+    } catch (SQLException | IllegalAccessException e) {
       throw new RuntimeException(e); // TODO: handle error
     }
   }
@@ -47,7 +46,7 @@ public class UserDAOImpl implements UserDAO {
       ps.execute();
       return userMapper.mapResultSetToObject(ps.getResultSet(), UserImpl.class,
           myDomainFactory::getUser);
-    } catch (SQLException | IllegalAccessException | InstantiationException e) {
+    } catch (SQLException | IllegalAccessException e) {
       throw new RuntimeException(e); // TODO: handle error
     }
   }
@@ -91,12 +90,11 @@ public class UserDAOImpl implements UserDAO {
 
   @Override
   public List<User> getAllStudents() {
-    List<User> users = new ArrayList<>();
     String sql = "SELECT * FROM projetae.utilisateurs";
     try (PreparedStatement ps = myDalService.getPS(sql)) {
       return userMapper.mapResultSetToObjectList(ps.getResultSet(), UserImpl.class,
           myDomainFactory::getUser);
-    } catch (SQLException | IllegalAccessException | InstantiationException e) {
+    } catch (SQLException | IllegalAccessException e) {
       throw new RuntimeException(e); // TODO: handle error
     }
   }

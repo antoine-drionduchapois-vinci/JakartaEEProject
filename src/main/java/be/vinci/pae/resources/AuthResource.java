@@ -17,20 +17,24 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+/**
+ * Resource class for handling authentication-related endpoints.
+ */
 @Singleton
 @Path("/auths")
 public class AuthResource {
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
+
   @Inject
   private AuthUCC myAuthUCC;
 
   /**
    * Endpoint for user login.
    *
-   * @param json A JSON object containing user login credentials (email and password).
-   * @return An ObjectNode containing authentication information, such as a JWT token.
+   * @param json JSON containing user login credentials (email, password).
+   * @return JSON representing the authenticated user.
    */
   @POST
   @Path("login")
@@ -53,8 +57,9 @@ public class AuthResource {
   /**
    * Endpoint for user registration.
    *
-   * @param json A JSON object containing user registration information.
-   * @return An ObjectNode containing authentication information, such as a JWT token.
+   * @param json JSON containing user registration data (name, firstname, email, telephone,
+   *             password, role).
+   * @return JSON representing the registered user.
    */
   @POST
   @Path("register")

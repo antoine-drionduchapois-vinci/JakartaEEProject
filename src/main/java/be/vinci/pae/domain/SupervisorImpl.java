@@ -1,5 +1,8 @@
 package be.vinci.pae.domain;
 
+/**
+ * Implementation of the Enterprise interface.
+ */
 public class SupervisorImpl implements Supervisor {
 
   private int responsibleId;
@@ -82,14 +85,14 @@ public class SupervisorImpl implements Supervisor {
 
   @Override
   public String toString() {
-    return "ResponsibleImpl{" +
-        "responsibleId=" + responsibleId +
-        ", name='" + name + '\'' +
-        ", surname='" + surname + '\'' +
-        ", phone='" + phone + '\'' +
-        ", email='" + email + '\'' +
-        ", enterprise=" + enterprise +
-        ", enterpriseDTO=" + enterpriseDTO +
-        '}';
+    return "ResponsibleImpl{"
+        + "responsibleId=" + responsibleId
+        + ", name='" + name + '\''
+        + ", surname='" + surname + '\''
+        + ", phone='" + phone + '\''
+        + ", email='" + email + '\''
+        + ", enterprise=" + enterprise
+        + ", enterpriseDTO=" + enterpriseDTO
+        + '}';
   }
 }

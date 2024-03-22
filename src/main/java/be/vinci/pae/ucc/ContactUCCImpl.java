@@ -11,6 +11,9 @@ import jakarta.inject.Singleton;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Implementation of the EnterpriseUCC interface.
+ */
 @Singleton
 public class ContactUCCImpl implements ContactUCC {
 
@@ -21,6 +24,7 @@ public class ContactUCCImpl implements ContactUCC {
 
   private final ObjectMapper jsonMapper = new ObjectMapper();
 
+  @Override
   public List<Contact> getContacts(int userId) {
     List<Contact> contacts = myContactDAO.readMany(userId);
     if (contacts == null) {
@@ -29,6 +33,7 @@ public class ContactUCCImpl implements ContactUCC {
     return contacts;
   }
 
+  @Override
   public ObjectNode getContact(int contactId) {
     Contact contact = myContactDAO.readOne(contactId);
     if (contact == null) {
@@ -42,6 +47,7 @@ public class ContactUCCImpl implements ContactUCC {
     return convertDTOToJson(contact);
   }
 
+  @Override
   public ObjectNode initiateContact(int userId, int enterpriseId) {
     if (myContactDAO.readOne(userId, enterpriseId) != null) {
       return null;

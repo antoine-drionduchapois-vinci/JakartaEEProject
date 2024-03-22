@@ -1,5 +1,8 @@
 package be.vinci.pae.domain;
 
+/**
+ * Implementation of the Enterprise interface.
+ */
 public class EnterpriseImpl implements Enterprise {
 
   private int enterpriseId;
@@ -82,14 +85,14 @@ public class EnterpriseImpl implements Enterprise {
 
   @Override
   public String toString() {
-    return "EnterpriseImpl{" +
-        "enterpriseId=" + enterpriseId +
-        ", name='" + name + '\'' +
-        ", label='" + label + '\'' +
-        ", address='" + address + '\'' +
-        ", contact='" + contactInfos + '\'' +
-        ", isBlacklisted=" + isBlacklisted +
-        ", blacklistedReason='" + blacklistedReason + '\'' +
-        '}';
+    return "EnterpriseImpl{"
+        + "enterpriseId=" + enterpriseId
+        + ", name='" + name + '\''
+        + ", label='" + label + '\''
+        + ", address='" + address + '\''
+        + ", contact='" + contactInfos + '\''
+        + ", isBlacklisted=" + isBlacklisted
+        + ", blacklistedReason='" + blacklistedReason + '\''
+        + '}';
   }
 }

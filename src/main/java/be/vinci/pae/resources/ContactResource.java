@@ -16,6 +16,9 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
 
+/**
+ * Resource class for handling contact-related endpoints.
+ */
 @Singleton
 @Path("/contact")
 public class ContactResource {
@@ -23,6 +26,12 @@ public class ContactResource {
   @Inject
   private ContactUCC myContactUCC;
 
+  /**
+   * Retrieves a contact by its ID.
+   *
+   * @param contactId The ID of the contact to retrieve.
+   * @return JSON representation of the retrieved contact.
+   */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getOne(@DefaultValue("-1") @QueryParam("contactId") int contactId) {
@@ -38,6 +47,12 @@ public class ContactResource {
     return contact;
   }
 
+  /**
+   * Adds a new contact.
+   *
+   * @param json JSON containing data for creating a new contact.
+   * @return JSON representation of the added contact.
+   */
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
@@ -75,6 +90,13 @@ public class ContactResource {
     return contact;
   }
 
+  /**
+   * Handles meeting with an enterprise.
+   *
+   * @param json JSON containing contact ID and meeting point.
+   * @return JSON representation of the updated contact after the meeting.
+   * @throws WebApplicationException if the required parameters are missing.
+   */
   @POST
   @Path("/meet")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -94,6 +116,12 @@ public class ContactResource {
     return contact;
   }
 
+  /**
+   * Indicates refusal of contact.
+   *
+   * @param json JSON containing contact ID and reason for refusal.
+   * @return JSON representation of the updated contact after refusal.
+   */
   @POST
   @Path("/refuse")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -113,6 +141,12 @@ public class ContactResource {
     return contact;
   }
 
+  /**
+   * Unfollows a contact.
+   *
+   * @param json JSON containing contact ID.
+   * @return JSON representation of the updated contact after unfollowing.
+   */
   @POST
   @Path("/unfollow")
   @Consumes(MediaType.APPLICATION_JSON)

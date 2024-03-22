@@ -20,8 +20,8 @@ public class SupervisorDAOImpl implements SupervisorDAO {
   @Inject
   private DomainFactory myDomainFactory;
 
-  private final ResultSetMapper<Supervisor, SupervisorImpl> supervisorMapper = new ResultSetMapper<>();
-
+  private final ResultSetMapper<Supervisor, SupervisorImpl> supervisorMapper =
+      new ResultSetMapper<>();
 
   @Override
   public Supervisor getResponsibleByEnterpriseId(int id) {
@@ -31,7 +31,7 @@ public class SupervisorDAOImpl implements SupervisorDAO {
       ps.execute();
       return supervisorMapper.mapResultSetToObject(ps.getResultSet(), SupervisorImpl.class,
           myDomainFactory::getSupervisor);
-    } catch (SQLException | IllegalAccessException | InstantiationException e) {
+    } catch (SQLException | IllegalAccessException e) {
       throw new RuntimeException(e); // TODO: handle error
     }
   }

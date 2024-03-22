@@ -20,7 +20,7 @@ public class ContactDAOImpl implements ContactDAO {
 
   @Inject
   private DomainFactory myDomainFactory;
-  
+
   private ResultSetMapper<Contact, ContactImpl> contactMapper = new ResultSetMapper<>();
 
   @Override
@@ -31,7 +31,7 @@ public class ContactDAOImpl implements ContactDAO {
       ps.execute();
       return contactMapper.mapResultSetToObject(ps.getResultSet(), ContactImpl.class,
           myDomainFactory::getContact);
-    } catch (SQLException | IllegalAccessException | InstantiationException e) {
+    } catch (SQLException | IllegalAccessException e) {
       throw new RuntimeException(e); // TODO: handle error
     }
   }
@@ -45,7 +45,7 @@ public class ContactDAOImpl implements ContactDAO {
       ps.execute();
       return contactMapper.mapResultSetToObject(ps.getResultSet(), ContactImpl.class,
           myDomainFactory::getContact);
-    } catch (SQLException | IllegalAccessException | InstantiationException e) {
+    } catch (SQLException | IllegalAccessException e) {
       throw new RuntimeException(e); // TODO: handle error
     }
   }
@@ -58,7 +58,7 @@ public class ContactDAOImpl implements ContactDAO {
       ps.execute();
       return contactMapper.mapResultSetToObjectList(ps.getResultSet(), ContactImpl.class,
           myDomainFactory::getContact);
-    } catch (SQLException | IllegalAccessException | InstantiationException e) {
+    } catch (SQLException | IllegalAccessException e) {
       throw new RuntimeException(e); // TODO: handle error
     }
   }
@@ -75,7 +75,7 @@ public class ContactDAOImpl implements ContactDAO {
       ps.execute();
       return contactMapper.mapResultSetToObject(ps.getResultSet(), ContactImpl.class,
           myDomainFactory::getContact);
-    } catch (SQLException | IllegalAccessException | InstantiationException e) {
+    } catch (SQLException | IllegalAccessException e) {
       throw new RuntimeException(e); // TODO: handle error
     }
   }
@@ -95,7 +95,7 @@ public class ContactDAOImpl implements ContactDAO {
       ps.execute();
       return contactMapper.mapResultSetToObject(ps.getResultSet(), ContactImpl.class,
           myDomainFactory::getContact);
-    } catch (SQLException | IllegalAccessException | InstantiationException e) {
+    } catch (SQLException | IllegalAccessException e) {
       throw new RuntimeException(e); // TODO: handle error
     }
   }

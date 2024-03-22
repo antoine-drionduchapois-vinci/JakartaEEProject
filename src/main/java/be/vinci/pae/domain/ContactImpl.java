@@ -1,5 +1,8 @@
 package be.vinci.pae.domain;
 
+/**
+ * Implementation of the Contact interface.
+ */
 public class ContactImpl implements Contact {
   private int contactId;
   private String meetingPoint;
@@ -125,15 +128,15 @@ public class ContactImpl implements Contact {
 
   @Override
   public String toString() {
-    return "ContactImpl{" +
-        "contactId=" + contactId +
-        ", meetingPoint='" + meetingPoint + '\'' +
-        ", state='" + state + '\'' +
-        ", refusalReason='" + refusalReason + '\'' +
-        ", year='" + year + '\'' +
-        ", user=" + user +
-        ", enterprise=" + enterprise +
-        ", enterpriseDTO=" + enterpriseDTO +
-        '}';
+    return "ContactImpl{"
+        + "contactId=" + contactId
+        + ", meetingPoint='" + meetingPoint + '\''
+        + ", state='" + state + '\''
+        + ", refusalReason='" + refusalReason + '\''
+        + ", year='" + year + '\''
+        + ", user=" + user
+        + ", enterprise=" + enterprise
+        + ", enterpriseDTO=" + enterpriseDTO
+        + '}';
   }
 }

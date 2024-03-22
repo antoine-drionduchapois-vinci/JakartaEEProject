@@ -2,6 +2,9 @@ package be.vinci.pae.domain;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+/**
+ * Implementation of the Enterprise interface.
+ */
 public class UserImpl implements User {
 
   private int userId;
@@ -107,15 +110,15 @@ public class UserImpl implements User {
 
   @Override
   public String toString() {
-    return "UserImpl{" +
-        "userId=" + userId +
-        ", name='" + name + '\'' +
-        ", surname='" + surname + '\'' +
-        ", email='" + email + '\'' +
-        ", phone='" + phone + '\'' +
-        ", password='" + password + '\'' +
-        ", year='" + year + '\'' +
-        ", role=" + role +
-        '}';
+    return "UserImpl{"
+        + "userId=" + userId
+        + ", name='" + name + '\''
+        + ", surname='" + surname + '\''
+        + ", email='" + email + '\''
+        + ", phone='" + phone + '\''
+        + ", password='" + password + '\''
+        + ", year='" + year + '\''
+        + ", role=" + role
+        + '}';
   }
 }
