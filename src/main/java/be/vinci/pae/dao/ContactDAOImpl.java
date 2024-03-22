@@ -20,8 +20,7 @@ public class ContactDAOImpl implements ContactDAO {
 
   @Inject
   private DomainFactory myDomainFactory;
-
-  @Inject
+  
   private ResultSetMapper<Contact, ContactImpl> contactMapper = new ResultSetMapper<>();
 
   @Override
