@@ -3,12 +3,9 @@ package be.vinci.pae.main;
 import be.vinci.pae.resources.filters.CorsFilter;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
-import be.vinci.pae.utils.DALService;
-import be.vinci.pae.utils.DALServiceImpl;
 import be.vinci.pae.utils.WebExceptionMapper;
 import java.io.IOException;
 import java.net.URI;
-import java.sql.SQLException;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -28,8 +25,7 @@ public class Main {
   public static final String BASE_URI = Config.getProperty("BaseUri");
 
   /**
-   * Starts Grizzly HTTP server exposing JAX-RS resources defined in this
-   * application.
+   * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
    *
    * @return Grizzly HTTP server.
    */
@@ -59,15 +55,7 @@ public class Main {
     final HttpServer server = startServer();
     System.out.println(String.format("Jersey app started with WADL available at "
         + BASE_URI + "\nHit enter to stop it..."));
-
-    DALService dalService = new DALServiceImpl();
-
     System.in.read();
-    try {
-      dalService.close();
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
     server.stop();
   }
 }
