@@ -1,6 +1,6 @@
-package be.vinci.pae.resource;
+package be.vinci.pae.resources;
 
-import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.domain.User;
 import be.vinci.pae.ucc.UserUCC;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
@@ -21,14 +21,12 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import java.util.List;
 
-
 /**
  * Implementation of the UserDataService interface.
  */
 @Singleton
 @Path("/users")
-public class UserResourceImpl implements UserResource {
-
+public class UserResource {
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
@@ -40,7 +38,6 @@ public class UserResourceImpl implements UserResource {
    *
    * @return an ObjectNode containing the global statistics
    */
-  @Override
   @GET
   @Path("stats")
   @Produces(MediaType.APPLICATION_JSON)
@@ -63,7 +60,6 @@ public class UserResourceImpl implements UserResource {
    *
    * @return an ObjectNode containing all users
    */
-  @Override
   @GET
   @Path("All")
   @Produces(MediaType.APPLICATION_JSON)
@@ -73,10 +69,10 @@ public class UserResourceImpl implements UserResource {
 
     try {
       // Récupérer la liste complète des utilisateurs depuis votre DAO
-      List<UserDTO> userList = myUserUCC.getUsersAsJson();
+      List<User> userList = myUserUCC.getUsersAsJson();
 
       // Parcourir chaque utilisateur et les ajouter à l'ArrayNode
-      for (UserDTO user : userList) {
+      for (User user : userList) {
         ObjectNode userNode = mapper.createObjectNode();
         userNode.put("userId", user.getUserId());
         userNode.put("name", user.getName());
@@ -96,11 +92,11 @@ public class UserResourceImpl implements UserResource {
   }
 
   /**
-   * Retrieves users info.
+   * Retrieves user information by user ID and returns it as JSON.
    *
-   * @return an ObjectNode containing users info
+   * @param json The JSON object containing the JWT token.
+   * @return An ObjectNode representing the user's information.
    */
-  @Override
   @POST
   @Path("getUserInfoById")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -108,20 +104,20 @@ public class UserResourceImpl implements UserResource {
   public ObjectNode getUsersByIdAsJson(JsonNode json) {
 
     try {
-      //Get token from JSON
+      // Get token from JSON
       String jsonToken = json.get("token").asText();
-      //Decode Token
+      // Decode Token
       DecodedJWT jwt = JWT.require(jwtAlgorithm)
           .withIssuer("auth0")
           .build() // create the JWTVerifier instance
           .verify(jsonToken); // verify the token
-      //Het userId from decodedToken
+      // Het userId from decodedToken
       int userId = jwt.getClaim("user").asInt();
       // Assuming the token includes a "user" claim holding the user ID
       if (userId == -1) {
         throw new JWTVerificationException("User ID claim is missing");
       }
-      UserDTO user = myUserUCC.getUsersByIdAsJson(userId);
+      User user = myUserUCC.getUsersByIdAsJson(userId);
 
       ObjectMapper mapper = new ObjectMapper();
       ObjectNode userInfo = mapper.createObjectNode();
@@ -137,6 +133,5 @@ public class UserResourceImpl implements UserResource {
     }
     return null;
   }
-
 
 }

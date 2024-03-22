@@ -11,14 +11,14 @@ import java.util.List;
 public interface ContactUCC {
 
   /**
-   * Authenticates a user with the provided email and password.
-   *
-   * @param id The id of the user.
-   * @return A List containing ContactDTO objects representing all contact stored
-   *         in the
-   *         system related to the user.
+   * Retrieves a list of contacts associated with the specified user ID.
+   * 
+   * @param userId The ID of the user whose contacts are to be retrieved.
+   * @return A list of contacts associated with the specified user ID, or null if
+   *         no contacts are
+   *         found.
    */
-  List<ContactDTO> getAllUsersContact(int id);
+  List<ContactDTO> getContacts(int userId);
 
   /**
    * Retrieves the contact information associated with the specified contact ID.

@@ -2,7 +2,7 @@ package be.vinci.pae.ucc;
 
 import be.vinci.pae.dao.UserDAO;
 import be.vinci.pae.domain.User;
-import be.vinci.pae.domain.User.Role;
+import be.vinci.pae.domain.UserDTO.Role;
 import be.vinci.pae.domain.UserImpl;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
@@ -12,8 +12,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 
 /**
- * Implementation of the AuthUCC interface providing authentication and user management
- * functionality.
+ * Implementation of the EnterpriseUCC interface.
  */
 public class AuthUCCImpl implements AuthUCC {
 
@@ -22,17 +21,9 @@ public class AuthUCCImpl implements AuthUCC {
   @Inject
   private UserDAO myUserDAO;
 
-  /**
-   * Authenticates a user based on provided email and password.
-   *
-   * @param email    The email of the user.
-   * @param password The password of the user.
-   * @return An ObjectNode containing authentication information,
-   *         including a JWT token, user ID, and email.
-   */
   @Override
   public ObjectNode login(String email, String password) {
-    User user = (User) myUserDAO.getOneByEmail(email);
+    User user = myUserDAO.getOneByEmail(email);
     if (user == null || !user.checkPassword(password)) {
       return null;
     }
@@ -54,13 +45,6 @@ public class AuthUCCImpl implements AuthUCC {
     }
   }
 
-  /**
-   * Registers a new user.
-   *
-   * @param user1 The user to register.
-   * @return An ObjectNode containing authentication information,
-   *         including a JWT token, user ID, and email.
-   */
   @Override
   public ObjectNode register(User user1) {
     User user = (User) myUserDAO.addUser(user1);
@@ -82,17 +66,6 @@ public class AuthUCCImpl implements AuthUCC {
     }
   }
 
-  /**
-   * Creates a new User object and returns it.
-   *
-   * @param name      The name of the user.
-   * @param firstname The first name of the user.
-   * @param email     The email of the user.
-   * @param telephone The telephone number of the user.
-   * @param password  The password of the user.
-   * @param role      The role of the user.
-   * @return A User object with the provided information.
-   */
   @Override
   public User createUserAndReturn(String name, String firstname, String email, String telephone,
       String password, String role) {

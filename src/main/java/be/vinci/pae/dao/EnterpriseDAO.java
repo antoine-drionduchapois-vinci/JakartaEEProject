@@ -1,6 +1,6 @@
 package be.vinci.pae.dao;
 
-import be.vinci.pae.domain.EnterpriseDTO;
+import be.vinci.pae.domain.Enterprise;
 import java.util.List;
 
 /**
@@ -18,7 +18,21 @@ public interface EnterpriseDAO {
    *         associated with the
    *         specified ID, or null if no enterprise with the given ID is found.
    */
-  EnterpriseDTO readOne(int enterpriseId);
+  Enterprise readOne(int enterpriseId);
+
+  /**
+   * Retrieves the enterprise information associated with the specified enterprise
+   * name and enterprise label.
+   *
+   * @param enterpriseName  The name of the enterprise to retrieve information
+   *                        for.
+   * @param enterpriseLabel The label of the enterprise to retrieve information
+   *                        for.
+   * @return An EnterpriseDTO object representing the enterprise information
+   *         associated with the
+   *         specified ID, or null if no enterprise with the given ID is found.
+   */
+  Enterprise readOne(String enterpriseName, String enterpriseLabel);
 
   /**
    * Creates a new enterprise with the given name, label, address, and contact
@@ -30,7 +44,7 @@ public interface EnterpriseDAO {
    * @param contact The contact information of the enterprise.
    * @return An EnterpriseDTO object representing the newly created enterprise.
    */
-  EnterpriseDTO create(String name, String label, String address, String contact);
+  Enterprise create(String name, String label, String address, String contact);
 
   /**
    * Retrieves a list of all enterprises stored in the database.
@@ -38,7 +52,7 @@ public interface EnterpriseDAO {
    * @return A List containing EnterpriseDTO objects representing all enterprises
    *         stored in the database.
    */
-  List<EnterpriseDTO> getAllEnterprises();
+  List<Enterprise> getAllEnterprises();
 
   /**
    * Retrieves the enterprise information associated with the specified ID.
@@ -48,5 +62,5 @@ public interface EnterpriseDAO {
    *         associated with the specified ID,
    *         or null if no enterprise with the given ID is found.
    */
-  EnterpriseDTO getEnterpriseById(int id);
+  Enterprise getEnterpriseById(int id);
 }

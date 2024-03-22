@@ -1,7 +1,6 @@
 package be.vinci.pae.dao;
 
 import be.vinci.pae.domain.User;
-import be.vinci.pae.domain.UserDTO;
 import java.util.List;
 
 /**
@@ -15,7 +14,7 @@ public interface UserDAO {
    * @param email the email of the user to retrieve
    * @return a UserDTO object representing the user with the specified email
    */
-  UserDTO getOneByEmail(String email);
+  User getOneByEmail(String email);
 
   /**
    * Retrieves a user by their ID.
@@ -23,7 +22,7 @@ public interface UserDAO {
    * @param id the ID of the user to retrieve
    * @return a UserDTO object representing the user with the specified ID
    */
-  UserDTO getOneByID(int id);
+  User getOneByID(int id);
 
   /**
    * Retrieves the total number of students.
@@ -37,7 +36,7 @@ public interface UserDAO {
    *
    * @return list of students
    */
-  List<UserDTO> getAllStudents();
+  List<User> getAllStudents();
 
   /**
    * Retrieves the number of students without a stage.
@@ -52,6 +51,6 @@ public interface UserDAO {
    * @param user the User object representing the user to be added
    * @return the UserDTO object representing the added user
    */
-  UserDTO addUser(User user);
+  User addUser(User user);
 
 }

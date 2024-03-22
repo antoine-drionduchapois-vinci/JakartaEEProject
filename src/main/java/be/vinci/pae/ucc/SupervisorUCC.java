@@ -1,11 +1,11 @@
 package be.vinci.pae.ucc;
 
-import be.vinci.pae.domain.ResponsibleDTO;
+import be.vinci.pae.domain.Supervisor;
 
 /**
  * The ResponsibleUCC interface provides methods for managing responsible-related functionality.
  */
-public interface ResponsibleUCC {
+public interface SupervisorUCC {
 
   /**
    * Retrieves responsible of an enterprise.
@@ -14,6 +14,6 @@ public interface ResponsibleUCC {
    * @return A ResponsbileDTO object representing the user in JSON format,
    *         or null if no user is found for
    */
-  ResponsibleDTO getResponsibleByEnterpriseId(int id);
+  Supervisor getResponsibleByEnterpriseId(int id);
 
 }

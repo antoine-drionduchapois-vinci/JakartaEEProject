@@ -1,13 +1,13 @@
 package be.vinci.pae.dao;
 
-import be.vinci.pae.domain.ResponsibleDTO;
+import be.vinci.pae.domain.Supervisor;
 
 /**
  * The ResponsibleDAO interface provides methods for accessing responsible
  * information from the
  * database.
  */
-public interface ResponsibleDAO {
+public interface SupervisorDAO {
 
   /**
    * Retrieves the responsible information associated with the enterprise ID.
@@ -19,5 +19,5 @@ public interface ResponsibleDAO {
    *         enterprise ID, or null if no responsible information is found for the
    *         given enterprise ID.
    */
-  ResponsibleDTO getResponsibleByEnterpriseId(int id);
+  Supervisor getResponsibleByEnterpriseId(int id);
 }

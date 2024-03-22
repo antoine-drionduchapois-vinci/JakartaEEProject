@@ -61,9 +61,9 @@ INSERT INTO projetae.utilisateurs(nom, prenom, email, telephone, mdp, annee, rol
 INSERT INTO projetae.entreprises(nom, appellation, adresse, telephone, is_blacklist, avis_professeur) VALUES
     ('Tech Innovations', 'TechInnov', '123 Innovation Drive, Tech City', '123456789', FALSE, 'Highly recommended for students.');
 
--- Insert a responsibleDTO (from the enterpriseDTO)
+-- Insert a supervisorDTO (from the enterpriseDTO)
 INSERT INTO projetae.responsables(nom, prenom, telephone, email, entreprise) VALUES
-    ('Responsible', 'Jordan', '111222333', 'jordan.responsibleDTO@techinnov.com', 1);
+    ('Responsible', 'Jordan', '111222333', 'jordan.supervisorDTO@techinnov.com', 1);
 
 -- Insert a contactDTO (related to the internship opportunity)
 INSERT INTO projetae.contactDTOS(description, etat, motif_refus, annee, utilisateur, entreprise) VALUES

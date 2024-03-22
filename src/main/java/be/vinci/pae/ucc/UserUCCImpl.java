@@ -1,7 +1,7 @@
 package be.vinci.pae.ucc;
 
 import be.vinci.pae.dao.UserDAO;
-import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.domain.User;
 import jakarta.inject.Inject;
 import java.util.List;
 
@@ -30,18 +30,18 @@ public class UserUCCImpl implements UserUCC {
 
 
   @Override
-  public List<UserDTO> getUsersAsJson() {
+  public List<User> getUsersAsJson() {
 
     // Récupérer la liste complète des utilisateurs depuis votre DAO
-    List<UserDTO> userList = myUserDAO.getAllStudents();
+    List<User> userList = myUserDAO.getAllStudents();
 
     return userList;
   }
 
   @Override
-  public UserDTO getUsersByIdAsJson(int userId) {
+  public User getUsersByIdAsJson(int userId) {
 
-    UserDTO user = myUserDAO.getOneByID(userId);
+    User user = myUserDAO.getOneByID(userId);
 
     return user;
   }

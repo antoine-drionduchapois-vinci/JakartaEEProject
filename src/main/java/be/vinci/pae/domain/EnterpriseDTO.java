@@ -1,7 +1,7 @@
 package be.vinci.pae.domain;
 
 /**
- * Interface representing an enterprise entity.
+ * The EnterpriseDTO interface represents enterprise informations.
  */
 public interface EnterpriseDTO {
 
@@ -10,96 +10,98 @@ public interface EnterpriseDTO {
    *
    * @return The ID of the enterprise.
    */
-  int getEntrepriseId();
+  int getEnterpriseId();
+
+  /**
+   * Sets the ID of the enterprise.
+   *
+   * @param enterpriseId The ID of the enterprise to set.
+   */
+  void setEnterpriseId(int enterpriseId);
 
   /**
    * Gets the name of the enterprise.
    *
    * @return The name of the enterprise.
    */
-  String getNom();
+  String getName();
 
   /**
-   * Gets the appellation of the enterprise.
+   * Sets the name of the enterprise.
    *
-   * @return The appellation of the enterprise.
+   * @param name The name of the enterprise to set.
    */
-  String getAppellation();
+  void setName(String name);
+
+  /**
+   * Gets the label of the enterprise.
+   *
+   * @return The label of the enterprise.
+   */
+  String getLabel();
+
+  /**
+   * Sets the label of the enterprise.
+   *
+   * @param label The label of the enterprise to set.
+   */
+  void setLabel(String label);
 
   /**
    * Gets the address of the enterprise.
    *
    * @return The address of the enterprise.
    */
-  String getAdresse();
+  String getAddress();
 
   /**
-   * Gets the telephone number of the enterprise.
+   * Sets the address of the enterprise.
    *
-   * @return The telephone number of the enterprise.
+   * @param address The address of the enterprise to set.
    */
-  String getTelephone();
+  void setAddress(String address);
+
+  /**
+   * Gets the contact information of the enterprise.
+   *
+   * @return The contact information of the enterprise.
+   */
+  String getContactInfos();
+
+  /**
+   * Sets the contact information of the enterprise.
+   *
+   * @param contactInfos The contact information of the enterprise to set.
+   */
+  void setContactInfos(String contactInfos);
 
   /**
    * Checks if the enterprise is blacklisted.
    *
    * @return True if the enterprise is blacklisted, false otherwise.
    */
-  boolean isBlacklist();
+  boolean isBlacklisted();
 
   /**
-   * Gets the professor's opinion about the enterprise.
+   * Sets the blacklisted status of the enterprise.
    *
-   * @return The professor's opinion about the enterprise.
+   * @param blacklisted True to mark the enterprise as blacklisted, false
+   *                    otherwise.
    */
-  String getAvisProfesseur();
+  void setBlacklisted(boolean blacklisted);
 
   /**
-   * Sets the ID of the enterprise.
+   * Gets the reason for the enterprise being blacklisted.
    *
-   * @param entrepriseId The ID of the enterprise to set.
+   * @return The reason for the enterprise being blacklisted.
    */
-  void setEntrepriseId(int entrepriseId);
+  String getBlacklistedReason();
 
   /**
-   * Sets the name of the enterprise.
+   * Sets the reason for the enterprise being blacklisted.
    *
-   * @param nom The name of the enterprise to set.
+   * @param blacklistedReason The reason for the enterprise being blacklisted to
+   *                          set.
    */
-  void setNom(String nom);
-
-  /**
-   * Sets the appellation of the enterprise.
-   *
-   * @param appellation The appellation of the enterprise to set.
-   */
-  void setAppellation(String appellation);
-
-  /**
-   * Sets the address of the enterprise.
-   *
-   * @param adresse The address of the enterprise to set.
-   */
-  void setAdresse(String adresse);
-
-  /**
-   * Sets the telephone number of the enterprise.
-   *
-   * @param telephone The telephone number of the enterprise to set.
-   */
-  void setTelephone(String telephone);
-
-  /**
-   * Sets whether the enterprise is blacklisted.
-   *
-   * @param blacklist True if the enterprise is blacklisted, false otherwise.
-   */
-  void setBlacklist(boolean blacklist);
-
-  /**
-   * Sets the professor's opinion about the enterprise.
-   *
-   * @param avisProfesseur The professor's opinion about the enterprise to set.
-   */
-  void setAvisProfesseur(String avisProfesseur);
+  void setBlacklistedReason(String blacklistedReason);
 }
