@@ -1,5 +1,6 @@
 package be.vinci.pae.utils;
 
+import be.vinci.pae.domain.User.Role;
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,13 +37,17 @@ public class ResultSetMapper<T, U> {
       return null;
     }
     for (Field field : fields) {
-      if (field.getType() != String.class && field.getType() != int.class) {
+      if (field.getType() != String.class && field.getType() != int.class
+          && field.getType() != Role.class) {
         continue;
       }
       field.setAccessible(true);
       String columnName = camelToSnakeCase(field.getName());
       if (rs.findColumn(columnName) != 0) {
         Object value = rs.getObject(columnName);
+        if (field.getType() == Role.class) {
+          value = Role.valueOf((String) value);
+        }
         field.set(object, value);
       }
     }
@@ -71,13 +76,17 @@ public class ResultSetMapper<T, U> {
     while (rs.next()) {
       T object = factoryFunction.get();
       for (Field field : fields) {
-        if (field.getType() != String.class && field.getType() != int.class) {
+        if (field.getType() != String.class && field.getType() != int.class
+            && field.getType() != Role.class) {
           continue;
         }
         field.setAccessible(true);
         String columnName = camelToSnakeCase(field.getName());
         if (rs.findColumn(columnName) != 0) {
           Object value = rs.getObject(columnName);
+          if (field.getType() == Role.class) {
+            value = Role.valueOf((String) value);
+          }
           field.set(object, value);
         }
       }

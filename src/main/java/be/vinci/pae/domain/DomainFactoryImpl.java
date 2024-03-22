@@ -1,8 +1,11 @@
 package be.vinci.pae.domain;
 
+import jakarta.inject.Singleton;
+
 /**
  * Implementation of the DomainFactory interface providing methods for creating domain objects.
  */
+@Singleton
 public class DomainFactoryImpl implements DomainFactory {
 
   @Override

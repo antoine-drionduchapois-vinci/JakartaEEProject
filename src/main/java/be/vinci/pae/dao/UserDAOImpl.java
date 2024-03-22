@@ -90,8 +90,9 @@ public class UserDAOImpl implements UserDAO {
 
   @Override
   public List<User> getAllStudents() {
-    String sql = "SELECT * FROM projetae.utilisateurs";
+    String sql = "SELECT * FROM projetae.users";
     try (PreparedStatement ps = myDalService.getPS(sql)) {
+      ps.execute();
       return userMapper.mapResultSetToObjectList(ps.getResultSet(), UserImpl.class,
           myDomainFactory::getUser);
     } catch (SQLException | IllegalAccessException e) {
