@@ -2,9 +2,10 @@ package be.vinci.pae.dao;
 
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.User;
-import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.domain.UserImpl;
 import be.vinci.pae.utils.DALService;
 import be.vinci.pae.utils.DALServiceImpl;
+import be.vinci.pae.utils.ResultSetMapper;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,72 +24,39 @@ public class UserDAOImpl implements UserDAO {
   @Inject
   private DomainFactory myDomainFactory;
 
+  private final ResultSetMapper<User, UserImpl> userMapper = new ResultSetMapper<>();
+
   @Override
-  public UserDTO getOneByEmail(String email) {
-    PreparedStatement ps = myDalService
-        .getPS("SELECT * FROM projetae.utilisateurs WHERE email = ?");
-    try {
+  public User getOneByEmail(String email) {
+    try (PreparedStatement ps = myDalService.getPS(
+        "SELECT * FROM projetae.utilisateurs WHERE email = ?");) {
       ps.setString(1, email);
       ps.execute();
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
+      return userMapper.mapResultSetToObject(ps.getResultSet(), UserImpl.class,
+          myDomainFactory::getUser);
+    } catch (SQLException | IllegalAccessException | InstantiationException e) {
+      throw new RuntimeException(e); // TODO: handle error
     }
-
-    try (ResultSet rs = ps.getResultSet()) {
-      rs.next();
-      return convertToDto(rs);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-
-    return null; // Handle the case where no user is found
   }
 
   @Override
-  public UserDTO getOneByID(int id) {
-    PreparedStatement ps = myDalService
-        .getPS("SELECT * FROM projetae.utilisateurs WHERE utilisateur_id = ?");
-    try {
+  public User getOneByID(int id) {
+    try (PreparedStatement ps = myDalService.getPS(
+        "SELECT * FROM projetae.utilisateurs WHERE utilisateur_id = ?");) {
       ps.setInt(1, id);
       ps.execute();
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
+      return userMapper.mapResultSetToObject(ps.getResultSet(), UserImpl.class,
+          myDomainFactory::getUser);
+    } catch (SQLException | IllegalAccessException | InstantiationException e) {
+      throw new RuntimeException(e); // TODO: handle error
     }
-
-    try (ResultSet rs = ps.getResultSet()) {
-      rs.next();
-      return convertToDto(rs);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-
-    return null; // Handle the case where no user is found
-  }
-
-  private UserDTO convertToDto(ResultSet rs) throws SQLException {
-    // Create a new UserDTO object using the user's data
-    UserDTO myUserDTO = myDomainFactory.getUserDTO();
-
-    myUserDTO.setUserId(rs.getInt(1));
-    myUserDTO.setName(rs.getString(2));
-    myUserDTO.setSurname(rs.getString(3));
-    myUserDTO.setEmail(rs.getString(4));
-    myUserDTO.setPhone(rs.getString(5));
-    myUserDTO.setPassword(rs.getString(6));
-    myUserDTO.setYear(rs.getString(7));
-    myUserDTO.setRole(User.Role.valueOf(rs.getString(8)));
-
-    // Convertit d'autres attributs si nécessaire
-    return myUserDTO;
-
   }
 
   @Override
-  public UserDTO addUser(User user) {
-    PreparedStatement ps = myDalService
-        .getPS(
-            "INSERT INTO projetae.utilisateurs (nom, prenom, email, telephone, mdp, annee, role)"
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)");
+  public User addUser(User user) {
+    PreparedStatement ps = myDalService.getPS(
+        "INSERT INTO projetae.utilisateurs (nom, prenom, email, telephone, mdp, annee, role)"
+            + "VALUES (?, ?, ?, ?, ?, ?, ?)");
     LocalDate currentDate = LocalDate.now();
     int currentYear = currentDate.getYear();
     try {
@@ -122,22 +90,15 @@ public class UserDAOImpl implements UserDAO {
   }
 
   @Override
-  public List<UserDTO> getAllStudents() {
-    List<UserDTO> users = new ArrayList<>();
+  public List<User> getAllStudents() {
+    List<User> users = new ArrayList<>();
     String sql = "SELECT * FROM projetae.utilisateurs";
-    try (PreparedStatement ps = myDalService.getPS(sql);
-        ResultSet rs = ps.executeQuery()) {
-
-      while (rs.next()) {
-        UserDTO userDTO = convertToDto(rs); // Convertir chaque ligne de résultat en UserDTO
-
-        users.add(userDTO); // Ajouter le UserDTO à la liste des utilisateurs
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
+    try (PreparedStatement ps = myDalService.getPS(sql)) {
+      return userMapper.mapResultSetToObjectList(ps.getResultSet(), UserImpl.class,
+          myDomainFactory::getUser);
+    } catch (SQLException | IllegalAccessException | InstantiationException e) {
+      throw new RuntimeException(e); // TODO: handle error
     }
-
-    return users; // Renvoyer la liste des utilisateurs
   }
 
 

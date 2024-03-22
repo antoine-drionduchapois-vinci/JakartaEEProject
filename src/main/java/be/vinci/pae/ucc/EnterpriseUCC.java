@@ -1,6 +1,6 @@
 package be.vinci.pae.ucc;
 
-import be.vinci.pae.domain.EnterpriseDTO;
+import be.vinci.pae.domain.Enterprise;
 import java.util.List;
 
 /**
@@ -15,7 +15,7 @@ public interface EnterpriseUCC {
    * @return A List containing EnterpriseDTO objects representing
    *         all enterprises stored in the system.
    */
-  List<EnterpriseDTO> getAllEnterprises();
+  List<Enterprise> getAllEnterprises();
 
   /**
    * Retrieves the enterprise associated with the specified user ID.
@@ -25,5 +25,5 @@ public interface EnterpriseUCC {
    *         enterprise associated with the specified user ID,
    *         or null if no enterprise is found for the given user ID.
    */
-  EnterpriseDTO getEnterprisesByUserId(int userId);
+  Enterprise getEnterprisesByUserId(int userId);
 }

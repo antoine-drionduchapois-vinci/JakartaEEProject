@@ -32,7 +32,7 @@ public class AuthUCCImpl implements AuthUCC {
    */
   @Override
   public ObjectNode login(String email, String password) {
-    User user = (User) myUserDAO.getOneByEmail(email);
+    User user = myUserDAO.getOneByEmail(email);
     if (user == null || !user.checkPassword(password)) {
       return null;
     }

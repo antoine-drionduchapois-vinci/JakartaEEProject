@@ -1,6 +1,6 @@
-package be.vinci.pae.resource;
+package be.vinci.pae.resources;
 
-import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.domain.User;
 import be.vinci.pae.ucc.UserUCC;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
@@ -27,7 +27,7 @@ import java.util.List;
  */
 @Singleton
 @Path("/users")
-public class UserResourceImpl implements UserResource {
+public class UserResourceImpl {
 
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
@@ -40,7 +40,6 @@ public class UserResourceImpl implements UserResource {
    *
    * @return an ObjectNode containing the global statistics
    */
-  @Override
   @GET
   @Path("stats")
   @Produces(MediaType.APPLICATION_JSON)
@@ -63,7 +62,6 @@ public class UserResourceImpl implements UserResource {
    *
    * @return an ObjectNode containing all users
    */
-  @Override
   @GET
   @Path("All")
   @Produces(MediaType.APPLICATION_JSON)
@@ -73,10 +71,10 @@ public class UserResourceImpl implements UserResource {
 
     try {
       // Récupérer la liste complète des utilisateurs depuis votre DAO
-      List<UserDTO> userList = myUserUCC.getUsersAsJson();
+      List<User> userList = myUserUCC.getUsersAsJson();
 
       // Parcourir chaque utilisateur et les ajouter à l'ArrayNode
-      for (UserDTO user : userList) {
+      for (User user : userList) {
         ObjectNode userNode = mapper.createObjectNode();
         userNode.put("userId", user.getUserId());
         userNode.put("name", user.getName());
@@ -100,7 +98,6 @@ public class UserResourceImpl implements UserResource {
    *
    * @return an ObjectNode containing users info
    */
-  @Override
   @POST
   @Path("getUserInfoById")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -121,7 +118,7 @@ public class UserResourceImpl implements UserResource {
       if (userId == -1) {
         throw new JWTVerificationException("User ID claim is missing");
       }
-      UserDTO user = myUserUCC.getUsersByIdAsJson(userId);
+      User user = myUserUCC.getUsersByIdAsJson(userId);
 
       ObjectMapper mapper = new ObjectMapper();
       ObjectNode userInfo = mapper.createObjectNode();

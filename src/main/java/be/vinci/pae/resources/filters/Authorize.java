@@ -1,4 +1,4 @@
-package be.vinci.pae.resource.filters;
+package be.vinci.pae.resources.filters;
 
 import jakarta.ws.rs.NameBinding;
 import java.lang.annotation.Retention;

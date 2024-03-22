@@ -1,4 +1,4 @@
-package be.vinci.pae.resource.filters;
+package be.vinci.pae.resources.filters;
 
 import be.vinci.pae.dao.UserDAO;
 import be.vinci.pae.dao.UserDAOImpl;
@@ -52,7 +52,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
         throw new WebApplicationException(Response.status(Status.UNAUTHORIZED)
             .entity("Malformed token : " + e.getMessage()).type("text/plain").build());
       }
-      User authenticatedUser = (User) myUserDAO.getOneByID(decodedToken.getClaim("user").asInt());
+      User authenticatedUser = myUserDAO.getOneByID(decodedToken.getClaim("user").asInt());
       if (authenticatedUser == null) {
         requestContext.abortWith(Response.status(Status.FORBIDDEN)
             .entity("You are forbidden to access this resource").build());

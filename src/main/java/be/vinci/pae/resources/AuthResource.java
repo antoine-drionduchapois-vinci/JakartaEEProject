@@ -1,4 +1,4 @@
-package be.vinci.pae.resource;
+package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.User;
 import be.vinci.pae.ucc.AuthUCC;
@@ -17,12 +17,9 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-/**
- * Implementation of the AuthResource interface providing authentication endpoints.
- */
 @Singleton
 @Path("/auths")
-public class AuthResourceImpl implements AuthResource {
+public class AuthResource {
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
@@ -35,7 +32,6 @@ public class AuthResourceImpl implements AuthResource {
    * @param json A JSON object containing user login credentials (email and password).
    * @return An ObjectNode containing authentication information, such as a JWT token.
    */
-  @Override
   @POST
   @Path("login")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -60,7 +56,6 @@ public class AuthResourceImpl implements AuthResource {
    * @param json A JSON object containing user registration information.
    * @return An ObjectNode containing authentication information, such as a JWT token.
    */
-  @Override
   @POST
   @Path("register")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -70,7 +65,7 @@ public class AuthResourceImpl implements AuthResource {
     if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
       throw new WebApplicationException("All fields are required",
           Response.status(Response.Status.BAD_REQUEST)
-          .entity("Email or password required").type("text/plain").build());
+              .entity("Email or password required").type("text/plain").build());
     }
     String name = json.get("name").asText();
     String firstname = json.get("firstname").asText();

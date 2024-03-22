@@ -1,7 +1,7 @@
 package be.vinci.pae.ucc;
 
 import be.vinci.pae.dao.EnterpriseDAO;
-import be.vinci.pae.domain.EnterpriseDTO;
+import be.vinci.pae.domain.Enterprise;
 import jakarta.inject.Inject;
 import java.util.List;
 
@@ -14,18 +14,18 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
   private EnterpriseDAO enterpriseDAO;
 
   @Override
-  public List<EnterpriseDTO> getAllEnterprises() {
+  public List<Enterprise> getAllEnterprises() {
 
-    List<EnterpriseDTO> enterprises = enterpriseDAO.getAllEnterprises();
+    List<Enterprise> enterprises = enterpriseDAO.getAllEnterprises();
 
     return enterprises;
   }
 
   @Override
-  public EnterpriseDTO getEnterprisesByUserId(int userId) {
+  public Enterprise getEnterprisesByUserId(int userId) {
 
     // get entrprise that corresponds to user intership
-    EnterpriseDTO enterpriseDTO = enterpriseDAO.getEnterpriseById(userId);
+    Enterprise enterpriseDTO = enterpriseDAO.getEnterpriseById(userId);
 
     return enterpriseDTO;
   }

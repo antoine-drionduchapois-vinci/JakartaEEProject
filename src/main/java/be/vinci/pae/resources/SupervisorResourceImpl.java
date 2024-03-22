@@ -1,9 +1,9 @@
-package be.vinci.pae.resource;
+package be.vinci.pae.resources;
 
-import be.vinci.pae.domain.EnterpriseDTO;
-import be.vinci.pae.domain.ResponsibleDTO;
+import be.vinci.pae.domain.Enterprise;
+import be.vinci.pae.domain.Supervisor;
 import be.vinci.pae.ucc.EnterpriseUCC;
-import be.vinci.pae.ucc.ResponsibleUCC;
+import be.vinci.pae.ucc.SupervisorUCC;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -25,7 +25,7 @@ import jakarta.ws.rs.core.MediaType;
  */
 @Singleton
 @Path("/res")
-public class ResponsibleResourceImpl implements ResponsibleResource {
+public class SupervisorResourceImpl {
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
 
@@ -33,7 +33,7 @@ public class ResponsibleResourceImpl implements ResponsibleResource {
   @Inject
   private EnterpriseUCC entrepriseUCC;
   @Inject
-  private ResponsibleUCC responsibleUCC;
+  private SupervisorUCC supervisorUCC;
 
 
   /**
@@ -41,7 +41,6 @@ public class ResponsibleResourceImpl implements ResponsibleResource {
    *
    * @return an ObjectNode containing users info
    */
-  @Override
   @POST
   @Path("responsable")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -64,19 +63,19 @@ public class ResponsibleResourceImpl implements ResponsibleResource {
       }
       System.out.println("user id : " + userId);
       //get entrprise that corresponds to user intership
-      EnterpriseDTO enterpriseDTO = entrepriseUCC.getEnterprisesByUserId(userId);
-      ResponsibleDTO responsibleDTO = responsibleUCC.getResponsibleByEnterpriseId(
-          enterpriseDTO.getEntrepriseId());
+      Enterprise enterpriseDTO = entrepriseUCC.getEnterprisesByUserId(userId);
+      Supervisor supervisorDTO = supervisorUCC.getResponsibleByEnterpriseId(
+          enterpriseDTO.getEnterpriseId());
 
       //transform responsibleDTO to JSOn
       ObjectMapper mapper = new ObjectMapper();
       ObjectNode responsibleNode = mapper.createObjectNode();
-      responsibleNode.put("responsible_id", responsibleDTO.getResponsibleId());
-      responsibleNode.put("name", responsibleDTO.getName());
-      responsibleNode.put("surname", responsibleDTO.getSurname());
-      responsibleNode.put("phone", responsibleDTO.getPhone());
-      responsibleNode.put("email", responsibleDTO.getEmail());
-      responsibleNode.put("enterprise_id", responsibleDTO.getEnterprise());
+      responsibleNode.put("responsible_id", supervisorDTO.getResponsibleId());
+      responsibleNode.put("name", supervisorDTO.getName());
+      responsibleNode.put("surname", supervisorDTO.getSurname());
+      responsibleNode.put("phone", supervisorDTO.getPhone());
+      responsibleNode.put("email", supervisorDTO.getEmail());
+      responsibleNode.put("enterprise_id", supervisorDTO.getEnterprise());
 
       return responsibleNode;
 

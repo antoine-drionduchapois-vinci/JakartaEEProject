@@ -2,28 +2,28 @@ package be.vinci.pae.domain;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-/**
- * Implementation of the User interface.
- */
-
 public class UserImpl implements User {
 
   private int userId;
-
   private String name;
-
   private String surname;
-
   private String email;
-
   private String phone;
 
   private String password;
-
   private String year;
-
   private Role role;
 
+
+  @Override
+  public boolean checkPassword(String password) {
+    return BCrypt.checkpw(password, this.password);
+  }
+
+  @Override
+  public String hashPassword(String password) {
+    return BCrypt.hashpw(password, BCrypt.gensalt());
+  }
 
   @Override
   public int getUserId() {
@@ -106,26 +106,16 @@ public class UserImpl implements User {
   }
 
   @Override
-  public boolean checkPassword(String password) {
-    return BCrypt.checkpw(password, this.password);
-  }
-
-  @Override
-  public String hashPassword(String password) {
-    return BCrypt.hashpw(password, BCrypt.gensalt());
-  }
-
-  @Override
   public String toString() {
-    return "UserImpl{"
-        + "userId=" + userId
-        + ", name='" + name + '\''
-        + ", surname='" + surname + '\''
-        + ", email='" + email + '\''
-        + ", phone='" + phone + '\''
-        + ", password='" + password + '\''
-        + ", year='" + year + '\''
-        + ", role=" + role
-        + '}';
+    return "UserImpl{" +
+        "userId=" + userId +
+        ", name='" + name + '\'' +
+        ", surname='" + surname + '\'' +
+        ", email='" + email + '\'' +
+        ", phone='" + phone + '\'' +
+        ", password='" + password + '\'' +
+        ", year='" + year + '\'' +
+        ", role=" + role +
+        '}';
   }
 }

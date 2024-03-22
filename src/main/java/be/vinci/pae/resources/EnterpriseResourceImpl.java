@@ -1,6 +1,6 @@
-package be.vinci.pae.resource;
+package be.vinci.pae.resources;
 
-import be.vinci.pae.domain.EnterpriseDTO;
+import be.vinci.pae.domain.Enterprise;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Singleton
 @Path("/ent")
-public class EnterpriseResourceImpl implements EnterpriseResource {
+public class EnterpriseResourceImpl {
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   @Inject
@@ -37,7 +37,7 @@ public class EnterpriseResourceImpl implements EnterpriseResource {
    *
    * @return an ObjectNode containing all enterprises
    */
-  @Override
+
   @GET
   @Path("enterprises")
   @Produces(MediaType.APPLICATION_JSON)
@@ -48,18 +48,18 @@ public class EnterpriseResourceImpl implements EnterpriseResource {
 
     try {
       // Récupérer toutes les entreprises depuis votre DAO
-      List<EnterpriseDTO> enterprises = myEnterpriseUCC.getAllEnterprises();
+      List<Enterprise> enterprises = myEnterpriseUCC.getAllEnterprises();
 
       // Parcourir chaque entreprise et les ajouter à la réponse
-      for (EnterpriseDTO enterpriseDTO : enterprises) {
+      for (Enterprise enterpriseDTO : enterprises) {
         ObjectNode enterpriseNode = mapper.createObjectNode();
-        enterpriseNode.put("entreprise_id", enterpriseDTO.getEntrepriseId());
-        enterpriseNode.put("nom", enterpriseDTO.getNom());
-        enterpriseNode.put("appellation", enterpriseDTO.getAppellation());
-        enterpriseNode.put("adresse", enterpriseDTO.getAdresse());
-        enterpriseNode.put("telephone", enterpriseDTO.getTelephone());
-        enterpriseNode.put("is_blacklist", enterpriseDTO.isBlacklist());
-        enterpriseNode.put("avis_professeur", enterpriseDTO.getAvisProfesseur());
+        enterpriseNode.put("entreprise_id", enterpriseDTO.getEnterpriseId());
+        enterpriseNode.put("nom", enterpriseDTO.getName());
+        enterpriseNode.put("appellation", enterpriseDTO.getLabel());
+        enterpriseNode.put("adresse", enterpriseDTO.getAddress());
+        enterpriseNode.put("telephone", enterpriseDTO.getContactInfos());
+        enterpriseNode.put("is_blacklist", enterpriseDTO.isBlacklisted());
+        enterpriseNode.put("avis_professeur", enterpriseDTO.getBlacklistedReason());
         enterprisesArray.add(enterpriseNode);
       }
 
@@ -78,7 +78,7 @@ public class EnterpriseResourceImpl implements EnterpriseResource {
    *
    * @return an ObjectNode containing users info
    */
-  @Override
+
   @POST
   @Path("enterprises")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -101,17 +101,17 @@ public class EnterpriseResourceImpl implements EnterpriseResource {
       }
       System.out.println("user id : " + userId);
       //get entrprise that corresponds to user intership
-      EnterpriseDTO enterpriseDTO = myEnterpriseUCC.getEnterprisesByUserId(userId);
+      Enterprise enterpriseDTO = myEnterpriseUCC.getEnterprisesByUserId(userId);
 
       ObjectMapper mapper = new ObjectMapper();
       ObjectNode enterpriseNode = mapper.createObjectNode();
-      enterpriseNode.put("entreprise_id", enterpriseDTO.getEntrepriseId());
-      enterpriseNode.put("nom", enterpriseDTO.getNom());
-      enterpriseNode.put("appellation", enterpriseDTO.getAppellation());
-      enterpriseNode.put("adresse", enterpriseDTO.getAdresse());
-      enterpriseNode.put("telephone", enterpriseDTO.getTelephone());
-      enterpriseNode.put("is_blacklist", enterpriseDTO.isBlacklist());
-      enterpriseNode.put("avis_professeur", enterpriseDTO.getAvisProfesseur());
+      enterpriseNode.put("entreprise_id", enterpriseDTO.getEnterpriseId());
+      enterpriseNode.put("nom", enterpriseDTO.getName());
+      enterpriseNode.put("appellation", enterpriseDTO.getLabel());
+      enterpriseNode.put("adresse", enterpriseDTO.getAddress());
+      enterpriseNode.put("telephone", enterpriseDTO.getContactInfos());
+      enterpriseNode.put("is_blacklist", enterpriseDTO.isBlacklisted());
+      enterpriseNode.put("avis_professeur", enterpriseDTO.getBlacklistedReason());
 
       return enterpriseNode;
     } catch (Exception e) {
