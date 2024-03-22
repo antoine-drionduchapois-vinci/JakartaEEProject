@@ -1,6 +1,6 @@
 package be.vinci.pae.ucc;
 
-import be.vinci.pae.domain.Contact;
+import be.vinci.pae.domain.ContactDTO;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.List;
 
@@ -18,7 +18,7 @@ public interface ContactUCC {
    *         no contacts are
    *         found.
    */
-  List<Contact> getContacts(int userId);
+  List<ContactDTO> getContacts(int userId);
 
   /**
    * Retrieves the contact information associated with the specified contact ID.

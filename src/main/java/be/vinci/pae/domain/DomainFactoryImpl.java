@@ -9,7 +9,7 @@ import jakarta.inject.Singleton;
 public class DomainFactoryImpl implements DomainFactory {
 
   @Override
-  public Contact getContact() {
+  public ContactDTO getContact() {
     return new ContactImpl();
   }
 

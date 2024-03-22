@@ -1,6 +1,6 @@
 package be.vinci.pae.dao;
 
-import be.vinci.pae.domain.Contact;
+import be.vinci.pae.domain.ContactDTO;
 import be.vinci.pae.domain.ContactImpl;
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.utils.DALService;
@@ -21,10 +21,10 @@ public class ContactDAOImpl implements ContactDAO {
   @Inject
   private DomainFactory myDomainFactory;
 
-  private ResultSetMapper<Contact, ContactImpl> contactMapper = new ResultSetMapper<>();
+  private ResultSetMapper<ContactDTO, ContactImpl> contactMapper = new ResultSetMapper<>();
 
   @Override
-  public Contact readOne(int contactId) {
+  public ContactDTO readOne(int contactId) {
     try (PreparedStatement ps = myDalService.getPS(
         "SELECT * FROM projetae.contacts WHERE contact_id = ?;")) {
       ps.setInt(1, contactId);
@@ -37,7 +37,7 @@ public class ContactDAOImpl implements ContactDAO {
   }
 
   @Override
-  public Contact readOne(int userId, int enterpriseId) {
+  public ContactDTO readOne(int userId, int enterpriseId) {
     try (PreparedStatement ps = myDalService.getPS(
         "SELECT * FROM projetae.contacts WHERE \"user\" = ? AND enterprise = ?;")) {
       ps.setInt(1, userId);
@@ -51,7 +51,7 @@ public class ContactDAOImpl implements ContactDAO {
   }
 
   @Override
-  public List<Contact> readMany(int userId) {
+  public List<ContactDTO> readMany(int userId) {
     try (PreparedStatement ps = myDalService.getPS(
         "SELECT * FROM projetae.contacts WHERE \"user\" = ?")) {
       ps.setInt(1, userId);
@@ -64,7 +64,7 @@ public class ContactDAOImpl implements ContactDAO {
   }
 
   @Override
-  public Contact create(String status, String year, int userId, int enterpriseId) {
+  public ContactDTO create(String status, String year, int userId, int enterpriseId) {
     try (PreparedStatement ps = myDalService.getPS(
         "INSERT INTO projetae.contacts (state, year, \"user\", enterprise)"
             + "VALUES (?, ?, ?, ?) RETURNING *;")) {
@@ -81,17 +81,17 @@ public class ContactDAOImpl implements ContactDAO {
   }
 
   @Override
-  public Contact update(Contact newContact) {
+  public ContactDTO update(ContactDTO newContactDTO) {
     try (PreparedStatement ps = myDalService.getPS(
         "UPDATE projetae.contacts SET meeting_point = ?, state = ?, refusal_reason = ?,"
             + " year = ?, \"user\" = ?, enterprise = ? WHERE contact_id = ? RETURNING *;")) {
-      ps.setString(1, newContact.getMeetingPoint());
-      ps.setString(2, newContact.getState());
-      ps.setString(3, newContact.getRefusalReason());
-      ps.setString(4, newContact.getYear());
-      ps.setInt(5, newContact.getUser());
-      ps.setInt(6, newContact.getEnterprise());
-      ps.setInt(7, newContact.getContactId());
+      ps.setString(1, newContactDTO.getMeetingPoint());
+      ps.setString(2, newContactDTO.getState());
+      ps.setString(3, newContactDTO.getRefusalReason());
+      ps.setString(4, newContactDTO.getYear());
+      ps.setInt(5, newContactDTO.getUser());
+      ps.setInt(6, newContactDTO.getEnterprise());
+      ps.setInt(7, newContactDTO.getContactId());
       ps.execute();
       return contactMapper.mapResultSetToObject(ps.getResultSet(), ContactImpl.class,
           myDomainFactory::getContact);
