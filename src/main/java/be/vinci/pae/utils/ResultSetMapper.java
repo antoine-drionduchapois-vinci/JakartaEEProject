@@ -7,18 +7,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+/**
+ * Convert ResultSet to correspondant DTO
+ */
 public class ResultSetMapper<T, U> {
 
   /**
    * Maps the data from a ResultSet to an object of type T using reflection.
    *
    * @param rs              The ResultSet containing the data to be mapped.
-   * @param clazz           The Class object representing the type of object to be created.
-   * @param factoryFunction A supplier function that creates a new instance of type T.
-   * @return An object of type T mapped from the ResultSet, or null if no data is found in the
-   * ResultSet.
+   * @param clazz           The Class object representing the type of object to be
+   *                        created.
+   * @param factoryFunction A supplier function that creates a new instance of
+   *                        type T.
+   * @return An object of type T mapped from the ResultSet, or null if no data is
+   *         found in the
+   *         ResultSet.
    * @throws SQLException           If a database access error occurs.
-   * @throws IllegalAccessException If the class or its nullary constructor is not accessible.
+   * @throws IllegalAccessException If the class or its nullary constructor is not
+   *                                accessible.
    */
   public T mapResultSetToObject(ResultSet rs, Class<U> clazz, Supplier<T> factoryFunction)
       throws SQLException, IllegalAccessException {
@@ -43,14 +50,18 @@ public class ResultSetMapper<T, U> {
   }
 
   /**
-   * Maps the data from a ResultSet to a list of objects of type T using reflection.
+   * Maps the data from a ResultSet to a list of objects of type T using
+   * reflection.
    *
    * @param rs              The ResultSet containing the data to be mapped.
-   * @param clazz           The Class object representing the type of object to be created.
-   * @param factoryFunction A supplier function that creates a new instance of type T.
+   * @param clazz           The Class object representing the type of object to be
+   *                        created.
+   * @param factoryFunction A supplier function that creates a new instance of
+   *                        type T.
    * @return A list of objects of type T mapped from the ResultSet.
    * @throws SQLException           If a database access error occurs.
-   * @throws IllegalAccessException If the class or its nullary constructor is not accessible.
+   * @throws IllegalAccessException If the class or its nullary constructor is not
+   *                                accessible.
    */
   public List<T> mapResultSetToObjectList(ResultSet rs, Class<U> clazz, Supplier<T> factoryFunction)
       throws SQLException, IllegalAccessException {

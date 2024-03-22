@@ -12,10 +12,11 @@ public interface ContactUCC {
 
   /**
    * Retrieves a list of contacts associated with the specified user ID.
-   *
+   * 
    * @param userId The ID of the user whose contacts are to be retrieved.
-   * @return A list of contacts associated with the specified user ID, or null if no contacts are
-   * found.
+   * @return A list of contacts associated with the specified user ID, or null if
+   *         no contacts are
+   *         found.
    */
   List<Contact> getContacts(int userId);
 
