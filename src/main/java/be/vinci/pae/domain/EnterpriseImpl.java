@@ -9,7 +9,8 @@ public class EnterpriseImpl implements Enterprise {
   private String name;
   private String label;
   private String address;
-  private String contactInfos;
+  private String phone;
+  private String email;
   private boolean isBlacklisted;
   private String blacklistedReason;
 
@@ -54,13 +55,23 @@ public class EnterpriseImpl implements Enterprise {
   }
 
   @Override
-  public String getContactInfos() {
-    return contactInfos;
+  public String getPhone() {
+    return phone;
   }
 
   @Override
-  public void setContactInfos(String contactInfos) {
-    this.contactInfos = contactInfos;
+  public void setPhone(String contactInfos) {
+    this.phone = contactInfos;
+  }
+
+  @Override
+  public String getEmail() {
+    return email;
+  }
+
+  @Override
+  public void setEmail(String email) {
+    this.email = email;
   }
 
   @Override
@@ -90,7 +101,8 @@ public class EnterpriseImpl implements Enterprise {
         + ", name='" + name + '\''
         + ", label='" + label + '\''
         + ", address='" + address + '\''
-        + ", contact='" + contactInfos + '\''
+        + ", phone='" + phone + '\''
+        + ", email='" + email + '\''
         + ", isBlacklisted=" + isBlacklisted
         + ", blacklistedReason='" + blacklistedReason + '\''
         + '}';

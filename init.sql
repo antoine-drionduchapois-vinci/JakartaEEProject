@@ -9,6 +9,7 @@ CREATE TABLE projetae.enterprises
     label              VARCHAR(50),
     address            VARCHAR(80),
     phone              VARCHAR(50) NOT NULL,
+    email VARCHAR(50),
     is_blacklisted     BOOLEAN,
     blacklisted_reason VARCHAR(200)
 );

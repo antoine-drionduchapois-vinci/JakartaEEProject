@@ -57,7 +57,8 @@ public class EnterpriseResource {
         enterpriseNode.put("nom", enterpriseDTO.getName());
         enterpriseNode.put("appellation", enterpriseDTO.getLabel());
         enterpriseNode.put("adresse", enterpriseDTO.getAddress());
-        enterpriseNode.put("telephone", enterpriseDTO.getContactInfos());
+        enterpriseNode.put("telephone", enterpriseDTO.getPhone());
+        enterpriseNode.put("email", enterpriseDTO.getEmail());
         enterpriseNode.put("is_blacklist", enterpriseDTO.isBlacklisted());
         enterpriseNode.put("avis_professeur", enterpriseDTO.getBlacklistedReason());
         enterprisesArray.add(enterpriseNode);
@@ -109,7 +110,8 @@ public class EnterpriseResource {
       enterpriseNode.put("nom", enterpriseDTO.getName());
       enterpriseNode.put("appellation", enterpriseDTO.getLabel());
       enterpriseNode.put("adresse", enterpriseDTO.getAddress());
-      enterpriseNode.put("telephone", enterpriseDTO.getContactInfos());
+      enterpriseNode.put("telephone", enterpriseDTO.getPhone());
+      enterpriseNode.put("email", enterpriseDTO.getEmail());
       enterpriseNode.put("is_blacklist", enterpriseDTO.isBlacklisted());
       enterpriseNode.put("avis_professeur", enterpriseDTO.getBlacklistedReason());
 
