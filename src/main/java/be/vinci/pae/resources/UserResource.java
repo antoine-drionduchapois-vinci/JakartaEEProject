@@ -47,7 +47,7 @@ public class UserResource {
   @Path("stats")
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getGlobalStats() {
-
+    logger.info("Fetching global statistics...");
     int studentsWithoutInternship = myUserUCC.countStudentsWithoutStage();
     int countStudents = myUserUCC.countStudents();
 
@@ -56,7 +56,7 @@ public class UserResource {
     ObjectNode stats = mapper.createObjectNode();
     stats.put("noStage", studentsWithoutInternship);
     stats.put("all", countStudents);
-    logger.info("Fetching global statistics...");
+
     return stats;
   }
 

@@ -6,6 +6,9 @@ import be.vinci.pae.utils.Config;
 import be.vinci.pae.utils.WebExceptionMapper;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -55,7 +58,15 @@ public class Main {
     final HttpServer server = startServer();
     System.out.println(String.format("Jersey app started with WADL available at "
         + BASE_URI + "\nHit enter to stop it..."));
-
+    Path logPath = Paths.get("logs");
+    if (Files.notExists(logPath)) {
+      try {
+        Files.createDirectory(logPath);
+        System.out.println("Le dossier 'logs' a été créé avec succès.");
+      } catch (Exception e) {
+        System.err.println("Impossible de créer le dossier 'logs': " + e.getMessage());
+      }
+    }
     System.in.read();
     server.stop();
   }
