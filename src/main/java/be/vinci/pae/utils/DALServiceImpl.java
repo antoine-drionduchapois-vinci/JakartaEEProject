@@ -29,11 +29,14 @@ public class DALServiceImpl implements DALService, DALBackService {
    */
   @Override
   public PreparedStatement getPS(String sql) {
-    try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+    try {
+      PreparedStatement ps = getConnection().prepareStatement(sql);
+
       return ps;
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
+
   }
 
   /**
@@ -42,6 +45,13 @@ public class DALServiceImpl implements DALService, DALBackService {
   @Override
   public void start() {
     this.dataSource = createDataSource();
+    try {
+
+      connectionThreadLocal.set(dataSource.getConnection());
+
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   /**
@@ -109,10 +119,11 @@ public class DALServiceImpl implements DALService, DALBackService {
    */
   private DataSource createDataSource() {
     BasicDataSource ds = new BasicDataSource();
-    ds.setDriverClassName("org.h2.Driver");
+    ds.setDriverClassName("org.postgresql.Driver");
     ds.setUrl(url);
     ds.setUsername(username);
     ds.setPassword(password);
+    
     return ds;
   }
 
@@ -124,6 +135,7 @@ public class DALServiceImpl implements DALService, DALBackService {
    */
   private Connection getConnection() throws SQLException {
     Connection conn = connectionThreadLocal.get();
+
     if (conn == null || conn.isClosed()) {
       conn = dataSource.getConnection();
       connectionThreadLocal.set(conn);

@@ -37,17 +37,21 @@ public class ApplicationBinder extends AbstractBinder {
   @Override
   protected void configure() {
     bind(DomainFactoryImpl.class).to(DomainFactory.class).in(Singleton.class);
+
     bind(UserUCCImpl.class).to(UserUCC.class).in(Singleton.class);
     bind(ContactUCCImpl.class).to(ContactUCC.class).in(Singleton.class);
     bind(SupervisorUCCImpl.class).to(SupervisorUCC.class).in(Singleton.class);
     bind(EnterpriseUCCImpl.class).to(EnterpriseUCC.class).in(Singleton.class);
     bind(AuthUCCImpl.class).to(AuthUCC.class).in(Singleton.class);
     bind(ContactUCCImpl.class).to(ContactUCC.class).in(Singleton.class);
+
     bind(UserDAOImpl.class).to(UserDAO.class).in(Singleton.class);
     bind(ContactDAOImpl.class).to(ContactDAO.class).in(Singleton.class);
     bind(EnterpriseDAOImpl.class).to(EnterpriseDAO.class).in(Singleton.class);
     bind(ContactDAOImpl.class).to(ContactDAO.class).in(Singleton.class);
     bind(SupervisorDAOImpl.class).to(SupervisorDAO.class).in(Singleton.class);
-    bind(DALServiceImpl.class).to(DALService.class).in(Singleton.class);
+
+    bind(DALServiceImpl.class).to(DALService.class).to(DALBackService.class).in(Singleton.class);
+
   }
 }

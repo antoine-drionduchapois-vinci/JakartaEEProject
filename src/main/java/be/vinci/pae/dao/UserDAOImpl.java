@@ -4,7 +4,6 @@ import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserImpl;
 import be.vinci.pae.utils.DALBackService;
-import be.vinci.pae.utils.DALServiceImpl;
 import be.vinci.pae.utils.ResultSetMapper;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
@@ -18,7 +17,8 @@ import java.util.List;
  */
 public class UserDAOImpl implements UserDAO {
 
-  private DALBackService myDalService = new DALServiceImpl();
+  @Inject
+  private DALBackService myDalService;
 
   @Inject
   private DomainFactory myDomainFactory;
@@ -29,8 +29,11 @@ public class UserDAOImpl implements UserDAO {
   public User getOneByEmail(String email) {
     try (PreparedStatement ps = myDalService.getPS(
         "SELECT * FROM projetae.users WHERE email = ?");) {
+      System.out.println("2.5 " + ps);
       ps.setString(1, email);
+      System.out.println("3  " + ps);
       ps.execute();
+      System.out.println("4 " + ps.getResultSet().toString());
       return userMapper.mapResultSetToObject(ps.getResultSet(), UserImpl.class,
           myDomainFactory::getUser);
     } catch (SQLException | IllegalAccessException e) {

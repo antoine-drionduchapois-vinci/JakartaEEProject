@@ -4,7 +4,6 @@ import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.Supervisor;
 import be.vinci.pae.domain.SupervisorImpl;
 import be.vinci.pae.utils.DALBackService;
-import be.vinci.pae.utils.DALServiceImpl;
 import be.vinci.pae.utils.ResultSetMapper;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
@@ -15,7 +14,8 @@ import java.sql.SQLException;
  */
 public class SupervisorDAOImpl implements SupervisorDAO {
 
-  private DALBackService myDalService = new DALServiceImpl();
+  @Inject
+  private DALBackService myDalService;
 
   @Inject
   private DomainFactory myDomainFactory;
