@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 /**
- * Convert ResultSet to correspondant DTO
+ * Convert ResultSet to correspondant DTO.
  */
 public class ResultSetMapper<T, U> {
 
