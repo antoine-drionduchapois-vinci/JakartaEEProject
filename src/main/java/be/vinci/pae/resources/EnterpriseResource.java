@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Singleton
 @Path("/ent")
-public class EnterpriseResourceImpl {
+public class EnterpriseResource {
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   @Inject
@@ -74,33 +74,33 @@ public class EnterpriseResourceImpl {
   }
 
   /**
-   * Retrieves users info.
+   * Retrieves the enterprise associated with the user's internship by user ID.
    *
-   * @return an ObjectNode containing users info
+   * @param json The JSON object containing the JWT token.
+   * @return An ObjectNode representing the enterprise details.
    */
-
   @POST
   @Path("enterprises")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getEnterprisesByUserId(JsonNode json) {
     try {
-      //Get token from JSON
+      // Get token from JSON
       System.out.println("here");
       String jsonToken = json.get("token").asText();
-      //Decode Token
+      // Decode Token
       DecodedJWT jwt = JWT.require(jwtAlgorithm)
           .withIssuer("auth0")
           .build() // create the JWTVerifier instance
           .verify(jsonToken); // verify the token
-      //Het userId from decodedToken
+      // Het userId from decodedToken
       int userId = jwt.getClaim("user").asInt();
       // Assuming the token includes a "user" claim holding the user ID
       if (userId == -1) {
         throw new JWTVerificationException("User ID claim is missing");
       }
       System.out.println("user id : " + userId);
-      //get entrprise that corresponds to user intership
+      // get entrprise that corresponds to user intership
       Enterprise enterpriseDTO = myEnterpriseUCC.getEnterprisesByUserId(userId);
 
       ObjectMapper mapper = new ObjectMapper();

@@ -25,21 +25,21 @@ import jakarta.ws.rs.core.MediaType;
  */
 @Singleton
 @Path("/res")
-public class SupervisorResourceImpl {
+public class SupervisorResource {
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
-
 
   @Inject
   private EnterpriseUCC entrepriseUCC;
   @Inject
   private SupervisorUCC supervisorUCC;
 
-
   /**
-   * Retrieves users info.
+   * Retrieves the supervisor responsible for the user's internship enterprise by
+   * user ID.
    *
-   * @return an ObjectNode containing users info
+   * @param json The JSON object containing the JWT token.
+   * @return An ObjectNode representing the supervisor details.
    */
   @POST
   @Path("responsable")
@@ -47,27 +47,27 @@ public class SupervisorResourceImpl {
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getResponsableByUserId(JsonNode json) {
     try {
-      //Get token from JSON
+      // Get token from JSON
       System.out.println("here");
       String jsonToken = json.get("token").asText();
-      //Decode Token
+      // Decode Token
       DecodedJWT jwt = JWT.require(jwtAlgorithm)
           .withIssuer("auth0")
           .build() // create the JWTVerifier instance
           .verify(jsonToken); // verify the token
-      //Het userId from decodedToken
+      // Het userId from decodedToken
       int userId = jwt.getClaim("user").asInt();
       // Assuming the token includes a "user" claim holding the user ID
       if (userId == -1) {
         throw new JWTVerificationException("User ID claim is missing");
       }
       System.out.println("user id : " + userId);
-      //get entrprise that corresponds to user intership
+      // get entrprise that corresponds to user intership
       Enterprise enterpriseDTO = entrepriseUCC.getEnterprisesByUserId(userId);
       Supervisor supervisorDTO = supervisorUCC.getResponsibleByEnterpriseId(
           enterpriseDTO.getEnterpriseId());
 
-      //transform responsibleDTO to JSOn
+      // transform responsibleDTO to JSOn
       ObjectMapper mapper = new ObjectMapper();
       ObjectNode responsibleNode = mapper.createObjectNode();
       responsibleNode.put("responsible_id", supervisorDTO.getResponsibleId());
@@ -85,6 +85,5 @@ public class SupervisorResourceImpl {
     }
     return null;
   }
-
 
 }

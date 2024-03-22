@@ -20,6 +20,18 @@ public interface EnterpriseDAO {
    */
   Enterprise readOne(int enterpriseId);
 
+  /**
+   * Retrieves the enterprise information associated with the specified enterprise
+   * name and enterprise label.
+   *
+   * @param enterpriseName  The name of the enterprise to retrieve information
+   *                        for.
+   * @param enterpriseLabel The label of the enterprise to retrieve information
+   *                        for.
+   * @return An EnterpriseDTO object representing the enterprise information
+   *         associated with the
+   *         specified ID, or null if no enterprise with the given ID is found.
+   */
   Enterprise readOne(String enterpriseName, String enterpriseLabel);
 
   /**

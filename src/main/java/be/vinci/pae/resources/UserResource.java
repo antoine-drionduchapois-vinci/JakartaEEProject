@@ -21,14 +21,12 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import java.util.List;
 
-
 /**
  * Implementation of the UserDataService interface.
  */
 @Singleton
 @Path("/users")
-public class UserResourceImpl {
-
+public class UserResource {
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
@@ -94,9 +92,10 @@ public class UserResourceImpl {
   }
 
   /**
-   * Retrieves users info.
+   * Retrieves user information by user ID and returns it as JSON.
    *
-   * @return an ObjectNode containing users info
+   * @param json The JSON object containing the JWT token.
+   * @return An ObjectNode representing the user's information.
    */
   @POST
   @Path("getUserInfoById")
@@ -105,14 +104,14 @@ public class UserResourceImpl {
   public ObjectNode getUsersByIdAsJson(JsonNode json) {
 
     try {
-      //Get token from JSON
+      // Get token from JSON
       String jsonToken = json.get("token").asText();
-      //Decode Token
+      // Decode Token
       DecodedJWT jwt = JWT.require(jwtAlgorithm)
           .withIssuer("auth0")
           .build() // create the JWTVerifier instance
           .verify(jsonToken); // verify the token
-      //Het userId from decodedToken
+      // Het userId from decodedToken
       int userId = jwt.getClaim("user").asInt();
       // Assuming the token includes a "user" claim holding the user ID
       if (userId == -1) {
@@ -134,6 +133,5 @@ public class UserResourceImpl {
     }
     return null;
   }
-
 
 }

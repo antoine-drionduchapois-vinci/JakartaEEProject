@@ -13,7 +13,6 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
-
 /**
  * Main class.
  */
@@ -23,11 +22,14 @@ public class Main {
     Config.load("dev.properties");
   }
 
-  // Base URI the Grizzly HTTP server will listen on
+  /**
+   * Base URI the Grizzly HTTP server will listen on
+   */
   public static final String BASE_URI = Config.getProperty("BaseUri");
 
   /**
-   * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
+   * Starts Grizzly HTTP server exposing JAX-RS resources defined in this
+   * application.
    *
    * @return Grizzly HTTP server.
    */
