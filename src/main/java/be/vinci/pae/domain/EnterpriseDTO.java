@@ -62,18 +62,32 @@ public interface EnterpriseDTO {
   void setAddress(String address);
 
   /**
-   * Gets the contact information of the enterprise.
+   * Gets the phone number of the enterprise.
    *
-   * @return The contact information of the enterprise.
+   * @return The phone number of the enterprise.
    */
-  String getContactInfos();
+  String getPhone();
 
   /**
-   * Sets the contact information of the enterprise.
+   * Sets the phone number of the enterprise.
    *
-   * @param contactInfos The contact information of the enterprise to set.
+   * @param phone The phone number of the enterprise to set.
    */
-  void setContactInfos(String contactInfos);
+  void setPhone(String phone);
+
+  /**
+   * Gets the email of the enterprise.
+   *
+   * @return The email of the enterprise.
+   */
+  String getEmail();
+
+  /**
+   * Sets the email of the enterprise.
+   *
+   * @param email The email of the enterprise to set.
+   */
+  void setEmail(String email);
 
   /**
    * Checks if the enterprise is blacklisted.

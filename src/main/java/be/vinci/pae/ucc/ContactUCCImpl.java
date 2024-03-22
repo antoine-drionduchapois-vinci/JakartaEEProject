@@ -169,7 +169,8 @@ public class ContactUCCImpl implements ContactUCC {
         .put("name", contactDTO.getEnterpriseDTO().getName())
         .put("label", contactDTO.getEnterpriseDTO().getLabel())
         .put("adress", contactDTO.getEnterpriseDTO().getAddress())
-        .put("contact", contactDTO.getEnterpriseDTO().getContactInfos())
+        .put("contact", contactDTO.getEnterpriseDTO().getPhone())
+        .put("email", contactDTO.getEnterpriseDTO().getEmail())
         .put("opinionTeacher", contactDTO.getEnterpriseDTO().getBlacklistedReason());
 
     return jsonMapper.createObjectNode()
