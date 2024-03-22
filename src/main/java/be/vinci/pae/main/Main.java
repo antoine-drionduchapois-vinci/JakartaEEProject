@@ -8,7 +8,6 @@ import be.vinci.pae.utils.DALServiceImpl;
 import be.vinci.pae.utils.WebExceptionMapper;
 import java.io.IOException;
 import java.net.URI;
-import java.sql.SQLException;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -67,11 +66,6 @@ public class Main {
     DALService dalService = new DALServiceImpl();
 
     System.in.read();
-    try {
-      dalService.close();
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
     server.stop();
   }
 }
