@@ -51,6 +51,7 @@ CREATE TABLE projetae.internships
     internship_id SERIAL PRIMARY KEY,
     subject       VARCHAR(100),
     year          VARCHAR(10) NOT NULL,
+    "user" INTEGER NOT NULL REFERENCES projetae.users,
     enterprise    INTEGER     NOT NULL REFERENCES projetae.enterprises,
     supervisor    INTEGER     NOT NULL REFERENCES projetae.supervisors,
     contact       INTEGER     NOT NULL REFERENCES projetae.contacts
@@ -108,7 +109,8 @@ VALUES (1, '2023-2024', 2, 'accepted', NULL, 'A distance', 9),
        (10, '2023-2024', 2, 'initiated', NULL, NULL, 5),
        (11, '2023-2024', 4, 'initiated', NULL, NULL, 8);
 
-INSERT INTO projetae.internships(internship_id, subject, year, supervisor, contact, enterprise)
-VALUES (1, 'Un ERP : Odoo', '2023-2024', 1, 1, 2),
-       (2, 'sBMS project - a complex environment', '2023-2024', 2, 2, 4),
-       (4, 'CRM : Microsoft Dynamics 365 For Sales', '2023-2024', 3, 4, 1);
+INSERT INTO projetae.internships(internship_id, subject, year, "user", supervisor, contact,
+                                 enterprise)
+VALUES (1, 'Un ERP : Odoo', '2023-2024', 9, 1, 1, 2),
+       (2, 'sBMS project - a complex environment', '2023-2024', 6, 2, 2, 4),
+       (4, 'CRM : Microsoft Dynamics 365 For Sales', '2023-2024', 7, 3, 4, 1);
