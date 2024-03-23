@@ -4,6 +4,7 @@ import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserImpl;
 import be.vinci.pae.utils.DALBackService;
+import be.vinci.pae.utils.FatalErrorException;
 import be.vinci.pae.utils.ResultSetMapper;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
@@ -37,7 +38,7 @@ public class UserDAOImpl implements UserDAO {
       return userMapper.mapResultSetToObject(ps.getResultSet(), UserImpl.class,
           myDomainFactory::getUser);
     } catch (SQLException | IllegalAccessException e) {
-      throw new RuntimeException(e); // TODO: handle error
+      throw new FatalErrorException(e);
     }
   }
 
@@ -50,7 +51,7 @@ public class UserDAOImpl implements UserDAO {
       return userMapper.mapResultSetToObject(ps.getResultSet(), UserImpl.class,
           myDomainFactory::getUser);
     } catch (SQLException | IllegalAccessException e) {
-      throw new RuntimeException(e); // TODO: handle error
+      throw new FatalErrorException(e);
     }
   }
 
@@ -72,7 +73,7 @@ public class UserDAOImpl implements UserDAO {
       ps.executeUpdate();
       return getOneByEmail(user.getEmail());
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalErrorException(e);
     }
   }
 
@@ -86,7 +87,7 @@ public class UserDAOImpl implements UserDAO {
         return rs.getInt(1); // Retourne le résultat du COUNT(*)
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      throw new FatalErrorException(e);
     }
     return 0; // Gérer le cas où il n'y a aucun résultat
   }
@@ -99,7 +100,7 @@ public class UserDAOImpl implements UserDAO {
       return userMapper.mapResultSetToObjectList(ps.getResultSet(), UserImpl.class,
           myDomainFactory::getUser);
     } catch (SQLException | IllegalAccessException e) {
-      throw new RuntimeException(e); // TODO: handle error
+      throw new FatalErrorException(e);
     }
   }
 
@@ -121,7 +122,7 @@ public class UserDAOImpl implements UserDAO {
         return rs.getInt(1); // Retourne le résultat du COUNT(*)
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      throw new FatalErrorException(e);
     }
     return 0; // Gérer le cas où il y a une erreur ou aucun résultat
   }

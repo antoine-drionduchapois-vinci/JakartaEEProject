@@ -4,6 +4,7 @@ import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.Enterprise;
 import be.vinci.pae.domain.EnterpriseImpl;
 import be.vinci.pae.utils.DALBackService;
+import be.vinci.pae.utils.FatalErrorException;
 import be.vinci.pae.utils.ResultSetMapper;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
@@ -33,7 +34,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       return enterpriseMapper.mapResultSetToObject(ps.getResultSet(), EnterpriseImpl.class,
           myDomainFactory::getEnterprise);
     } catch (SQLException | IllegalAccessException e) {
-      throw new RuntimeException(e); // TODO: handle error
+      throw new FatalErrorException(e);
     }
   }
 
@@ -47,7 +48,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       return enterpriseMapper.mapResultSetToObject(ps.getResultSet(), EnterpriseImpl.class,
           myDomainFactory::getEnterprise);
     } catch (SQLException | IllegalAccessException e) {
-      throw new RuntimeException(e); // TODO: handle error
+      throw new FatalErrorException(e);
     }
   }
 
@@ -64,7 +65,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       return enterpriseMapper.mapResultSetToObject(ps.getResultSet(), EnterpriseImpl.class,
           myDomainFactory::getEnterprise);
     } catch (SQLException | IllegalAccessException e) {
-      throw new RuntimeException(e); // TODO: handle error
+      throw new FatalErrorException(e);
     }
   }
 
@@ -75,7 +76,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       return enterpriseMapper.mapResultSetToObjectList(ps.getResultSet(), EnterpriseImpl.class,
           myDomainFactory::getEnterprise);
     } catch (SQLException | IllegalAccessException e) {
-      throw new RuntimeException(e); // TODO: handle error
+      throw new FatalErrorException(e);
     }
   }
 
@@ -95,7 +96,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       return enterpriseMapper.mapResultSetToObject(ps.getResultSet(), EnterpriseImpl.class,
           myDomainFactory::getEnterprise);
     } catch (SQLException | IllegalAccessException e) {
-      throw new RuntimeException(e); // TODO: handle error
+      throw new FatalErrorException(e);
     }
   }
 }
