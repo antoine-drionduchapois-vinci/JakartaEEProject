@@ -31,10 +31,9 @@ import org.apache.logging.log4j.Logger;
 @Path("/users")
 public class UserResource {
 
+  private static final Logger logger = LogManager.getLogger(UserResource.class);
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
-  private static final Logger logger = LogManager.getLogger(UserResource.class);
-
   @Inject
   private UserUCC myUserUCC;
 
@@ -110,20 +109,25 @@ public class UserResource {
 
     try {
       // Get token from JSON
+      System.out.println("Received token: " + json); // Java
+
       String jsonToken = json.get("token").asText();
       // Decode Token
+      System.out.println();
       DecodedJWT jwt = JWT.require(jwtAlgorithm)
           .withIssuer("auth0")
           .build() // create the JWTVerifier instance
           .verify(jsonToken); // verify the token
+      System.out.println(jwt);
       // Het userId from decodedToken
       int userId = jwt.getClaim("user").asInt();
+      System.out.println(userId);
       // Assuming the token includes a "user" claim holding the user ID
       if (userId == -1) {
         throw new JWTVerificationException("User ID claim is missing");
       }
       User user = myUserUCC.getUsersByIdAsJson(userId);
-
+      System.out.println(user.toString());
       ObjectMapper mapper = new ObjectMapper();
       ObjectNode userInfo = mapper.createObjectNode();
       userInfo.put("name", user.getName());
