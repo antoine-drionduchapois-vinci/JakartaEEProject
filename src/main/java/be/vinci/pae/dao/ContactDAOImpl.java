@@ -99,4 +99,6 @@ public class ContactDAOImpl implements ContactDAO {
       throw new RuntimeException(e); // TODO: handle error
     }
   }
+
+
 }

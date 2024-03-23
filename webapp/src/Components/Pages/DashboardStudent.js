@@ -34,11 +34,11 @@ const fetchUser = async () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ contactId: getAuthenticatedUser().id }), 
+      body: JSON.stringify({ token: getAuthenticatedUser().token }), 
     };
   
     try {
-      const response = await fetch('http://localhost:8080/contact/getContacts', options);
+      const response = await fetch('http://localhost:8080/contact/getUserContacts', options);
       if (!response.ok) {
         throw new Error('Error retrieving user contacts');
       }
@@ -51,19 +51,15 @@ const fetchUser = async () => {
       return null;
     }
   };
-/*
+
   const fetchUserInternship = async () => {
-    const token = localStorage.getItem('token');
-    const requestBody = {
-      token,
-    }; // Object shorthand used here
-  
+   
     const options = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(requestBody),
+      body: JSON.stringify({ token: getAuthenticatedUser().token }), 
     };
   
     try {
@@ -73,13 +69,16 @@ const fetchUser = async () => {
       }
   
       const internshipInfo = await response.json();
+      console.log("internshipInfo");
+      console.log(internshipInfo);
       return internshipInfo;
+      
     } catch (error) {
       console.error('Error retrieving user internship:', error);
       return null;
     }
   };
-  */
+  
   const DashboardStudent = async () => {
     const main = document.querySelector('main');
     
@@ -146,10 +145,12 @@ const fetchUser = async () => {
     // const contactsInfo = await fetchUserContacts();
     const userData = await fetchUser();
     const contactData = await fetchUserContacts();
+    const internshipData = await fetchUserInternship();
     // const internshipData = await fetchUserInternship();
     console.log(userData.name);
     console.log(userData.surname);
     console.log(contactData);
+    console.log(internshipData);
     
     // User Data
     /*
