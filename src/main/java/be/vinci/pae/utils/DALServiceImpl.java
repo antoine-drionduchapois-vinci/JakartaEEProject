@@ -34,7 +34,7 @@ public class DALServiceImpl implements DALService, DALBackService {
 
       return ps;
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalErrorException(e);
     }
 
   }
@@ -50,7 +50,7 @@ public class DALServiceImpl implements DALService, DALBackService {
       connectionThreadLocal.set(dataSource.getConnection());
 
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalErrorException(e);
     }
   }
 
@@ -78,11 +78,11 @@ public class DALServiceImpl implements DALService, DALBackService {
           conn.rollback();
         } catch (SQLException rollbackEx) {
           // Handle rollback errors
-          rollbackEx.printStackTrace();
+          throw new FatalErrorException(rollbackEx);
         }
       }
       // Handle transaction error
-      e.printStackTrace();
+      throw new FatalErrorException(e);
     } finally {
       // Close the connection
       if (conn != null) {
@@ -91,7 +91,7 @@ public class DALServiceImpl implements DALService, DALBackService {
           conn.close();
         } catch (SQLException closeEx) {
           // Handle connection closing errors
-          closeEx.printStackTrace();
+          throw new FatalErrorException(closeEx);
         }
       }
     }
