@@ -1,5 +1,8 @@
 package be.vinci.pae.domain;
 
+/**
+ * Implementation of the Internship interface.
+ */
 public class InternshipImpl implements Internship {
 
   private int internshipId;
@@ -7,7 +10,7 @@ public class InternshipImpl implements Internship {
   private String year;
   private int user;
   private int enterprise;
-  private int responsible;
+  private int supervisor;
   private int contact;
 
   private Internship IntenshipDTO;
@@ -20,7 +23,7 @@ public class InternshipImpl implements Internship {
 
   @Override
   public int getResponsible() {
-    return responsible;
+    return supervisor;
   }
 
   @Override

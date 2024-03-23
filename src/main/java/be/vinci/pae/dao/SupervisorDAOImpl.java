@@ -14,19 +14,17 @@ import java.sql.SQLException;
  */
 public class SupervisorDAOImpl implements SupervisorDAO {
 
-  @Inject
-  private DALBackService myDalService;
-
-  @Inject
-  private DomainFactory myDomainFactory;
-
   private final ResultSetMapper<Supervisor, SupervisorImpl> supervisorMapper =
       new ResultSetMapper<>();
+  @Inject
+  private DALBackService myDalService;
+  @Inject
+  private DomainFactory myDomainFactory;
 
   @Override
   public Supervisor getResponsibleByEnterpriseId(int id) {
     try (PreparedStatement ps = myDalService.getPS(
-        "SELECT * FROM projetae.supervisor WHERE enterprise = ?")) {
+        "SELECT * FROM projetae.supervisors WHERE enterprise = ?")) {
       ps.setInt(1, id);
       ps.execute();
       return supervisorMapper.mapResultSetToObject(ps.getResultSet(), SupervisorImpl.class,

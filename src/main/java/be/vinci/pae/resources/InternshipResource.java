@@ -1,4 +1,4 @@
-package be.vinci.pae.resource;
+package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.domain.Internship;
@@ -49,6 +49,7 @@ public class InternshipResource {
   public ObjectNode getUserInternship(JsonNode json) {
     try {
       //Get token from JSON
+      System.out.println("GetUsersInternship");
       System.out.println("here");
       String jsonToken = json.get("token").asText();
       //Decode Token
@@ -64,10 +65,14 @@ public class InternshipResource {
       }
       System.out.println("user id : " + userId);
       //get entrprise that corresponds to user intership
+      System.out.println("1");
       Internship internship = myInternshipUCC.getUserInternship(userId);
+      System.out.println("2");
       EnterpriseDTO enterpriseDTO = myEnterpriseUCC.getEnterprisesByUserId(userId);
+      System.out.println("3");
       SupervisorDTO responsibleDTO = myResponsbileUCC.getResponsibleByEnterpriseId(
           enterpriseDTO.getEnterpriseId());
+      System.out.println("4");
 
       ObjectMapper mapper = new ObjectMapper();
       ObjectNode InternshipNode = mapper.createObjectNode();
