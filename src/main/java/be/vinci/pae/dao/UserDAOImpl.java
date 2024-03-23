@@ -29,11 +29,10 @@ public class UserDAOImpl implements UserDAO {
   public User getOneByEmail(String email) {
     try (PreparedStatement ps = myDalService.getPS(
         "SELECT * FROM projetae.users WHERE email = ?");) {
-      System.out.println("2.5 " + ps);
+
       ps.setString(1, email);
-      System.out.println("3  " + ps);
       ps.execute();
-      System.out.println("4 " + ps.getResultSet().toString());
+
       return userMapper.mapResultSetToObject(ps.getResultSet(), UserImpl.class,
           myDomainFactory::getUser);
     } catch (SQLException | IllegalAccessException e) {

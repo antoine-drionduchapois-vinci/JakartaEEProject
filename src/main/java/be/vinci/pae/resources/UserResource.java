@@ -20,6 +20,9 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  * Implementation of the UserDataService interface.
@@ -30,6 +33,8 @@ public class UserResource {
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
+  private static final Logger logger = LogManager.getLogger(UserResource.class);
+
   @Inject
   private UserUCC myUserUCC;
 
@@ -42,7 +47,7 @@ public class UserResource {
   @Path("stats")
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getGlobalStats() {
-
+    logger.info("Fetching global statistics...");
     int studentsWithoutInternship = myUserUCC.countStudentsWithoutStage();
     int countStudents = myUserUCC.countStudents();
 
@@ -87,7 +92,7 @@ public class UserResource {
       // Gérer les erreurs éventuelles
       e.printStackTrace();
     }
-
+    logger.info("Fetching all User...");
     return usersArray;
   }
 
