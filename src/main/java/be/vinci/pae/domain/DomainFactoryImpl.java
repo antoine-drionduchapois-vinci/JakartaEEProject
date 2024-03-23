@@ -27,4 +27,10 @@ public class DomainFactoryImpl implements DomainFactory {
   public User getUser() {
     return new UserImpl();
   }
+
+  @Override
+  public Internship getInternship() {
+    return new InternshipImpl();
+  }
+
 }

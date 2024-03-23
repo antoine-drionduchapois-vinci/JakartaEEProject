@@ -32,4 +32,6 @@ public interface DomainFactory {
    * @return A new User object.
    */
   User getUser();
+
+  Internship getInternship();
 }
