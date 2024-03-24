@@ -13,8 +13,6 @@ public class InternshipDTOImpl implements InternshipDTO {
   private int supervisor;
   private int contact;
 
-  private InternshipDTO internshipDTO;
-
 
   @Override
   public int getInternshipId() {
@@ -51,8 +49,5 @@ public class InternshipDTOImpl implements InternshipDTO {
     return year;
   }
 
-  @Override
-  public void setInternshipDTO(InternshipDTO InternshipDTO) {
-    this.internshipDTO = InternshipDTO;
-  }
+
 }

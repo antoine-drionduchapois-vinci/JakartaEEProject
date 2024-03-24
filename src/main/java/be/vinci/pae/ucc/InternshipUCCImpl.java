@@ -5,10 +5,13 @@ import be.vinci.pae.domain.InternshipDTO;
 import be.vinci.pae.utils.DALService;
 import jakarta.inject.Inject;
 
+/**
+ * Implementation of the internshipUCC interface.
+ */
 public class InternshipUCCImpl implements InternshipUCC {
 
   @Inject
-  private InternshipDAO InternshipDAO;
+  private InternshipDAO internshipDAO;
 
   @Inject
   private DALService myDALService;
@@ -18,7 +21,7 @@ public class InternshipUCCImpl implements InternshipUCC {
   public InternshipDTO getUserInternship(int userId) {
     myDALService.start();
     // get entrprise that corresponds to user intership
-    InternshipDTO internshipDTO = InternshipDAO.getUserInternship(userId);
+    InternshipDTO internshipDTO = internshipDAO.getUserInternship(userId);
     myDALService.commit();
 
     return internshipDTO;

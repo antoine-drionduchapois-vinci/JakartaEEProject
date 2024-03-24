@@ -192,36 +192,26 @@ public class ContactResource {
   public ObjectNode getUsersByIdAsJson(JsonNode json) {
 
     try {
-      // Get token from JSON
       System.out.println("Received token: " + json); // Java
-
       String jsonToken = json.get("token").asText();
-      // Decode Token
       System.out.println();
       DecodedJWT jwt = JWT.require(jwtAlgorithm)
           .withIssuer("auth0")
-          .build() // create the JWTVerifier instance
-          .verify(jsonToken); // verify the token
+          .build()
+          .verify(jsonToken);
       System.out.println(jwt);
-      // Het userId from decodedToken
       int userId = jwt.getClaim("user").asInt();
       System.out.println(userId);
-      // Assuming the token includes a "user" claim holding the user ID
       if (userId == -1) {
         throw new JWTVerificationException("User ID claim is missing");
       }
-
       ObjectMapper mapper = new ObjectMapper();
       ObjectNode response = mapper.createObjectNode();
       ArrayNode contactArray = mapper.createArrayNode();
 
       try {
-        // Récupérer toutes les entreprises depuis votre DAO
         List<ContactDTO> contacts = myContactUCC.getContacts(userId);
-
-        // Parcourir chaque entreprise et les ajouter à la réponse
         for (ContactDTO contactDTO : contacts) {
-
           contactArray.add(
               convertDTOToJson(contactDTO).put("enterprise_name",
                   myEnterpriseUCC.getAllEnterprises().get(contactDTO.getEnterprise() - 1)

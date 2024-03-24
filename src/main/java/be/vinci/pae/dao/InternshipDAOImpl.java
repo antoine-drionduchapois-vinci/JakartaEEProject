@@ -11,6 +11,9 @@ import java.sql.SQLException;
 
 public class InternshipDAOImpl implements InternshipDAO {
 
+  /**
+   * Represents the implementation of the internshipDAO interface.
+   */
   private final ResultSetMapper<InternshipDTO, InternshipDTOImpl>
       internshipMapper = new ResultSetMapper<>();
   @Inject

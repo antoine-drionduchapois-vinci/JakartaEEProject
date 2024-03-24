@@ -54,10 +54,5 @@ public interface InternshipDTO {
    */
   String getYear();
 
-  /**
-   * Sets the InternshipDTO object.
-   *
-   * @param internshipDTO The InternshipDTO object to set.
-   */
-  void setInternshipDTO(InternshipDTO internshipDTO);
+ 
 }

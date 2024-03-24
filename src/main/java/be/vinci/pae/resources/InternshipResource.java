@@ -75,14 +75,14 @@ public class InternshipResource {
           enterpriseDTO.getEnterpriseId());
 
       ObjectMapper mapper = new ObjectMapper();
-      ObjectNode InternshipNode = mapper.createObjectNode();
-      InternshipNode.put("enterprise", enterpriseDTO.getName());
-      InternshipNode.put("year", internshipDTO.getYear());
-      InternshipNode.put("responsbile", responsibleDTO.getName());
-      InternshipNode.put("phone", responsibleDTO.getPhone());
-      InternshipNode.put("contact", internshipDTO.getContact());
+      ObjectNode internshipNode = mapper.createObjectNode();
+      internshipNode.put("enterprise", enterpriseDTO.getName());
+      internshipNode.put("year", internshipDTO.getYear());
+      internshipNode.put("responsbile", responsibleDTO.getName());
+      internshipNode.put("phone", responsibleDTO.getPhone());
+      internshipNode.put("contact", internshipDTO.getContact());
 
-      return InternshipNode;
+      return internshipNode;
     } catch (Exception e) {
       // Gérer les erreurs éventuelles
       e.printStackTrace();
