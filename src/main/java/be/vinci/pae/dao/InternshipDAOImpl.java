@@ -9,11 +9,12 @@ import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * Represents the implementation of the internshipDAO interface.
+ */
 public class InternshipDAOImpl implements InternshipDAO {
 
-  /**
-   * Represents the implementation of the internshipDAO interface.
-   */
+
   private final ResultSetMapper<InternshipDTO, InternshipDTOImpl>
       internshipMapper = new ResultSetMapper<>();
   @Inject

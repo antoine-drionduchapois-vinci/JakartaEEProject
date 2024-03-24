@@ -6,11 +6,7 @@ import be.vinci.pae.domain.SupervisorDTO;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.ucc.InternshipUCC;
 import be.vinci.pae.ucc.SupervisorUCC;
-import be.vinci.pae.utils.Config;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
+import be.vinci.pae.utils.JWTDecryptToken;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -29,7 +25,9 @@ import jakarta.ws.rs.core.MediaType;
 @Path("/int")
 public class InternshipResource {
 
-  private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
+
+  private JWTDecryptToken decryptToken = new JWTDecryptToken();
+
   @Inject
   private InternshipUCC myInternshipUCC;
 
@@ -50,44 +48,28 @@ public class InternshipResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getUserInternship(JsonNode json) {
-    try {
-      //Get token from JSON
-      System.out.println("GetUsersInternship");
-      System.out.println("here");
-      String jsonToken = json.get("token").asText();
-      //Decode Token
-      DecodedJWT jwt = JWT.require(jwtAlgorithm)
-          .withIssuer("auth0")
-          .build() // create the JWTVerifier instance
-          .verify(jsonToken); // verify the token
-      //Het userId from decodedToken
-      int userId = jwt.getClaim("user").asInt();
-      // Assuming the token includes a "user" claim holding the user ID
-      if (userId == -1) {
-        throw new JWTVerificationException("User ID claim is missing");
-      }
-      System.out.println("user id : " + userId);
-      //get entrprise that corresponds to user intership
 
-      InternshipDTO internshipDTO = myInternshipUCC.getUserInternship(userId);
-      EnterpriseDTO enterpriseDTO = myEnterpriseUCC.getEnterprisesByUserId(userId);
-      SupervisorDTO responsibleDTO = myResponsbileUCC.getResponsibleByEnterpriseId(
-          enterpriseDTO.getEnterpriseId());
+    int userId = decryptToken.getIdFromJsonToken(json);
 
-      ObjectMapper mapper = new ObjectMapper();
-      ObjectNode internshipNode = mapper.createObjectNode();
-      internshipNode.put("enterprise", enterpriseDTO.getName());
-      internshipNode.put("year", internshipDTO.getYear());
-      internshipNode.put("responsbile", responsibleDTO.getName());
-      internshipNode.put("phone", responsibleDTO.getPhone());
-      internshipNode.put("contact", internshipDTO.getContact());
+    System.out.println("user id : " + userId);
+    //get entrprise that corresponds to user intership
 
-      return internshipNode;
-    } catch (Exception e) {
-      // Gérer les erreurs éventuelles
-      e.printStackTrace();
-    }
-    return null;
+    InternshipDTO internshipDTO = myInternshipUCC.getUserInternship(userId);
+    EnterpriseDTO enterpriseDTO = myEnterpriseUCC.getEnterprisesByUserId(userId);
+    SupervisorDTO responsibleDTO = myResponsbileUCC.getResponsibleByEnterpriseId(
+        enterpriseDTO.getEnterpriseId());
+
+    ObjectMapper mapper = new ObjectMapper();
+    ObjectNode internshipNode = mapper.createObjectNode();
+    internshipNode.put("enterprise", enterpriseDTO.getName());
+    internshipNode.put("year", internshipDTO.getYear());
+    internshipNode.put("responsbile", responsibleDTO.getName());
+    internshipNode.put("phone", responsibleDTO.getPhone());
+    internshipNode.put("contact", internshipDTO.getContact());
+
+    return internshipNode;
+
+
   }
 
 

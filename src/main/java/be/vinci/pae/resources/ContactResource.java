@@ -3,11 +3,7 @@ package be.vinci.pae.resources;
 import be.vinci.pae.domain.ContactDTO;
 import be.vinci.pae.ucc.ContactUCC;
 import be.vinci.pae.ucc.EnterpriseUCC;
-import be.vinci.pae.utils.Config;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
+import be.vinci.pae.utils.JWTDecryptToken;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -33,7 +29,8 @@ import java.util.List;
 @Path("/contact")
 public class ContactResource {
 
-  private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
+
+  private JWTDecryptToken decryptToken = new JWTDecryptToken();
   @Inject
   private ContactUCC myContactUCC;
 
@@ -190,45 +187,32 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getUsersByIdAsJson(JsonNode json) {
+    int userId = decryptToken.getIdFromJsonToken(json);
+
+    System.out.println(userId);
+
+    ObjectMapper mapper = new ObjectMapper();
+    ObjectNode response = mapper.createObjectNode();
+    ArrayNode contactArray = mapper.createArrayNode();
 
     try {
-      System.out.println("Received token: " + json); // Java
-      String jsonToken = json.get("token").asText();
-      System.out.println();
-      DecodedJWT jwt = JWT.require(jwtAlgorithm)
-          .withIssuer("auth0")
-          .build()
-          .verify(jsonToken);
-      System.out.println(jwt);
-      int userId = jwt.getClaim("user").asInt();
-      System.out.println(userId);
-      if (userId == -1) {
-        throw new JWTVerificationException("User ID claim is missing");
+      List<ContactDTO> contacts = myContactUCC.getContacts(userId);
+      for (ContactDTO contactDTO : contacts) {
+        contactArray.add(
+            convertDTOToJson(contactDTO).put("enterprise_name",
+                myEnterpriseUCC.getAllEnterprises().get(contactDTO.getEnterprise() - 1)
+                    .getName()));
+
       }
-      ObjectMapper mapper = new ObjectMapper();
-      ObjectNode response = mapper.createObjectNode();
-      ArrayNode contactArray = mapper.createArrayNode();
 
-      try {
-        List<ContactDTO> contacts = myContactUCC.getContacts(userId);
-        for (ContactDTO contactDTO : contacts) {
-          contactArray.add(
-              convertDTOToJson(contactDTO).put("enterprise_name",
-                  myEnterpriseUCC.getAllEnterprises().get(contactDTO.getEnterprise() - 1)
-                      .getName()));
-
-        }
-
-        // Ajouter le tableau d'entreprises à la réponse
-        response.set("contact", contactArray);
-      } catch (Exception e) {
-        // Gérer les erreurs éventuelles
-        response.put("error", e.getMessage());
-      }
-      return response;
-    } catch (JWTVerificationException e) {
-      throw new RuntimeException(e);
+      // Ajouter le tableau d'entreprises à la réponse
+      response.set("contact", contactArray);
+    } catch (Exception e) {
+      // Gérer les erreurs éventuelles
+      response.put("error", e.getMessage());
     }
+    return response;
+
   }
 
   private ObjectNode convertDTOToJson(ContactDTO contactDTO) {
