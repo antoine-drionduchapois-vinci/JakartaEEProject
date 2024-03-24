@@ -31,16 +31,12 @@ public class JWTDecryptToken {
    *         claim is missing or not an integer.
    */
   public int getIdFromJsonToken(JsonNode json) throws JWTVerificationException {
-    System.out.println("Received token: " + json); // Log the received JSON
     String jsonToken = json.get("token").asText(); // Extract the token as text
-    System.out.println();
     DecodedJWT jwt = JWT.require(jwtAlgorithm) // Require and decode the token
         .withIssuer("auth0") // Specify the expected issuer
         .build()
         .verify(jsonToken);
-    System.out.println(jwt); // Log the decoded JWT
     int userId = jwt.getClaim("user").asInt(); // Extract the user ID claim
-    System.out.println(userId); // Log the user ID
     if (userId == -1) { // Check if the user ID is -1 (indicating missing)
       throw new JWTVerificationException(
           "User ID claim is missing"); // Throw an exception if missing

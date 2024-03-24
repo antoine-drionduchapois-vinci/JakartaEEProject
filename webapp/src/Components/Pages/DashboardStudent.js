@@ -154,9 +154,9 @@ const fetchUser = async () => {
   try {
     // Await all fetch functions
     const userHtml = await fetchUser(); // Ensure this returns HTML string
-    const contactsHtml = await fetchUserContacts(); // Ensure this builds and returns an HTML string
+     // Ensure this builds and returns an HTML string
     const internshipHtml = await fetchUserInternship(); // Ensure this returns HTML string
-    
+    const contactsHtml = await fetchUserContacts();
     // Combine all HTML segments
     const combinedHtml = `
       ${userHtml}

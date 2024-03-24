@@ -29,18 +29,14 @@ public class InternshipDAOImpl implements InternshipDAO {
    */
   @Override
   public InternshipDTO getUserInternship(int id) {
-    System.out.println("DAO 1");
-    System.out.println(id);
     try {
       PreparedStatement ps = myDalService.getPS(
           "SELECT * FROM projetae.internships WHERE \"user\"= ?");
       ps.setInt(1, id);
       ps.execute();
-      System.out.println("DAO 2");
       return internshipMapper.mapResultSetToObject(ps.getResultSet(), InternshipDTOImpl.class,
           myDomainFactory::getInternship);
     } catch (SQLException | IllegalAccessException e) {
-      System.out.println("error ici");
       throw new RuntimeException(e); // TODO: handle error
     }
   }

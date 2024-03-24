@@ -2,11 +2,7 @@ package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.User;
 import be.vinci.pae.ucc.UserUCC;
-import be.vinci.pae.utils.Config;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
+import be.vinci.pae.utils.JWTDecryptToken;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -32,8 +28,8 @@ import org.apache.logging.log4j.Logger;
 public class UserResource {
 
   private static final Logger logger = LogManager.getLogger(UserResource.class);
-  private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
-  private final ObjectMapper jsonMapper = new ObjectMapper();
+
+  private JWTDecryptToken decryptToken = new JWTDecryptToken();
   @Inject
   private UserUCC myUserUCC;
 
@@ -106,28 +102,13 @@ public class UserResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getUsersByIdAsJson(JsonNode json) {
-
+    System.out.println("GetUserInfoById");
     try {
       // Get token from JSON
-      System.out.println("Received token: " + json); // Java
+      int userId = decryptToken.getIdFromJsonToken(json);
 
-      String jsonToken = json.get("token").asText();
-      // Decode Token
-      System.out.println();
-      DecodedJWT jwt = JWT.require(jwtAlgorithm)
-          .withIssuer("auth0")
-          .build() // create the JWTVerifier instance
-          .verify(jsonToken); // verify the token
-      System.out.println(jwt);
-      // Het userId from decodedToken
-      int userId = jwt.getClaim("user").asInt();
-      System.out.println(userId);
-      // Assuming the token includes a "user" claim holding the user ID
-      if (userId == -1) {
-        throw new JWTVerificationException("User ID claim is missing");
-      }
       User user = myUserUCC.getUsersByIdAsJson(userId);
-      System.out.println(user.toString());
+
       ObjectMapper mapper = new ObjectMapper();
       ObjectNode userInfo = mapper.createObjectNode();
       userInfo.put("name", user.getName());

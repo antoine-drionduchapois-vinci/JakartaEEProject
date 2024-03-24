@@ -48,10 +48,9 @@ public class InternshipResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getUserInternship(JsonNode json) {
-
+    System.out.println("GetUserInternship");
     int userId = decryptToken.getIdFromJsonToken(json);
 
-    System.out.println("user id : " + userId);
     //get entrprise that corresponds to user intership
 
     InternshipDTO internshipDTO = myInternshipUCC.getUserInternship(userId);

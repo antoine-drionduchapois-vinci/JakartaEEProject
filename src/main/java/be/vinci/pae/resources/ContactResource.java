@@ -1,6 +1,7 @@
 package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.ContactDTO;
+import be.vinci.pae.domain.Enterprise;
 import be.vinci.pae.ucc.ContactUCC;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.utils.JWTDecryptToken;
@@ -187,9 +188,8 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getUsersByIdAsJson(JsonNode json) {
+    System.out.println("getUserContact");
     int userId = decryptToken.getIdFromJsonToken(json);
-
-    System.out.println(userId);
 
     ObjectMapper mapper = new ObjectMapper();
     ObjectNode response = mapper.createObjectNode();
@@ -197,10 +197,11 @@ public class ContactResource {
 
     try {
       List<ContactDTO> contacts = myContactUCC.getContacts(userId);
+      List<Enterprise> enterprises = myEnterpriseUCC.getAllEnterprises();
       for (ContactDTO contactDTO : contacts) {
         contactArray.add(
             convertDTOToJson(contactDTO).put("enterprise_name",
-                myEnterpriseUCC.getAllEnterprises().get(contactDTO.getEnterprise() - 1)
+                enterprises.get(contactDTO.getEnterprise() - 1)
                     .getName()));
 
       }
