@@ -2,6 +2,7 @@ package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.ContactDTO;
 import be.vinci.pae.ucc.ContactUCC;
+import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -35,6 +36,9 @@ public class ContactResource {
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   @Inject
   private ContactUCC myContactUCC;
+
+  @Inject
+  private EnterpriseUCC myEnterpriseUCC;
 
   /**
    * Retrieves a contact by its ID.
@@ -217,8 +221,12 @@ public class ContactResource {
 
         // Parcourir chaque entreprise et les ajouter à la réponse
         for (ContactDTO contactDTO : contacts) {
+
           contactArray.add(
-              convertDTOToJson(contactDTO));
+              convertDTOToJson(contactDTO).put("enterprise_name",
+                  myEnterpriseUCC.getAllEnterprises().get(contactDTO.getEnterprise() - 1)
+                      .getName()));
+
         }
 
         // Ajouter le tableau d'entreprises à la réponse
