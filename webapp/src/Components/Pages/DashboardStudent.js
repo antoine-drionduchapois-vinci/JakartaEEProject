@@ -152,6 +152,7 @@ const fetchUser = async () => {
 
       
   try {
+    main.innerHTML = `<p>Loading Data...</p>`
     // Await all fetch functions
     const userHtml = await fetchUser(); // Ensure this returns HTML string
      // Ensure this builds and returns an HTML string
