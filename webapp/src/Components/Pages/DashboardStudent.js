@@ -47,7 +47,8 @@ const fetchUser = async () => {
       return blocUser;
     } catch (error) {
       console.error('Erreur lors de la récupération des données du user : ', error);
-      return null;
+      const blocError = `<p>${error}</p>`
+      return blocError;
     }
   };
  
@@ -85,7 +86,8 @@ const fetchUser = async () => {
       return contactsHtml;
     } catch (error) {
       console.error('Error retrieving user contacts:', error);
-      return null;
+      const blocError = `<p>${error}</p>`
+      return blocError;
     }
   };
 
