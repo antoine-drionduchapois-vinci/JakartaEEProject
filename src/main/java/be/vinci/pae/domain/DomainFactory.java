@@ -38,5 +38,5 @@ public interface DomainFactory {
    *
    * @return A new Internship object.
    */
-  Internship getInternship();
+  InternshipDTO getInternship();
 }

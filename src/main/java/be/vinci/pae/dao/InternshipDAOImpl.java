@@ -1,8 +1,8 @@
 package be.vinci.pae.dao;
 
 import be.vinci.pae.domain.DomainFactory;
-import be.vinci.pae.domain.Internship;
-import be.vinci.pae.domain.InternshipImpl;
+import be.vinci.pae.domain.InternshipDTO;
+import be.vinci.pae.domain.InternshipDTOImpl;
 import be.vinci.pae.utils.DALBackService;
 import be.vinci.pae.utils.ResultSetMapper;
 import jakarta.inject.Inject;
@@ -11,7 +11,8 @@ import java.sql.SQLException;
 
 public class InternshipDAOImpl implements InternshipDAO {
 
-  private final ResultSetMapper<Internship, InternshipImpl> internshipMapper = new ResultSetMapper<>();
+  private final ResultSetMapper<InternshipDTO, InternshipDTOImpl>
+      internshipMapper = new ResultSetMapper<>();
   @Inject
   private DALBackService myDalService;
   @Inject
@@ -23,7 +24,7 @@ public class InternshipDAOImpl implements InternshipDAO {
    * @return enterprises.
    */
   @Override
-  public Internship getUserInternship(int id) {
+  public InternshipDTO getUserInternship(int id) {
     System.out.println("DAO 1");
     System.out.println(id);
     try {
@@ -32,7 +33,7 @@ public class InternshipDAOImpl implements InternshipDAO {
       ps.setInt(1, id);
       ps.execute();
       System.out.println("DAO 2");
-      return internshipMapper.mapResultSetToObject(ps.getResultSet(), InternshipImpl.class,
+      return internshipMapper.mapResultSetToObject(ps.getResultSet(), InternshipDTOImpl.class,
           myDomainFactory::getInternship);
     } catch (SQLException | IllegalAccessException e) {
       System.out.println("error ici");

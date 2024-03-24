@@ -3,7 +3,7 @@ package be.vinci.pae.domain;
 /**
  * Implementation of the Internship interface.
  */
-public class InternshipImpl implements Internship {
+public class InternshipDTOImpl implements InternshipDTO {
 
   private int internshipId;
   private String subject;
@@ -13,7 +13,7 @@ public class InternshipImpl implements Internship {
   private int supervisor;
   private int contact;
 
-  private Internship IntenshipDTO;
+  private InternshipDTO internshipDTO;
 
 
   @Override
@@ -52,7 +52,7 @@ public class InternshipImpl implements Internship {
   }
 
   @Override
-  public void setInternshipDTO(Internship InternshipDTO) {
-    this.IntenshipDTO = InternshipDTO;
+  public void setInternshipDTO(InternshipDTO InternshipDTO) {
+    this.internshipDTO = InternshipDTO;
   }
 }

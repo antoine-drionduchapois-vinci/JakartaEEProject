@@ -1,7 +1,7 @@
 package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.EnterpriseDTO;
-import be.vinci.pae.domain.Internship;
+import be.vinci.pae.domain.InternshipDTO;
 import be.vinci.pae.domain.SupervisorDTO;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.ucc.InternshipUCC;
@@ -22,6 +22,9 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
+/**
+ * Implementation of the internship interface.
+ */
 @Singleton
 @Path("/int")
 public class InternshipResource {
@@ -38,7 +41,7 @@ public class InternshipResource {
 
 
   /**
-   * Retrieves users info.
+   * Retrieves users internship info.
    *
    * @return an ObjectNode containing users info
    */
@@ -65,22 +68,19 @@ public class InternshipResource {
       }
       System.out.println("user id : " + userId);
       //get entrprise that corresponds to user intership
-      System.out.println("1");
-      Internship internship = myInternshipUCC.getUserInternship(userId);
-      System.out.println("2");
+
+      InternshipDTO internshipDTO = myInternshipUCC.getUserInternship(userId);
       EnterpriseDTO enterpriseDTO = myEnterpriseUCC.getEnterprisesByUserId(userId);
-      System.out.println("3");
       SupervisorDTO responsibleDTO = myResponsbileUCC.getResponsibleByEnterpriseId(
           enterpriseDTO.getEnterpriseId());
-      System.out.println("4");
 
       ObjectMapper mapper = new ObjectMapper();
       ObjectNode InternshipNode = mapper.createObjectNode();
       InternshipNode.put("enterprise", enterpriseDTO.getName());
-      InternshipNode.put("year", internship.getYear());
+      InternshipNode.put("year", internshipDTO.getYear());
       InternshipNode.put("responsbile", responsibleDTO.getName());
       InternshipNode.put("phone", responsibleDTO.getPhone());
-      InternshipNode.put("contact", (internship.getContact()));
+      InternshipNode.put("contact", internshipDTO.getContact());
 
       return InternshipNode;
     } catch (Exception e) {

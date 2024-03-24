@@ -29,8 +29,8 @@ public class DomainFactoryImpl implements DomainFactory {
   }
 
   @Override
-  public Internship getInternship() {
-    return new InternshipImpl();
+  public InternshipDTO getInternship() {
+    return new InternshipDTOImpl();
   }
 
 }

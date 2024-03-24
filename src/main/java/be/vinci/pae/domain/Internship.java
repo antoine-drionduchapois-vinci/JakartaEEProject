@@ -1,20 +1,8 @@
 package be.vinci.pae.domain;
 
-public interface Internship {
+/**
+ * Interface representing a Internship entity.
+ */
+public interface Internship extends InternshipDTO {
 
-  int getInternshipId();
-
-  int getResponsible();
-
-  String getSubject();
-
-  int getEnterprise();
-
-  int getContact();
-
-  int getUser();
-
-  String getYear();
-
-  void setInternshipDTO(Internship InternshipDTO);
 }
