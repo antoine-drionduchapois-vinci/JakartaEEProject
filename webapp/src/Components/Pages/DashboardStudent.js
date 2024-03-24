@@ -73,10 +73,12 @@ const fetchUser = async () => {
       let contactsHtml = ''; // Initialize an empty string to accumulate HTML content
       for (let index = 0; index < contactsArray.length; index+=1) {
         contactsHtml += `
-          <div>
-            <p>Entreprise: ${contactsArray[index].enterprise_name}</p>
-            <p>Statut: ${contactsArray[index].state}</p>
-          </div>
+            <tr>
+            <td> ${contactsArray[index].enterprise_name}</td>
+            <td> ${contactsArray[index].state}</td>
+            </tr>
+            
+         
         `;
         
       }
@@ -156,9 +158,23 @@ const fetchUser = async () => {
     // Combine all HTML segments
     const combinedHtml = `
       ${userHtml}
-      <h2 class="title is-3">Contacts</h2>
-      <div id="contactsContainer">${contactsHtml}</div>
       ${internshipHtml}
+      <h2 class="title is-3">Contact</h2>
+      <table class="table is-striped is-fullwidth">
+        <thead>
+          <tr>
+          <th>Entreprise</th>
+          <th>Etat</th>
+          </tr>
+        </thead>
+        <tbody>
+      
+          ${contactsHtml}
+      
+        </tbody>
+      </table>
+      
+      
     `;
     
     main.innerHTML = combinedHtml;
