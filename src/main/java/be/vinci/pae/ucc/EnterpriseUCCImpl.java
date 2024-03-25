@@ -31,7 +31,6 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
     myDALService.start();
     // get entrprise that corresponds to user intership
     EnterpriseDTO enterpriseDTO = enterpriseDAO.getEnterpriseById(userId);
-    System.out.println(enterpriseDTO);
     myDALService.commit();
 
     return enterpriseDTO;

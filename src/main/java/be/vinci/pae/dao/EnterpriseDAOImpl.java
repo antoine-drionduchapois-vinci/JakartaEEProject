@@ -93,9 +93,6 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
     try {
       ps.setInt(1, id);
       ps.execute();
-      System.out.println(
-          enterpriseMapper.mapResultSetToObject(ps.getResultSet(), EnterpriseImpl.class,
-              myDomainFactory::getEnterprise));
       return enterpriseMapper.mapResultSetToObject(ps.getResultSet(), EnterpriseImpl.class,
           myDomainFactory::getEnterprise);
     } catch (SQLException | IllegalAccessException e) {

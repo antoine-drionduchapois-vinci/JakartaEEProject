@@ -50,7 +50,6 @@ public class InternshipResource {
   public ObjectNode getUserInternship(JsonNode json) {
     System.out.println("GetUserInternship");
     int userId = decryptToken.getIdFromJsonToken(json);
-    System.out.println(userId);
 
     //get entrprise that corresponds to user intership
 
@@ -71,9 +70,5 @@ public class InternshipResource {
     internshipNode.put("contact", internshipDTO.getContact());
 
     return internshipNode;
-
-
   }
-
-
 }
