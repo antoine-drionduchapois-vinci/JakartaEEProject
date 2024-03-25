@@ -33,7 +33,7 @@ public class ResultSetMapper<T, U> {
     Field[] fields = clazz.getDeclaredFields();
 
     if (!rs.next()) {
-      return null;
+      throw new NotFoundException();
     }
     return mapFields(fields, rs, factoryFunction);
   }
@@ -57,9 +57,13 @@ public class ResultSetMapper<T, U> {
     List<T> objects = new ArrayList<>();
     Field[] fields = clazz.getDeclaredFields();
 
-    while (rs.next()) {
+    do {
+      if (!rs.next()) {
+        throw new NotFoundException();
+      }
       objects.add(mapFields(fields, rs, factoryFunction));
     }
+    while (rs.next());
     return objects;
   }
 
