@@ -30,9 +30,7 @@ public class DALServiceImpl implements DALService, DALBackService {
   @Override
   public PreparedStatement getPS(String sql) {
     try {
-      PreparedStatement ps = getConnection().prepareStatement(sql);
-
-      return ps;
+      return getConnection().prepareStatement(sql);
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
@@ -46,16 +44,17 @@ public class DALServiceImpl implements DALService, DALBackService {
   public void start() {
     this.dataSource = createDataSource();
     try {
-
-      connectionThreadLocal.set(dataSource.getConnection());
-
+      Connection dsConnection = dataSource.getConnection();
+      connectionThreadLocal.set(dsConnection);
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
   }
 
+
   /**
-   * Commits the transaction.
+   * Commits the transaction or make a rollback if the transaction could not be executed. Close the
+   * connection in the current LocalThread
    */
   @Override
   public void commit() {
@@ -63,11 +62,6 @@ public class DALServiceImpl implements DALService, DALBackService {
     try {
       // Obtain the connection from the data source
       conn = dataSource.getConnection();
-
-      // Begin the transaction
-      conn.setAutoCommit(false);
-
-      // Execute your transaction validation and processing operations here
 
       // Validate and commit the transaction
       conn.commit();
@@ -94,36 +88,28 @@ public class DALServiceImpl implements DALService, DALBackService {
           closeEx.printStackTrace();
         }
       }
+      // Remove the connection from thread local
+      connectionThreadLocal.remove();
     }
   }
 
 
   /**
-   * Closes the database connection.
-   *
-   * @throws SQLException if a database access error occurs
-   */
-  public void close() throws SQLException {
-    Connection conn = connectionThreadLocal.get();
-    if (conn != null && !conn.isClosed()) {
-      conn.close();
-      System.out.println("Connection closed");
-      connectionThreadLocal.remove(); // Remove the connection from thread local
-    }
-  }
-
-  /**
-   * Creates and configures the data source for database connections.
+   * Creates and configures the data source for database connections. Limits the number of
+   * simultaneous connections to 3. Make your transaction validation at false by default.
    *
    * @return the data source configured with connection details
    */
   private DataSource createDataSource() {
     BasicDataSource ds = new BasicDataSource();
+    ds.setMaxTotal(3);
     ds.setDriverClassName("org.postgresql.Driver");
     ds.setUrl(url);
     ds.setUsername(username);
     ds.setPassword(password);
-    
+    // Make your transaction validation at false by default
+    ds.setDefaultAutoCommit(false);
+
     return ds;
   }
 
