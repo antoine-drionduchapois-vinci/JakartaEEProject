@@ -11,6 +11,11 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Authorize {
 
+  /**
+   * The value attribute allows specifying additional information related to authorization. This
+   * information could include roles, permissions, or other criteria required for authorization.
+   *
+   * @return An array of strings representing additional information related to authorization.
+   */
   String[] value() default {};
 }
-

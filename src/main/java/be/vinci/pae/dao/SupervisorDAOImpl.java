@@ -4,6 +4,7 @@ import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.Supervisor;
 import be.vinci.pae.domain.SupervisorImpl;
 import be.vinci.pae.utils.DALBackService;
+import be.vinci.pae.utils.FatalErrorException;
 import be.vinci.pae.utils.ResultSetMapper;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
@@ -32,7 +33,7 @@ public class SupervisorDAOImpl implements SupervisorDAO {
       return supervisorMapper.mapResultSetToObject(ps.getResultSet(), SupervisorImpl.class,
           myDomainFactory::getSupervisor);
     } catch (SQLException | IllegalAccessException e) {
-      throw new RuntimeException(e); // TODO: handle error
+      throw new FatalErrorException(e);
     }
   }
 }
