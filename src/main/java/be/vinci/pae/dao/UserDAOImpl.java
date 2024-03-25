@@ -1,7 +1,7 @@
 package be.vinci.pae.dao;
 
 import be.vinci.pae.domain.DomainFactory;
-import be.vinci.pae.domain.User;
+import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.domain.UserImpl;
 import be.vinci.pae.utils.DALBackService;
 import be.vinci.pae.utils.FatalErrorException;
@@ -24,10 +24,10 @@ public class UserDAOImpl implements UserDAO {
   @Inject
   private DomainFactory myDomainFactory;
 
-  private final ResultSetMapper<User, UserImpl> userMapper = new ResultSetMapper<>();
+  private final ResultSetMapper<UserDTO, UserImpl> userMapper = new ResultSetMapper<>();
 
   @Override
-  public User getOneByEmail(String email) {
+  public UserDTO getOneByEmail(String email) {
     try (PreparedStatement ps = myDalService.getPS(
         "SELECT * FROM projetae.users WHERE email = ?");) {
 
@@ -42,7 +42,7 @@ public class UserDAOImpl implements UserDAO {
   }
 
   @Override
-  public User getOneByID(int id) {
+  public UserDTO getOneByID(int id) {
     try (PreparedStatement ps = myDalService.getPS(
         "SELECT * FROM projetae.users WHERE user_id = ?");) {
       ps.setInt(1, id);
@@ -55,23 +55,24 @@ public class UserDAOImpl implements UserDAO {
   }
 
   @Override
-  public User addUser(User user) {
+  public UserDTO addUser(UserDTO userDTO) {
     PreparedStatement ps = myDalService.getPS(
         "INSERT INTO projetae.users (name, surname, email, phone, password, year, role)"
-            + "VALUES (?, ?, ?, ?, ?, ?, ?)");
+            + "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING *");
     LocalDate currentDate = LocalDate.now();
     int currentYear = currentDate.getYear();
     try {
-      ps.setString(1, user.getName());
-      ps.setString(2, user.getSurname());
-      ps.setString(3, user.getEmail());
-      ps.setString(4, user.getPhone());
-      ps.setString(5, user.getPassword());
+      ps.setString(1, userDTO.getName());
+      ps.setString(2, userDTO.getSurname());
+      ps.setString(3, userDTO.getEmail());
+      ps.setString(4, userDTO.getPhone());
+      ps.setString(5, userDTO.getPassword());
       ps.setInt(6, currentYear);
-      ps.setString(7, user.getRole().name());
+      ps.setString(7, userDTO.getRole().name());
       ps.executeUpdate();
-      return getOneByEmail(user.getEmail());
-    } catch (SQLException e) {
+      return userMapper.mapResultSetToObject(ps.getResultSet(), UserImpl.class,
+          myDomainFactory::getUser);
+    } catch (SQLException | IllegalAccessException e) {
       throw new FatalErrorException(e);
     }
   }
@@ -92,7 +93,7 @@ public class UserDAOImpl implements UserDAO {
   }
 
   @Override
-  public List<User> getAllStudents() {
+  public List<UserDTO> getAllStudents() {
     String sql = "SELECT * FROM projetae.users";
     try (PreparedStatement ps = myDalService.getPS(sql)) {
       ps.execute();

@@ -1,6 +1,6 @@
 package be.vinci.pae.ucc;
 
-import be.vinci.pae.domain.User;
+import be.vinci.pae.domain.UserDTO;
 import java.util.List;
 
 /**
@@ -27,7 +27,7 @@ public interface UserUCC {
    *
    * @return A List containing UserDTO objects representing users in JSON format.
    */
-  List<User> getUsersAsJson();
+  List<UserDTO> getUsersAsJson();
 
   /**
    * Retrieves a specific user in JSON format based on the provided user ID.
@@ -36,5 +36,5 @@ public interface UserUCC {
    * @return A UserDTO object representing the user in JSON format, or null if no user is found for
    *         the given user ID.
    */
-  User getUsersByIdAsJson(int userId);
+  UserDTO getUsersByIdAsJson(int userId);
 }
