@@ -12,6 +12,8 @@ import be.vinci.pae.dao.UserDAO;
 import be.vinci.pae.dao.UserDAOImpl;
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.DomainFactoryImpl;
+import be.vinci.pae.resources.JWT;
+import be.vinci.pae.resources.JWTImpl;
 import be.vinci.pae.ucc.AuthUCC;
 import be.vinci.pae.ucc.AuthUCCImpl;
 import be.vinci.pae.ucc.ContactUCC;
@@ -41,6 +43,7 @@ public class ApplicationBinder extends AbstractBinder {
   @Override
   protected void configure() {
     bind(DomainFactoryImpl.class).to(DomainFactory.class).in(Singleton.class);
+    bind(JWTImpl.class).to(JWT.class).in(Singleton.class);
 
     bind(UserUCCImpl.class).to(UserUCC.class).in(Singleton.class);
     bind(ContactUCCImpl.class).to(ContactUCC.class).in(Singleton.class);
