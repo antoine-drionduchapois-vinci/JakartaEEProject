@@ -13,6 +13,8 @@ public class WebExceptionMapper implements ExceptionMapper<Throwable> {
 
   @Override
   public Response toResponse(Throwable exception) {
+    exception.printStackTrace();
+
     if (exception instanceof WebApplicationException exc) {
       System.err.println(exc.getResponse().getStatus() + " " + exc.getMessage());
       return Response.status(exc.getResponse().getStatus())
@@ -24,6 +26,11 @@ public class WebExceptionMapper implements ExceptionMapper<Throwable> {
       System.err.println(exc.getCode() + " " + exc.getMessage());
       return Response.status(((BusinessException) exception).getCode())
           .entity(exception.getMessage()).build();
+    }
+
+    if (exception instanceof NotFoundException exc) {
+      System.err.println("404 " + exc.getMessage());
+      return Response.status(404).entity("Not Found").build();
     }
 
     System.err.println("500 " + exception.getMessage());
