@@ -23,26 +23,31 @@ const fetchUser = async () => {
 
       const blocUser = `
       <h2 class="title is-3">Profil</h2>
-    <table class="table is-striped is-fullwidth">
-      <thead>
-        <tr>
-          <th>Nom</th>
-          <th>Prénom</th>
-          <th>Année</th>
-          <th>Email</th>
-          <th>Téléphone</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td id="nom">${userData.name}</td>
-          <td id="prenom">${userData.surName}</td>
-          <td id="annee">${userData.year}</td>
-          <td id="email">${userData.email}</td>
-          <td id="telephone">${userData.phone}</td>
-        </tr>
-      </tbody>
-    </table>`;
+      <table class="table is-striped is-fullwidth">
+        <tbody>
+          <tr>
+            <th>Nom</th>
+            <td>${userData.name}</td>
+          </tr>
+          <tr>
+            <th>Prénom</th>
+            <td>${userData.surName}</td>
+          </tr>
+          <tr>
+            <th>Année</th>
+            <td>${userData.year}</td>
+          </tr>
+          <tr>
+            <th>Email</th>
+            <td>${userData.email}</td>
+          </tr>
+          <tr>
+            <th>Téléphone</th>
+            <td>${userData.phone}</td>
+          </tr>
+        </tbody>
+      </table>
+      `;
 
       return blocUser;
     } catch (error) {
@@ -112,26 +117,30 @@ const fetchUser = async () => {
       console.log(internshipData);
       const blocInternship = `
       <h2 class="title is-3">Stage</h2>
-      <table class="table is-striped is-fullwidth">
-        <thead>
-          <tr>
-            <th>Entreprise</th>
-            <th>Année</th>
-            <th>Responsable</th>
-            <th>Téléphone</th>
-            <th>Contact Entreprise</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td id="entreprise">${internshipData.enterprise}</td>
-            <td id="annee_stage">${internshipData.year}</td>
-            <td id="responsable_nom">${internshipData.responsbile}</td>
-            <td id="responsable_telephone">${internshipData.phone}</td>
-            <td id="entreprise_contact">${internshipData.contact}</td>
-          </tr>
-        </tbody>
-      </table>
+<table class="table is-striped is-fullwidth">
+  <tbody>
+    <tr>
+      <th>Entreprise</th>
+      <td>${internshipData.enterprise}</td>
+    </tr>
+    <tr>
+      <th>Année</th>
+      <td>${internshipData.year}</td>
+    </tr>
+    <tr>
+      <th>Responsable</th>
+      <td>${internshipData.responsbile}</td> 
+    <tr>
+      <th>Téléphone</th>
+      <td>${internshipData.phone}</td>
+    </tr>
+    <tr>
+      <th>Contact Entreprise</th>
+      <td>${internshipData.contact}</td>
+    </tr>
+  </tbody>
+</table>
+
       
       `;
       return blocInternship;
@@ -160,25 +169,26 @@ const fetchUser = async () => {
     const contactsHtml = await fetchUserContacts();
     // Combine all HTML segments
     const combinedHtml = `
-      ${userHtml}
-      ${internshipHtml}
+  <div class="tables-container" style="display: flex; justify-content: space-around;">
+    <div>${userHtml}</div>
+    <div>${internshipHtml}</div>
+    <div>
       <h2 class="title is-3">Contact</h2>
       <table class="table is-striped is-fullwidth">
         <thead>
           <tr>
-          <th>Entreprise</th>
-          <th>Etat</th>
+            <th>Entreprise</th>
+            <th>Etat</th>
           </tr>
         </thead>
         <tbody>
-      
           ${contactsHtml}
-      
         </tbody>
       </table>
-      
-      
-    `;
+    </div>
+  </div>
+`;
+
     
     main.innerHTML = combinedHtml;
   } catch (error) {
