@@ -1,7 +1,13 @@
 package be.vinci.pae.resources;
 
+import be.vinci.pae.domain.ContactDTO;
+import be.vinci.pae.domain.Enterprise;
 import be.vinci.pae.ucc.ContactUCC;
+import be.vinci.pae.ucc.EnterpriseUCC;
+import be.vinci.pae.utils.JWTDecryptToken;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -15,6 +21,7 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
+import java.util.List;
 
 /**
  * Resource class for handling contact-related endpoints.
@@ -23,8 +30,13 @@ import jakarta.ws.rs.core.Response.Status;
 @Path("/contact")
 public class ContactResource {
 
+
+  private JWTDecryptToken decryptToken = new JWTDecryptToken();
   @Inject
   private ContactUCC myContactUCC;
+
+  @Inject
+  private EnterpriseUCC myEnterpriseUCC;
 
   /**
    * Retrieves a contact by its ID.
@@ -163,5 +175,57 @@ public class ContactResource {
     }
 
     return contact;
+  }
+
+  /**
+   * Retrieves user information by user ID and returns it as JSON.
+   *
+   * @param json The JSON object containing the JWT token.
+   * @return An ObjectNode representing the user's information.
+   */
+  @POST
+  @Path("getUserContacts")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public ObjectNode getUsersByIdAsJson(JsonNode json) {
+    System.out.println("getUserContact");
+    int userId = decryptToken.getIdFromJsonToken(json);
+
+    ObjectMapper mapper = new ObjectMapper();
+    ObjectNode response = mapper.createObjectNode();
+    ArrayNode contactArray = mapper.createArrayNode();
+
+    try {
+      List<ContactDTO> contacts = myContactUCC.getContacts(userId);
+      List<Enterprise> enterprises = myEnterpriseUCC.getAllEnterprises();
+      for (ContactDTO contactDTO : contacts) {
+        contactArray.add(
+            convertDTOToJson(contactDTO).put("enterprise_name",
+                enterprises.get(contactDTO.getEnterprise() - 1)
+                    .getName()));
+
+      }
+
+      // Ajouter le tableau d'entreprises à la réponse
+      response.set("contact", contactArray);
+    } catch (Exception e) {
+      // Gérer les erreurs éventuelles
+      response.put("error", e.getMessage());
+    }
+    return response;
+
+  }
+
+  private ObjectNode convertDTOToJson(ContactDTO contactDTO) {
+    ObjectMapper mapper = new ObjectMapper();
+    ObjectNode contactNode = mapper.createObjectNode();
+    contactNode.put("contact_id", contactDTO.getContactId());
+    contactNode.put("meeting_point", contactDTO.getMeetingPoint());
+    contactNode.put("state", contactDTO.getState());
+    contactNode.put("refusal_reason", contactDTO.getRefusalReason());
+    contactNode.put("year", contactDTO.getYear());
+    contactNode.put("user", contactDTO.getUser());
+    contactNode.put("enterprise", contactDTO.getEnterprise());
+    return contactNode;
   }
 }

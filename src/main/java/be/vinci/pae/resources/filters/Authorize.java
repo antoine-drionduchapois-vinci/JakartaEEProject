@@ -12,10 +12,10 @@ import java.lang.annotation.RetentionPolicy;
 public @interface Authorize {
 
   /**
-   * Defines the roles that are authorized to access the resource.
+   * The value attribute allows specifying additional information related to authorization. This
+   * information could include roles, permissions, or other criteria required for authorization.
    *
-   * @return an array of strings representing the roles authorized to access the resource.
+   * @return An array of strings representing additional information related to authorization.
    */
   String[] value() default {};
 }
-

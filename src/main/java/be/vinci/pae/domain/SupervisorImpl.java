@@ -5,7 +5,7 @@ package be.vinci.pae.domain;
  */
 public class SupervisorImpl implements Supervisor {
 
-  private int responsibleId;
+  private int supervisorId;
   private String name;
   private String surname;
   private String phone;
@@ -15,12 +15,12 @@ public class SupervisorImpl implements Supervisor {
 
   @Override
   public int getResponsibleId() {
-    return responsibleId;
+    return supervisorId;
   }
 
   @Override
   public void setResponsibleId(int responsibleId) {
-    this.responsibleId = responsibleId;
+    this.supervisorId = responsibleId;
   }
 
   @Override
@@ -86,7 +86,7 @@ public class SupervisorImpl implements Supervisor {
   @Override
   public String toString() {
     return "ResponsibleImpl{"
-        + "responsibleId=" + responsibleId
+        + "responsibleId=" + supervisorId
         + ", name='" + name + '\''
         + ", surname='" + surname + '\''
         + ", phone='" + phone + '\''

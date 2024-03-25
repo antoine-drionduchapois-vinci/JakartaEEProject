@@ -4,6 +4,7 @@ import be.vinci.pae.domain.ContactDTO;
 import be.vinci.pae.domain.ContactImpl;
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.utils.DALBackService;
+import be.vinci.pae.utils.FatalErrorException;
 import be.vinci.pae.utils.ResultSetMapper;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
@@ -32,7 +33,7 @@ public class ContactDAOImpl implements ContactDAO {
       return contactMapper.mapResultSetToObject(ps.getResultSet(), ContactImpl.class,
           myDomainFactory::getContact);
     } catch (SQLException | IllegalAccessException e) {
-      throw new RuntimeException(e); // TODO: handle error
+      throw new FatalErrorException(e);
     }
   }
 
@@ -46,7 +47,7 @@ public class ContactDAOImpl implements ContactDAO {
       return contactMapper.mapResultSetToObject(ps.getResultSet(), ContactImpl.class,
           myDomainFactory::getContact);
     } catch (SQLException | IllegalAccessException e) {
-      throw new RuntimeException(e); // TODO: handle error
+      throw new FatalErrorException(e);
     }
   }
 
@@ -59,7 +60,7 @@ public class ContactDAOImpl implements ContactDAO {
       return contactMapper.mapResultSetToObjectList(ps.getResultSet(), ContactImpl.class,
           myDomainFactory::getContact);
     } catch (SQLException | IllegalAccessException e) {
-      throw new RuntimeException(e); // TODO: handle error
+      throw new FatalErrorException(e);
     }
   }
 
@@ -76,7 +77,7 @@ public class ContactDAOImpl implements ContactDAO {
       return contactMapper.mapResultSetToObject(ps.getResultSet(), ContactImpl.class,
           myDomainFactory::getContact);
     } catch (SQLException | IllegalAccessException e) {
-      throw new RuntimeException(e); // TODO: handle error
+      throw new FatalErrorException(e);
     }
   }
 
@@ -96,7 +97,9 @@ public class ContactDAOImpl implements ContactDAO {
       return contactMapper.mapResultSetToObject(ps.getResultSet(), ContactImpl.class,
           myDomainFactory::getContact);
     } catch (SQLException | IllegalAccessException e) {
-      throw new RuntimeException(e); // TODO: handle error
+      throw new FatalErrorException(e);
     }
   }
+
+
 }

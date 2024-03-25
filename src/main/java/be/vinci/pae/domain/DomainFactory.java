@@ -32,4 +32,11 @@ public interface DomainFactory {
    * @return A new User object.
    */
   User getUser();
+
+  /**
+   * Creates a new instance of Internship.
+   *
+   * @return A new Internship object.
+   */
+  InternshipDTO getInternship();
 }
