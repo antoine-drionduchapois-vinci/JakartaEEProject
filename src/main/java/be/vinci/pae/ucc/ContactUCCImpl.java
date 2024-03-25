@@ -4,7 +4,7 @@ import be.vinci.pae.dao.ContactDAO;
 import be.vinci.pae.dao.EnterpriseDAO;
 import be.vinci.pae.domain.Contact;
 import be.vinci.pae.domain.ContactDTO;
-import be.vinci.pae.domain.Enterprise;
+import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.utils.DALService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -46,12 +46,12 @@ public class ContactUCCImpl implements ContactUCC {
     if (contactDTO == null) {
       return null;
     }
-    Enterprise enterprise = myEnterpriseDAO.readOne(contactDTO.getEnterprise());
+    EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(contactDTO.getEnterprise());
     myDALService.commit();
-    if (enterprise == null) {
+    if (enterpriseDTO == null) {
       return null; // TODO: handle error
     }
-    contactDTO.setEnterpriseDTO(enterprise);
+    contactDTO.setEnterpriseDTO(enterpriseDTO);
     return convertDTOToJson(contactDTO);
   }
 
@@ -64,12 +64,12 @@ public class ContactUCCImpl implements ContactUCC {
     }
     ContactDTO contactDTO = myContactDAO.create("initié", getCurrentYearString(), userId,
         enterpriseId);
-    Enterprise enterprise = myEnterpriseDAO.readOne(contactDTO.getEnterprise());
+    EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(contactDTO.getEnterprise());
     myDALService.commit();
-    if (enterprise == null) {
+    if (enterpriseDTO == null) {
       return null; // TODO: handle error
     }
-    contactDTO.setEnterpriseDTO(enterprise);
+    contactDTO.setEnterpriseDTO(enterpriseDTO);
     return convertDTOToJson(contactDTO);
   }
 
@@ -80,15 +80,15 @@ public class ContactUCCImpl implements ContactUCC {
     if (myEnterpriseDAO.readOne(enterpriseName, enterpriseLabel) != null) {
       return null; // TODO: handle conflict
     }
-    Enterprise enterprise = myEnterpriseDAO.create(enterpriseName, enterpriseLabel,
+    EnterpriseDTO enterpriseDTO = myEnterpriseDAO.create(enterpriseName, enterpriseLabel,
         enterpriseAddress, enterpriseContact);
-    if (enterprise == null) {
+    if (enterpriseDTO == null) {
       return null; // TODO: handle error
     }
     ContactDTO contactDTO = myContactDAO.create("initié", getCurrentYearString(), userId,
-        enterprise.getEnterpriseId());
+        enterpriseDTO.getEnterpriseId());
     myDALService.commit();
-    contactDTO.setEnterpriseDTO(enterprise);
+    contactDTO.setEnterpriseDTO(enterpriseDTO);
     return convertDTOToJson(contactDTO);
   }
 
@@ -104,14 +104,7 @@ public class ContactUCCImpl implements ContactUCC {
       return null; // TODO: handle forbidden
     }
 
-    ContactDTO updatedContactDTO = myContactDAO.update(contact);
-    Enterprise enterprise = myEnterpriseDAO.readOne(updatedContactDTO.getEnterprise());
-    myDALService.commit();
-    if (enterprise == null) {
-      return null; // TODO: handle error
-    }
-    updatedContactDTO.setEnterpriseDTO(enterprise);
-    return convertDTOToJson(updatedContactDTO);
+    return getJsonNodes(contact);
   }
 
   @Override
@@ -124,15 +117,7 @@ public class ContactUCCImpl implements ContactUCC {
 
     contact.inidcateAsRefused(refusalReason);
 
-    ContactDTO updatedContactDTO = myContactDAO.update(contact);
-    Enterprise enterprise = myEnterpriseDAO.readOne(updatedContactDTO.getEnterprise());
-    myDALService.commit();
-    if (enterprise == null) {
-      return null; // TODO: handle error
-    }
-
-    updatedContactDTO.setEnterpriseDTO(enterprise);
-    return convertDTOToJson(updatedContactDTO);
+    return getJsonNodes(contact);
   }
 
   @Override
@@ -145,14 +130,18 @@ public class ContactUCCImpl implements ContactUCC {
 
     contact.unfollow();
 
+    return getJsonNodes(contact);
+  }
+
+  private ObjectNode getJsonNodes(Contact contact) {
     ContactDTO updatedContactDTO = myContactDAO.update(contact);
-    Enterprise enterprise = myEnterpriseDAO.readOne(updatedContactDTO.getEnterprise());
+    EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(updatedContactDTO.getEnterprise());
     myDALService.commit();
-    if (enterprise == null) {
+    if (enterpriseDTO == null) {
       return null; // TODO: handle error
     }
 
-    updatedContactDTO.setEnterpriseDTO(enterprise);
+    updatedContactDTO.setEnterpriseDTO(enterpriseDTO);
     return convertDTOToJson(updatedContactDTO);
   }
 

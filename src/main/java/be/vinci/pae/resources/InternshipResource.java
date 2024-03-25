@@ -50,11 +50,15 @@ public class InternshipResource {
   public ObjectNode getUserInternship(JsonNode json) {
     System.out.println("GetUserInternship");
     int userId = decryptToken.getIdFromJsonToken(json);
+    System.out.println(userId);
 
     //get entrprise that corresponds to user intership
 
     InternshipDTO internshipDTO = myInternshipUCC.getUserInternship(userId);
     EnterpriseDTO enterpriseDTO = myEnterpriseUCC.getEnterprisesByUserId(userId);
+    if (enterpriseDTO == null) {
+      return null;
+    }
     SupervisorDTO responsibleDTO = myResponsbileUCC.getResponsibleByEnterpriseId(
         enterpriseDTO.getEnterpriseId());
 

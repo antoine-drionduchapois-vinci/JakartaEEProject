@@ -4,6 +4,7 @@ package be.vinci.pae.domain;
  * Implementation of the Contact interface.
  */
 public class ContactImpl implements Contact {
+
   private int contactId;
   private String meetingPoint;
   private String state;
@@ -11,7 +12,7 @@ public class ContactImpl implements Contact {
   private String year;
   private int user;
   private int enterprise;
-  private Enterprise enterpriseDTO;
+  private EnterpriseDTO enterpriseDTO;
 
   @Override
   public boolean meet(String meetingPoint) {
@@ -117,12 +118,12 @@ public class ContactImpl implements Contact {
   }
 
   @Override
-  public Enterprise getEnterpriseDTO() {
+  public EnterpriseDTO getEnterpriseDTO() {
     return enterpriseDTO;
   }
 
   @Override
-  public void setEnterpriseDTO(Enterprise enterpriseDTO) {
+  public void setEnterpriseDTO(EnterpriseDTO enterpriseDTO) {
     this.enterpriseDTO = enterpriseDTO;
   }
 

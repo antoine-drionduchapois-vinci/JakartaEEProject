@@ -75,7 +75,7 @@ const fetchUser = async () => {
   
       const contactsInfo = await response.json();
       const contactsArray = contactsInfo.contact;
-      console.log(contactsInfo.contact[0]);
+      console.log(contactsInfo);
       let contactsHtml = ''; // Initialize an empty string to accumulate HTML content
       for (let index = 0; index < contactsArray.length; index+=1) {
         contactsHtml += `
@@ -105,49 +105,51 @@ const fetchUser = async () => {
       },
       body: JSON.stringify({ token: getAuthenticatedUser().token }), 
     };
-  
+
     try {
       const response = await fetch('http://localhost:8080/int', options);
+      
       if (!response.ok) {
         throw new Error('Error retrieving user internships');
       }
-  
       const internshipData = await response.json();
+      
       console.log("internshipInfo");
       console.log(internshipData);
       const blocInternship = `
-      <h2 class="title is-3">Stage</h2>
-<table class="table is-striped is-fullwidth">
-  <tbody>
-    <tr>
-      <th>Entreprise</th>
-      <td>${internshipData.enterprise}</td>
-    </tr>
-    <tr>
-      <th>Année</th>
-      <td>${internshipData.year}</td>
-    </tr>
-    <tr>
-      <th>Responsable</th>
-      <td>${internshipData.responsbile}</td> 
-    <tr>
-      <th>Téléphone</th>
-      <td>${internshipData.phone}</td>
-    </tr>
-    <tr>
-      <th>Contact Entreprise</th>
-      <td>${internshipData.contact}</td>
-    </tr>
-  </tbody>
-</table>
-
-      
+      <table class="table is-striped is-fullwidth">
+        <tbody>
+          <tr>
+            <th>Entreprise</th>
+            <td>${internshipData.enterprise}</td>
+          </tr>
+          <tr>
+            <th>Année</th>
+            <td>${internshipData.year}</td>
+          </tr>
+          <tr>
+            <th>Responsable</th>
+            <td>${internshipData.responsbile}</td> 
+          <tr>
+            <th>Téléphone</th>
+            <td>${internshipData.phone}</td>
+          </tr>
+          <tr>
+            <th>Contact Entreprise</th>
+            <td>${internshipData.contact}</td>
+          </tr>
+        </tbody>
+      </table>
       `;
       return blocInternship;
       
     } catch (error) {
       console.error('Error retrieving user internship:', error);
-      return null;
+      // If there's an error, still return the default stage title with error message
+      return `
+        <h2 class="title is-3">Stage</h2>
+        <p>Pas de stage pour l'instant</p>
+      `;
     }
   };
   
