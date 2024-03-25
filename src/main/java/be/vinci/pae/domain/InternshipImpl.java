@@ -3,7 +3,7 @@ package be.vinci.pae.domain;
 /**
  * Implementation of the Internship interface.
  */
-public class InternshipDTOImpl implements InternshipDTO {
+public class InternshipImpl implements Internship {
 
   private int internshipId;
   private String subject;

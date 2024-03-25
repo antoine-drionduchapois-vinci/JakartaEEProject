@@ -30,7 +30,7 @@ public class DomainFactoryImpl implements DomainFactory {
 
   @Override
   public InternshipDTO getInternship() {
-    return new InternshipDTOImpl();
+    return new InternshipImpl();
   }
 
 }

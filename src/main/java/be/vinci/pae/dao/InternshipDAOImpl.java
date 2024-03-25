@@ -2,7 +2,7 @@ package be.vinci.pae.dao;
 
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.InternshipDTO;
-import be.vinci.pae.domain.InternshipDTOImpl;
+import be.vinci.pae.domain.InternshipImpl;
 import be.vinci.pae.utils.DALBackService;
 import be.vinci.pae.utils.ResultSetMapper;
 import jakarta.inject.Inject;
@@ -15,7 +15,7 @@ import java.sql.SQLException;
 public class InternshipDAOImpl implements InternshipDAO {
 
 
-  private final ResultSetMapper<InternshipDTO, InternshipDTOImpl>
+  private final ResultSetMapper<InternshipDTO, InternshipImpl>
       internshipMapper = new ResultSetMapper<>();
   @Inject
   private DALBackService myDalService;
@@ -34,7 +34,7 @@ public class InternshipDAOImpl implements InternshipDAO {
           "SELECT * FROM projetae.internships WHERE \"user\"= ?");
       ps.setInt(1, id);
       ps.execute();
-      return internshipMapper.mapResultSetToObject(ps.getResultSet(), InternshipDTOImpl.class,
+      return internshipMapper.mapResultSetToObject(ps.getResultSet(), InternshipImpl.class,
           myDomainFactory::getInternship);
     } catch (SQLException | IllegalAccessException e) {
       throw new RuntimeException(e); // TODO: handle error
