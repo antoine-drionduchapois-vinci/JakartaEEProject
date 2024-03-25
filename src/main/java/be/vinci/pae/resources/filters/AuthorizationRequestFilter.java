@@ -64,7 +64,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
         requestContext.abortWith(Response.status(Status.FORBIDDEN)
             .entity("You are forbidden to access this resource").build());
       }
-      Method resourceMethod = resourceInfo.getResourceMethod(); // Obtenez la méthode de ressource demandée
+      Method resourceMethod = resourceInfo.getResourceMethod();
       if (resourceMethod != null) {
         Authorize authorizeAnnotation = resourceMethod.getAnnotation(Authorize.class);
         if (authorizeAnnotation != null) {
