@@ -100,4 +100,6 @@ public class ContactDAOImpl implements ContactDAO {
       throw new FatalErrorException(e);
     }
   }
+
+
 }

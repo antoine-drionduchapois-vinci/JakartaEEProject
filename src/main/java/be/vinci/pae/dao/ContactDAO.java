@@ -58,4 +58,6 @@ public interface ContactDAO {
    * @return The updated Contact object.
    */
   ContactDTO update(ContactDTO newContactDTO);
+
+
 }
