@@ -225,6 +225,13 @@ const renderForm = (formContainer, users,tableUserContainer) => {
 
 // Fonction pour rendre le tableau des entreprises avec recherche et tri
 const renderEnterpriseTable = (tableContainer, enterprises) => {
+  // Créer la div pour le tableau avec une barre de défilement
+  const tableWrapper = document.createElement('div');
+  tableWrapper.className = 'table-wrapper';
+  tableWrapper.style.maxHeight = '250px'; // Définir la hauteur maximale
+  tableWrapper.style.overflowY = 'auto'; // Activer la barre de défilement
+  tableContainer.appendChild(tableWrapper);
+
   // Créer le tableau
   const table = document.createElement('table');
   table.className = 'table is-fullwidth';
@@ -265,8 +272,11 @@ const renderEnterpriseTable = (tableContainer, enterprises) => {
   // Ajouter la ligne d'en-tête au tableau
   thead.appendChild(headerRow);
   table.appendChild(thead);
-  // ajouter le corp au tableau
+  // Ajouter le corps du tableau au tableau
   table.appendChild(tbody);
+
+  // Ajouter le tableau à la div du wrapper
+  tableWrapper.appendChild(table);
 
   // Afficher le tableau avec toutes les entreprises au chargement initial
   updateTable(tbody, enterprises);
@@ -278,12 +288,16 @@ const renderUserTable = (tableUserContainer, users) => {
   const table = document.createElement('table');
   table.className = 'table is-fullwidth';
 
+  const tableWrapper = document.createElement('div');
+  tableWrapper.className = 'table-wrapper';
+  tableWrapper.style.maxHeight = '250px'; // Définir la hauteur maximale
+  tableWrapper.style.overflowY = 'auto'; // Activer la barre de défilement
+  tableUserContainer.appendChild(tableWrapper);
+
     // Créer le corps du tableau
   const tbody = document.createElement('tbody');
   renderForm(formContainer, users,tbody);
-
-
-  tableUserContainer.appendChild(table);
+  table.appendChild(tbody);
 
   // Créer la première ligne pour les en-têtes de colonne
   const thead = document.createElement('thead');
@@ -301,7 +315,7 @@ const renderUserTable = (tableUserContainer, users) => {
   table.appendChild(thead);
 
 
-  table.appendChild(tbody);
+  tableWrapper.appendChild(table);
 
   updateTable(tbody, users);
 };
