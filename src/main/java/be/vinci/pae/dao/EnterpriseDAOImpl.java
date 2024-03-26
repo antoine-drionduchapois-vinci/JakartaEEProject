@@ -1,7 +1,7 @@
 package be.vinci.pae.dao;
 
 import be.vinci.pae.domain.DomainFactory;
-import be.vinci.pae.domain.Enterprise;
+import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.domain.EnterpriseImpl;
 import be.vinci.pae.utils.BusinessException;
 import be.vinci.pae.utils.DALBackService;
@@ -21,14 +21,14 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
   @Inject
   private DALBackService myDalService;
 
-  private final ResultSetMapper<Enterprise, EnterpriseImpl> enterpriseMapper =
+  private final ResultSetMapper<EnterpriseDTO, EnterpriseImpl> enterpriseMapper =
       new ResultSetMapper<>();
 
   @Inject
   private DomainFactory myDomainFactory;
 
   @Override
-  public Enterprise readOne(int enterpriseId) {
+  public EnterpriseDTO readOne(int enterpriseId) {
     try (PreparedStatement ps = myDalService.getPS(
         "SELECT * FROM projetae.enterprises WHERE enterprise_id = ?;")) {
       ps.setInt(1, enterpriseId);
@@ -41,7 +41,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
   }
 
   @Override
-  public Enterprise readOne(String enterpriseName, String enterpriseLabel) {
+  public EnterpriseDTO readOne(String enterpriseName, String enterpriseLabel) {
     try (PreparedStatement ps = myDalService.getPS(
         "SELECT * FROM projetae.enterprises WHERE name = ? AND label = ?;")) {
       ps.setString(1, enterpriseName);
@@ -55,7 +55,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
   }
 
   @Override
-  public Enterprise create(String name, String label, String adress, String phone, String email) {
+  public EnterpriseDTO create(String name, String label, String adress, String phone, String email) {
     if (exists(name, label)) {
       throw new BusinessException(409,
           "enterprise with name: " + name + " and label: " + label + " already exists!");
@@ -77,7 +77,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
   }
 
   @Override
-  public List<Enterprise> getAllEnterprises() {
+  public List<EnterpriseDTO> getAllEnterprises() {
     try (PreparedStatement ps = myDalService.getPS("SELECT * FROM projetae.enterprises")) {
       ps.execute();
       return enterpriseMapper.mapResultSetToObjectList(ps.getResultSet(), EnterpriseImpl.class,
@@ -93,7 +93,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
    * @return enterprises.
    */
   @Override
-  public Enterprise getEnterpriseById(int id) {
+  public EnterpriseDTO getEnterpriseById(int id) {
     PreparedStatement ps = myDalService.getPS(
         "SELECT * FROM projetae.enterprises e, projetae.internships i "
             + "WHERE i.enterprise = e.enterprise_id AND i.user = ?");

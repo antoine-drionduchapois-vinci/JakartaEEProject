@@ -1,7 +1,7 @@
 package be.vinci.pae.ucc;
 
 import be.vinci.pae.dao.EnterpriseDAO;
-import be.vinci.pae.domain.Enterprise;
+import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.utils.DALService;
 import jakarta.inject.Inject;
 import java.util.List;
@@ -17,20 +17,20 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
   private DALService myDALService;
 
   @Override
-  public List<Enterprise> getAllEnterprises() {
+  public List<EnterpriseDTO> getAllEnterprises() {
     myDALService.start();
 
-    List<Enterprise> enterprises = enterpriseDAO.getAllEnterprises();
+    List<EnterpriseDTO> enterpriseDTOS = enterpriseDAO.getAllEnterprises();
     myDALService.commit();
 
-    return enterprises;
+    return enterpriseDTOS;
   }
 
   @Override
-  public Enterprise getEnterprisesByUserId(int userId) {
+  public EnterpriseDTO getEnterprisesByUserId(int userId) {
     myDALService.start();
     // get entrprise that corresponds to user intership
-    Enterprise enterpriseDTO = enterpriseDAO.getEnterpriseById(userId);
+    EnterpriseDTO enterpriseDTO = enterpriseDAO.getEnterpriseById(userId);
     myDALService.commit();
 
     return enterpriseDTO;

@@ -4,13 +4,14 @@ import be.vinci.pae.dao.ContactDAO;
 import be.vinci.pae.dao.EnterpriseDAO;
 import be.vinci.pae.domain.Contact;
 import be.vinci.pae.domain.ContactDTO;
-import be.vinci.pae.domain.Enterprise;
+import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.utils.BusinessException;
 import be.vinci.pae.utils.DALService;
 import be.vinci.pae.utils.NotFoundException;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.List;
+
 
 /**
  * Implementation of the EnterpriseUCC interface.
@@ -40,42 +41,46 @@ public class ContactUCCImpl implements ContactUCC {
   @Override
   public ContactDTO getContact(int contactId) {
     myDALService.start();
-    ContactDTO contact = myContactDAO.readOne(contactId);
-    if (contact == null) {
+    ContactDTO contactDTO = myContactDAO.readOne(contactId);
+    if (contactDTO == null) {
       throw new NotFoundException();
     }
-    Enterprise enterprise = myEnterpriseDAO.readOne(contact.getEnterprise());
+    EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(contactDTO.getEnterprise());
     myDALService.commit();
-    if (enterprise == null) {
+    if (enterpriseDTO == null) {
       throw new NotFoundException();
     }
-    contact.setEnterpriseDTO(enterprise);
-    return contact;
+    contactDTO.setEnterpriseDTO(enterpriseDTO);
+    return contactDTO;
   }
 
   @Override
   public ContactDTO initiateContact(int userId, int enterpriseId) {
     myDALService.start();
-    ContactDTO contact = myContactDAO.create(userId, enterpriseId);
-    Enterprise enterprise = myEnterpriseDAO.readOne(contact.getEnterprise());
+    if (myContactDAO.readOne(userId, enterpriseId) != null) {
+      return null;
+      // TODO: handle conflict
+    }
+    ContactDTO contactDTO = myContactDAO.create(userId,enterpriseId);
+    EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(contactDTO.getEnterprise());
     myDALService.commit();
-    if (enterprise == null) {
+    if (enterpriseDTO == null) {
       throw new NotFoundException();
     }
-    contact.setEnterpriseDTO(enterprise);
-    return contact;
+    contactDTO.setEnterpriseDTO(enterpriseDTO);
+    return contactDTO;
   }
 
   @Override
   public ContactDTO initiateContact(int userId, String enterpriseName, String enterpriseLabel,
       String enterpriseAddress, String enterprisePhone, String enterpriseEmail) {
     myDALService.start();
-    Enterprise enterprise = myEnterpriseDAO.create(enterpriseName, enterpriseLabel,
+    EnterpriseDTO enterpriseDTO = myEnterpriseDAO.create(enterpriseName, enterpriseLabel,
         enterpriseAddress, enterprisePhone, enterpriseEmail);
-    ContactDTO contact = myContactDAO.create(userId, enterprise.getEnterpriseId());
+    ContactDTO contactDTO = myContactDAO.create(userId, enterpriseDTO.getEnterpriseId());
     myDALService.commit();
-    contact.setEnterpriseDTO(enterprise);
-    return contact;
+    contactDTO.setEnterpriseDTO(enterpriseDTO);
+    return contactDTO;
   }
 
   @Override
@@ -91,12 +96,12 @@ public class ContactUCCImpl implements ContactUCC {
     }
 
     ContactDTO updatedContactDTO = myContactDAO.update(contact);
-    Enterprise enterprise = myEnterpriseDAO.readOne(updatedContactDTO.getEnterprise());
+    EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(updatedContactDTO.getEnterprise());
     myDALService.commit();
-    if (enterprise == null) {
+    if (enterpriseDTO == null) {
       throw new NotFoundException();
     }
-    updatedContactDTO.setEnterpriseDTO(enterprise);
+    updatedContactDTO.setEnterpriseDTO(enterpriseDTO);
     return updatedContactDTO;
   }
 
@@ -113,12 +118,13 @@ public class ContactUCCImpl implements ContactUCC {
     }
 
     ContactDTO updatedContactDTO = myContactDAO.update(contact);
-    Enterprise enterprise = myEnterpriseDAO.readOne(updatedContactDTO.getEnterprise());
+    EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(updatedContactDTO.getEnterprise());
     myDALService.commit();
-    if (enterprise == null) {
+    if (enterpriseDTO == null) {
       throw new NotFoundException();
     }
-    updatedContactDTO.setEnterpriseDTO(enterprise);
+
+    updatedContactDTO.setEnterpriseDTO(enterpriseDTO);
     return updatedContactDTO;
   }
 
@@ -135,12 +141,12 @@ public class ContactUCCImpl implements ContactUCC {
     }
 
     ContactDTO updatedContactDTO = myContactDAO.update(contact);
-    Enterprise enterprise = myEnterpriseDAO.readOne(updatedContactDTO.getEnterprise());
+    EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(updatedContactDTO.getEnterprise());
     myDALService.commit();
-    if (enterprise == null) {
+    if (enterpriseDTO == null) {
       throw new NotFoundException();
     }
-    updatedContactDTO.setEnterpriseDTO(enterprise);
+    updatedContactDTO.setEnterpriseDTO(enterpriseDTO);
     return updatedContactDTO;
   }
 }

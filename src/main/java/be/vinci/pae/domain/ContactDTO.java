@@ -108,12 +108,12 @@ public interface ContactDTO {
    *
    * @return The Enterprise object associated with the contact.
    */
-  Enterprise getEnterpriseDTO();
+  EnterpriseDTO getEnterpriseDTO();
 
   /**
    * Sets the Enterprise object associated with the contact.
    *
    * @param enterpriseDTO The Enterprise object to set for the contact.
    */
-  void setEnterpriseDTO(Enterprise enterpriseDTO);
+  void setEnterpriseDTO(EnterpriseDTO enterpriseDTO);
 }

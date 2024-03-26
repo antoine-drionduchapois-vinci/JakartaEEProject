@@ -1,6 +1,5 @@
 package be.vinci.pae.resources;
 
-import be.vinci.pae.domain.Enterprise;
 import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.utils.Config;
@@ -49,10 +48,10 @@ public class EnterpriseResource {
 
     try {
       // Récupérer toutes les entreprises depuis votre DAO
-      List<Enterprise> enterprises = myEnterpriseUCC.getAllEnterprises();
+      List<EnterpriseDTO> enterprises = myEnterpriseUCC.getAllEnterprises();
 
       // Parcourir chaque entreprise et les ajouter à la réponse
-      for (Enterprise enterpriseDTO : enterprises) {
+      for (EnterpriseDTO enterpriseDTO : enterprises) {
         enterprisesArray.add(convertDTOToJson(enterpriseDTO));
       }
 
@@ -94,7 +93,7 @@ public class EnterpriseResource {
       }
       System.out.println("user id : " + userId);
       // get entrprise that corresponds to user intership
-      Enterprise enterpriseDTO = myEnterpriseUCC.getEnterprisesByUserId(userId);
+      EnterpriseDTO enterpriseDTO = myEnterpriseUCC.getEnterprisesByUserId(userId);
 
       return convertDTOToJson(enterpriseDTO);
     } catch (Exception e) {

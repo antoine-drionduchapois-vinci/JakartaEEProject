@@ -1,7 +1,7 @@
 package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.ContactDTO;
-import be.vinci.pae.domain.Enterprise;
+import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.ucc.ContactUCC;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.utils.JWTDecryptToken;
@@ -163,7 +163,7 @@ public class ContactResource {
 
     try {
       List<ContactDTO> contacts = myContactUCC.getContacts(userId);
-      List<Enterprise> enterprises = myEnterpriseUCC.getAllEnterprises();
+      List<EnterpriseDTO> enterprises = myEnterpriseUCC.getAllEnterprises();
       for (ContactDTO contactDTO : contacts) {
         contactArray.add(
             convertDTOToJson(contactDTO).put("enterprise_name",

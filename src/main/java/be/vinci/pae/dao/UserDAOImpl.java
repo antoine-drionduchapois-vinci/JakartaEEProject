@@ -44,7 +44,7 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public UserDTO getOneByID(int id) {
     try (PreparedStatement ps = myDalService.getPS(
-        "SELECT * FROM projetae.users WHERE user_id = ?");) {
+        "SELECT * FROM projetae.users WHERE user_id = ?")) {
       ps.setInt(1, id);
       ps.execute();
       return userMapper.mapResultSetToObject(ps.getResultSet(), UserImpl.class,
