@@ -19,6 +19,7 @@ public class TestBinder extends AbstractBinder {
   protected void configure() {
     bind(internshipDAO).to(InternshipDAO.class);
     bind(dalService).to(DALService.class);
+
     bind(InternshipUCCImpl.class).to(InternshipUCC.class);
   }
 }
