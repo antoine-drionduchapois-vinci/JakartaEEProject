@@ -1,10 +1,12 @@
 import { removePathPrefix, usePathPrefix } from '../../utils/path-prefix';
+import fetchUserOnRefresh from '../../utils/refresh';
 import routes from './routes';
 
 const Router = () => {
   onFrontendLoad();
   onNavBarClick();
   onHistoryChange();
+  fetchUserOnRefresh();
 };
 
 function onNavBarClick() {
