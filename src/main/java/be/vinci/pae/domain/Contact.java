@@ -17,12 +17,15 @@ public interface Contact extends ContactDTO {
    * Sets the contact as refused with the specified refusal reason.
    *
    * @param refusalReason The reason for refusal.
+   * @return
    */
-  void inidcateAsRefused(String refusalReason);
+  boolean inidcateAsRefused(String refusalReason);
 
   /**
    * Sets the contact as unfollowed.
+   *
+   * @return
    */
-  void unfollow();
+  boolean unfollow();
 
 }

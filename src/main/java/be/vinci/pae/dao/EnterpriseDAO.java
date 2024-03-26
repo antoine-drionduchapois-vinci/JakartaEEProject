@@ -34,17 +34,7 @@ public interface EnterpriseDAO {
    */
   Enterprise readOne(String enterpriseName, String enterpriseLabel);
 
-  /**
-   * Creates a new enterprise with the given name, label, address, and contact
-   * information.
-   *
-   * @param name    The name of the enterprise.
-   * @param label   The label of the enterprise.
-   * @param address The address of the enterprise.
-   * @param contact The contact information of the enterprise.
-   * @return An EnterpriseDTO object representing the newly created enterprise.
-   */
-  Enterprise create(String name, String label, String address, String contact);
+  Enterprise create(String name, String label, String adress, String phone, String email);
 
   /**
    * Retrieves a list of all enterprises stored in the database.

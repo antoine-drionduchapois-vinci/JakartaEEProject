@@ -3,12 +3,15 @@ package be.vinci.pae.dao;
 import be.vinci.pae.domain.ContactDTO;
 import be.vinci.pae.domain.ContactImpl;
 import be.vinci.pae.domain.DomainFactory;
+import be.vinci.pae.utils.BusinessException;
 import be.vinci.pae.utils.DALBackService;
 import be.vinci.pae.utils.FatalErrorException;
 import be.vinci.pae.utils.ResultSetMapper;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -65,12 +68,16 @@ public class ContactDAOImpl implements ContactDAO {
   }
 
   @Override
-  public ContactDTO create(String status, String year, int userId, int enterpriseId) {
+  public ContactDTO create(int userId, int enterpriseId) {
+    if (exists(userId, enterpriseId)) {
+      throw new BusinessException(409,
+          "contact with user: " + userId + " and enterprise " + enterpriseId + " already exists");
+    }
     try (PreparedStatement ps = myDalService.getPS(
         "INSERT INTO projetae.contacts (state, year, \"user\", enterprise)"
             + "VALUES (?, ?, ?, ?) RETURNING *;")) {
-      ps.setString(1, status);
-      ps.setString(2, year);
+      ps.setString(1, "initiated");
+      ps.setString(2, getCurrentYearString());
       ps.setInt(3, userId);
       ps.setInt(4, enterpriseId);
       ps.execute();
@@ -101,5 +108,27 @@ public class ContactDAOImpl implements ContactDAO {
     }
   }
 
+  private boolean exists(int userId, int enterpriseId) {
+    try (PreparedStatement ps = myDalService.getPS(
+        "SELECT COUNT(*) FROM projetae.contacts WHERE \"user\" = ? AND enterprise = ?")) {
+      ps.setInt(1, userId);
+      ps.setInt(2, enterpriseId);
+      ps.execute();
+      ResultSet rs = ps.getResultSet();
+      rs.next();
+      if (rs.getInt(1) == 0) {
+        return false;
+      }
+    } catch (SQLException e) {
+      throw new FatalErrorException(e);
+    }
+    return true;
+  }
 
+  private String getCurrentYearString() {
+    LocalDate currentDate = LocalDate.now();
+    LocalDate startDate = LocalDate.of(currentDate.getYear() - 1, 9, 1);
+    LocalDate endDate = LocalDate.of(currentDate.getYear(), 9, 1);
+    return startDate.getYear() + "-" + endDate.getYear();
+  }
 }

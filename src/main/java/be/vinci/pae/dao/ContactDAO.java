@@ -10,18 +10,6 @@ import java.util.List;
 public interface ContactDAO {
 
   /**
-   * Creates a new contact with the provided status, year, user ID, and enterprise
-   * ID.
-   *
-   * @param status       The status of the contact.
-   * @param year         The year of the contact.
-   * @param userId       The ID of the user associated with the contact.
-   * @param enterpriseId The ID of the enterprise associated with the contact.
-   * @return The newly created Contact object.
-   */
-  ContactDTO create(String status, String year, int userId, int enterpriseId);
-
-  /**
    * Retrieves a list of contacts associated with the specified user ID.
    *
    * @param userId The ID of the user for whom to retrieve contacts.
@@ -50,6 +38,8 @@ public interface ContactDAO {
    *         no contact with the given user ID and enterprise ID is found.
    */
   ContactDTO readOne(int userId, int enterpriseId);
+
+  ContactDTO create(int userId, int enterpriseId);
 
   /**
    * Updates the information of the specified contact.

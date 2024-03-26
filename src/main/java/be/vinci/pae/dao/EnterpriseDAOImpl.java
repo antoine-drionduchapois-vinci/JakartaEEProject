@@ -3,11 +3,13 @@ package be.vinci.pae.dao;
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.Enterprise;
 import be.vinci.pae.domain.EnterpriseImpl;
+import be.vinci.pae.utils.BusinessException;
 import be.vinci.pae.utils.DALBackService;
 import be.vinci.pae.utils.FatalErrorException;
 import be.vinci.pae.utils.ResultSetMapper;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -53,14 +55,19 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
   }
 
   @Override
-  public Enterprise create(String name, String label, String adress, String contact) {
+  public Enterprise create(String name, String label, String adress, String phone, String email) {
+    if (exists(name, label)) {
+      throw new BusinessException(409,
+          "enterprise with name: " + name + " and label: " + label + " already exists!");
+    }
     try (PreparedStatement ps = myDalService.getPS(
-        "INSERT INTO projetae.enterprises (name, label, address, contact_infos)"
-            + "VALUES (?, ?, ?, ?) RETURNING *;")) {
+        "INSERT INTO projetae.enterprises (name, label, address, phone, email)"
+            + "VALUES (?, ?, ?, ?,  ?) RETURNING *;")) {
       ps.setString(1, name);
       ps.setString(2, label);
       ps.setString(3, adress);
-      ps.setString(4, contact);
+      ps.setString(4, phone);
+      ps.setString(5, email);
       ps.execute();
       return enterpriseMapper.mapResultSetToObject(ps.getResultSet(), EnterpriseImpl.class,
           myDomainFactory::getEnterprise);
@@ -98,5 +105,22 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
     } catch (SQLException | IllegalAccessException e) {
       throw new FatalErrorException(e);
     }
+  }
+
+  private boolean exists(String name, String label) {
+    try (PreparedStatement ps = myDalService.getPS(
+        "SELECT COUNT(*) FROM projetae.enterprises WHERE name = ? AND label = ?")) {
+      ps.setString(1, name);
+      ps.setString(2, label);
+      ps.execute();
+      ResultSet rs = ps.getResultSet();
+      rs.next();
+      if (rs.getInt(1) == 0) {
+        return false;
+      }
+    } catch (SQLException e) {
+      throw new FatalErrorException(e);
+    }
+    return true;
   }
 }

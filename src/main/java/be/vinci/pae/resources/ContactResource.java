@@ -51,12 +51,7 @@ public class ContactResource {
       throw new WebApplicationException("contactId required", Status.BAD_REQUEST);
     }
 
-    ObjectNode contact = myContactUCC.getContact(contactId);
-    if (contact == null) {
-      throw new WebApplicationException("not found", Status.NOT_FOUND);
-    }
-
-    return contact;
+    return convertDTOToJson(myContactUCC.getContact(contactId));
   }
 
   /**
@@ -68,38 +63,28 @@ public class ContactResource {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode addOne(JsonNode json) {
+  public ObjectNode initiate(JsonNode json) {
     if (!json.hasNonNull("userId")) {
       throw new WebApplicationException("Bad Request", Status.BAD_REQUEST);
     }
 
-    ObjectNode contact;
-
     if (json.hasNonNull("enterpriseId")) {
-      contact = myContactUCC.initiateContact(json.get("userId").asInt(),
-          json.get("enterpriseId").asInt());
-      if (contact == null) {
-        throw new WebApplicationException("not found", Status.NOT_FOUND);
-      }
-
-      return contact;
-
+      return convertDTOToJson(myContactUCC.initiateContact(json.get("userId").asInt(),
+          json.get("enterpriseId").asInt()));
     }
 
     if (!json.hasNonNull("enterpriseName") || !json.hasNonNull("enterpriseLabel")
-        || !json.hasNonNull("enterpriseAddress") || !json.hasNonNull("enterpriseContact")) {
-      throw new WebApplicationException("Bad Request", Status.BAD_REQUEST);
+        || !json.hasNonNull("enterpriseAddress")
+        || !json.hasNonNull("enterprisePhone") && !json.hasNonNull("enterpriseEmail")) {
+      throw new WebApplicationException(
+          "contactId, enterpriseName, enterpriseLabel, enterpriseAddress and enterprisePhone or enterpriseEmail are required",
+          Status.BAD_REQUEST);
     }
 
-    contact = myContactUCC.initiateContact(json.get("userId").asInt(),
+    return convertDTOToJson(myContactUCC.initiateContact(json.get("userId").asInt(),
         json.get("enterpriseName").asText(), json.get("enterpriseLabel").asText(),
-        json.get("enterpriseAddress").asText(), json.get("enterpriseContact").asText());
-
-    if (contact == null) {
-      throw new WebApplicationException("not found", Status.NOT_FOUND);
-    }
-
-    return contact;
+        json.get("enterpriseAddress").asText(), json.get("enterprisePhone").asText(),
+        json.get("enterpriseEmail").asText()));
   }
 
   /**
@@ -115,17 +100,11 @@ public class ContactResource {
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode meet(JsonNode json) throws WebApplicationException {
     if (!json.hasNonNull("contactId") || !json.hasNonNull("meetingPoint")) {
-      throw new WebApplicationException("contactId, meetingPoint required", Status.BAD_REQUEST);
+      throw new WebApplicationException("contactId and meetingPoint required", Status.BAD_REQUEST);
     }
 
-    ObjectNode contact = myContactUCC.meetEnterprise(json.get("contactId").asInt(),
-        json.get("meetingPoint").asText());
-
-    if (contact == null) {
-      throw new WebApplicationException("not found", Status.NOT_FOUND);
-    }
-
-    return contact;
+    return convertDTOToJson(myContactUCC.meetEnterprise(json.get("contactId").asInt(),
+        json.get("meetingPoint").asText()));
   }
 
   /**
@@ -139,18 +118,12 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode refuse(JsonNode json) {
-    if (!json.hasNonNull("contactId") || !json.hasNonNull("reason")) {
-      throw new WebApplicationException("contactId, reason required", Status.BAD_REQUEST);
+    if (!json.hasNonNull("contactId") || !json.hasNonNull("refusalReason")) {
+      throw new WebApplicationException("contactId and refusalReason required", Status.BAD_REQUEST);
     }
 
-    ObjectNode contact = myContactUCC.indicateAsRefused(json.get("contactId").asInt(),
-        json.get("reason").asText());
-
-    if (contact == null) {
-      throw new WebApplicationException("not found", Status.NOT_FOUND);
-    }
-
-    return contact;
+    return convertDTOToJson(myContactUCC.indicateAsRefused(json.get("contactId").asInt(),
+        json.get("refusalReason").asText()));
   }
 
   /**
@@ -168,13 +141,7 @@ public class ContactResource {
       throw new WebApplicationException("contactId required", Status.BAD_REQUEST);
     }
 
-    ObjectNode contact = myContactUCC.unfollow(json.get("contactId").asInt());
-
-    if (contact == null) {
-      throw new WebApplicationException("not found", Status.NOT_FOUND);
-    }
-
-    return contact;
+    return convertDTOToJson(myContactUCC.unfollow(json.get("contactId").asInt()));
   }
 
   /**
@@ -218,6 +185,15 @@ public class ContactResource {
 
   private ObjectNode convertDTOToJson(ContactDTO contactDTO) {
     ObjectMapper mapper = new ObjectMapper();
+    ObjectNode enterpriseNode = mapper.createObjectNode()
+        .put("enterpriseId", contactDTO.getEnterpriseDTO().getEnterpriseId())
+        .put("name", contactDTO.getEnterpriseDTO().getName())
+        .put("label", contactDTO.getEnterpriseDTO().getLabel())
+        .put("adress", contactDTO.getEnterpriseDTO().getAddress())
+        .put("contact", contactDTO.getEnterpriseDTO().getPhone())
+        .put("email", contactDTO.getEnterpriseDTO().getEmail())
+        .put("opinionTeacher", contactDTO.getEnterpriseDTO().getBlacklistedReason());
+
     ObjectNode contactNode = mapper.createObjectNode();
     contactNode.put("contact_id", contactDTO.getContactId());
     contactNode.put("meeting_point", contactDTO.getMeetingPoint());
@@ -225,7 +201,8 @@ public class ContactResource {
     contactNode.put("refusal_reason", contactDTO.getRefusalReason());
     contactNode.put("year", contactDTO.getYear());
     contactNode.put("user", contactDTO.getUser());
-    contactNode.put("enterprise", contactDTO.getEnterprise());
+    contactNode.put("enterpriseId", contactDTO.getEnterprise());
+    contactNode.put("enterprise", enterpriseNode);
     return contactNode;
   }
 }
