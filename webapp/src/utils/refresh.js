@@ -15,9 +15,28 @@ async function fetchUserOnRefresh(){
     if (!user || !user.token) {
       console.error('No authenticated user found.');
       Navigate('/'); // Redirect to homepage or login page
-       // Exit the function to prevent further execution
+      return; // Exit the function to prevent further execution
     }
-}
+  
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token: getAuthenticatedUser().token }), // Object shorthand used here
+    };
+  
+    try {
+      const response = await fetch('http://localhost:8080/users/getUserInfoById', options);
+      if (!response.ok) {
+        throw new Error('Erreur lors de la récupération des données du user');
+      }
+     
+    } catch (error) {
+      console.error('Erreur lors de la récupération des données du user : ', error);
+      Navigate('/');
+    }
+  };
 
   export default fetchUserOnRefresh;
   
