@@ -44,6 +44,7 @@ canvas {
 .table-container {
   width: 50%; /* Adjust the width of the table container */
   max-width: 100%; /* Ensure the table container does not exceed 100% of its parent container's width */
+  gap: 8%; 
 }
 
 .tableUser-container {
