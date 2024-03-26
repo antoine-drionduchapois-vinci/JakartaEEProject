@@ -1,21 +1,25 @@
 // Importing navigation function
+import { clearPage } from '../../utils/render';
 import Navigate from '../Router/Navigate';
 
 // HomePage component definition
 const HomePage = () => {
+  // Clear the page
+  clearPage();
+
   // Selecting main element from the DOM
   const main = document.querySelector('main');
 
   // Function to navigate to register page
   function register() {
-    console.log("Register Page");
+    console.log('Register Page');
     // Navigating to '/register' route
     Navigate('/register');
   }
 
   // Function to navigate to login page
   function connect() {
-    console.log("Connection Page");
+    console.log('Connection Page');
     // Navigating to '/login' route
     Navigate('/login');
   }
