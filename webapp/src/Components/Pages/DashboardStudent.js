@@ -121,6 +121,7 @@ const fetchUser = async () => {
       }
       const internshipData = await response.json();
       const blocInternship = `
+      <h2 class="title is-3">Stage</h2>
       <table class="table is-striped is-fullwidth">
         <tbody>
           <tr>
@@ -207,7 +208,7 @@ const fetchUser = async () => {
       link.addEventListener('click', (e) => {
           e.preventDefault();
           const {contactId} = e.target.dataset;
-          Navigate(`/contact?contactId=${contactId}`);
+          Navigate(`/contact?id=${contactId}`);
       });
   });
   } catch (error) {
