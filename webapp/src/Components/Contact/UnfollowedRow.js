@@ -6,7 +6,7 @@ const unfollow = async (data) =>
     },
     body: JSON.stringify(data),
   })
-    .then((response) => response.status === 200)
+    .then(() => window.location.reload())
     .catch((error) => console.error(error));
 
 const UnfollowedRow = (htmlElement, contactData) => {

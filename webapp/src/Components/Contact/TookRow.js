@@ -1,6 +1,6 @@
 import checkInput from '../../services/checkInput';
 
-const meetEnterprise = async (data) =>
+const meetEnterprise = (data) =>
   fetch('http://localhost:8080/contact/meet', {
     method: 'POST',
     headers: {
@@ -8,7 +8,7 @@ const meetEnterprise = async (data) =>
     },
     body: JSON.stringify(data),
   })
-    .then((response) => response.status === 200)
+    .then(() => window.location.reload())
     .catch((error) => console.error(error));
 
 const TookRow = (htmlElement, userData, contactData) => {

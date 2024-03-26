@@ -1,6 +1,6 @@
 import checkInput from '../../services/checkInput';
 
-const indicateAsRefused = async (data) =>
+const indicateAsRefused = (data) =>
   fetch('http://localhost:8080/contact/refuse', {
     method: 'POST',
     headers: {
@@ -8,7 +8,7 @@ const indicateAsRefused = async (data) =>
     },
     body: JSON.stringify(data),
   })
-    .then((response) => response.status === 200)
+    .then(() => window.location.reload())
     .catch((error) => console.error(error));
 
 const RefusedRow = (htmlElement, contactData) => {

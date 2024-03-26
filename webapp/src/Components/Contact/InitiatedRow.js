@@ -1,7 +1,7 @@
 import autocomplete from '../../services/autocomplete';
 import checkInput from '../../services/checkInput';
 
-const initiateContact = async (data) =>
+const initiateContact = (data) =>
   fetch('http://localhost:8080/contact', {
     method: 'POST',
     headers: {
@@ -9,7 +9,7 @@ const initiateContact = async (data) =>
     },
     body: JSON.stringify(data),
   })
-    .then((response) => response.status === 200)
+    .then(() => window.location.reload())
     .catch((error) => console.error(error));
 
 let foundEnterprise;
