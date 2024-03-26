@@ -2,6 +2,8 @@ package be.vinci.pae.ucc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -75,4 +77,68 @@ class InternshipUCCImplTest {
     verify(dalService).start();
     verify(dalService).commit();
   }
+
+
+  @Test
+  void getUserInternship_nonExistentUser() {
+    int nonExistentUserId = 999; // Assuming this ID does not exist
+    when(internshipDAO.getUserInternship(nonExistentUserId)).thenReturn(null);
+
+    InternshipDTO result = internshipUCC.getUserInternship(nonExistentUserId);
+
+    assertNull(result, "Expected null when querying a non-existent user ID.");
+    verify(internshipDAO).getUserInternship(nonExistentUserId);
+    verify(dalService).start();
+    verify(dalService).commit();
+  }
+
+  @Test
+  void getUserInternship_emptySubject() {
+    int userId = 10;
+    InternshipDTO internshipWithEmptySubject = new InternshipImpl();
+    internshipWithEmptySubject.setInternshipId(2);
+    internshipWithEmptySubject.setSubject(""); // Empty subject
+    internshipWithEmptySubject.setYear("2023-2024");
+    internshipWithEmptySubject.setUser(userId);
+    internshipWithEmptySubject.setEnterprise(3);
+    internshipWithEmptySubject.setSupervisor(2);
+    internshipWithEmptySubject.setContact(2);
+
+    when(internshipDAO.getUserInternship(userId)).thenReturn(internshipWithEmptySubject);
+
+    InternshipDTO result = internshipUCC.getUserInternship(userId);
+
+    assertNotNull(result, "Internship should not be null even with an empty subject.");
+    assertTrue(result.getSubject().isEmpty(), "Expected the subject to be empty.");
+  }
+
+  @Test
+  void getUserInternship_commitsTransactionOnSuccess() {
+    int userId = 9;
+    InternshipDTO expectedInternship = new InternshipImpl();
+    expectedInternship.setInternshipId(1);
+    when(internshipDAO.getUserInternship(userId)).thenReturn(expectedInternship);
+
+    internshipUCC.getUserInternship(userId);
+
+    verify(dalService).start();
+    verify(dalService).commit();
+  }
+
+  @Test
+  void getUserInternship_withSpecificYear() {
+    int userId = 11;
+    InternshipDTO expectedInternship = new InternshipImpl();
+    expectedInternship.setInternshipId(3);
+    expectedInternship.setYear("2024-2025"); // A future year
+    when(internshipDAO.getUserInternship(userId)).thenReturn(expectedInternship);
+
+    InternshipDTO result = internshipUCC.getUserInternship(userId);
+
+    assertNotNull(result, "Expected a valid InternshipDTO.");
+    assertEquals("2024-2025", result.getYear(),
+        "Expected the year to match the specific future year.");
+  }
+
+
 }
