@@ -1,5 +1,10 @@
 import { getAuthenticatedUser } from '../../utils/auths';
+import fetchUserOnRefresh from '../../utils/refresh';
+
 import { clearPage, renderPageTitle } from '../../utils/render';
+
+
+fetchUserOnRefresh();
 
 
 const fetchUser = async () => {
