@@ -5,6 +5,10 @@ import be.vinci.pae.ucc.InternshipUCC;
 import be.vinci.pae.ucc.InternshipUCCImpl;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 
+/**
+ * A test utility class for binding mock objects and test instances to their corresponding
+ * interfaces or classes
+ */
 public class TestBinder extends AbstractBinder {
 
   private final InternshipDAO internshipDAO;

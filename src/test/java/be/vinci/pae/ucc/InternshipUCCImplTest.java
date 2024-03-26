@@ -36,7 +36,7 @@ class InternshipUCCImplTest {
   @Test
   void getUserInternship() {
     int userId = 9; // Example user ID
-    InternshipDTO expectedInternship = new InternshipImpl(); // Direct instantiation; ensure this is logically correct
+    InternshipDTO expectedInternship = new InternshipImpl();
     // Assume setters are present and set the properties
     expectedInternship.setInternshipId(1);
     expectedInternship.setSubject("Un ERP : Odoo");
@@ -55,6 +55,18 @@ class InternshipUCCImplTest {
     assertNotNull(result, "The returned InternshipDTO should not be null.");
     assertEquals(expectedInternship.getInternshipId(), result.getInternshipId(),
         "The internship ID should match.");
+    assertEquals(expectedInternship.getSubject(), result.getSubject(),
+        "The subject should match.");
+    assertEquals(expectedInternship.getYear(), result.getYear(),
+        "The year should match.");
+    assertEquals(expectedInternship.getUser(), result.getUser(),
+        "The user ID should match.");
+    assertEquals(expectedInternship.getEnterprise(), result.getEnterprise(),
+        "The enterprise ID should match.");
+    assertEquals(expectedInternship.getResponsible(), result.getResponsible(),
+        "The supervisor ID should match.");
+    assertEquals(expectedInternship.getContact(), result.getContact(),
+        "The contact ID should match.");
 
     // More assertions as per your test design
 
