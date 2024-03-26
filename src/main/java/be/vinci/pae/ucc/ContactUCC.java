@@ -22,10 +22,10 @@ public interface ContactUCC {
   /**
    * Retrieves the contact information associated with the specified contact ID.
    *
-   * @param contactid The ID of the contact to retrieve.
+   * @param contactId The ID of the contact to retrieve.
    * @return An ObjectNode containing the contact information if found, or null if not found.
    */
-  ContactDTO getContact(int contactid);
+  ContactDTO getContact(int contactId);
 
   /**
    * Initiates a contact between a user and an enterprise identified by their respective IDs.
@@ -36,6 +36,7 @@ public interface ContactUCC {
    * if the contact already exists.
    */
   ContactDTO initiateContact(int userId, int enterpriseId);
+
 
   ContactDTO initiateContact(int userId, String enterpriseName, String enterpriseLabel,
       String enterpriseAddress, String enterprisePhone, String enterpriseEmail);

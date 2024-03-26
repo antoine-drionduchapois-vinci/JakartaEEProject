@@ -24,7 +24,7 @@ public class ContactImpl implements Contact {
   }
 
   @Override
-  public boolean inidcateAsRefused(String refusalReason) {
+  public boolean indicateAsRefused(String refusalReason) {
     if (!state.equals("initiated") && !state.equals("meet")) {
       return false;
     }

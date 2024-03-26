@@ -114,13 +114,12 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       ps.setString(2, label);
       ps.execute();
       ResultSet rs = ps.getResultSet();
-      rs.next();
-      if (rs.getInt(1) == 0) {
-        return false;
+      if (rs.next() && rs.getInt(1) == 1) {
+        return true;
       }
     } catch (SQLException e) {
       throw new FatalErrorException(e);
     }
-    return true;
+    return false;
   }
 }

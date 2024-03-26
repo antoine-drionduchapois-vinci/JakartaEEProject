@@ -24,12 +24,11 @@ import jakarta.ws.rs.core.Response.Status;
 import java.util.List;
 
 /**
- * Resource class for handling contact-related endpoints.
+ * Resource class for managing contacts between users and enterprises.
  */
 @Singleton
 @Path("/contact")
 public class ContactResource {
-
 
   private JWTDecryptToken decryptToken = new JWTDecryptToken();
   @Inject
@@ -42,7 +41,7 @@ public class ContactResource {
    * Retrieves a contact by its ID.
    *
    * @param contactId The ID of the contact to retrieve.
-   * @return JSON representation of the retrieved contact.
+   * @return The contact as JSON.
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -55,11 +54,12 @@ public class ContactResource {
   }
 
   /**
-   * Adds a new contact.
+   * Initiates a new contact between a user and an enterprise.
    *
-   * @param json JSON containing data for creating a new contact.
-   * @return JSON representation of the added contact.
+   * @param json The JSON containing information about the contact.
+   * @return The newly initiated contact as JSON.
    */
+
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
@@ -88,11 +88,10 @@ public class ContactResource {
   }
 
   /**
-   * Handles meeting with an enterprise.
+   * Marks a contact as having a meeting.
    *
-   * @param json JSON containing contact ID and meeting point.
-   * @return JSON representation of the updated contact after the meeting.
-   * @throws WebApplicationException if the required parameters are missing.
+   * @param json The JSON containing the contact ID and meeting point.
+   * @return The updated contact as JSON.
    */
   @POST
   @Path("/meet")
@@ -108,10 +107,10 @@ public class ContactResource {
   }
 
   /**
-   * Indicates refusal of contact.
+   * Indicates that a contact has been refused.
    *
-   * @param json JSON containing contact ID and reason for refusal.
-   * @return JSON representation of the updated contact after refusal.
+   * @param json The JSON containing the contact ID and refusal reason.
+   * @return The updated contact as JSON.
    */
   @POST
   @Path("/refuse")
@@ -129,8 +128,8 @@ public class ContactResource {
   /**
    * Unfollows a contact.
    *
-   * @param json JSON containing contact ID.
-   * @return JSON representation of the updated contact after unfollowing.
+   * @param json The JSON containing the contact ID.
+   * @return The result of the unfollow operation as JSON.
    */
   @POST
   @Path("/unfollow")
@@ -145,10 +144,10 @@ public class ContactResource {
   }
 
   /**
-   * Retrieves user information by user ID and returns it as JSON.
+   * Retrieves contacts for a specific user.
    *
-   * @param json The JSON object containing the JWT token.
-   * @return An ObjectNode representing the user's information.
+   * @param json The JSON containing the user ID.
+   * @return The user's contacts as JSON.
    */
   @POST
   @Path("getUserContacts")
@@ -183,6 +182,12 @@ public class ContactResource {
 
   }
 
+  /**
+   * Converts a ContactDTO object to JSON format.
+   *
+   * @param contactDTO The ContactDTO object to convert.
+   * @return The ContactDTO object as JSON.
+   */
   private ObjectNode convertDTOToJson(ContactDTO contactDTO) {
     ObjectMapper mapper = new ObjectMapper();
     ObjectNode enterpriseNode = mapper.createObjectNode()

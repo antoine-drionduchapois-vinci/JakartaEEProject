@@ -8,7 +8,6 @@ import be.vinci.pae.domain.Enterprise;
 import be.vinci.pae.utils.BusinessException;
 import be.vinci.pae.utils.DALService;
 import be.vinci.pae.utils.NotFoundException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.List;
@@ -26,7 +25,6 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Inject
   private DALService myDALService;
-  private final ObjectMapper jsonMapper = new ObjectMapper();
 
   @Override
   public List<ContactDTO> getContacts(int userId) {
@@ -110,7 +108,7 @@ public class ContactUCCImpl implements ContactUCC {
       return null;
     }
 
-    if (!contact.inidcateAsRefused(refusalReason)) {
+    if (!contact.indicateAsRefused(refusalReason)) {
       throw new BusinessException(403, "contact must be initiated or meet");
     }
 
