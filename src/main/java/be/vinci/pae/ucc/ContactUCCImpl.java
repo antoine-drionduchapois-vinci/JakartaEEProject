@@ -31,6 +31,9 @@ public class ContactUCCImpl implements ContactUCC {
   public List<ContactDTO> getContacts(int userId) {
     myDALService.start();
     List<ContactDTO> contactDTOS = myContactDAO.readMany(userId);
+    for (ContactDTO contact : contactDTOS) {
+      contact.setEnterpriseDTO(myEnterpriseDAO.readOne(contact.getEnterprise()));
+    }
     myDALService.commit();
     if (contactDTOS == null) {
       return null;
