@@ -155,7 +155,7 @@ public class ContactResource {
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getUsersByIdAsJson(JsonNode json) {
     System.out.println("getUserContact");
-    int userId = 7;
+    int userId = decryptToken.getIdFromJsonToken(json);
 
     ObjectMapper mapper = new ObjectMapper();
     ObjectNode response = mapper.createObjectNode();
