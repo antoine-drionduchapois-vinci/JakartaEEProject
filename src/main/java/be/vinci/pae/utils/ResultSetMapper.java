@@ -56,13 +56,13 @@ public class ResultSetMapper<T, U> {
     List<T> objects = new ArrayList<>();
     Field[] fields = clazz.getDeclaredFields();
 
-    do {
-      if (!rs.next()) {
-        return null;
-      }
+    if (!rs.next()) {
+      return null;
+    }
+    objects.add(mapFields(fields, rs, factoryFunction));
+    while (rs.next()) {
       objects.add(mapFields(fields, rs, factoryFunction));
     }
-    while (rs.next());
     return objects;
   }
 
