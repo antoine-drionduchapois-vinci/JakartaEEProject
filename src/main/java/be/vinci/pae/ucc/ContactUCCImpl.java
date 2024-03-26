@@ -4,14 +4,18 @@ import be.vinci.pae.dao.ContactDAO;
 import be.vinci.pae.dao.EnterpriseDAO;
 import be.vinci.pae.domain.Contact;
 import be.vinci.pae.domain.ContactDTO;
+import be.vinci.pae.domain.Enterprise;
 import be.vinci.pae.domain.EnterpriseDTO;
+import be.vinci.pae.utils.BusinessException;
 import be.vinci.pae.utils.DALService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import be.vinci.pae.utils.NotFoundException;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
 import java.time.LocalDate;
 import java.util.List;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * Implementation of the EnterpriseUCC interface.
@@ -26,7 +30,6 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Inject
   private DALService myDALService;
-  private final ObjectMapper jsonMapper = new ObjectMapper();
 
   @Override
   public List<ContactDTO> getContacts(int userId) {
@@ -40,136 +43,114 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
-  public ObjectNode getContact(int contactId) {
+  public ContactDTO getContact(int contactId) {
     myDALService.start();
     ContactDTO contactDTO = myContactDAO.readOne(contactId);
     if (contactDTO == null) {
-      return null;
+      throw new NotFoundException();
     }
     EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(contactDTO.getEnterprise());
     myDALService.commit();
     if (enterpriseDTO == null) {
-      return null; // TODO: handle error
+      throw new NotFoundException();
     }
     contactDTO.setEnterpriseDTO(enterpriseDTO);
-    return convertDTOToJson(contactDTO);
+    return contactDTO;
   }
 
   @Override
-  public ObjectNode initiateContact(int userId, int enterpriseId) {
+  public ContactDTO initiateContact(int userId, int enterpriseId) {
     myDALService.start();
     if (myContactDAO.readOne(userId, enterpriseId) != null) {
       return null;
       // TODO: handle conflict
     }
-    ContactDTO contactDTO = myContactDAO.create("initié", getCurrentYearString(), userId,
-        enterpriseId);
+    ContactDTO contactDTO = myContactDAO.create(userId,enterpriseId);
     EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(contactDTO.getEnterprise());
     myDALService.commit();
     if (enterpriseDTO == null) {
-      return null; // TODO: handle error
+      throw new NotFoundException();
     }
     contactDTO.setEnterpriseDTO(enterpriseDTO);
-    return convertDTOToJson(contactDTO);
+    return contactDTO;
   }
 
   @Override
-  public ObjectNode initiateContact(int userId, String enterpriseName, String enterpriseLabel,
-      String enterpriseAddress, String enterpriseContact) {
+  public ContactDTO initiateContact(int userId, String enterpriseName, String enterpriseLabel,
+      String enterpriseAddress, String enterprisePhone, String enterpriseEmail) {
     myDALService.start();
-    if (myEnterpriseDAO.readOne(enterpriseName, enterpriseLabel) != null) {
-      return null; // TODO: handle conflict
-    }
     EnterpriseDTO enterpriseDTO = myEnterpriseDAO.create(enterpriseName, enterpriseLabel,
-        enterpriseAddress, enterpriseContact);
-    if (enterpriseDTO == null) {
-      return null; // TODO: handle error
-    }
-    ContactDTO contactDTO = myContactDAO.create("initié", getCurrentYearString(), userId,
-        enterpriseDTO.getEnterpriseId());
+        enterpriseAddress, enterprisePhone, enterpriseEmail);
+    ContactDTO contactDTO = myContactDAO.create(userId, enterpriseDTO.getEnterpriseId());
     myDALService.commit();
     contactDTO.setEnterpriseDTO(enterpriseDTO);
-    return convertDTOToJson(contactDTO);
+    return contactDTO;
   }
 
   @Override
-  public ObjectNode meetEnterprise(int contactId, String meetingPoint) {
+  public ContactDTO meetEnterprise(int contactId, String meetingPoint) {
     myDALService.start();
     Contact contact = (Contact) myContactDAO.readOne(contactId);
     if (contact == null) {
-      return null;
+      throw new NotFoundException();
     }
 
     if (!contact.meet(meetingPoint)) {
-      return null; // TODO: handle forbidden
+      throw new BusinessException(403, "contact must be initiated");
     }
 
-    return getJsonNodes(contact);
-  }
-
-  @Override
-  public ObjectNode indicateAsRefused(int contactId, String refusalReason) {
-    myDALService.start();
-    Contact contact = (Contact) myContactDAO.readOne(contactId);
-    if (contact == null) {
-      return null;
-    }
-
-    contact.inidcateAsRefused(refusalReason);
-
-    return getJsonNodes(contact);
-  }
-
-  @Override
-  public ObjectNode unfollow(int contactId) {
-    myDALService.start();
-    Contact contact = (Contact) myContactDAO.readOne(contactId);
-    if (contact == null) {
-      return null;
-    }
-
-    contact.unfollow();
-
-    return getJsonNodes(contact);
-  }
-
-  private ObjectNode getJsonNodes(Contact contact) {
     ContactDTO updatedContactDTO = myContactDAO.update(contact);
     EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(updatedContactDTO.getEnterprise());
     myDALService.commit();
     if (enterpriseDTO == null) {
-      return null; // TODO: handle error
+      throw new NotFoundException();
+    }
+    updatedContactDTO.setEnterpriseDTO(enterpriseDTO);
+    return updatedContactDTO;
+  }
+
+  @Override
+  public ContactDTO indicateAsRefused(int contactId, String refusalReason) {
+    myDALService.start();
+    Contact contact = (Contact) myContactDAO.readOne(contactId);
+    if (contact == null) {
+      return null;
+    }
+
+    if (!contact.indicateAsRefused(refusalReason)) {
+      throw new BusinessException(403, "contact must be initiated or meet");
+    }
+
+    ContactDTO updatedContactDTO = myContactDAO.update(contact);
+    EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(updatedContactDTO.getEnterprise());
+    myDALService.commit();
+    if (enterpriseDTO == null) {
+      throw new NotFoundException();
     }
 
     updatedContactDTO.setEnterpriseDTO(enterpriseDTO);
-    return convertDTOToJson(updatedContactDTO);
+    return updatedContactDTO;
   }
 
-  private String getCurrentYearString() {
-    LocalDate currentDate = LocalDate.now();
-    LocalDate startDate = LocalDate.of(currentDate.getYear() - 1, 9, 1);
-    LocalDate endDate = LocalDate.of(currentDate.getYear(), 9, 1);
-    return startDate.getYear() + "-" + endDate.getYear();
-  }
+  @Override
+  public ContactDTO unfollow(int contactId) {
+    myDALService.start();
+    Contact contact = (Contact) myContactDAO.readOne(contactId);
+    if (contact == null) {
+      return null;
+    }
 
-  private ObjectNode convertDTOToJson(ContactDTO contactDTO) {
-    ObjectNode enterpriseNode = jsonMapper.createObjectNode()
-        .put("enterpriseId", contactDTO.getEnterpriseDTO().getEnterpriseId())
-        .put("name", contactDTO.getEnterpriseDTO().getName())
-        .put("label", contactDTO.getEnterpriseDTO().getLabel())
-        .put("adress", contactDTO.getEnterpriseDTO().getAddress())
-        .put("contact", contactDTO.getEnterpriseDTO().getPhone())
-        .put("email", contactDTO.getEnterpriseDTO().getEmail())
-        .put("opinionTeacher", contactDTO.getEnterpriseDTO().getBlacklistedReason());
+    if (!contact.unfollow()) {
+      throw new BusinessException(403, "contact must be initiated or meet");
+    }
 
-    return jsonMapper.createObjectNode()
-        .put("contactId", contactDTO.getContactId())
-        .put("description", contactDTO.getMeetingPoint())
-        .put("state", contactDTO.getState())
-        .put("reasonRefusal", contactDTO.getRefusalReason())
-        .put("year", contactDTO.getYear())
-        .put("useriD", contactDTO.getUser())
-        .put("enterpriseId", contactDTO.getEnterprise())
-        .putPOJO("enterprise", enterpriseNode);
+    ContactDTO updatedContactDTO = myContactDAO.update(contact);
+    EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(updatedContactDTO.getEnterprise());
+    myDALService.commit();
+    if (enterpriseDTO == null) {
+      throw new NotFoundException();
+    }
+    updatedContactDTO.setEnterpriseDTO(enterpriseDTO);
+    return updatedContactDTO;
   }
 }
