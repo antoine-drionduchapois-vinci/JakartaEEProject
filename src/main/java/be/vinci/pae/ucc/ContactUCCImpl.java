@@ -4,18 +4,14 @@ import be.vinci.pae.dao.ContactDAO;
 import be.vinci.pae.dao.EnterpriseDAO;
 import be.vinci.pae.domain.Contact;
 import be.vinci.pae.domain.ContactDTO;
-import be.vinci.pae.domain.Enterprise;
 import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.utils.BusinessException;
 import be.vinci.pae.utils.DALService;
 import be.vinci.pae.utils.NotFoundException;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
-import java.time.LocalDate;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * Implementation of the EnterpriseUCC interface.
