@@ -27,9 +27,9 @@ class InternshipUCCImplTest {
     internshipDAO = mock(InternshipDAO.class);
     dalService = mock(DALService.class);
 
-    ServiceLocator locator = ServiceLocatorUtilities.bind(
-        new TestBinder(internshipDAO, dalService));
-    internshipUCC = locator.getService(InternshipUCC.class);
+    ServiceLocator locator = ServiceLocatorUtilities.bind(new
+        TestBinder(internshipDAO, dalService));
+    this.internshipUCC = locator.getService(InternshipUCC.class);
     assertNotNull(internshipUCC, "InternshipUCCImpl should not be null");
   }
 
