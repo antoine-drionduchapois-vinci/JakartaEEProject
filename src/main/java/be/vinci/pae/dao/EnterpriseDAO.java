@@ -14,7 +14,7 @@ public interface EnterpriseDAO {
    *
    * @param enterpriseId The ID of the enterprise to retrieve information for.
    * @return An EnterpriseDTO object representing the enterprise information associated with the
-   * specified ID, or null if no enterprise with the given ID is found.
+   *        specified ID, or null if no enterprise with the given ID is found.
    */
   EnterpriseDTO readOne(int enterpriseId);
 
@@ -25,7 +25,7 @@ public interface EnterpriseDAO {
    * @param enterpriseName  The name of the enterprise to retrieve information for.
    * @param enterpriseLabel The label of the enterprise to retrieve information for.
    * @return An EnterpriseDTO object representing the enterprise information associated with the
-   * specified ID, or null if no enterprise with the given ID is found.
+   *        specified ID, or null if no enterprise with the given ID is found.
    */
   EnterpriseDTO readOne(String enterpriseName, String enterpriseLabel);
 
@@ -44,7 +44,7 @@ public interface EnterpriseDAO {
    * Retrieves a list of all enterprises stored in the database.
    *
    * @return A List containing EnterpriseDTO objects representing all enterprises stored in the
-   * database.
+   *        database.
    */
   List<EnterpriseDTO> getAllEnterprises();
 
@@ -53,7 +53,7 @@ public interface EnterpriseDAO {
    *
    * @param id The ID of the enterprise to retrieve information for.
    * @return An EnterpriseDTO object representing the enterprise information associated with the
-   * specified ID, or null if no enterprise with the given ID is found.
+   *        specified ID, or null if no enterprise with the given ID is found.
    */
   EnterpriseDTO getEnterpriseById(int id);
 }
