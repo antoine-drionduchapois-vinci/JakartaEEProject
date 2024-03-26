@@ -12,10 +12,9 @@ const meetEnterprise = async (data) =>
     .catch((error) => console.error(error));
 
 const TookRow = (htmlElement, userData, contactData) => {
-  console.log('🚀 ~ TookRow ~ contactData:', contactData);
   const html = htmlElement;
   html.innerHTML = `
-  <div class="column is-one-fifth bg-primary">
+  <div class="column is-one-fifth">
         <div class="d-flex gap-2 align-items-center">
             <div class="status-circle">
                 <div id="took-circle" class="status-circle-item" hidden></div>
@@ -23,11 +22,11 @@ const TookRow = (htmlElement, userData, contactData) => {
             Pris
         </div>
     </div>
-    <div class="column bg-secondary">
+    <div class="column">
         <label for="meeting">Lieu de rencontre *</label>
         <input class="input is-primary" type="text" id="meeting">
     </div>
-    <div class="column bg-secondary d-flex align-items-end">
+    <div class="column d-flex align-items-end">
         <button class="button is-fullwidth" id="submit-took">Prendre contact</button>
     </div>
   `;
@@ -36,22 +35,21 @@ const TookRow = (htmlElement, userData, contactData) => {
   const meetingInput = { element: document.querySelector('#meeting'), isValid: false };
   const submit = document.querySelector('#submit-took');
 
-  if (!contactData || contactData.state !== 'initié') {
-    meetingInput.element.value = contactData?.description ? contactData.description : '';
+  if (!contactData || contactData.state !== 'initiated') {
+    meetingInput.element.value = contactData?.meeting_point ? contactData.meeting_point : '';
     meetingInput.element.setAttribute('disabled', true);
     submit.setAttribute('disabled', true);
   }
 
   if (
     contactData &&
-    contactData.state !== 'initié' &&
-    contactData.state !== 'refusé' &&
-    contactData.state !== 'non_suivis'
+    contactData.state !== 'initiated' &&
+    contactData.state !== 'refused' &&
+    contactData.state !== 'unfollowed'
   )
     tookCircle.removeAttribute('hidden');
 
   meetingInput.element.addEventListener('input', (e) => {
-    meetingInput.value = e.target.value;
     meetingInput.isValid = checkInput(e.target);
   });
 
@@ -61,7 +59,7 @@ const TookRow = (htmlElement, userData, contactData) => {
       return;
     }
 
-    meetEnterprise({ contactId: contactData.contactId, meetingPoint: meetingInput.value });
+    meetEnterprise({ contactId: contactData.contact_id, meetingPoint: meetingInput.element.value });
   });
 };
 

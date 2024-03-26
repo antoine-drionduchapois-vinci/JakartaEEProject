@@ -1,14 +1,17 @@
 // Importing authentication utility function to set authenticated user
-import { setAuthenticatedUser } from "../../utils/auths";
-import Navbar from "../Navbar/Navbar";
+import { setAuthenticatedUser } from '../../utils/auths';
+import Navbar from '../Navbar/Navbar';
 // Importing navigation function
-import Navigate from "../Router/Navigate";
-import Redirect from "../../utils/redirect";
+import Navigate from '../Router/Navigate';
+import Redirect from '../../utils/redirect';
+import { clearPage } from '../../utils/render';
 
 // RegisterPage component definition
 const RegisterPage = () => {
+  clearPage();
+
   // Selecting main element from the DOM
-  const main = document.querySelector('main');  
+  const main = document.querySelector('main');
 
   // HTML block for registration form
   const bloc1 = `
@@ -93,23 +96,23 @@ const RegisterPage = () => {
     const email = this.value.trim();
     const additionalOptions = document.getElementById('roleOptions');
     const roleSelect = document.getElementById('roleSelect');
-    
+
     if (email.endsWith('@vinci.be')) {
-        additionalOptions.style.display = 'block';
-        roleSelect.setAttribute('required', '');
+      additionalOptions.style.display = 'block';
+      roleSelect.setAttribute('required', '');
     } else {
-        additionalOptions.style.display = 'none';
-        roleSelect.removeAttribute('required');
+      additionalOptions.style.display = 'none';
+      roleSelect.removeAttribute('required');
     }
   });
-  document.getElementById('loginLink').addEventListener("click", () => Navigate('/login'));
+  document.getElementById('loginLink').addEventListener('click', () => Navigate('/login'));
 
   // Adding event listener for form submission
   document.getElementById('registerButton').addEventListener('click', handleSubmit);
 };
 
 // Function to handle the submit of the form register
-async function handleSubmit (e) {
+async function handleSubmit(e) {
   e.preventDefault();
   // Getting form input values
   const name = document.getElementById('nameInput').value;
@@ -117,66 +120,66 @@ async function handleSubmit (e) {
   const email = document.getElementById('emailInput').value;
   const telephone = document.getElementById('telInput').value;
   const password = document.getElementById('passwordInput').value;
-  let role = "STUDENT";
+  let role = 'STUDENT';
   if (email.endsWith('@vinci.be')) {
-      role = document.getElementById('roleSelect').value;
+    role = document.getElementById('roleSelect').value;
   }
   // Validating form inputs
   if (!name || !firstname || !email || !telephone || !password || !role) {
-      const errorMessage = document.getElementById('errorMessage');
-      errorMessage.textContent = "Veuillez remplir tous les champs obligatoires";
-      errorMessage.style.display = 'block';
-      errorMessage.style.fontSize = '16px';
-      return;
+    const errorMessage = document.getElementById('errorMessage');
+    errorMessage.textContent = 'Veuillez remplir tous les champs obligatoires';
+    errorMessage.style.display = 'block';
+    errorMessage.style.fontSize = '16px';
+    return;
   }
 
   // Creating data object
   const data = {
-      name,
-      firstname,
-      email,
-      telephone,
-      password,
-      role
+    name,
+    firstname,
+    email,
+    telephone,
+    password,
+    role,
   };
 
   // Creating options for fetch request
   const options = {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: {
-          'Content-Type': 'application/json',
-      },
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json',
+    },
   };
   // Sending registration request to server
   try {
-      fetch('http://localhost:8080/auths/register', options)
-          .then(response => {
-              if (!response.ok) {
-                  return response.json().then(errorData => {
-                      const errorMessage = document.getElementById('error-message');
-                      errorMessage.innerHTML = errorData.message;
-                      errorMessage.style.display = 'block';
-                      throw new Error(errorData.message);
-                  });
-              }
-              return response.json();
-          })
-          .then(authenticatedUser => {
-              // Setting authenticated user in localStorage
-              setAuthenticatedUser(authenticatedUser);
-              // Render navbar components
-              Navbar();
-              // Navigating to home page
-              Redirect.redirect(authenticatedUser.role);
-          })
-          .catch(error => {
-              console.error('Error during register:', error);
+    fetch('http://localhost:8080/auths/register', options)
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then((errorData) => {
+            const errorMessage = document.getElementById('error-message');
+            errorMessage.innerHTML = errorData.message;
+            errorMessage.style.display = 'block';
+            throw new Error(errorData.message);
           });
+        }
+        return response.json();
+      })
+      .then((authenticatedUser) => {
+        // Setting authenticated user in localStorage
+        setAuthenticatedUser(authenticatedUser);
+        // Render navbar components
+        Navbar();
+        // Navigating to home page
+        Redirect.redirect(authenticatedUser.role);
+      })
+      .catch((error) => {
+        console.error('Error during register:', error);
+      });
   } catch (error) {
-      console.error('Error during register:', error);
+    console.error('Error during register:', error);
   }
-};
+}
 
 // Exporting RegisterPage component
 export default RegisterPage;
