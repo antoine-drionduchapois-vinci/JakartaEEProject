@@ -12,6 +12,8 @@ public interface InternshipDTO {
    */
   int getInternshipId();
 
+  void setInternshipId(int internshipId);
+
   /**
    * Gets the ID of the responsible person for the internship.
    *
@@ -26,12 +28,16 @@ public interface InternshipDTO {
    */
   String getSubject();
 
+  void setSubject(String subject);
+
   /**
    * Gets the ID of the enterprise associated with the internship.
    *
    * @return The ID of the associated enterprise.
    */
   int getEnterprise();
+
+  void setEnterprise(int enterprise);
 
   /**
    * Gets the ID of the contact associated with the internship.
@@ -40,12 +46,16 @@ public interface InternshipDTO {
    */
   int getContact();
 
+  void setContact(int contact);
+
   /**
    * Gets the ID of the user associated with the internship.
    *
    * @return The ID of the associated user.
    */
   int getUser();
+
+  void setUser(int user);
 
   /**
    * Gets the academic year of the internship.
@@ -54,5 +64,9 @@ public interface InternshipDTO {
    */
   String getYear();
 
- 
+  void setYear(String year);
+
+  void setSupervisor(int supervisor);
+
+
 }
