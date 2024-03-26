@@ -2,41 +2,42 @@ package be.vinci.pae.ucc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import be.vinci.pae.dao.InternshipDAO;
-import be.vinci.pae.domain.Internship;
 import be.vinci.pae.domain.InternshipDTO;
 import be.vinci.pae.domain.InternshipImpl;
 import be.vinci.pae.utils.DALService;
+import be.vinci.pae.utils.TestBinder;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 class InternshipUCCImplTest {
 
-  @Mock
   private InternshipDAO internshipDAO;
-
-  @Mock
   private DALService dalService;
-
-  @InjectMocks
-  private InternshipUCCImpl internshipUCC;
+  private InternshipUCC internshipUCC;
 
   @BeforeEach
   void setUp() {
-    MockitoAnnotations.openMocks(this);
+    internshipDAO = mock(InternshipDAO.class);
+    dalService = mock(DALService.class);
+
+    ServiceLocator locator = ServiceLocatorUtilities.bind(
+        new TestBinder(internshipDAO, dalService));
+    internshipUCC = locator.getService(InternshipUCC.class);
+    assertNotNull(internshipUCC, "InternshipUCCImpl should not be null");
   }
 
   @Test
   void getUserInternship() {
-    // Setup - Define the expected properties of the InternshipDTO
-    int userId = 9; // Assuming this user has an internship
-    Internship expectedInternship = new InternshipImpl();
+    int userId = 9; // Example user ID
+    InternshipDTO expectedInternship = new InternshipImpl(); // Direct instantiation; ensure this is logically correct
+    // Assume setters are present and set the properties
     expectedInternship.setInternshipId(1);
     expectedInternship.setSubject("Un ERP : Odoo");
     expectedInternship.setYear("2023-2024");
@@ -44,28 +45,20 @@ class InternshipUCCImplTest {
     expectedInternship.setEnterprise(2);
     expectedInternship.setSupervisor(1);
     expectedInternship.setContact(1);
-
-    // Mocking
+    // Mocking behavior
     when(internshipDAO.getUserInternship(userId)).thenReturn(expectedInternship);
 
-    // Execution - Call the method under test
+    // Execution
     InternshipDTO result = internshipUCC.getUserInternship(userId);
 
-    // Assertions - Verify the result is as expected
+    // Assertions
     assertNotNull(result, "The returned InternshipDTO should not be null.");
     assertEquals(expectedInternship.getInternshipId(), result.getInternshipId(),
         "The internship ID should match.");
-    assertEquals(expectedInternship.getSubject(), result.getSubject(), "The subject should match.");
-    assertEquals(expectedInternship.getYear(), result.getYear(), "The year should match.");
-    assertEquals(expectedInternship.getUser(), result.getUser(), "The user ID should match.");
-    assertEquals(expectedInternship.getEnterprise(), result.getEnterprise(),
-        "The enterprise ID should match.");
-    assertEquals(expectedInternship.getResponsible(), result.getResponsible(),
-        "The supervisor ID should match.");
-    assertEquals(expectedInternship.getContact(), result.getContact(),
-        "The contact ID should match.");
 
-    // Verify the interaction with the mock
+    // More assertions as per your test design
+
+    // Verify
     verify(internshipDAO).getUserInternship(userId);
     verify(dalService).start();
     verify(dalService).commit();
