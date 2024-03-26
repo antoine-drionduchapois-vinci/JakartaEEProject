@@ -1,7 +1,10 @@
+/* eslint-disable camelcase */
 import { getAuthenticatedUser } from '../../utils/auths';
 import fetchUserOnRefresh from '../../utils/refresh';
 
 import { clearPage, renderPageTitle } from '../../utils/render';
+import Navigate from '../Router/Navigate';
+
 
 
 fetchUserOnRefresh();
@@ -80,25 +83,24 @@ const fetchUser = async () => {
   
       const contactsInfo = await response.json();
       const contactsArray = contactsInfo.contact;
-      console.log(contactsInfo);
       let contactsHtml = ''; // Initialize an empty string to accumulate HTML content
       for (let index = 0; index < contactsArray.length; index+=1) {
+        const { enterpriseId, enterprise_name, state} = contactsArray[index];
         contactsHtml += `
             <tr>
-            <td> ${contactsArray[index].enterprise_name}</td>
-            <td> ${contactsArray[index].state}</td>
+            <td><a class="enterprise_link" data-contact-id="${enterpriseId}">${enterprise_name}</a></td>
+            <td> ${state}</td>
             </tr>
-            
-         
         `;
-        
       }
+      
       return contactsHtml;
     } catch (error) {
       console.error('Error retrieving user contacts:', error);
       const blocError = `<p>${error}</p>`
       return blocError;
     }
+    
   };
 
   const fetchUserInternship = async () => {
@@ -118,10 +120,8 @@ const fetchUser = async () => {
         throw new Error('Error retrieving user internships');
       }
       const internshipData = await response.json();
-      
-      console.log("internshipInfo");
-      console.log(internshipData);
       const blocInternship = `
+      <h2 class="title is-3">Stage</h2>
       <table class="table is-striped is-fullwidth">
         <tbody>
           <tr>
@@ -186,6 +186,7 @@ const fetchUser = async () => {
           <tr>
             <th>Entreprise</th>
             <th>Etat</th>
+            <th><a id="addContact"> + </a></th>
           </tr>
         </thead>
         <tbody>
@@ -198,6 +199,18 @@ const fetchUser = async () => {
 
     
     main.innerHTML = combinedHtml;
+    const addContact = document.getElementById('addContact')
+    addContact.addEventListener('click', () => {
+          Navigate('/contact');
+    });
+
+    document.querySelectorAll('.enterprise_link').forEach(link => {
+      link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const {contactId} = e.target.dataset;
+          Navigate(`/contact?id=${contactId}`);
+      });
+  });
   } catch (error) {
     console.error('Error loading dashboard:', error);
     // Optionally, render an error message in the main container or log it
