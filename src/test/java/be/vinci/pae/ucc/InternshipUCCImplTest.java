@@ -25,7 +25,7 @@ class InternshipUCCImplTest {
   private DALService dalService;
 
   @InjectMocks
-  private InternshipUCCImpl internshipUCC; // Assuming this is your class that implements InternshipUCC
+  private InternshipUCCImpl internshipUCC;
 
   @BeforeEach
   void setUp() {
@@ -45,7 +45,7 @@ class InternshipUCCImplTest {
     expectedInternship.setSupervisor(1);
     expectedInternship.setContact(1);
 
-    // Mocking - When the DAO is asked for the internship of the specified user, it returns the prepared object
+    // Mocking
     when(internshipDAO.getUserInternship(userId)).thenReturn(expectedInternship);
 
     // Execution - Call the method under test
