@@ -13,20 +13,29 @@ import java.util.ArrayList;
 import java.util.List;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class UserUCCImplTest {
 
-  private UserUCC userUCC;
-  private UserDAO userDAO;
+  private static UserUCC userUCC;
+  private static UserDAO userDAO;
+  private static ServiceLocator locator;
 
-  @BeforeEach
-  void setUp() {
-    ServiceLocator locator = ServiceLocatorUtilities.bind(new TestBinder());
-    this.userDAO = locator.getService(UserDAO.class);
-    this.userUCC = locator.getService(UserUCC.class);
+  @BeforeAll
+  static void setUp() {
+    locator = ServiceLocatorUtilities.bind(new TestBinder());
+    userDAO = locator.getService(UserDAO.class);
+    userUCC = locator.getService(UserUCC.class);
   }
+
+  @AfterAll
+  static void tearDown() {
+    // Fermeture du ServiceLocator
+    locator.shutdown();
+  }
+
 
   @Test
   void countStudentsWithoutStage() {
