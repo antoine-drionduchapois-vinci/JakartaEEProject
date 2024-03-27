@@ -20,6 +20,11 @@ public class InternshipImpl implements Internship {
   }
 
   @Override
+  public void setInternshipId(int internshipId) {
+    this.internshipId = internshipId;
+  }
+
+  @Override
   public int getResponsible() {
     return supervisor;
   }
@@ -30,8 +35,18 @@ public class InternshipImpl implements Internship {
   }
 
   @Override
+  public void setSubject(String subject) {
+    this.subject = subject;
+  }
+
+  @Override
   public int getEnterprise() {
     return enterprise;
+  }
+
+  @Override
+  public void setEnterprise(int enterprise) {
+    this.enterprise = enterprise;
   }
 
   @Override
@@ -40,8 +55,18 @@ public class InternshipImpl implements Internship {
   }
 
   @Override
+  public void setContact(int contact) {
+    this.contact = contact;
+  }
+
+  @Override
   public int getUser() {
     return user;
+  }
+
+  @Override
+  public void setUser(int user) {
+    this.user = user;
   }
 
   @Override
@@ -49,5 +74,13 @@ public class InternshipImpl implements Internship {
     return year;
   }
 
+  @Override
+  public void setYear(String year) {
+    this.year = year;
+  }
 
+  @Override
+  public void setSupervisor(int supervisor) {
+    this.supervisor = supervisor;
+  }
 }

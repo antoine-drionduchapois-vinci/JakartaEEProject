@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-import be.vinci.pae.TestBinder;
 import be.vinci.pae.dao.ContactDAO;
 import be.vinci.pae.dao.EnterpriseDAO;
 import be.vinci.pae.domain.ContactDTO;
@@ -12,6 +11,7 @@ import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.utils.BusinessException;
 import be.vinci.pae.utils.NotFoundException;
+import be.vinci.pae.utils.TestBinder;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;

@@ -5,13 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-import be.vinci.pae.TestBinder;
 import be.vinci.pae.dao.UserDAO;
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.utils.BusinessException;
 import be.vinci.pae.utils.NotFoundException;
+import be.vinci.pae.utils.TestBinder;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.AfterAll;
