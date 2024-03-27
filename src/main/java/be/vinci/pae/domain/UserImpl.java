@@ -25,7 +25,7 @@ public class UserImpl implements User {
 
   @Override
   public String hashPassword(String password) {
-    return BCrypt.hashpw(password, BCrypt.gensalt());
+    return this.password = BCrypt.hashpw(password, BCrypt.gensalt());
   }
 
   @Override

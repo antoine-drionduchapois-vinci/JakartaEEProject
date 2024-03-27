@@ -1,7 +1,7 @@
 package be.vinci.pae.ucc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 import be.vinci.pae.TestBinder;
@@ -40,40 +40,43 @@ class AuthUCCImplTest {
 
   @Test
   void testLogin() {
-    User userDTO = domainFactory.getUser();
-    User user = (User) userDTO;
+    // Créer un utilisateur de test
+    UserDTO userDTO = domainFactory.getUser();
     userDTO.setEmail("test@example.com");
-    userDTO.setPassword("$2a$10$jifOCQv6CquRzCTsQYNLBeOetkXV52AIjKyi2tiOfBzNeibFGENK");
-    System.out.println(user + " " + userDTO);
+    userDTO.setPassword("password");
+    System.out.println("test userDTO password" + userDTO.getPassword());
 
     UserDTO userTemp = domainFactory.getUser();
-    userTemp.setPassword("$2a$10$jifOCQv6CquRzCTsQYNLBeOetkXV52AIjKyi2tiOfBzNeibFGENK");
+    userTemp.setPassword("password");
+    userTemp.setEmail("test@example.com");
 
-    // Configurer le comportement du mock userDAO
+    User user = (User) userDTO;
+    user.hashPassword(userDTO.getPassword());
+
+    // Configurer le comportement du mock userDAO pour retourner userDTO
     when(userDAO.getOneByEmail("test@example.com")).thenReturn(userDTO);
 
     // Appeler la méthode à tester
     UserDTO result = authUCC.login(userTemp);
-    System.out.println(user.getPassword() + " " + userTemp.getPassword());
+
+    System.out.println(result);
     // Vérifier le résultat
-    assertEquals(user.getPassword(), userTemp.getPassword());
-    assertTrue(user.checkPassword(userTemp.getPassword()));
+    assertNotNull(result);
+    assertEquals(userTemp.getEmail(), result.getEmail());
+    assertEquals(userDTO.getPassword(), result.getPassword());
   }
 
   @Test
   void testRegister() {
-    // Créer un utilisateur de test
     UserDTO userDTO = domainFactory.getUser();
     userDTO.setEmail("test@example.com");
     userDTO.setPassword("password123");
 
-    // Configurer le comportement du mock userDAO
+    when(userDAO.getOneByEmail("test@example.com")).thenReturn(null);
     when(userDAO.addUser(userDTO)).thenReturn(userDTO);
 
-    // Appeler la méthode à tester
     UserDTO result = authUCC.register(userDTO);
 
-    // Vérifier le résultat
     assertEquals(userDTO, result);
   }
 }
