@@ -172,10 +172,10 @@ public class ContactResource {
 
       }
 
-      // Ajouter le tableau d'entreprises à la réponse
+      // Add table enterprise to response
       response.set("contact", contactArray);
     } catch (Exception e) {
-      // Gérer les erreurs éventuelles
+      // Handle error
       response.put("error", e.getMessage());
     }
     return response;

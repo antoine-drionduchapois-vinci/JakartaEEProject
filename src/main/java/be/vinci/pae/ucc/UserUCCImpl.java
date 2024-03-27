@@ -3,9 +3,9 @@ package be.vinci.pae.ucc;
 import be.vinci.pae.dao.UserDAO;
 import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.utils.DALService;
+import be.vinci.pae.utils.NotFoundException;
 import jakarta.inject.Inject;
 import java.util.List;
-
 
 /**
  * Implementation of the UserDataService interface.
@@ -43,6 +43,9 @@ public class UserUCCImpl implements UserUCC {
     myDALService.start();
     // Récupérer la liste complète des utilisateurs depuis votre DAO
     List<UserDTO> userList = myUserDAO.getAllStudents();
+    if (userList == null) {
+      throw new NotFoundException();
+    }
     myDALService.commit();
 
     return userList;
@@ -52,6 +55,9 @@ public class UserUCCImpl implements UserUCC {
   public UserDTO getUsersByIdAsJson(int userId) {
     myDALService.start();
     UserDTO userDTO = myUserDAO.getOneByID(userId);
+    if (userDTO == null) {
+      throw new NotFoundException();
+    }
     myDALService.commit();
 
     return userDTO;
