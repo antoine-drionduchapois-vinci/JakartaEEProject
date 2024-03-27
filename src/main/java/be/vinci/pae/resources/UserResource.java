@@ -72,9 +72,6 @@ public class UserResource {
     try {
       // Récupérer la liste complète des utilisateurs depuis votre DAO
       List<UserDTO> userList = myUserUCC.getUsersAsJson();
-      if (userList == null) {
-        throw new WebApplicationException("No user found ", Status.BAD_REQUEST);
-      }
 
       // Parcourir chaque utilisateur et les ajouter à l'ArrayNode
       for (UserDTO user : userList) {
