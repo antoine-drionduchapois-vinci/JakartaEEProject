@@ -43,9 +43,6 @@ public class UserUCCImpl implements UserUCC {
     myDALService.start();
     // Récupérer la liste complète des utilisateurs depuis votre DAO
     List<UserDTO> userList = myUserDAO.getAllStudents();
-    if (userList == null) {
-      throw new NotFoundException();
-    }
     myDALService.commit();
 
     return userList;

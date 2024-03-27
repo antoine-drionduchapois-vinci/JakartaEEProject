@@ -48,11 +48,7 @@ public class AuthUCCImpl implements AuthUCC {
     UserDTO user = myUserDAO.addUser(userTemp);
     //faire dto dans ressource cast et check role
     myDALService.commit();
-    if (user == null) {
-      throw new NotFoundException();
-    }
     return user;
   }
-
-
+  
 }

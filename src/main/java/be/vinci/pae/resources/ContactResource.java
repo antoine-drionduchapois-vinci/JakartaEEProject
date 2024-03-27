@@ -157,6 +157,10 @@ public class ContactResource {
     System.out.println("getUserContact");
     int userId = decryptToken.getIdFromJsonToken(json);
 
+    if (userId == 0) {
+      throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
+    }
+
     ObjectMapper mapper = new ObjectMapper();
     ObjectNode response = mapper.createObjectNode();
     ArrayNode contactArray = mapper.createArrayNode();

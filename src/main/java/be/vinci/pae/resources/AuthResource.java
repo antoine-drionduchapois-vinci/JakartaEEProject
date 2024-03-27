@@ -18,6 +18,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Resource class for handling authentication-related endpoints.
@@ -81,10 +82,10 @@ public class AuthResource {
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode register(JsonNode json) {
     // Get and check credentials
-    if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
-      throw new WebApplicationException("All fields are required",
-          Response.status(Response.Status.BAD_REQUEST)
-              .entity("Email or password required").type("text/plain").build());
+    if (!json.hasNonNull("email") || !json.hasNonNull("password") || !json.hasNonNull("name")
+        || !json.hasNonNull("firstname") || !json.hasNonNull("email") || !json.hasNonNull(
+        "telephone") || !json.hasNonNull("role")) {
+      throw new WebApplicationException("All fields are required", Status.BAD_REQUEST);
     }
     String name = json.get("name").asText();
     String firstname = json.get("firstname").asText();

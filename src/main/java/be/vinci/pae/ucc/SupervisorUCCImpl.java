@@ -3,6 +3,7 @@ package be.vinci.pae.ucc;
 import be.vinci.pae.dao.SupervisorDAO;
 import be.vinci.pae.domain.Supervisor;
 import be.vinci.pae.utils.DALService;
+import be.vinci.pae.utils.NotFoundException;
 import jakarta.inject.Inject;
 
 /**
@@ -33,6 +34,9 @@ public class SupervisorUCCImpl implements SupervisorUCC {
   public Supervisor getResponsibleByEnterpriseId(int id) {
     myDALService.start();
     Supervisor supervisor = supervisorDAO.getResponsibleByEnterpriseId(id);
+    if (supervisor == null) {
+      throw new NotFoundException();
+    }
     myDALService.commit();
     return supervisor;
   }
