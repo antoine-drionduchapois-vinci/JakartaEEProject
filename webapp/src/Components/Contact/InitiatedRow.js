@@ -9,7 +9,10 @@ const initiateContact = (data) =>
     },
     body: JSON.stringify(data),
   })
-    .then(() => window.location.reload())
+    .then((res) => (res.status === 200 ? res.json() : null))
+    .then((d) => {
+      if (d) window.location.href = `http://localhost:3000/contact?id=${d.contact_id}`;
+    })
     .catch((error) => console.error(error));
 
 let foundEnterprise;
@@ -34,9 +37,9 @@ const autoFillFields = (
     const labelValue = labelE.value;
     foundEnterprise = foundEnterprises.find((e) => e.appellation === labelValue);
     if (foundEnterprise) {
-      addressE.value = foundEnterprise.address;
+      addressE.value = foundEnterprise.adresse;
       addressE.setAttribute('disabled', true);
-      phoneE.value = foundEnterprise.phone;
+      phoneE.value = foundEnterprise.telephone;
       phoneE.setAttribute('disabled', true);
       emailE.value = foundEnterprise.email;
       emailE.setAttribute('disabled', true);
@@ -145,11 +148,15 @@ const InitiatedRow = (htmlElement, userData, contactData, enterprisesData) => {
   });
 
   phoneInput.element.addEventListener('input', (e) => {
-    phoneInput.isValid = checkInput(e.target);
+    const isValid = checkInput(e.target, emailInput.element);
+    phoneInput.isValid = isValid;
+    emailInput.isValid = isValid;
   });
 
   emailInput.element.addEventListener('input', (e) => {
-    emailInput.isValid = checkInput(e.target);
+    const isValid = checkInput(e.target, phoneInput.element);
+    emailInput.isValid = isValid;
+    phoneInput.isValid = isValid;
   });
 
   submit.addEventListener('click', () => {
@@ -168,8 +175,7 @@ const InitiatedRow = (htmlElement, userData, contactData, enterprisesData) => {
       checkInput(enterpriseInput.element);
       checkInput(labelInput.element);
       checkInput(addressInput.element);
-      checkInput(phoneInput.element);
-      checkInput(emailInput.element);
+      checkInput(phoneInput.element, emailInput.element);
       return;
     }
     initiateContact({
