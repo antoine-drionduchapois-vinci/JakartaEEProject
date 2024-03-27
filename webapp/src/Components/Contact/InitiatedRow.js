@@ -28,7 +28,12 @@ const autoFillFields = (
   const addressE = addressElement;
   const phoneE = phoneElement;
   const emailE = emailElement;
-  const foundEnterprises = enterprises.filter((e) => e.nom === enterpriseValue);
+  const foundEnterprises = enterprises.filter((e) => {
+    if (e.nom === enterpriseValue && e.appellation === null) {
+      e.appellation = '';
+    }
+    return e.nom === enterpriseValue;
+  });
   if (foundEnterprises) {
     autocomplete(
       labelE,
@@ -132,7 +137,6 @@ const InitiatedRow = (htmlElement, userData, contactData, enterprisesData) => {
   });
 
   labelInput.element.addEventListener('input', (e) => {
-    labelInput.isValid = checkInput(e.target);
     autoFillFields(
       enterprisesData,
       enterpriseInput.element.value,
@@ -141,6 +145,7 @@ const InitiatedRow = (htmlElement, userData, contactData, enterprisesData) => {
       phoneInput.element,
       emailInput.element,
     );
+    if (!foundEnterprise) labelInput.isValid = checkInput(e.target);
   });
 
   addressInput.element.addEventListener('input', (e) => {
