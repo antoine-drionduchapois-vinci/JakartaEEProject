@@ -1,8 +1,8 @@
 // Importing rendering utility functions
 import { clearPage, renderPageTitle } from '../../utils/render';
-import InitiatedRow from '../Contact/InitiatedRow';
-
 import { getAuthenticatedUser } from '../../utils/auths';
+import Navigate from '../Router/Navigate';
+import InitiatedRow from '../Contact/InitiatedRow';
 import TookRow from '../Contact/TookRow';
 import RefusedRow from '../Contact/RefusedRow';
 import UnfollowedRow from '../Contact/UnfollowedRow';
@@ -39,11 +39,19 @@ const Contact = async () => {
   contentElement.id = 'content';
   main.appendChild(contentElement);
   contentElement.innerHTML = `
+    <div>
+      <button class="ml-4 button" id="back">Retour</button>
+    </div>
     <div id="initiated-row" class="columns p-4"></div>
     <div id="took-row" class="columns p-4"></div>
     <div id="refused-row" class="columns p-4"></div>
     <div id="unfollowed-row" class="columns p-4"></div>
   `;
+
+  const backButton = document.querySelector('#back');
+  backButton.addEventListener('click', () => {
+    Navigate('/dashboardS');
+  });
 
   InitiatedRow(document.querySelector('#initiated-row'), user, contact, enterprises);
   TookRow(document.querySelector('#took-row'), user, contact);
