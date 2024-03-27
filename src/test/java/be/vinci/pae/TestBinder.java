@@ -1,7 +1,5 @@
 package be.vinci.pae;
 
-import static org.mockito.Mockito.mock;
-
 import be.vinci.pae.dao.EnterpriseDAO;
 import be.vinci.pae.dao.EnterpriseDAOImpl;
 import be.vinci.pae.domain.DomainFactory;
@@ -12,6 +10,7 @@ import be.vinci.pae.utils.DALBackService;
 import be.vinci.pae.utils.DALService;
 import be.vinci.pae.utils.DALServiceImpl;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.mockito.Mockito;
 
 /**
  * Binder used for configuring dependency injection in tests.
@@ -23,10 +22,8 @@ public class TestBinder extends AbstractBinder {
    */
   @Override
   protected void configure() {
-    DALServiceImpl dalServiceMock = mock(DALServiceImpl.class);
-    bind(dalServiceMock).to(DALService.class);
-    bind(dalServiceMock).to(DALBackService.class);
-    bind(EnterpriseDAOImpl.class).to(EnterpriseDAO.class);
+    bind(Mockito.mock(DALServiceImpl.class)).to(DALService.class).to(DALBackService.class);
+    bind(Mockito.mock(EnterpriseDAOImpl.class)).to(EnterpriseDAO.class);
     bind(EnterpriseUCCImpl.class).to(EnterpriseUCC.class);
     bind(DomainFactoryImpl.class).to(DomainFactory.class);
 
