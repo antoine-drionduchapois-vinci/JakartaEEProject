@@ -4,6 +4,8 @@ import be.vinci.pae.dao.ContactDAO;
 import be.vinci.pae.dao.ContactDAOImpl;
 import be.vinci.pae.dao.EnterpriseDAO;
 import be.vinci.pae.dao.EnterpriseDAOImpl;
+import be.vinci.pae.dao.InternshipDAO;
+import be.vinci.pae.dao.InternshipDAOImpl;
 import be.vinci.pae.dao.SupervisorDAO;
 import be.vinci.pae.dao.SupervisorDAOImpl;
 import be.vinci.pae.dao.UserDAO;
@@ -16,6 +18,8 @@ import be.vinci.pae.ucc.ContactUCC;
 import be.vinci.pae.ucc.ContactUCCImpl;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.ucc.EnterpriseUCCImpl;
+import be.vinci.pae.ucc.InternshipUCC;
+import be.vinci.pae.ucc.InternshipUCCImpl;
 import be.vinci.pae.ucc.SupervisorUCC;
 import be.vinci.pae.ucc.SupervisorUCCImpl;
 import be.vinci.pae.ucc.UserUCC;
@@ -43,11 +47,13 @@ public class TestBinder extends AbstractBinder {
     bind(Mockito.mock(UserDAOImpl.class)).to(UserDAO.class);
     bind(Mockito.mock(ContactDAOImpl.class)).to(ContactDAO.class);
     bind(Mockito.mock(SupervisorDAOImpl.class)).to(SupervisorDAO.class);
+    bind(Mockito.mock(InternshipDAOImpl.class)).to(InternshipDAO.class);
 
     bind(UserUCCImpl.class).to(UserUCC.class);
     bind(AuthUCCImpl.class).to(AuthUCC.class);
     bind(ContactUCCImpl.class).to(ContactUCC.class);
     bind(EnterpriseUCCImpl.class).to(EnterpriseUCC.class);
     bind(SupervisorUCCImpl.class).to(SupervisorUCC.class);
+    bind(InternshipUCCImpl.class).to(InternshipUCC.class);
   }
 }
