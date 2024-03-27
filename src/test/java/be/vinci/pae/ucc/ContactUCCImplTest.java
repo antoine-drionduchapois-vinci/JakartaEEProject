@@ -152,6 +152,20 @@ class ContactUCCImplTest {
   }
 
   @Test
+  void testMeetEnterpriseenterpriseDTONF() {
+    ContactDTO contactDTO = domainFactory.getContact();
+    contactDTO.setContactId(1);
+    contactDTO.setState("initiated");
+    when(contactDAO.readOne(1)).thenReturn(contactDTO);
+    when(contactDAO.update(contactDTO)).thenReturn(contactDTO);
+    when(enterpriseDAO.readOne(contactDTO.getEnterprise())).thenReturn(null);
+
+    assertThrows(NotFoundException.class, () -> {
+      contactUCC.meetEnterprise(1, "meetingPoint");
+    });
+  }
+
+  @Test
   void testMeetEnterpriseWithCorrespondingContact() {
     ContactDTO contactDTO = domainFactory.getContact();
     contactDTO.setState("initiated");
@@ -185,7 +199,6 @@ class ContactUCCImplTest {
   void testIndicateAsRefusedContactenterpriseDTONF() {
     ContactDTO contactDTO = domainFactory.getContact();
     contactDTO.setState("initiated");
-    EnterpriseDTO enterpriseDTO = domainFactory.getEnterprise();
     when(contactDAO.readOne(1)).thenReturn(contactDTO);
     when(contactDAO.update(contactDTO)).thenReturn(contactDTO);
     when(enterpriseDAO.readOne(contactDTO.getEnterprise())).thenReturn(null);
@@ -218,6 +231,20 @@ class ContactUCCImplTest {
     when(contactDAO.readOne(1)).thenReturn(contactDTO);
 
     assertThrows(BusinessException.class, () -> {
+      contactUCC.unfollow(1);
+    });
+
+  }
+
+  @Test
+  void testUnfollowEnterpriseDTONF() {
+    ContactDTO contactDTO = domainFactory.getContact();
+    contactDTO.setState("initiated");
+    when(contactDAO.readOne(1)).thenReturn(contactDTO);
+    when(contactDAO.update(contactDTO)).thenReturn(contactDTO);
+    when(enterpriseDAO.readOne(contactDTO.getEnterprise())).thenReturn(null);
+
+    assertThrows(NotFoundException.class, () -> {
       contactUCC.unfollow(1);
     });
 
