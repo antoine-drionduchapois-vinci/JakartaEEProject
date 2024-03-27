@@ -42,7 +42,7 @@ public class AuthUCCImpl implements AuthUCC {
   public UserDTO register(UserDTO userTemp) {
     myDALService.start();
     User tempUser = (User) myUserDAO.getOneByEmail(userTemp.getEmail());
-    if (tempUser == null) {
+    if (tempUser != null) {
       throw new BusinessException(409, "User already exists!");
     }
     UserDTO user = myUserDAO.addUser(userTemp);
