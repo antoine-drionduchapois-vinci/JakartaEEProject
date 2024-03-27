@@ -181,6 +181,20 @@ class ContactUCCImplTest {
   }
 
   @Test
+  void testIndicateAsRefusedContactenterpriseDTONF() {
+    ContactDTO contactDTO = domainFactory.getContact();
+    contactDTO.setState("initiated");
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterprise();
+    when(contactDAO.readOne(1)).thenReturn(contactDTO);
+    when(contactDAO.update(contactDTO)).thenReturn(contactDTO);
+    when(enterpriseDAO.readOne(contactDTO.getEnterprise())).thenReturn(null);
+
+    assertThrows(NotFoundException.class, () -> {
+      contactUCC.indicateAsRefused(1, "refusalReason");
+    });
+  }
+
+  @Test
   void testIndicateAsRefusedWithCorrespondingContact() {
     ContactDTO contactDTO = domainFactory.getContact();
     contactDTO.setState("initiated");
