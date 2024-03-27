@@ -25,11 +25,9 @@ public class AuthUCCImpl implements AuthUCC {
     myDALService.start();
 
     UserDTO userDTO = myUserDAO.getOneByEmail(userTemp.getEmail());
-    System.out.println("userTemps UCC" + userTemp.getPassword());
 
     myDALService.commit();
     User user = (User) userDTO;
-    System.out.println("user" + user.getPassword());
     if (user == null) {
       throw new NotFoundException();
     }

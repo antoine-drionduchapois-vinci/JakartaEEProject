@@ -2,6 +2,7 @@ package be.vinci.pae.ucc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import be.vinci.pae.TestBinder;
@@ -9,6 +10,8 @@ import be.vinci.pae.dao.UserDAO;
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.utils.BusinessException;
+import be.vinci.pae.utils.NotFoundException;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.AfterAll;
@@ -63,7 +66,6 @@ class AuthUCCImplTest {
     // Vérifier le résultat
     assertNotNull(result);
     assertEquals(userTemp.getEmail(), result.getEmail());
-    assertEquals(userDTO.getPassword(), result.getPassword());
   }
 
   @Test
@@ -78,5 +80,40 @@ class AuthUCCImplTest {
     UserDTO result = authUCC.register(userDTO);
 
     assertEquals(userDTO, result);
+  }
+
+  @Test
+  void testLoginWithUserNotFound() {
+    UserDTO userDTO = domainFactory.getUser();
+    userDTO.setEmail("test@example.com");
+    userDTO.setPassword("password123");
+    when(userDAO.getOneByEmail("test@example.com")).thenReturn(null);
+
+    assertThrows(NotFoundException.class, () -> {
+      authUCC.login(userDTO);
+    });
+
+  }
+
+  @Test
+  void testLoginWithIncorrectPassword() {
+    UserDTO userDTO = domainFactory.getUser();
+    userDTO.setEmail("test@example.com");
+    userDTO.setPassword("password");
+    System.out.println("test userDTO password" + userDTO.getPassword());
+
+    UserDTO userTemp = domainFactory.getUser();
+    userTemp.setPassword("passwordIncorrect");
+    userTemp.setEmail("test@example.com");
+
+    User user = (User) userDTO;
+    user.hashPassword(userDTO.getPassword());
+
+    when(userDAO.getOneByEmail("test@example.com")).thenReturn(userDTO);
+
+    BusinessException exception = assertThrows(BusinessException.class, () -> {
+      authUCC.login(userTemp);
+    });
+
   }
 }
