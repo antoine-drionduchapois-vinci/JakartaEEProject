@@ -35,6 +35,7 @@ class EnterpriseUCCImplTest {
     domainFactory = locator.getService(DomainFactory.class);
 
   }
+
   @AfterAll
   static void tearDown() {
     // Fermeture du ServiceLocator
