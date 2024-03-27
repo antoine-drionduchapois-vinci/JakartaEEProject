@@ -18,7 +18,9 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Implementation of the Responsible interface.
@@ -48,6 +50,9 @@ public class SupervisorResource {
     try {
       // Get token from JSON
       System.out.println("here");
+      if (!json.hasNonNull("token")) {
+        throw new WebApplicationException("token is required", Status.BAD_REQUEST);
+      }
       String jsonToken = json.get("token").asText();
       // Decode Token
       DecodedJWT jwt = JWT.require(jwtAlgorithm)

@@ -6,6 +6,7 @@ import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.utils.BusinessException;
 import be.vinci.pae.utils.DALBackService;
 import be.vinci.pae.utils.FatalErrorException;
+import be.vinci.pae.utils.NotFoundException;
 import be.vinci.pae.utils.ResultSetMapper;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
@@ -33,8 +34,12 @@ public class ContactDAOImpl implements ContactDAO {
         "SELECT * FROM projetae.contacts WHERE contact_id = ?;")) {
       ps.setInt(1, contactId);
       ps.execute();
-      return contactMapper.mapResultSetToObject(ps.getResultSet(), ContactImpl.class,
+      ContactDTO contact = contactMapper.mapResultSetToObject(ps.getResultSet(), ContactImpl.class,
           myDomainFactory::getContact);
+      if (contact == null) {
+        throw new NotFoundException();
+      }
+      return contact;
     } catch (SQLException | IllegalAccessException e) {
       throw new FatalErrorException(e);
     }
@@ -47,8 +52,12 @@ public class ContactDAOImpl implements ContactDAO {
       ps.setInt(1, userId);
       ps.setInt(2, enterpriseId);
       ps.execute();
-      return contactMapper.mapResultSetToObject(ps.getResultSet(), ContactImpl.class,
+      ContactDTO contact = contactMapper.mapResultSetToObject(ps.getResultSet(), ContactImpl.class,
           myDomainFactory::getContact);
+      if (contact == null) {
+        throw new NotFoundException();
+      }
+      return contact;
     } catch (SQLException | IllegalAccessException e) {
       throw new FatalErrorException(e);
     }

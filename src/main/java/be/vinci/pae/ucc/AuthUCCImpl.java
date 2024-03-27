@@ -3,7 +3,9 @@ package be.vinci.pae.ucc;
 import be.vinci.pae.dao.UserDAO;
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.utils.BusinessException;
 import be.vinci.pae.utils.DALService;
+import be.vinci.pae.utils.NotFoundException;
 import jakarta.inject.Inject;
 
 /**
@@ -26,8 +28,11 @@ public class AuthUCCImpl implements AuthUCC {
 
     myDALService.commit();
     User user = (User) userDTO;
-    if (user == null || !user.checkPassword(userTemp.getPassword())) {
-      return null;
+    if (user == null) {
+      throw new NotFoundException();
+    }
+    if (!user.checkPassword(userTemp.getPassword())) {
+      throw new BusinessException(401, "Wrong password");
     }
     return userDTO;
 
@@ -36,19 +41,17 @@ public class AuthUCCImpl implements AuthUCC {
   @Override
   public UserDTO register(UserDTO userTemp) {
     myDALService.start();
-    //todo
-    // User tempUser = (User) myUserDAO.getOneByEmail(email);
-    //    if (tempUser != null) {
-    //      return null; // User already exists!
-    //    }
-    UserDTO user = myUserDAO.addUser(userTemp);
+    User tempUser = (User) myUserDAO.getOneByEmail(userTemp.getEmail());
+    if (tempUser != null) {
+      throw new BusinessException(409, "User already exists!");
+    }
+    User user = (User) userTemp;
+    user.hashPassword(userTemp.getPassword());
+    System.out.println(user.getPassword());
+    UserDTO userDTO = myUserDAO.addUser(user);
     //faire dto dans ressource cast et check role
     myDALService.commit();
-    if (user == null) {
-      return null;
-    }
-    return user;
+    return userDTO;
   }
-
-
+  
 }

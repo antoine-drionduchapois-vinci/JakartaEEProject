@@ -71,30 +71,32 @@ VALUES ('Dossche', 'Stéphanie', '014.54.67.54', 'stephanie.dossche@letsbuild.co
 
 INSERT INTO projetae.users(name, surname, phone, email, password, role, year)
 VALUES ('Baroni', 'Raphaël', '0481 01 01 01', 'raphael.baroni@vinci.be',
-        '$2a$10$jifOCQv6CquRzCTsQYNLBeOetkXV52AIjKyi2tiOfBzNeibFGENK.', 'TEACHER', '2020-2021'),
+        '$2a$10$bGwz1upQx0AvLsRJxIwjpu6iFHsnqjPTgxdra3uUh6x1Ie1dHvuka', 'TEACHER', '2020-2021'),
        ('Lehmann', 'Brigitte', '0482 02 02 02', 'brigitte.lehmann@vinci.be',
-        '$2a$10$jifOCQv6CquRzCTsQYNLBeOetkXV52AIjKyi2tiOfBzNeibFGENK.', 'TEACHER',
+        '$2a$10$bGwz1upQx0AvLsRJxIwjpu6iFHsnqjPTgxdra3uUh6x1Ie1dHvuka', 'TEACHER',
         '2020-2021'),
        ('Leleux', 'Laurent', '0483 03 03 03', 'laurent.leleux@vinci.be',
-        '$2a$10$jifOCQv6CquRzCTsQYNLBeOetkXV52AIjKyi2tiOfBzNeibFGENK.', 'TEACHER', '2020-2021'),
+        '$2a$10$bGwz1upQx0AvLsRJxIwjpu6iFHsnqjPTgxdra3uUh6x1Ie1dHvuka', 'TEACHER', '2020-2021'),
        ('Lancaster', 'Annouck', '0484 04 04 04', 'annouck.lancaster@vinci.be',
-        '$2a$10$jifOCQv6CquRzCTsQYNLBeOetkXV52AIjKyi2tiOfBzNeibFGENK.', 'ADMIN',
+        '$2a$10$tMH2ROuqMhZ1QMB/9uJkVejyEZtKgyR5e0aNa/pRb36rz63uX6W5q', 'ADMIN',
         '2020-2021'),
        ('Line', 'Caroline', '0486 00 00 01', 'Caroline.line@student.vinci.be',
-        '$2a$10$jifOCQv6CquRzCTsQYNLBeOetkXV52AIjKyi2tiOfBzNeibFGENK.', 'STUDENT',
+        '$2a$10$hyBUNX6oO1x14sdE6BpGx.M0jzUluskpq01Drt4ilCOGfUri1.OP2', 'STUDENT',
         '2023-2024'),
        ('Ile', 'Achille', '0487 00 00 01', 'Ach.ile@student.vinci.be',
-        '$2a$10$jifOCQv6CquRzCTsQYNLBeOetkXV52AIjKyi2tiOfBzNeibFGENK.', 'STUDENT', '2023-2024'),
+        '$2a$10$hyBUNX6oO1x14sdE6BpGx.M0jzUluskpq01Drt4ilCOGfUri1.OP2', 'STUDENT', '2023-2024'),
        ('Ile', 'Basile', '0488 00 00 01', 'Basile.Ile@student.vinci.be',
-        '$2a$10$jifOCQv6CquRzCTsQYNLBeOetkXV52AIjKyi2tiOfBzNeibFGENK.', 'STUDENT', '2023-2024'),
+        '$2a$10$hyBUNX6oO1x14sdE6BpGx.M0jzUluskpq01Drt4ilCOGfUri1.OP2', 'STUDENT', '2023-2024'),
        ('skile', 'Achille', '0490 00 00 01', 'Achille.skile@student.vinci.be',
-        '$2a$10$jifOCQv6CquRzCTsQYNLBeOetkXV52AIjKyi2tiOfBzNeibFGENK.', 'STUDENT',
+        '$2a$10$hyBUNX6oO1x14sdE6BpGx.M0jzUluskpq01Drt4ilCOGfUri1.OP2', 'STUDENT',
         '2023-2024'),
        ('skile', 'Carole', '0489 00 00 01', 'Carole.skile@student.vinci.be',
-        '$2a$10$jifOCQv6CquRzCTsQYNLBeOetkXV52AIjKyi2tiOfBzNeibFGENK.', 'STUDENT',
+        '$2a$10$hyBUNX6oO1x14sdE6BpGx.M0jzUluskpq01Drt4ilCOGfUri1.OP2', 'STUDENT',
         '2023-2024');
 
--- passwords: "password"
+-- passwords admins: "Admin;10."
+-- passwords teachers : "Prof24,z"
+-- passwords students : "mdpuser.1"
 
 INSERT INTO projetae.contacts(year, enterprise, state, refusal_reason, meeting_point,
                               "user")
