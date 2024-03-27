@@ -4,6 +4,8 @@ import static org.mockito.Mockito.mock;
 
 import be.vinci.pae.dao.UserDAO;
 import be.vinci.pae.dao.UserDAOImpl;
+import be.vinci.pae.domain.DomainFactory;
+import be.vinci.pae.domain.DomainFactoryImpl;
 import be.vinci.pae.ucc.AuthUCC;
 import be.vinci.pae.ucc.AuthUCCImpl;
 import be.vinci.pae.ucc.UserUCC;
@@ -28,6 +30,7 @@ public class TestBinder extends AbstractBinder {
     bind(mock(UserDAOImpl.class)).to(UserDAO.class);
     bind(UserUCCImpl.class).to(UserUCC.class);
     bind(AuthUCCImpl.class).to(AuthUCC.class);
+    bind(DomainFactoryImpl.class).to(DomainFactory.class);
 
   }
 }
