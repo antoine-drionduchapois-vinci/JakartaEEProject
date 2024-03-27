@@ -14,7 +14,9 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response.Status;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -106,6 +108,10 @@ public class UserResource {
     try {
       // Get token from JSON
       int userId = decryptToken.getIdFromJsonToken(json);
+
+      if (userId == 0) {
+        throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
+      }
 
       UserDTO user = myUserUCC.getUsersByIdAsJson(userId);
 

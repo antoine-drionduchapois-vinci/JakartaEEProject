@@ -4,6 +4,7 @@ import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.InternshipDTO;
 import be.vinci.pae.domain.InternshipImpl;
 import be.vinci.pae.utils.DALBackService;
+import be.vinci.pae.utils.FatalErrorException;
 import be.vinci.pae.utils.ResultSetMapper;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
@@ -37,7 +38,7 @@ public class InternshipDAOImpl implements InternshipDAO {
       return internshipMapper.mapResultSetToObject(ps.getResultSet(), InternshipImpl.class,
           myDomainFactory::getInternship);
     } catch (SQLException | IllegalAccessException e) {
-      throw new RuntimeException(e); // TODO: handle error
+      throw new FatalErrorException(e);
     }
   }
 

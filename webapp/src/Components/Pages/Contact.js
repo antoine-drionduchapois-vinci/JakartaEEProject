@@ -7,8 +7,6 @@ import TookRow from '../Contact/TookRow';
 import RefusedRow from '../Contact/RefusedRow';
 import UnfollowedRow from '../Contact/UnfollowedRow';
 
-const contactId = 1; // TODO: will then be acquired by route param
-
 // Contact component definition
 const Contact = async () => {
   // Selecting main element from the DOM
@@ -20,14 +18,22 @@ const Contact = async () => {
 
   const user = getAuthenticatedUser();
 
-  const contact = await fetch(`http://localhost:8080/contact?contactId=${contactId}`)
-    .then((res) => (res.status === 200 ? res.json() : null))
-    .catch((error) => console.error(error));
+  const contactId = new URLSearchParams(window.location.search).get('id');
 
-  const enterprises = await fetch('http://localhost:8080/ent/enterprises')
-    .then((response) => response.json())
+  let contact = null;
+  if (contactId) {
+    contact = await fetch(`http://localhost:8080/contact?contactId=${contactId}`)
+      .then((res) => (res.status === 200 ? res.json() : null))
+      .catch((error) => console.error(error));
+  }
+
+  let enterprises = null;
+  enterprises = await fetch('http://localhost:8080/ent/enterprises')
+    .then((res) => (res.status === 200 ? res.json() : null))
     .then((data) => data.enterprises)
     .catch((error) => console.error(error));
+
+  if (!enterprises) return;
 
   const contentElement = document.createElement('div');
   contentElement.id = 'content';
