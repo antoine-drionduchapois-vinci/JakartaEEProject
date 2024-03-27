@@ -2,14 +2,15 @@ package be.vinci.pae.dao;
 
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.EnterpriseDTO;
-import be.vinci.pae.domain.EnterpriseDTOImpl;
-import be.vinci.pae.utils.DALService;
-import be.vinci.pae.utils.DALServiceImpl;
+import be.vinci.pae.domain.EnterpriseImpl;
+import be.vinci.pae.utils.BusinessException;
+import be.vinci.pae.utils.DALBackService;
+import be.vinci.pae.utils.FatalErrorException;
+import be.vinci.pae.utils.ResultSetMapper;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,40 +18,73 @@ import java.util.List;
  */
 public class EnterpriseDAOImpl implements EnterpriseDAO {
 
-  private DALService myDalService = new DALServiceImpl();
+  @Inject
+  private DALBackService myDalService;
+
+  private final ResultSetMapper<EnterpriseDTO, EnterpriseImpl> enterpriseMapper =
+      new ResultSetMapper<>();
 
   @Inject
   private DomainFactory myDomainFactory;
 
   @Override
-  public List<EnterpriseDTO> getAllEnterprises() {
-    List<EnterpriseDTO> enterprises = new ArrayList<>();
-
-    try (PreparedStatement ps = myDalService
-        .getPS("SELECT * FROM projetae.entreprises");
-        ResultSet rs = ps.executeQuery()) {
-
-      while (rs.next()) {
-        int entrepriseId = rs.getInt("entreprise_id");
-        String nom = rs.getString("nom");
-        String appellation = rs.getString("appellation");
-        String adresse = rs.getString("adresse");
-        String telephone = rs.getString("telephone");
-        boolean isBlacklist = rs.getBoolean("is_blacklist");
-        String avisProfesseur = rs.getString("avis_professeur");
-
-        // Create a new EnterpriseImpl object and add it to the list
-        EnterpriseDTO enterpriseDTO = myDomainFactory.getEnterpriseDTO(entrepriseId, nom,
-            appellation, adresse,
-            telephone, isBlacklist, avisProfesseur);
-        enterprises.add(enterpriseDTO);
-      }
-    } catch (SQLException e) {
-      // Print the stack trace if an SQLException occurs
-      e.printStackTrace();
+  public EnterpriseDTO readOne(int enterpriseId) {
+    try (PreparedStatement ps = myDalService.getPS(
+        "SELECT * FROM projetae.enterprises WHERE enterprise_id = ?;")) {
+      ps.setInt(1, enterpriseId);
+      ps.execute();
+      return enterpriseMapper.mapResultSetToObject(ps.getResultSet(), EnterpriseImpl.class,
+          myDomainFactory::getEnterprise);
+    } catch (SQLException | IllegalAccessException e) {
+      throw new FatalErrorException(e);
     }
+  }
 
-    return enterprises;
+  @Override
+  public EnterpriseDTO readOne(String enterpriseName, String enterpriseLabel) {
+    try (PreparedStatement ps = myDalService.getPS(
+        "SELECT * FROM projetae.enterprises WHERE name = ? AND label = ?;")) {
+      ps.setString(1, enterpriseName);
+      ps.setString(2, enterpriseLabel);
+      ps.execute();
+      return enterpriseMapper.mapResultSetToObject(ps.getResultSet(), EnterpriseImpl.class,
+          myDomainFactory::getEnterprise);
+    } catch (SQLException | IllegalAccessException e) {
+      throw new FatalErrorException(e);
+    }
+  }
+
+  @Override
+  public EnterpriseDTO create(String name, String label, String adress, String phone, String email) {
+    if (exists(name, label)) {
+      throw new BusinessException(409,
+          "enterprise with name: " + name + " and label: " + label + " already exists!");
+    }
+    try (PreparedStatement ps = myDalService.getPS(
+        "INSERT INTO projetae.enterprises (name, label, address, phone, email)"
+            + "VALUES (?, ?, ?, ?,  ?) RETURNING *;")) {
+      ps.setString(1, name);
+      ps.setString(2, label);
+      ps.setString(3, adress);
+      ps.setString(4, phone);
+      ps.setString(5, email);
+      ps.execute();
+      return enterpriseMapper.mapResultSetToObject(ps.getResultSet(), EnterpriseImpl.class,
+          myDomainFactory::getEnterprise);
+    } catch (SQLException | IllegalAccessException e) {
+      throw new FatalErrorException(e);
+    }
+  }
+
+  @Override
+  public List<EnterpriseDTO> getAllEnterprises() {
+    try (PreparedStatement ps = myDalService.getPS("SELECT * FROM projetae.enterprises")) {
+      ps.execute();
+      return enterpriseMapper.mapResultSetToObjectList(ps.getResultSet(), EnterpriseImpl.class,
+          myDomainFactory::getEnterprise);
+    } catch (SQLException | IllegalAccessException e) {
+      throw new FatalErrorException(e);
+    }
   }
 
   /**
@@ -60,48 +94,32 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
    */
   @Override
   public EnterpriseDTO getEnterpriseById(int id) {
-    PreparedStatement ps = myDalService
-        .getPS(
-            "SELECT * FROM projetae.entreprises e,"
-                + " projetae.stages s WHERE s.entreprise = e.entreprise_id"
-                + " AND s.utilisateur = ?");
+    PreparedStatement ps = myDalService.getPS(
+        "SELECT * FROM projetae.enterprises e, projetae.internships i "
+            + "WHERE i.enterprise = e.enterprise_id AND i.user = ?");
     try {
       ps.setInt(1, id);
       ps.execute();
-
-      try (ResultSet rs = ps.getResultSet()) {
-        // Check if ResultSet has data
-        if (rs.next()) {
-          int entrepriseId = rs.getInt("entreprise_id");
-          String nom = rs.getString("nom");
-          String appellation = rs.getString("appellation");
-          String adresse = rs.getString("adresse");
-          String telephone = rs.getString("telephone");
-          boolean isBlacklist = rs.getBoolean("is_blacklist");
-          String avisProfesseur = rs.getString("avis_professeur");
-
-          EnterpriseDTO enterpriseDTO = new EnterpriseDTOImpl(entrepriseId, nom, appellation,
-              adresse,
-              telephone, isBlacklist, avisProfesseur);
-          if (enterpriseDTO == null) {
-            System.out.println("Entreprise is NULL");
-          }
-          System.out.println("entreprise : ");
-          System.out.println(enterpriseDTO);
-          return enterpriseDTO;
-        } else {
-          // Handle the case where no enterprise is found for the user
-          System.out.println("RS.next == NULL");
-          return null;
-        }
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
+      return enterpriseMapper.mapResultSetToObject(ps.getResultSet(), EnterpriseImpl.class,
+          myDomainFactory::getEnterprise);
+    } catch (SQLException | IllegalAccessException e) {
+      throw new FatalErrorException(e);
     }
-    // If there's an exception or no data, return null
-    return null;
   }
 
+  private boolean exists(String name, String label) {
+    try (PreparedStatement ps = myDalService.getPS(
+        "SELECT COUNT(*) FROM projetae.enterprises WHERE name = ? AND label = ?")) {
+      ps.setString(1, name);
+      ps.setString(2, label);
+      ps.execute();
+      ResultSet rs = ps.getResultSet();
+      if (rs.next() && rs.getInt(1) == 1) {
+        return true;
+      }
+    } catch (SQLException e) {
+      throw new FatalErrorException(e);
+    }
+    return false;
+  }
 }

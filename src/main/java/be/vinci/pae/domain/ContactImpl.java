@@ -1,44 +1,46 @@
 package be.vinci.pae.domain;
 
 /**
- * Implementation of the ContactDTO interface representing a contact entity.
+ * Implementation of the Contact interface.
  */
-public class ContactImpl implements ContactDTO {
+public class ContactImpl implements Contact {
 
   private int contactId;
-  private String description;
+  private String meetingPoint;
   private String state;
-  private String reasonRefusal;
+  private String refusalReason;
   private String year;
   private int user;
-  private int entreprise;
+  private int enterprise;
+  private EnterpriseDTO enterpriseDTO;
 
-  /**
-   * Constructs a new ContactImpl object with default values.
-   */
-  public ContactImpl() {
+  @Override
+  public boolean meet(String meetingPoint) {
+    if (!state.equals("initiated")) {
+      return false;
+    }
+    this.meetingPoint = meetingPoint;
+    state = "meet";
+    return true;
   }
 
-  /**
-   * Constructs a new ContactImpl object with the specified attributes.
-   *
-   * @param contactId     The ID of the contact.
-   * @param description   The description of the contact.
-   * @param state         The state of the contact.
-   * @param reasonRefusal The reason for refusal of the contact.
-   * @param year          The year of the contact.
-   * @param user          The ID of the user associated with the contact.
-   * @param entreprise    The ID of the enterprise associated with the contact.
-   */
-  public ContactImpl(int contactId, String description, String state, String reasonRefusal,
-      String year, int user, int entreprise) {
-    this.contactId = contactId;
-    this.description = description;
-    this.state = state;
-    this.reasonRefusal = reasonRefusal;
-    this.year = year;
-    this.user = user;
-    this.entreprise = entreprise;
+  @Override
+  public boolean indicateAsRefused(String refusalReason) {
+    if (!state.equals("initiated") && !state.equals("meet")) {
+      return false;
+    }
+    this.refusalReason = refusalReason;
+    state = "refused";
+    return true;
+  }
+
+  @Override
+  public boolean unfollow() {
+    if (!state.equals("initiated") && !state.equals("meet")) {
+      return false;
+    }
+    state = "unfollowed";
+    return true;
   }
 
   @Override
@@ -52,13 +54,13 @@ public class ContactImpl implements ContactDTO {
   }
 
   @Override
-  public String getDescription() {
-    return description;
+  public String getMeetingPoint() {
+    return meetingPoint;
   }
-  
+
   @Override
-  public void setDescription(String description) {
-    this.description = description;
+  public void setMeetingPoint(String meetingPoint) {
+    this.meetingPoint = meetingPoint;
   }
 
   @Override
@@ -72,13 +74,13 @@ public class ContactImpl implements ContactDTO {
   }
 
   @Override
-  public String getReasonRefusal() {
-    return reasonRefusal;
+  public String getRefusalReason() {
+    return refusalReason;
   }
 
   @Override
-  public void setReasonRefusal(String reasonRefusal) {
-    this.reasonRefusal = reasonRefusal;
+  public void setRefusalReason(String refusalReason) {
+    this.refusalReason = refusalReason;
   }
 
   @Override
@@ -102,12 +104,36 @@ public class ContactImpl implements ContactDTO {
   }
 
   @Override
-  public int getEntreprise() {
-    return entreprise;
+  public int getEnterprise() {
+    return enterprise;
   }
 
   @Override
-  public void setEntreprise(int entreprise) {
-    this.entreprise = entreprise;
+  public void setEnterprise(int enterprise) {
+    this.enterprise = enterprise;
+  }
+
+  @Override
+  public EnterpriseDTO getEnterpriseDTO() {
+    return enterpriseDTO;
+  }
+
+  @Override
+  public void setEnterpriseDTO(EnterpriseDTO enterpriseDTO) {
+    this.enterpriseDTO = enterpriseDTO;
+  }
+
+  @Override
+  public String toString() {
+    return "ContactImpl{"
+        + "contactId=" + contactId
+        + ", meetingPoint='" + meetingPoint + '\''
+        + ", state='" + state + '\''
+        + ", refusalReason='" + refusalReason + '\''
+        + ", year='" + year + '\''
+        + ", user=" + user
+        + ", enterprise=" + enterprise
+        + ", enterpriseDTO=" + enterpriseDTO
+        + '}';
   }
 }

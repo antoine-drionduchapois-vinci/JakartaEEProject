@@ -1,7 +1,7 @@
 package be.vinci.pae.domain;
 
 /**
- * Interface representing an Contact entity.
+ * The Contact interface represents contact informations.
  */
 public interface ContactDTO {
 
@@ -13,23 +13,65 @@ public interface ContactDTO {
   int getContactId();
 
   /**
-   * Sets the ID of the user associated with the contact.
+   * Sets the ID of the contact.
    *
-   * @param user The ID of the user associated with the contact.
+   * @param contactId The ID of the contact to set.
    */
-  void setUser(int user);
+  void setContactId(int contactId);
 
   /**
-   * Gets the ID of the enterprise associated with the contact.
+   * Gets the meeting point for the contact.
    *
-   * @return The ID of the enterprise associated with the contact.
+   * @return The meeting point for the contact.
    */
-  int getEntreprise();
+  String getMeetingPoint();
+
+  /**
+   * Sets the meeting point for the contact.
+   *
+   * @param meetingPoint The meeting point to set.
+   */
+  void setMeetingPoint(String meetingPoint);
+
+  /**
+   * Gets the state of the contact.
+   *
+   * @return The state of the contact.
+   */
+  String getState();
+
+  /**
+   * Sets the state of the contact.
+   *
+   * @param state The state to set for the contact.
+   */
+  void setState(String state);
+
+  /**
+   * Gets the reason for refusal of the contact.
+   *
+   * @return The reason for refusal of the contact.
+   */
+  String getRefusalReason();
+
+  /**
+   * Sets the reason for refusal of the contact.
+   *
+   * @param refusalReason The reason for refusal to set.
+   */
+  void setRefusalReason(String refusalReason);
+
+  /**
+   * Gets the year of the contact.
+   *
+   * @return The year of the contact.
+   */
+  String getYear();
 
   /**
    * Sets the year of the contact.
    *
-   * @param year The year of the contact.
+   * @param year The year to set for the contact.
    */
   void setYear(String year);
 
@@ -41,65 +83,37 @@ public interface ContactDTO {
   int getUser();
 
   /**
-   * Sets the ID of the contact.
+   * Sets the ID of the user associated with the contact.
    *
-   * @param contactId The ID of the contact.
+   * @param user The ID of the user to set for the contact.
    */
-  void setContactId(int contactId);
+  void setUser(int user);
 
   /**
-   * Gets the description of the contact.
+   * Gets the ID of the enterprise associated with the contact.
    *
-   * @return The description of the contact.
+   * @return The ID of the enterprise associated with the contact.
    */
-  String getDescription();
-
-  /**
-   * Sets the state of the contact.
-   *
-   * @param state The state of the contact.
-   */
-  void setState(String state);
-
-  /**
-   * Gets the reason for refusal of the contact.
-   *
-   * @return The reason for refusal of the contact.
-   */
-  String getReasonRefusal();
-
-  /**
-   * Sets the description of the contact.
-   *
-   * @param description The description of the contact.
-   */
-  void setDescription(String description);
-
-  /**
-   * Gets the state of the contact.
-   *
-   * @return The state of the contact.
-   */
-  String getState();
-
-  /**
-   * Sets the reason for refusal of the contact.
-   *
-   * @param reasonRefusal The reason for refusal of the contact.
-   */
-  void setReasonRefusal(String reasonRefusal);
-
-  /**
-   * Gets the year of the contact.
-   *
-   * @return The year of the contact.
-   */
-  String getYear();
+  int getEnterprise();
 
   /**
    * Sets the ID of the enterprise associated with the contact.
    *
-   * @param entreprise The ID of the enterprise associated with the contact.
+   * @param enterprise The ID of the enterprise to set for the contact.
    */
-  void setEntreprise(int entreprise);
+  void setEnterprise(int enterprise);
+
+  /**
+   * Gets the Enterprise object associated with the contact.
+   *
+   * @return The Enterprise object associated with the contact.
+   */
+  EnterpriseDTO getEnterpriseDTO();
+
+  /**
+   * Sets the Enterprise object associated with the contact.
+   *
+   * @param enterpriseDTO The Enterprise object to set for the contact.
+   */
+  void setEnterpriseDTO(EnterpriseDTO enterpriseDTO);
 }

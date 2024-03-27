@@ -41,7 +41,7 @@ public class Config {
    *
    * @param key The key of the property.
    * @return The value of the property as an integer, or null if the property is not found or cannot
-   * be parsed as an integer.
+   *         be parsed as an integer.
    */
   public static Integer getIntProperty(String key) {
     return Integer.parseInt(props.getProperty(key));
@@ -52,7 +52,7 @@ public class Config {
    *
    * @param key The key of the property.
    * @return The value of the property as a boolean, or false if the property is not found or cannot
-   * be parsed as a boolean.
+   *         be parsed as a boolean.
    */
   public static boolean getBoolProperty(String key) {
     return Boolean.parseBoolean(props.getProperty(key));

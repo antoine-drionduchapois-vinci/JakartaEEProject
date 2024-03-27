@@ -1,63 +1,101 @@
 package be.vinci.pae.utils;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import javax.sql.DataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 
-/**
- * DALServiceImpl is an implementation of the DALService interface. It provides methods for
- * managing database access using JDBC.
- */
-public class DALServiceImpl implements DALService {
+public class DALServiceImpl implements DALService, DALBackService {
 
-  private Connection connection;
+  private DataSource dataSource;
   private final String url = Config.getProperty("db.url");
   private final String username = Config.getProperty("db.username");
   private final String password = Config.getProperty("db.password");
-  private PreparedStatement ps;
+  private final ThreadLocal<Connection> connectionThreadLocal = new ThreadLocal<>();
+  private final int MAX_CONNECTIONS = 3;
 
-
-  /**
-   * Constructs a new DALServiceImpl instance and establishes a connection to the database.
-   */
-  public DALServiceImpl() {
-    try {
-      this.connection = DriverManager.getConnection(url, username, password);
-
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
-
-  }
-
-  /**
-   * Gets a prepared statement for the provided SQL query.
-   *
-   * @param sql the SQL query
-   * @return a prepared statement for the SQL query
-   * @throws RuntimeException if a database access error occurs
-   */
   @Override
   public PreparedStatement getPS(String sql) {
     try {
-      ps = connection.prepareStatement(sql);
+      return getConnection().prepareStatement(sql);
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalErrorException(e);
     }
-    return ps;
   }
 
-  /**
-   * Closes the database connection.
-   *
-   * @throws SQLException if a database access error occurs
-   */
   @Override
-  public void close() throws SQLException {
-    if (connection != null && !connection.isClosed()) {
-      connection.close();
-      System.out.println("Connection closed");
+  public void start() {
+    if (dataSource == null) {
+      dataSource = createDataSource();
     }
   }
+
+  @Override
+  public void commit() {
+    Connection conn = connectionThreadLocal.get();
+    if (conn == null) {
+      throw new IllegalStateException("No active connection to commit.");
+    }
+    try {
+      conn.commit();
+    } catch (SQLException e) {
+      rollbackAndClose(conn);
+      throw new FatalErrorException(e);
+    } finally {
+      closeConnection(conn);
+    }
+  }
+
+  private void rollbackAndClose(Connection conn) {
+    try {
+      if (conn != null) {
+        conn.rollback();
+      }
+    } catch (SQLException rollbackEx) {
+      throw new FatalErrorException(rollbackEx);
+    } finally {
+      closeConnection(conn);
+    }
+  }
+
+  private void closeConnection(Connection conn) {
+    if (conn != null) {
+      try {
+        conn.setAutoCommit(true);
+        conn.close();
+      } catch (SQLException closeEx) {
+        throw new FatalErrorException(closeEx);
+      } finally {
+        connectionThreadLocal.remove();
+      }
+    }
+  }
+
+  private Connection getConnection() {
+    try {
+      Connection conn = connectionThreadLocal.get();
+      if (conn == null || conn.isClosed()) {
+        conn = dataSource.getConnection();
+        connectionThreadLocal.set(conn);
+      }
+      return conn;
+    } catch (SQLException e) {
+      throw new FatalErrorException(e);
+    }
+  }
+
+
+
+  private DataSource createDataSource() {
+    BasicDataSource ds = new BasicDataSource();
+    ds.setMaxTotal(MAX_CONNECTIONS);
+    ds.setDriverClassName("org.postgresql.Driver");
+    ds.setUrl(url);
+    ds.setUsername(username);
+    ds.setPassword(password);
+    ds.setDefaultAutoCommit(false);
+    return ds;
+  }
 }
+

@@ -1,112 +1,110 @@
 package be.vinci.pae.domain;
 
-import be.vinci.pae.domain.User.Role;
-
 /**
- * The UserDTO interface represents a data transfer object for a user entity.
+ * The UserDTO interface represents user informations.
  */
 public interface UserDTO {
 
   /**
-   * Retrieves the user's unique identifier.
+   * Gets the ID of the user.
    *
-   * @return The user's unique identifier.
+   * @return The ID of the user.
    */
   int getUserId();
 
   /**
-   * Sets the user's unique identifier.
+   * Sets the ID of the user.
    *
-   * @param userId The user's unique identifier to set.
+   * @param userId The ID of the user to set.
    */
   void setUserId(int userId);
 
   /**
-   * Retrieves the user's name.
+   * Gets the name of the user.
    *
-   * @return The user's name.
+   * @return The name of the user.
    */
   String getName();
 
   /**
-   * Sets the user's name.
+   * Sets the name of the user.
    *
-   * @param name The user's name to set.
+   * @param name The name of the user to set.
    */
   void setName(String name);
 
   /**
-   * Retrieves the user's surname.
+   * Gets the surname of the user.
    *
-   * @return The user's surname.
+   * @return The surname of the user.
    */
   String getSurname();
 
   /**
-   * Sets the user's surname.
+   * Sets the surname of the user.
    *
-   * @param surname The user's surname to set.
+   * @param surname The surname of the user to set.
    */
   void setSurname(String surname);
 
   /**
-   * Retrieves the user's email address.
+   * Gets the email address of the user.
    *
-   * @return The user's email address.
+   * @return The email address of the user.
    */
   String getEmail();
 
   /**
-   * Sets the user's email address.
+   * Sets the email address of the user.
    *
-   * @param email The user's email address to set.
+   * @param email The email address of the user to set.
    */
   void setEmail(String email);
 
   /**
-   * Retrieves the user's phone number.
+   * Gets the phone number of the user.
    *
-   * @return The user's phone number.
+   * @return The phone number of the user.
    */
   String getPhone();
 
   /**
-   * Sets the user's phone number.
+   * Sets the phone number of the user.
    *
-   * @param phone The user's phone number to set.
+   * @param phone The phone number of the user to set.
    */
   void setPhone(String phone);
 
   /**
-   * Retrieves the user's password.
+   * Gets the password of the user.
    *
-   * @return The user's password.
+   * @return The password of the user.
    */
   String getPassword();
 
   /**
-   * Sets the user's password.
+   * Sets the password of the user.
    *
-   * @param password The user's password to set.
+   * @param password The password of the user to set.
    */
   void setPassword(String password);
 
   /**
-   * Retrieves the user's year.
+   * Gets the year associated with the user.
    *
-   * @return The user's year.
+   * @return The year associated with the user.
    */
   String getYear();
 
   /**
-   * Sets the user's year.
+   * Sets the year associated with the user.
    *
-   * @param year The user's year to set.
+   * @param year The year associated with the user to set.
    */
   void setYear(String year);
 
   /**
-   * Retrieves the role of the user.
+   * Gets the role of the user.
    *
    * @return The role of the user.
    */
@@ -118,4 +116,22 @@ public interface UserDTO {
    * @param role The role of the user to set.
    */
   void setRole(Role role);
+
+  /**
+   * Enum representing the roles that a user can have.
+   */
+  enum Role {
+    /**
+     * Student role.
+     */
+    STUDENT,
+    /**
+     * Teacher role.
+     */
+    TEACHER,
+    /**
+     * Admin role.
+     */
+    ADMIN
+  }
 }

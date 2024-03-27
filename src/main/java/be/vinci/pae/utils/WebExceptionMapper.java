@@ -11,20 +11,29 @@ import jakarta.ws.rs.ext.Provider;
 @Provider
 public class WebExceptionMapper implements ExceptionMapper<Throwable> {
 
-  /**
-   * Maps a Throwable to an HTTP response.
-   *
-   * @param exception The exception to be mapped.
-   * @return The HTTP response corresponding to the exception.
-   */
   @Override
   public Response toResponse(Throwable exception) {
     exception.printStackTrace();
-    if (exception instanceof WebApplicationException) {
-      return Response.status(((WebApplicationException) exception).getResponse().getStatus())
+
+    if (exception instanceof WebApplicationException exc) {
+      System.err.println(exc.getResponse().getStatus() + " " + exc.getMessage());
+      return Response.status(exc.getResponse().getStatus())
           .entity(exception.getMessage())
           .build();
     }
+
+    if (exception instanceof BusinessException exc) {
+      System.err.println(exc.getCode() + " " + exc.getMessage());
+      return Response.status(((BusinessException) exception).getCode())
+          .entity(exception.getMessage()).build();
+    }
+
+    if (exception instanceof NotFoundException exc) {
+      System.err.println("404 " + exc.getMessage());
+      return Response.status(404).entity("Not Found").build();
+    }
+
+    System.err.println("500 " + exception.getMessage());
     return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
         .entity(exception.getMessage())
         .build();

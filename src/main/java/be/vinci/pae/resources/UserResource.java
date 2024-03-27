@@ -1,12 +1,8 @@
-package be.vinci.pae.resource;
+package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.ucc.UserUCC;
-import be.vinci.pae.utils.Config;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
+import be.vinci.pae.utils.JWTDecryptToken;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -20,6 +16,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -27,11 +25,11 @@ import java.util.List;
  */
 @Singleton
 @Path("/users")
-public class UserResourceImpl implements UserResource {
+public class UserResource {
 
+  private static final Logger logger = LogManager.getLogger(UserResource.class);
+  private JWTDecryptToken decryptToken = new JWTDecryptToken();
 
-  private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
-  private final ObjectMapper jsonMapper = new ObjectMapper();
   @Inject
   private UserUCC myUserUCC;
 
@@ -40,12 +38,11 @@ public class UserResourceImpl implements UserResource {
    *
    * @return an ObjectNode containing the global statistics
    */
-  @Override
   @GET
   @Path("stats")
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getGlobalStats() {
-
+    logger.info("Fetching global statistics...");
     int studentsWithoutInternship = myUserUCC.countStudentsWithoutStage();
     int countStudents = myUserUCC.countStudents();
 
@@ -63,7 +60,6 @@ public class UserResourceImpl implements UserResource {
    *
    * @return an ObjectNode containing all users
    */
-  @Override
   @GET
   @Path("All")
   @Produces(MediaType.APPLICATION_JSON)
@@ -91,16 +87,16 @@ public class UserResourceImpl implements UserResource {
       // Gérer les erreurs éventuelles
       e.printStackTrace();
     }
-
+    logger.info("Fetching all User...");
     return usersArray;
   }
 
   /**
-   * Retrieves users info.
+   * Retrieves user information by user ID and returns it as JSON.
    *
-   * @return an ObjectNode containing users info
+   * @param json The JSON object containing the JWT token.
+   * @return An ObjectNode representing the user's information.
    */
-  @Override
   @POST
   @Path("getUserInfoById")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -108,19 +104,9 @@ public class UserResourceImpl implements UserResource {
   public ObjectNode getUsersByIdAsJson(JsonNode json) {
 
     try {
-      //Get token from JSON
-      String jsonToken = json.get("token").asText();
-      //Decode Token
-      DecodedJWT jwt = JWT.require(jwtAlgorithm)
-          .withIssuer("auth0")
-          .build() // create the JWTVerifier instance
-          .verify(jsonToken); // verify the token
-      //Het userId from decodedToken
-      int userId = jwt.getClaim("user").asInt();
-      // Assuming the token includes a "user" claim holding the user ID
-      if (userId == -1) {
-        throw new JWTVerificationException("User ID claim is missing");
-      }
+      // Get token from JSON
+      int userId = decryptToken.getIdFromJsonToken(json);
+
       UserDTO user = myUserUCC.getUsersByIdAsJson(userId);
 
       ObjectMapper mapper = new ObjectMapper();
@@ -137,6 +123,5 @@ public class UserResourceImpl implements UserResource {
     }
     return null;
   }
-
 
 }
