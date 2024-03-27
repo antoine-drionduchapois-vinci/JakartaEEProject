@@ -7,10 +7,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import be.vinci.pae.TestBinder;
 import be.vinci.pae.dao.UserDAO;
 import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.utils.NotFoundException;
+import be.vinci.pae.utils.TestBinder;
 import java.util.ArrayList;
 import java.util.List;
 import org.glassfish.hk2.api.ServiceLocator;

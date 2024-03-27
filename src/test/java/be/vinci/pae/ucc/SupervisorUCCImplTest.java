@@ -4,11 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-import be.vinci.pae.TestBinder;
 import be.vinci.pae.dao.SupervisorDAO;
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.Supervisor;
 import be.vinci.pae.utils.NotFoundException;
+import be.vinci.pae.utils.TestBinder;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.AfterAll;
