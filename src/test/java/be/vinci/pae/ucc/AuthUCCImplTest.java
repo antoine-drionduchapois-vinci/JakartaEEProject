@@ -69,20 +69,6 @@ class AuthUCCImplTest {
   }
 
   @Test
-  void testRegister() {
-    UserDTO userDTO = domainFactory.getUser();
-    userDTO.setEmail("test@example.com");
-    userDTO.setPassword("password123");
-
-    when(userDAO.getOneByEmail("test@example.com")).thenReturn(null);
-    when(userDAO.addUser(userDTO)).thenReturn(userDTO);
-
-    UserDTO result = authUCC.register(userDTO);
-
-    assertEquals(userDTO, result);
-  }
-
-  @Test
   void testLoginWithUserNotFound() {
     UserDTO userDTO = domainFactory.getUser();
     userDTO.setEmail("test@example.com");
@@ -113,6 +99,32 @@ class AuthUCCImplTest {
 
     BusinessException exception = assertThrows(BusinessException.class, () -> {
       authUCC.login(userTemp);
+    });
+
+  }
+  @Test
+  void testRegister() {
+    UserDTO userDTO = domainFactory.getUser();
+    userDTO.setEmail("test@example.com");
+    userDTO.setPassword("password123");
+
+    when(userDAO.getOneByEmail("test@example.com")).thenReturn(null);
+    when(userDAO.addUser(userDTO)).thenReturn(userDTO);
+
+    UserDTO result = authUCC.register(userDTO);
+
+    assertEquals(userDTO, result);
+  }
+
+  @Test
+  void testRegisterWithExistingUser() {
+    UserDTO existingUserDTO = domainFactory.getUser();
+    existingUserDTO.setEmail("test@example.com");
+
+    when(userDAO.getOneByEmail("test@example.com")).thenReturn(existingUserDTO);
+
+    assertThrows(BusinessException.class, () -> {
+      authUCC.register(existingUserDTO);
     });
 
   }
