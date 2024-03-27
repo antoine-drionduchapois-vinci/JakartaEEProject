@@ -42,9 +42,6 @@ public class ContactUCCImpl implements ContactUCC {
   public ContactDTO getContact(int contactId) {
     myDALService.start();
     ContactDTO contactDTO = myContactDAO.readOne(contactId);
-    if (contactDTO == null) {
-      throw new NotFoundException();
-    }
     EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(contactDTO.getEnterprise());
     myDALService.commit();
     if (enterpriseDTO == null) {
@@ -83,9 +80,6 @@ public class ContactUCCImpl implements ContactUCC {
   public ContactDTO meetEnterprise(int contactId, String meetingPoint) {
     myDALService.start();
     Contact contact = (Contact) myContactDAO.readOne(contactId);
-    if (contact == null) {
-      throw new NotFoundException();
-    }
 
     if (!contact.meet(meetingPoint)) {
       throw new BusinessException(403, "contact must be initiated");
@@ -105,9 +99,6 @@ public class ContactUCCImpl implements ContactUCC {
   public ContactDTO indicateAsRefused(int contactId, String refusalReason) {
     myDALService.start();
     Contact contact = (Contact) myContactDAO.readOne(contactId);
-    if (contact == null) {
-      return null;
-    }
 
     if (!contact.indicateAsRefused(refusalReason)) {
       throw new BusinessException(403, "contact must be initiated or meet");
@@ -128,9 +119,6 @@ public class ContactUCCImpl implements ContactUCC {
   public ContactDTO unfollow(int contactId) {
     myDALService.start();
     Contact contact = (Contact) myContactDAO.readOne(contactId);
-    if (contact == null) {
-      return null;
-    }
 
     if (!contact.unfollow()) {
       throw new BusinessException(403, "contact must be initiated or meet");
