@@ -41,12 +41,7 @@ const TookRow = (htmlElement, userData, contactData) => {
     submit.setAttribute('disabled', true);
   }
 
-  if (
-    contactData &&
-    contactData.state !== 'initiated' &&
-    contactData.state !== 'refused' &&
-    contactData.state !== 'unfollowed'
-  )
+  if (contactData && contactData.state !== 'initiated' && contactData.meeting_point)
     tookCircle.removeAttribute('hidden');
 
   meetingInput.element.addEventListener('input', (e) => {
