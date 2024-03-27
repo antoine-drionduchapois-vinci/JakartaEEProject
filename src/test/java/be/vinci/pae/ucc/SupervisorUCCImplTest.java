@@ -38,7 +38,6 @@ class SupervisorUCCImplTest {
 
   @Test
   void testGetResponsibleByEnterpriseIdWithExistingSupervisor() {
-    int enterpriseId = 1;
     Supervisor supervisor = domainFactory.getSupervisor();
     supervisor.setEnterprise(1);
     supervisor.setEmail("test@vinci.be");
@@ -47,9 +46,10 @@ class SupervisorUCCImplTest {
     supervisor.setPhone("0484752145");
     supervisor.setEnterpriseDTO(domainFactory.getEnterprise());
     supervisor.setResponsibleId(1);
-    when(supervisorDAO.getResponsibleByEnterpriseId(enterpriseId)).thenReturn(supervisor);
+    when(supervisorDAO.getResponsibleByEnterpriseId(supervisor.getEnterprise())).thenReturn(
+        supervisor);
 
-    Supervisor result = supervisorUCC.getResponsibleByEnterpriseId(enterpriseId);
+    Supervisor result = supervisorUCC.getResponsibleByEnterpriseId(supervisor.getEnterprise());
 
     assertEquals(supervisor, result);
   }
