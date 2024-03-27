@@ -1,6 +1,8 @@
 package be.vinci.pae.resources;
 
-import be.vinci.pae.domain.User;
+import be.vinci.pae.domain.DomainFactory;
+import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.domain.UserDTO.Role;
 import be.vinci.pae.ucc.AuthUCC;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -28,7 +30,13 @@ public class AuthResource {
   private final ObjectMapper jsonMapper = new ObjectMapper();
 
   @Inject
+  private DomainFactory myDomainFactory;
+
+  @Inject
   private AuthUCC myAuthUCC;
+
+  @Inject
+  private JWT myJwt;
 
   /**
    * Endpoint for user login.
@@ -44,9 +52,15 @@ public class AuthResource {
     if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
       throw new WebApplicationException("Login or password required", Response.Status.BAD_REQUEST);
     }
+
     String email = json.get("email").asText();
     String password = json.get("password").asText();
-    ObjectNode publicUser = myAuthUCC.login(email, password);
+    UserDTO userTemp = myDomainFactory.getUser();
+    userTemp.setPassword(password);
+    userTemp.setEmail(email);
+    UserDTO userDTO = myAuthUCC.login(userTemp);
+
+    ObjectNode publicUser = myJwt.createToken(userDTO);
     if (publicUser == null) {
       throw new WebApplicationException("Login or password incorrect",
           Response.Status.UNAUTHORIZED);
@@ -79,10 +93,18 @@ public class AuthResource {
     String password = json.get("password").asText();
     String role = json.get("role").asText();
 
-    User user = myAuthUCC.createUserAndReturn(name, firstname, email, telephone, password, role);
+    UserDTO userTemp = myDomainFactory.getUser();
+    userTemp.setName(name);
+    userTemp.setSurname(firstname);
+    userTemp.setEmail(email);
+    userTemp.setPhone(telephone);
+    userTemp.setPassword(password);
+    userTemp.setRole(Role.valueOf(role));
+
+    UserDTO user = myAuthUCC.register(userTemp);
 
     // Try to register
-    ObjectNode publicUser = myAuthUCC.register(user);
+    ObjectNode publicUser = myJwt.createToken(user);
     if (publicUser == null) {
       throw new WebApplicationException(Response.status(Response.Status.CONFLICT)
           .entity("This resource already exists").type(MediaType.TEXT_PLAIN).build());

@@ -4,7 +4,7 @@ package be.vinci.pae.utils;
  * The BusinessException class represents an exception that occurs due to business logic errors. It
  * extends the Exception class and provides additional functionality to include error codes.
  */
-public class BusinessException extends Exception {
+public class BusinessException extends RuntimeException {
 
   private int code;
 

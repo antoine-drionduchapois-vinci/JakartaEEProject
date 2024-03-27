@@ -55,6 +55,9 @@ public class InternshipResource {
 
     InternshipDTO internshipDTO = myInternshipUCC.getUserInternship(userId);
     EnterpriseDTO enterpriseDTO = myEnterpriseUCC.getEnterprisesByUserId(userId);
+    if (enterpriseDTO == null) {
+      return null;
+    }
     SupervisorDTO responsibleDTO = myResponsbileUCC.getResponsibleByEnterpriseId(
         enterpriseDTO.getEnterpriseId());
 
@@ -67,9 +70,5 @@ public class InternshipResource {
     internshipNode.put("contact", internshipDTO.getContact());
 
     return internshipNode;
-
-
   }
-
-
 }

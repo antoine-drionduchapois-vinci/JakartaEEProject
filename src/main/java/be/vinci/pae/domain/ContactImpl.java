@@ -4,6 +4,7 @@ package be.vinci.pae.domain;
  * Implementation of the Contact interface.
  */
 public class ContactImpl implements Contact {
+
   private int contactId;
   private String meetingPoint;
   private String state;
@@ -11,39 +12,35 @@ public class ContactImpl implements Contact {
   private String year;
   private int user;
   private int enterprise;
-  private Enterprise enterpriseDTO;
+  private EnterpriseDTO enterpriseDTO;
 
   @Override
   public boolean meet(String meetingPoint) {
-    if (!state.equals("initié")) {
+    if (!state.equals("initiated")) {
       return false;
     }
     this.meetingPoint = meetingPoint;
-    state = "pris";
+    state = "meet";
     return true;
   }
 
   @Override
-  public void inidcateAsRefused(String refusalReason) {
-    if (state.equals("refusé")) {
-      return; // TODO: handle no content
-    }
-    if (!state.equals("initié") && !state.equals("pris")) {
-      return; // TODO: handle forbidden
+  public boolean indicateAsRefused(String refusalReason) {
+    if (!state.equals("initiated") && !state.equals("meet")) {
+      return false;
     }
     this.refusalReason = refusalReason;
-    state = "refusé";
+    state = "refused";
+    return true;
   }
 
   @Override
-  public void unfollow() {
-    if (state.equals("non_suivis")) {
-      return; // TODO: handle no content
+  public boolean unfollow() {
+    if (!state.equals("initiated") && !state.equals("meet")) {
+      return false;
     }
-    if (!state.equals("initié") && !state.equals("pris")) {
-      return; // TODO: handle forbidden
-    }
-    state = "non_suivis";
+    state = "unfollowed";
+    return true;
   }
 
   @Override
@@ -117,12 +114,12 @@ public class ContactImpl implements Contact {
   }
 
   @Override
-  public Enterprise getEnterpriseDTO() {
+  public EnterpriseDTO getEnterpriseDTO() {
     return enterpriseDTO;
   }
 
   @Override
-  public void setEnterpriseDTO(Enterprise enterpriseDTO) {
+  public void setEnterpriseDTO(EnterpriseDTO enterpriseDTO) {
     this.enterpriseDTO = enterpriseDTO;
   }
 

@@ -1,6 +1,6 @@
 package be.vinci.pae.resources;
 
-import be.vinci.pae.domain.User;
+import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.ucc.UserUCC;
 import be.vinci.pae.utils.JWTDecryptToken;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -28,8 +28,8 @@ import org.apache.logging.log4j.Logger;
 public class UserResource {
 
   private static final Logger logger = LogManager.getLogger(UserResource.class);
-
   private JWTDecryptToken decryptToken = new JWTDecryptToken();
+
   @Inject
   private UserUCC myUserUCC;
 
@@ -69,10 +69,10 @@ public class UserResource {
 
     try {
       // Récupérer la liste complète des utilisateurs depuis votre DAO
-      List<User> userList = myUserUCC.getUsersAsJson();
+      List<UserDTO> userList = myUserUCC.getUsersAsJson();
 
       // Parcourir chaque utilisateur et les ajouter à l'ArrayNode
-      for (User user : userList) {
+      for (UserDTO user : userList) {
         ObjectNode userNode = mapper.createObjectNode();
         userNode.put("userId", user.getUserId());
         userNode.put("name", user.getName());
@@ -102,12 +102,12 @@ public class UserResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getUsersByIdAsJson(JsonNode json) {
-    System.out.println("GetUserInfoById");
+
     try {
       // Get token from JSON
       int userId = decryptToken.getIdFromJsonToken(json);
 
-      User user = myUserUCC.getUsersByIdAsJson(userId);
+      UserDTO user = myUserUCC.getUsersByIdAsJson(userId);
 
       ObjectMapper mapper = new ObjectMapper();
       ObjectNode userInfo = mapper.createObjectNode();

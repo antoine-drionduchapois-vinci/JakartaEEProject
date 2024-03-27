@@ -31,9 +31,8 @@ public class ResultSetMapper<T, U> {
   public T mapResultSetToObject(ResultSet rs, Class<U> clazz, Supplier<T> factoryFunction)
       throws SQLException, IllegalAccessException {
     Field[] fields = clazz.getDeclaredFields();
-
     if (!rs.next()) {
-      throw new NotFoundException();
+      return null;
     }
     return mapFields(fields, rs, factoryFunction);
   }
@@ -57,13 +56,13 @@ public class ResultSetMapper<T, U> {
     List<T> objects = new ArrayList<>();
     Field[] fields = clazz.getDeclaredFields();
 
-    do {
-      if (!rs.next()) {
-        throw new NotFoundException();
-      }
+    if (!rs.next()) {
+      return null;
+    }
+    objects.add(mapFields(fields, rs, factoryFunction));
+    while (rs.next()) {
       objects.add(mapFields(fields, rs, factoryFunction));
     }
-    while (rs.next());
     return objects;
   }
 

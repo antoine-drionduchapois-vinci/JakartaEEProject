@@ -1,7 +1,7 @@
 package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.ContactDTO;
-import be.vinci.pae.domain.Enterprise;
+import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.ucc.ContactUCC;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.utils.JWTDecryptToken;
@@ -24,12 +24,11 @@ import jakarta.ws.rs.core.Response.Status;
 import java.util.List;
 
 /**
- * Resource class for handling contact-related endpoints.
+ * Resource class for managing contacts between users and enterprises.
  */
 @Singleton
 @Path("/contact")
 public class ContactResource {
-
 
   private JWTDecryptToken decryptToken = new JWTDecryptToken();
   @Inject
@@ -42,7 +41,7 @@ public class ContactResource {
    * Retrieves a contact by its ID.
    *
    * @param contactId The ID of the contact to retrieve.
-   * @return JSON representation of the retrieved contact.
+   * @return The contact as JSON.
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -51,63 +50,48 @@ public class ContactResource {
       throw new WebApplicationException("contactId required", Status.BAD_REQUEST);
     }
 
-    ObjectNode contact = myContactUCC.getContact(contactId);
-    if (contact == null) {
-      throw new WebApplicationException("not found", Status.NOT_FOUND);
-    }
-
-    return contact;
+    return convertDTOToJson(myContactUCC.getContact(contactId));
   }
 
   /**
-   * Adds a new contact.
+   * Initiates a new contact between a user and an enterprise.
    *
-   * @param json JSON containing data for creating a new contact.
-   * @return JSON representation of the added contact.
+   * @param json The JSON containing information about the contact.
+   * @return The newly initiated contact as JSON.
    */
+
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode addOne(JsonNode json) {
+  public ObjectNode initiate(JsonNode json) {
     if (!json.hasNonNull("userId")) {
       throw new WebApplicationException("Bad Request", Status.BAD_REQUEST);
     }
 
-    ObjectNode contact;
-
     if (json.hasNonNull("enterpriseId")) {
-      contact = myContactUCC.initiateContact(json.get("userId").asInt(),
-          json.get("enterpriseId").asInt());
-      if (contact == null) {
-        throw new WebApplicationException("not found", Status.NOT_FOUND);
-      }
-
-      return contact;
-
+      return convertDTOToJson(myContactUCC.initiateContact(json.get("userId").asInt(),
+          json.get("enterpriseId").asInt()));
     }
 
     if (!json.hasNonNull("enterpriseName") || !json.hasNonNull("enterpriseLabel")
-        || !json.hasNonNull("enterpriseAddress") || !json.hasNonNull("enterpriseContact")) {
-      throw new WebApplicationException("Bad Request", Status.BAD_REQUEST);
+        || !json.hasNonNull("enterpriseAddress")
+        || !json.hasNonNull("enterprisePhone") && !json.hasNonNull("enterpriseEmail")) {
+      throw new WebApplicationException(
+          "contactId, enterpriseName, enterpriseLabel, enterpriseAddress and enterprisePhone or enterpriseEmail are required",
+          Status.BAD_REQUEST);
     }
 
-    contact = myContactUCC.initiateContact(json.get("userId").asInt(),
+    return convertDTOToJson(myContactUCC.initiateContact(json.get("userId").asInt(),
         json.get("enterpriseName").asText(), json.get("enterpriseLabel").asText(),
-        json.get("enterpriseAddress").asText(), json.get("enterpriseContact").asText());
-
-    if (contact == null) {
-      throw new WebApplicationException("not found", Status.NOT_FOUND);
-    }
-
-    return contact;
+        json.get("enterpriseAddress").asText(), json.get("enterprisePhone").asText(),
+        json.get("enterpriseEmail").asText()));
   }
 
   /**
-   * Handles meeting with an enterprise.
+   * Marks a contact as having a meeting.
    *
-   * @param json JSON containing contact ID and meeting point.
-   * @return JSON representation of the updated contact after the meeting.
-   * @throws WebApplicationException if the required parameters are missing.
+   * @param json The JSON containing the contact ID and meeting point.
+   * @return The updated contact as JSON.
    */
   @POST
   @Path("/meet")
@@ -115,49 +99,37 @@ public class ContactResource {
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode meet(JsonNode json) throws WebApplicationException {
     if (!json.hasNonNull("contactId") || !json.hasNonNull("meetingPoint")) {
-      throw new WebApplicationException("contactId, meetingPoint required", Status.BAD_REQUEST);
+      throw new WebApplicationException("contactId and meetingPoint required", Status.BAD_REQUEST);
     }
 
-    ObjectNode contact = myContactUCC.meetEnterprise(json.get("contactId").asInt(),
-        json.get("meetingPoint").asText());
-
-    if (contact == null) {
-      throw new WebApplicationException("not found", Status.NOT_FOUND);
-    }
-
-    return contact;
+    return convertDTOToJson(myContactUCC.meetEnterprise(json.get("contactId").asInt(),
+        json.get("meetingPoint").asText()));
   }
 
   /**
-   * Indicates refusal of contact.
+   * Indicates that a contact has been refused.
    *
-   * @param json JSON containing contact ID and reason for refusal.
-   * @return JSON representation of the updated contact after refusal.
+   * @param json The JSON containing the contact ID and refusal reason.
+   * @return The updated contact as JSON.
    */
   @POST
   @Path("/refuse")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode refuse(JsonNode json) {
-    if (!json.hasNonNull("contactId") || !json.hasNonNull("reason")) {
-      throw new WebApplicationException("contactId, reason required", Status.BAD_REQUEST);
+    if (!json.hasNonNull("contactId") || !json.hasNonNull("refusalReason")) {
+      throw new WebApplicationException("contactId and refusalReason required", Status.BAD_REQUEST);
     }
 
-    ObjectNode contact = myContactUCC.indicateAsRefused(json.get("contactId").asInt(),
-        json.get("reason").asText());
-
-    if (contact == null) {
-      throw new WebApplicationException("not found", Status.NOT_FOUND);
-    }
-
-    return contact;
+    return convertDTOToJson(myContactUCC.indicateAsRefused(json.get("contactId").asInt(),
+        json.get("refusalReason").asText()));
   }
 
   /**
    * Unfollows a contact.
    *
-   * @param json JSON containing contact ID.
-   * @return JSON representation of the updated contact after unfollowing.
+   * @param json The JSON containing the contact ID.
+   * @return The result of the unfollow operation as JSON.
    */
   @POST
   @Path("/unfollow")
@@ -168,20 +140,14 @@ public class ContactResource {
       throw new WebApplicationException("contactId required", Status.BAD_REQUEST);
     }
 
-    ObjectNode contact = myContactUCC.unfollow(json.get("contactId").asInt());
-
-    if (contact == null) {
-      throw new WebApplicationException("not found", Status.NOT_FOUND);
-    }
-
-    return contact;
+    return convertDTOToJson(myContactUCC.unfollow(json.get("contactId").asInt()));
   }
 
   /**
-   * Retrieves user information by user ID and returns it as JSON.
+   * Retrieves contacts for a specific user.
    *
-   * @param json The JSON object containing the JWT token.
-   * @return An ObjectNode representing the user's information.
+   * @param json The JSON containing the user ID.
+   * @return The user's contacts as JSON.
    */
   @POST
   @Path("getUserContacts")
@@ -197,7 +163,7 @@ public class ContactResource {
 
     try {
       List<ContactDTO> contacts = myContactUCC.getContacts(userId);
-      List<Enterprise> enterprises = myEnterpriseUCC.getAllEnterprises();
+      List<EnterpriseDTO> enterprises = myEnterpriseUCC.getAllEnterprises();
       for (ContactDTO contactDTO : contacts) {
         contactArray.add(
             convertDTOToJson(contactDTO).put("enterprise_name",
@@ -216,8 +182,23 @@ public class ContactResource {
 
   }
 
+  /**
+   * Converts a ContactDTO object to JSON format.
+   *
+   * @param contactDTO The ContactDTO object to convert.
+   * @return The ContactDTO object as JSON.
+   */
   private ObjectNode convertDTOToJson(ContactDTO contactDTO) {
     ObjectMapper mapper = new ObjectMapper();
+    ObjectNode enterpriseNode = mapper.createObjectNode()
+        .put("enterpriseId", contactDTO.getEnterpriseDTO().getEnterpriseId())
+        .put("name", contactDTO.getEnterpriseDTO().getName())
+        .put("label", contactDTO.getEnterpriseDTO().getLabel())
+        .put("adress", contactDTO.getEnterpriseDTO().getAddress())
+        .put("contact", contactDTO.getEnterpriseDTO().getPhone())
+        .put("email", contactDTO.getEnterpriseDTO().getEmail())
+        .put("opinionTeacher", contactDTO.getEnterpriseDTO().getBlacklistedReason());
+
     ObjectNode contactNode = mapper.createObjectNode();
     contactNode.put("contact_id", contactDTO.getContactId());
     contactNode.put("meeting_point", contactDTO.getMeetingPoint());
@@ -225,7 +206,8 @@ public class ContactResource {
     contactNode.put("refusal_reason", contactDTO.getRefusalReason());
     contactNode.put("year", contactDTO.getYear());
     contactNode.put("user", contactDTO.getUser());
-    contactNode.put("enterprise", contactDTO.getEnterprise());
+    contactNode.put("enterpriseId", contactDTO.getEnterprise());
+    contactNode.put("enterprise", enterpriseNode);
     return contactNode;
   }
 }

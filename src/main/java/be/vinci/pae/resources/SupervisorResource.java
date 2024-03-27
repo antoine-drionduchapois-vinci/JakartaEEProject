@@ -1,6 +1,6 @@
 package be.vinci.pae.resources;
 
-import be.vinci.pae.domain.Enterprise;
+import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.domain.Supervisor;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.ucc.SupervisorUCC;
@@ -35,8 +35,7 @@ public class SupervisorResource {
   private SupervisorUCC supervisorUCC;
 
   /**
-   * Retrieves the supervisor responsible for the user's internship enterprise by
-   * user ID.
+   * Retrieves the supervisor responsible for the user's internship enterprise by user ID.
    *
    * @param json The JSON object containing the JWT token.
    * @return An ObjectNode representing the supervisor details.
@@ -63,7 +62,7 @@ public class SupervisorResource {
       }
       System.out.println("user id : " + userId);
       // get entrprise that corresponds to user intership
-      Enterprise enterpriseDTO = entrepriseUCC.getEnterprisesByUserId(userId);
+      EnterpriseDTO enterpriseDTO = entrepriseUCC.getEnterprisesByUserId(userId);
       Supervisor supervisorDTO = supervisorUCC.getResponsibleByEnterpriseId(
           enterpriseDTO.getEnterpriseId());
 
