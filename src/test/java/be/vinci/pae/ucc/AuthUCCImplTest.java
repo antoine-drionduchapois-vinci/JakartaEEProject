@@ -102,6 +102,7 @@ class AuthUCCImplTest {
     });
 
   }
+  
   @Test
   void testRegister() {
     UserDTO userDTO = domainFactory.getUser();

@@ -69,6 +69,7 @@ class ContactUCCImplTest {
 
     assertEquals(contactDTOs, result);
   }
+
   @Test
   void testGetContactWithNoCorrespondingContact() {
     ContactDTO contactDTO = createcontactDTO(2, 1, 2);
