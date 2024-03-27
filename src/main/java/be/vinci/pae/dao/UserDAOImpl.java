@@ -69,7 +69,7 @@ public class UserDAOImpl implements UserDAO {
       ps.setString(5, userDTO.getPassword());
       ps.setInt(6, currentYear);
       ps.setString(7, userDTO.getRole().name());
-      ps.executeUpdate();
+      ps.execute();
       return userMapper.mapResultSetToObject(ps.getResultSet(), UserImpl.class,
           myDomainFactory::getUser);
     } catch (SQLException | IllegalAccessException e) {
