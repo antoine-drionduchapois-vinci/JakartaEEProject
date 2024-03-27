@@ -45,10 +45,13 @@ public class AuthUCCImpl implements AuthUCC {
     if (tempUser != null) {
       throw new BusinessException(409, "User already exists!");
     }
-    UserDTO user = myUserDAO.addUser(userTemp);
+    User user = (User) userTemp;
+    user.hashPassword(userTemp.getPassword());
+    System.out.println(user.getPassword());
+    UserDTO userDTO = myUserDAO.addUser(user);
     //faire dto dans ressource cast et check role
     myDALService.commit();
-    return user;
+    return userDTO;
   }
   
 }
