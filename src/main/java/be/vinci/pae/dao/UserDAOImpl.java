@@ -84,12 +84,12 @@ public class UserDAOImpl implements UserDAO {
         ResultSet rs = ps.executeQuery()) {
 
       if (rs.next()) {
-        return rs.getInt(1); // Retourne le résultat du COUNT(*)
+        return rs.getInt(1);
       }
     } catch (SQLException e) {
       throw new FatalErrorException(e);
     }
-    return 0; // Gérer le cas où il n'y a aucun résultat
+    return 0;
   }
 
   @Override
@@ -119,11 +119,11 @@ public class UserDAOImpl implements UserDAO {
         ResultSet rs = ps.executeQuery()) {
 
       if (rs.next()) {
-        return rs.getInt(1); // Retourne le résultat du COUNT(*)
+        return rs.getInt(1);
       }
     } catch (SQLException e) {
       throw new FatalErrorException(e);
     }
-    return 0; // Gérer le cas où il y a une erreur ou aucun résultat
+    return 0;
   }
 }

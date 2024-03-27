@@ -157,6 +157,10 @@ public class ContactResource {
     System.out.println("getUserContact");
     int userId = decryptToken.getIdFromJsonToken(json);
 
+    if (userId == 0) {
+      throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
+    }
+
     ObjectMapper mapper = new ObjectMapper();
     ObjectNode response = mapper.createObjectNode();
     ArrayNode contactArray = mapper.createArrayNode();
@@ -172,10 +176,10 @@ public class ContactResource {
 
       }
 
-      // Ajouter le tableau d'entreprises à la réponse
+      // Add table enterprise to response
       response.set("contact", contactArray);
     } catch (Exception e) {
-      // Gérer les erreurs éventuelles
+      // Handle error
       response.put("error", e.getMessage());
     }
     return response;
