@@ -1,6 +1,7 @@
 package be.vinci.pae.ucc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -9,6 +10,7 @@ import static org.mockito.Mockito.when;
 import be.vinci.pae.TestBinder;
 import be.vinci.pae.dao.UserDAO;
 import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.utils.NotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -97,5 +99,14 @@ class UserUCCImplTest {
     // Assert
     assertEquals(user, result);
     verify(userDAO, times(1)).getOneByID(userId);
+  }
+
+  @Test
+  void testGetUsersByIdAsJsonWithNoCorrespondingUser() {
+    when(userDAO.getOneByID(1)).thenReturn(null);
+
+    assertThrows(NotFoundException.class, () -> {
+      userUCC.getUsersByIdAsJson(1);
+    });
   }
 }
