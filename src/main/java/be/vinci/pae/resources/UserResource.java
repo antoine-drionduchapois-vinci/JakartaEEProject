@@ -14,9 +14,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response.Status;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -110,10 +108,6 @@ public class UserResource {
       int userId = decryptToken.getIdFromJsonToken(json);
 
       UserDTO user = myUserUCC.getUsersByIdAsJson(userId);
-
-      if (user == null) {
-        throw new WebApplicationException("User not found for ID: " + userId, Status.BAD_REQUEST);
-      }
 
       ObjectMapper mapper = new ObjectMapper();
       ObjectNode userInfo = mapper.createObjectNode();
