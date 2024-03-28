@@ -7,6 +7,7 @@ import be.vinci.pae.utils.DALBackService;
 import be.vinci.pae.utils.FatalErrorException;
 import be.vinci.pae.utils.ResultSetMapper;
 import jakarta.inject.Inject;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -57,18 +58,22 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public UserDTO addUser(UserDTO userDTO) {
     PreparedStatement ps = myDalService.getPS(
-        "INSERT INTO projetae.users (name, surname, email, phone, password, year, role)"
-            + "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING *");
+        "INSERT INTO projetae.users (name, surname, email, phone, password, year, inscription_date, role)"
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING *");
     LocalDate currentDate = LocalDate.now();
+    Date curDate = Date.valueOf(currentDate);
     int currentYear = currentDate.getYear();
+    int previousYear = currentYear - 1;
+    String academicYear = previousYear + "-" + currentYear;
     try {
       ps.setString(1, userDTO.getName());
       ps.setString(2, userDTO.getSurname());
       ps.setString(3, userDTO.getEmail());
       ps.setString(4, userDTO.getPhone());
       ps.setString(5, userDTO.getPassword());
-      ps.setInt(6, currentYear);
-      ps.setString(7, userDTO.getRole().name());
+      ps.setString(6, academicYear);
+      ps.setDate(7, curDate);
+      ps.setString(8, userDTO.getRole().name());
       ps.execute();
       return userMapper.mapResultSetToObject(ps.getResultSet(), UserImpl.class,
           myDomainFactory::getUser);
