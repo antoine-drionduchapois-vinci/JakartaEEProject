@@ -47,9 +47,9 @@ public class InternshipResource {
   /**
    * Retrieves users internship info.
    *
+   * @param json user
    * @return an ObjectNode containing users info
    */
-
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
