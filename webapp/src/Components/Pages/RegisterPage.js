@@ -111,9 +111,13 @@ const RegisterPage = () => {
   document.getElementById('registerButton').addEventListener('click', handleSubmit);
 };
 
+
+
 // Function to handle the submit of the form register
 async function handleSubmit(e) {
   e.preventDefault();
+  resetFormErrors();
+  const errorMessage = document.getElementById('errorMessage');
   // Getting form input values
   const name = document.getElementById('nameInput').value;
   const firstname = document.getElementById('firstnameInput').value;
@@ -126,12 +130,19 @@ async function handleSubmit(e) {
   }
   // Validating form inputs
   if (!name || !firstname || !email || !telephone || !password || !role) {
-    const errorMessage = document.getElementById('errorMessage');
     errorMessage.textContent = 'Veuillez remplir tous les champs obligatoires';
     errorMessage.style.display = 'block';
     errorMessage.style.fontSize = '16px';
-    return;
-  }
+
+    if (!name) addRedBorder('nameInput');
+    if (!firstname) addRedBorder('firstnameInput');
+    if (!email) addRedBorder('emailInput');
+    if (!telephone) addRedBorder('telInput');
+    if (!password) addRedBorder('passwordInput');
+    if (!role) addRedBorder('roleInput');
+
+  return;
+}
 
   // Creating data object
   const data = {
@@ -157,7 +168,6 @@ async function handleSubmit(e) {
       .then((response) => {
         if (!response.ok) {
           return response.json().then((errorData) => {
-            const errorMessage = document.getElementById('error-message');
             errorMessage.innerHTML = errorData.message;
             errorMessage.style.display = 'block';
             throw new Error(errorData.message);
@@ -179,6 +189,25 @@ async function handleSubmit(e) {
   } catch (error) {
     console.error('Error during register:', error);
   }
+}
+
+function addRedBorder(elementId) {
+  const element = document.getElementById(elementId);
+  if (element) {
+    element.style.border = '1px solid red';
+  } 
+}
+
+function resetFormErrors() {
+  const errorMessage = document.getElementById('errorMessage');
+  errorMessage.textContent = '';
+  errorMessage.style.display = 'none';
+
+  const inputs = document.querySelectorAll('input');
+  inputs.forEach(input => {
+    const inputElement = input;
+    inputElement.style.border = '1px solid lightgray';
+  });
 }
 
 // Exporting RegisterPage component
