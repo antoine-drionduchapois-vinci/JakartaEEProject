@@ -30,10 +30,10 @@ function renderLoginForm() {
   form.style.padding = '100px';
 
   // Create email input field
-  const username = createInputElement('email', 'email', 'Email', true, 'form-control mb-3');
+  const username = createInputElement('email', 'emailInput', 'Email', 'form-control mb-3');
 
   // Create password input field
-  const password = createInputElement('password', 'password', 'Password', true, 'form-control mb-3');
+  const password = createInputElement('password', 'passwordInput', 'Password', 'form-control mb-3');
 
   // Create submit button
   const submit = createSubmitButton();
@@ -41,13 +41,18 @@ function renderLoginForm() {
   // Create wrapper for "Remember me" checkbox
   const formCheckWrapper = createRememberMeCheckbox();
 
+  // Create an empty paragraph element to display error message
+  const errorMessageElement = document.createElement('p');
+  errorMessageElement.className = 'help is-danger';
+  errorMessageElement.id = 'loginErrorMessage';
+
   const registerLink = document.createElement('p');
   registerLink.innerHTML = `Vous n'avez pas de compte ? <a id="registerLink" style="color: blue; cursor: pointer;">S'enregistrer</a>`;
   // Add event listener for redirection to registration page
   registerLink.querySelector('#registerLink').addEventListener('click', () => Navigate('/register'));
 
   // Add elements to form
-  form.append(username.label, username.input, password.label, password.input, formCheckWrapper, submit, registerLink);
+  form.append(username.label, username.input, password.label, password.input, formCheckWrapper, errorMessageElement, submit, registerLink);
 
   // Add form to container
   container.appendChild(form);
@@ -60,11 +65,10 @@ function renderLoginForm() {
 }
 
 // Create an HTML input field
-function createInputElement(type, id, labelText, required, className) {
+function createInputElement(type, id, labelText, className) {
   const input = document.createElement('input');
   input.type = type;
   input.id = id;
-  input.required = required;
   input.className = className;
 
   const label = document.createElement('label');
@@ -112,12 +116,26 @@ function onCheckboxClicked(e) {
   setRememberMe(e.target.checked);
 }
 
+
+
 // Handle login form submission
 async function onLogin(e) {
   e.preventDefault();
+  resetFormErrors();
 
-  const email = document.querySelector('#email').value;
-  const password = document.querySelector('#password').value;
+  const email = document.querySelector('#emailInput').value;
+  const password = document.querySelector('#passwordInput').value;
+
+  if (!email || !password){
+    const errorMessageElement = document.getElementById('loginErrorMessage');
+    errorMessageElement.textContent = 'Veuillez remplir tous les champs';
+    errorMessageElement.style.display = 'block';
+    errorMessageElement.style.fontSize = '16px';
+
+    if (!email) addRedBorder('emailInput');
+    if (!password) addRedBorder('passwordInput');
+    return;
+  } 
 
   const options = {
     method: 'POST',
@@ -129,9 +147,19 @@ async function onLogin(e) {
 
   try {
     const response = await fetch(`http://localhost:8080/auths/login`, options);
+    const errorMessageElement = document.getElementById('loginErrorMessage');
 
     if (!response.ok){
-      alert('Email or password incorrect');
+      if(response.status === 401){
+        errorMessageElement.textContent = 'Mauvais mot de passe'
+        errorMessageElement.style.display = 'block';
+        errorMessageElement.style.fontSize = '16px';
+      }else{
+        errorMessageElement.textContent = 'Email incorrect';
+        errorMessageElement.style.display = 'block';
+        errorMessageElement.style.fontSize = '16px';
+      }
+      
       return;
     } 
   
@@ -145,5 +173,24 @@ async function onLogin(e) {
   }
 }
 
+function addRedBorder(elementId) {
+  const element = document.getElementById(elementId);
+  if (element) {
+    element.style.border = '1px solid red';
+  } 
+}
+
+function resetFormErrors() {
+  const errorMessage = document.getElementById('loginErrorMessage');
+  errorMessage.textContent = '';
+  errorMessage.style.display = 'none';
+
+  const inputs = document.querySelectorAll('input');
+  console.log(`hhhhh: ${inputs}`);
+  inputs.forEach(input => {
+    const inputElement = input;
+    inputElement.style.border = '1px solid lightgray';
+  });
+}
 // Export the LoginPage component
 export default LoginPage;
