@@ -21,6 +21,9 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 
 /**
  * Implementation of the Responsible interface.
@@ -30,6 +33,7 @@ import jakarta.ws.rs.core.Response.Status;
 public class SupervisorResource {
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
+  private static final Logger logger = LogManager.getLogger(EnterpriseResource.class);
 
   @Inject
   private EnterpriseUCC entrepriseUCC;
@@ -47,9 +51,10 @@ public class SupervisorResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getResponsableByUserId(JsonNode json) {
+    ThreadContext.put("route", "/res/responsable");
+    ThreadContext.put("method", "Post");
     try {
-      // Get token from JSON
-      System.out.println("here");
+
       if (!json.hasNonNull("token")) {
         throw new WebApplicationException("token is required", Status.BAD_REQUEST);
       }
@@ -61,11 +66,11 @@ public class SupervisorResource {
           .verify(jsonToken); // verify the token
       // Het userId from decodedToken
       int userId = jwt.getClaim("user").asInt();
+      ThreadContext.put("params", "userId:" + userId);
       // Assuming the token includes a "user" claim holding the user ID
       if (userId == -1) {
         throw new JWTVerificationException("User ID claim is missing");
       }
-      System.out.println("user id : " + userId);
       // get entrprise that corresponds to user intership
       EnterpriseDTO enterpriseDTO = entrepriseUCC.getEnterprisesByUserId(userId);
       Supervisor supervisorDTO = supervisorUCC.getResponsibleByEnterpriseId(
@@ -80,7 +85,8 @@ public class SupervisorResource {
       responsibleNode.put("phone", supervisorDTO.getPhone());
       responsibleNode.put("email", supervisorDTO.getEmail());
       responsibleNode.put("enterprise_id", supervisorDTO.getEnterprise());
-
+      logger.info("Status: 200 {getResponsableByUserId}");
+      ThreadContext.clearAll();
       return responsibleNode;
 
     } catch (Exception e) {
