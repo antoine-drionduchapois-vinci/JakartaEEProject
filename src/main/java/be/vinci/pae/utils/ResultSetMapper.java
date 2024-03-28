@@ -30,11 +30,15 @@ public class ResultSetMapper<T, U> {
    */
   public T mapResultSetToObject(ResultSet rs, Class<U> clazz, Supplier<T> factoryFunction)
       throws SQLException, IllegalAccessException {
-    Field[] fields = clazz.getDeclaredFields();
-    if (!rs.next()) {
-      return null;
+    try (rs) {
+      if (!rs.next()) {
+        return null;
+      }
+      Field[] fields = clazz.getDeclaredFields();
+      return mapFields(fields, rs, factoryFunction);
+    } catch (SQLException e) {
+      throw new FatalErrorException(e);
     }
-    return mapFields(fields, rs, factoryFunction);
   }
 
   /**
@@ -54,16 +58,20 @@ public class ResultSetMapper<T, U> {
   public List<T> mapResultSetToObjectList(ResultSet rs, Class<U> clazz, Supplier<T> factoryFunction)
       throws SQLException, IllegalAccessException {
     List<T> objects = new ArrayList<>();
-    Field[] fields = clazz.getDeclaredFields();
 
-    if (!rs.next()) {
-      return null;
-    }
-    objects.add(mapFields(fields, rs, factoryFunction));
-    while (rs.next()) {
+    try (rs) {
+      if (!rs.next()) {
+        return null;
+      }
+      Field[] fields = clazz.getDeclaredFields();
       objects.add(mapFields(fields, rs, factoryFunction));
+      while (rs.next()) {
+        objects.add(mapFields(fields, rs, factoryFunction));
+      }
+      return objects;
+    } catch (SQLException e) {
+      throw new FatalErrorException(e);
     }
-    return objects;
   }
 
   /**
@@ -109,5 +117,4 @@ public class ResultSetMapper<T, U> {
     }
     return object;
   }
-
 }
