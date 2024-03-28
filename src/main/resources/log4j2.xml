@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
   <Appenders>
+    <!-- Appender pour le fichier de journalisation -->
     <RollingFile name="RollingFile" fileName="logs/app.log"
       filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
-      <PatternLayout>
-        <Pattern>%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n</Pattern>
-      </PatternLayout>
+      <PatternLayout
+        pattern="%highlight{%d{yyyy-MM-dd HH:mm:ss} [%-5level] %logger{36} - Route: %X{route}, Method: %X{method}, Params: %X{params} - %msg%n}{FATAL=red blink,ERROR=red, WARN=yellow bold, INFO=black, DEBUG=green bold, TRACE=blue}"/>
       <Policies>
         <TimeBasedTriggeringPolicy />
         <SizeBasedTriggeringPolicy size="10 MB"/>
@@ -17,10 +17,20 @@
         </Delete>
       </DefaultRolloverStrategy>
     </RollingFile>
+
+    <!-- Appender pour la sortie console -->
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout
+        pattern="%highlight{%d{yyyy-MM-dd HH:mm:ss} [%-5level] %logger{36} - Route: %X{route}, Params: %X{params} - %msg%n}{FATAL=red blink,ERROR=red, WARN=yellow bold, INFO=black, DEBUG=green bold, TRACE=blue}"/>
+    </Console>
   </Appenders>
+
+  <!-- Configuration du logger -->
   <Loggers>
-    <Root level="info">
+    <!-- Configuration du root logger -->
+    <Root level="ALL">
       <AppenderRef ref="RollingFile"/>
+      <AppenderRef ref="Console"/> <!-- Ajout de la référence à l'appender de la console -->
     </Root>
   </Loggers>
 </Configuration>
