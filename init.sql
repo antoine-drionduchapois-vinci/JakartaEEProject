@@ -106,7 +106,7 @@ VALUES ('2023-2024', 2, 'accepted', NULL, 'A distance', 9),
        ('2023-2024', 2, 'suspended', NULL, 'A distance', 7),
        ('2023-2024', 4, 'suspended', NULL, NULL, 7),
        ('2023-2024', 3, 'refused', NULL, 'Dans l''entreprise', 7),
-       ('2023-2024', 3, 'contacted', NULL, 'A distance', 5),
+       ('2023-2024', 3, 'meet', NULL, 'A distance', 5),
        ('2023-2024', 4, 'initiated', NULL, NULL, 5),
        ('2023-2024', 2, 'initiated', NULL, NULL, 5),
        ('2023-2024', 4, 'initiated', NULL, NULL, 8);
