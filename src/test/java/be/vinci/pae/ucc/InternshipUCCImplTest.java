@@ -1,13 +1,12 @@
 package be.vinci.pae.ucc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 import be.vinci.pae.dao.InternshipDAO;
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.InternshipDTO;
-import be.vinci.pae.utils.NotFoundException;
 import be.vinci.pae.utils.TestBinder;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
@@ -59,8 +58,6 @@ class InternshipUCCImplTest {
     int userId = 1;
     when(internshipDAO.getUserInternship(userId)).thenReturn(null);
 
-    assertThrows(NotFoundException.class, () -> {
-      internshipUCC.getUserInternship(userId);
-    });
+    assertNull(internshipUCC.getUserInternship(userId));
   }
 }
