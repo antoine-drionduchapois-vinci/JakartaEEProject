@@ -3,6 +3,9 @@ package be.vinci.pae.resources;
 import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.auth0.jwt.interfaces.JWTVerifier;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -43,6 +46,17 @@ public class JWTImpl implements JWT {
       // Log error message if token creation fails
       System.out.println("Unable to create token: " + e.getMessage());
       return null;
+    }
+  }
+
+  @Override
+  public int getUserIdFromToken(String token) {
+    try {
+      JWTVerifier verifier = com.auth0.jwt.JWT.require(jwtAlgorithm).withIssuer("auth0").build();
+      DecodedJWT decodedJWT = verifier.verify(token);
+      return decodedJWT.getClaim("user").asInt();
+    } catch (JWTVerificationException e) {
+      return 0;
     }
   }
 }

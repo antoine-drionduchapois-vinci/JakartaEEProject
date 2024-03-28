@@ -14,6 +14,7 @@ import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -32,8 +33,9 @@ public class ContactResource {
 
   private JWTDecryptToken decryptToken = new JWTDecryptToken();
   @Inject
+  private JWT myJwt;
+  @Inject
   private ContactUCC myContactUCC;
-
   @Inject
   private EnterpriseUCC myEnterpriseUCC;
 
@@ -45,12 +47,18 @@ public class ContactResource {
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getOne(@DefaultValue("-1") @QueryParam("contactId") int contactId) {
+  public ObjectNode getOne(@DefaultValue("-1") @QueryParam("contactId") int contactId,
+      @HeaderParam("Authorization") String token) {
+    int userId = myJwt.getUserIdFromToken(token);
+    if (userId == 0) {
+      throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
+    }
+
     if (contactId == -1) {
       throw new WebApplicationException("contactId required", Status.BAD_REQUEST);
     }
 
-    return convertDTOToJson(myContactUCC.getContact(contactId));
+    return convertDTOToJson(myContactUCC.getContact(userId, contactId));
   }
 
   /**
@@ -63,14 +71,15 @@ public class ContactResource {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode initiate(JsonNode json) {
-    if (!json.hasNonNull("userId")) {
-      throw new WebApplicationException("Bad Request", Status.BAD_REQUEST);
+  public ObjectNode initiate(JsonNode json, @HeaderParam("Authorization") String token) {
+    int userId = myJwt.getUserIdFromToken(token);
+    if (userId == 0) {
+      throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
     }
 
     if (json.hasNonNull("enterpriseId")) {
-      return convertDTOToJson(myContactUCC.initiateContact(json.get("userId").asInt(),
-          json.get("enterpriseId").asInt()));
+      return convertDTOToJson(
+          myContactUCC.initiateContact(userId, json.get("enterpriseId").asInt()));
     }
 
     if (!json.hasNonNull("enterpriseName") || !json.hasNonNull("enterpriseLabel")
@@ -81,10 +90,10 @@ public class ContactResource {
           Status.BAD_REQUEST);
     }
 
-    return convertDTOToJson(myContactUCC.initiateContact(json.get("userId").asInt(),
-        json.get("enterpriseName").asText(), json.get("enterpriseLabel").asText(),
-        json.get("enterpriseAddress").asText(), json.get("enterprisePhone").asText(),
-        json.get("enterpriseEmail").asText()));
+    return convertDTOToJson(
+        myContactUCC.initiateContact(userId, json.get("enterpriseName").asText(),
+            json.get("enterpriseLabel").asText(), json.get("enterpriseAddress").asText(),
+            json.get("enterprisePhone").asText(), json.get("enterpriseEmail").asText()));
   }
 
   /**
@@ -97,12 +106,17 @@ public class ContactResource {
   @Path("/meet")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode meet(JsonNode json) throws WebApplicationException {
+  public ObjectNode meet(JsonNode json, @HeaderParam("Authorization") String token) {
+    int userId = myJwt.getUserIdFromToken(token);
+    if (userId == 0) {
+      throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
+    }
+
     if (!json.hasNonNull("contactId") || !json.hasNonNull("meetingPoint")) {
       throw new WebApplicationException("contactId and meetingPoint required", Status.BAD_REQUEST);
     }
 
-    return convertDTOToJson(myContactUCC.meetEnterprise(json.get("contactId").asInt(),
+    return convertDTOToJson(myContactUCC.meetEnterprise(userId, json.get("contactId").asInt(),
         json.get("meetingPoint").asText()));
   }
 
@@ -116,12 +130,17 @@ public class ContactResource {
   @Path("/refuse")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode refuse(JsonNode json) {
+  public ObjectNode refuse(JsonNode json, @HeaderParam("Authorization") String token) {
+    int userId = myJwt.getUserIdFromToken(token);
+    if (userId == 0) {
+      throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
+    }
+
     if (!json.hasNonNull("contactId") || !json.hasNonNull("refusalReason")) {
       throw new WebApplicationException("contactId and refusalReason required", Status.BAD_REQUEST);
     }
 
-    return convertDTOToJson(myContactUCC.indicateAsRefused(json.get("contactId").asInt(),
+    return convertDTOToJson(myContactUCC.indicateAsRefused(userId, json.get("contactId").asInt(),
         json.get("refusalReason").asText()));
   }
 
@@ -135,12 +154,16 @@ public class ContactResource {
   @Path("/unfollow")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode unfollow(JsonNode json) {
+  public ObjectNode unfollow(JsonNode json, @HeaderParam("Authorization") String token) {
+    int userId = myJwt.getUserIdFromToken(token);
+    if (userId == 0) {
+      throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
+    }
     if (!json.hasNonNull("contactId")) {
       throw new WebApplicationException("contactId required", Status.BAD_REQUEST);
     }
 
-    return convertDTOToJson(myContactUCC.unfollow(json.get("contactId").asInt()));
+    return convertDTOToJson(myContactUCC.unfollow(userId, json.get("contactId").asInt()));
   }
 
   /**

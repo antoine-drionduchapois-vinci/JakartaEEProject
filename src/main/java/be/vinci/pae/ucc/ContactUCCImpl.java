@@ -39,9 +39,12 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
-  public ContactDTO getContact(int contactId) {
+  public ContactDTO getContact(int userId, int contactId) {
     myDALService.start();
     ContactDTO contactDTO = myContactDAO.readOne(contactId);
+    if (contactDTO.getUser() != userId) {
+      throw new NotFoundException();
+    }
     EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(contactDTO.getEnterprise());
     myDALService.commit();
     if (enterpriseDTO == null) {
@@ -77,9 +80,12 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
-  public ContactDTO meetEnterprise(int contactId, String meetingPoint) {
+  public ContactDTO meetEnterprise(int userId, int contactId, String meetingPoint) {
     myDALService.start();
     Contact contact = (Contact) myContactDAO.readOne(contactId);
+    if (contact.getUser() != userId) {
+      throw new NotFoundException();
+    }
 
     if (!contact.meet(meetingPoint)) {
       throw new BusinessException(403, "contact must be initiated");
@@ -96,9 +102,12 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
-  public ContactDTO indicateAsRefused(int contactId, String refusalReason) {
+  public ContactDTO indicateAsRefused(int userId, int contactId, String refusalReason) {
     myDALService.start();
     Contact contact = (Contact) myContactDAO.readOne(contactId);
+    if (contact.getUser() != userId) {
+      throw new NotFoundException();
+    }
 
     if (!contact.indicateAsRefused(refusalReason)) {
       throw new BusinessException(403, "contact must be initiated or meet");
@@ -116,10 +125,13 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
-  public ContactDTO unfollow(int contactId) {
+  public ContactDTO unfollow(int userId, int contactId) {
     myDALService.start();
     Contact contact = (Contact) myContactDAO.readOne(contactId);
-
+    if (contact.getUser() != userId) {
+      throw new NotFoundException();
+    }
+    
     if (!contact.unfollow()) {
       throw new BusinessException(403, "contact must be initiated or meet");
     }

@@ -22,10 +22,12 @@ public interface ContactUCC {
   /**
    * Retrieves the contact information associated with the specified contact ID.
    *
+   * @param userId       The ID of the user initiating the contact.
    * @param contactId The ID of the contact to retrieve.
    * @return An ObjectNode containing the contact information if found, or null if not found.
    */
-  ContactDTO getContact(int contactId);
+
+  ContactDTO getContact(int userId, int contactId);
 
   /**
    * Initiates a contact between a user and an enterprise identified by their respective IDs.
@@ -44,27 +46,31 @@ public interface ContactUCC {
   /**
    * Updates the contact status to "pris" and sets the meeting point for the specified contact.
    *
+   * @param userId       The ID of the user.
    * @param contactId    The ID of the contact to update.
    * @param meetingPoint The meeting point for the contact.
    * @return An ObjectNode containing the updated contact information.
    */
-  ContactDTO meetEnterprise(int contactId, String meetingPoint);
+  ContactDTO meetEnterprise(int userId, int contactId, String meetingPoint);
 
   /**
    * Indicates that the contact associated with the specified ID has been refused with the provided
    * reason.
    *
-   * @param contactId The ID of the contact to mark as refused.
-   * @param reason    The reason for refusing the contact.
+   * @param userId           The ID of the user.
+   * @param contactId        The ID of the contact to mark as refused.
+   * @param refusalReason    The reason for refusing the contact.
    * @return An ObjectNode containing the updated contact information.
    */
-  ContactDTO indicateAsRefused(int contactId, String reason);
+  ContactDTO indicateAsRefused(int userId, int contactId, String refusalReason);
 
   /**
    * Marks the contact associated with the specified ID as "non_suivis".
    *
+   * @param userId           The ID of the user.
    * @param contactId The ID of the contact to unfollow.
    * @return An ObjectNode containing the updated contact information.
    */
-  ContactDTO unfollow(int contactId);
+
+  ContactDTO unfollow(int userId, int contactId);
 }

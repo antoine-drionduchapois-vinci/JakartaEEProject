@@ -1,11 +1,13 @@
 import autocomplete from '../../services/autocomplete';
 import checkInput from '../../services/checkInput';
+import { getAuthenticatedUser } from '../../utils/auths';
 
 const initiateContact = (data) =>
   fetch('http://localhost:8080/contact', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: getAuthenticatedUser().token,
     },
     body: JSON.stringify(data),
   })

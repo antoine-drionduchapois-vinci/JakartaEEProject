@@ -22,8 +22,16 @@ const Contact = async () => {
 
   let contact = null;
   if (contactId) {
-    contact = await fetch(`http://localhost:8080/contact?contactId=${contactId}`)
-      .then((res) => (res.status === 200 ? res.json() : null))
+    contact = await fetch(`http://localhost:8080/contact?contactId=${contactId}`, {
+      headers: {
+        Authorization: user.token,
+      },
+    })
+      .then((res) => {
+        if (res.ok) return res.json();
+        if (res.status === 404);
+        return 404;
+      })
       .catch((error) => console.error(error));
   }
 
@@ -38,9 +46,18 @@ const Contact = async () => {
   const contentElement = document.createElement('div');
   contentElement.id = 'content';
   main.appendChild(contentElement);
+
   contentElement.innerHTML = `
     <div>
       <button class="ml-4 button" id="back">Retour</button>
+    </div>
+    <div id="error-404" class="d-none">
+      <p>
+        <strong>
+          404
+        </strong>
+        Not Found
+      </p>
     </div>
     <div id="initiated-row" class="columns p-4"></div>
     <div id="took-row" class="columns p-4"></div>
@@ -52,6 +69,11 @@ const Contact = async () => {
   backButton.addEventListener('click', () => {
     Navigate('/dashboardS');
   });
+
+  if (contact === 404) {
+    document.querySelector('#error-404').setAttribute('class', 'd-flex justify-content-center');
+    return;
+  }
 
   InitiatedRow(document.querySelector('#initiated-row'), user, contact, enterprises);
   TookRow(document.querySelector('#took-row'), user, contact);

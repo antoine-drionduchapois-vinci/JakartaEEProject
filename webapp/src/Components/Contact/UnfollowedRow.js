@@ -1,8 +1,11 @@
+import { getAuthenticatedUser } from '../../utils/auths';
+
 const unfollow = async (data) =>
   fetch('http://localhost:8080/contact/unfollow', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: getAuthenticatedUser().token,
     },
     body: JSON.stringify(data),
   })
