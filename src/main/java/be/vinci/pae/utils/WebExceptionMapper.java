@@ -7,6 +7,7 @@ import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 
 /**
  * Provider class for mapping exceptions to appropriate HTTP responses.
@@ -22,6 +23,7 @@ public class WebExceptionMapper implements ExceptionMapper<Throwable> {
 
     if (exception instanceof WebApplicationException exc) {
       logger.error("Status: " + exc.getResponse().getStatus() + " " + exc.getMessage());
+      ThreadContext.clearAll();
 
       return Response.status(exc.getResponse().getStatus())
           .entity(exception.getMessage())
@@ -30,16 +32,19 @@ public class WebExceptionMapper implements ExceptionMapper<Throwable> {
 
     if (exception instanceof BusinessException exc) {
       logger.error("Status: " + exc.getCode() + " " + exc.getMessage());
+      ThreadContext.clearAll();
       return Response.status(((BusinessException) exception).getCode())
           .entity(exception.getMessage()).build();
     }
 
     if (exception instanceof NotFoundException exc) {
       logger.error("Status: 404 " + exc.getMessage());
+      ThreadContext.clearAll();
       return Response.status(404).entity("Not Found").build();
     }
 
     logger.error("Status: 500 " + exception.getMessage());
+    ThreadContext.clearAll();
     return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
         .entity(exception.getMessage())
         .build();
