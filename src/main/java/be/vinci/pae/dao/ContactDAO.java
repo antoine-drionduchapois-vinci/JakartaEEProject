@@ -39,6 +39,13 @@ public interface ContactDAO {
    */
   ContactDTO readOne(int userId, int enterpriseId);
 
+  /**
+   * Creates a new contact between a user and an enterprise.
+   *
+   * @param userId       The ID of the user.
+   * @param enterpriseId The ID of the enterprise.
+   * @return The newly created contact.
+   */
   ContactDTO create(int userId, int enterpriseId);
 
   /**

@@ -6,8 +6,12 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 
+/**
+ * Implementation of the Data Access Layer service interface providing methods for database
+ * interaction.
+ */
 public class DALServiceImpl implements DALService, DALBackService {
-
+  
   private DataSource dataSource;
   private final String url = Config.getProperty("db.url");
   private final String username = Config.getProperty("db.username");

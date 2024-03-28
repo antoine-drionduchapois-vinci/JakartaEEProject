@@ -15,4 +15,6 @@ public interface JWT {
    * @return an ObjectNode containing the JWT token and user information
    */
   ObjectNode createToken(UserDTO userDTO);
+
+  int getUserIdFromToken(String token);
 }

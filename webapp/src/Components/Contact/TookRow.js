@@ -1,10 +1,12 @@
 import checkInput from '../../services/checkInput';
+import { getAuthenticatedUser } from '../../utils/auths';
 
 const meetEnterprise = (data) =>
   fetch('http://localhost:8080/contact/meet', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: getAuthenticatedUser().token,
     },
     body: JSON.stringify(data),
   })

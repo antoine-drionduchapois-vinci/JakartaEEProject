@@ -6,6 +6,9 @@ package be.vinci.pae.utils;
  */
 public class BusinessException extends RuntimeException {
 
+  /**
+   * Status code of the error.
+   */
   private int code;
 
   /**

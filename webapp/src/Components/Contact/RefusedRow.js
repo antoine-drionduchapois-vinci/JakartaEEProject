@@ -1,10 +1,12 @@
 import checkInput from '../../services/checkInput';
+import { getAuthenticatedUser } from '../../utils/auths';
 
 const indicateAsRefused = (data) =>
   fetch('http://localhost:8080/contact/refuse', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: getAuthenticatedUser().token,
     },
     body: JSON.stringify(data),
   })
