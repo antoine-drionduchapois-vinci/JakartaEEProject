@@ -17,7 +17,7 @@ public interface JWT {
   ObjectNode createToken(UserDTO userDTO);
 
   /**
-   * Retrieves user ID from string token
+   * Retrieves user ID from string token.
    *
    * @param token the token to be decrypted
    * @return user ID
