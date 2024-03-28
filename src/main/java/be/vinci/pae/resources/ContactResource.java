@@ -66,7 +66,7 @@ public class ContactResource {
     if (contactId == -1) {
       throw new WebApplicationException("contactId required", Status.BAD_REQUEST);
     }
-    ObjectNode objectNode = convertDTOToJson(myContactUCC.getContact(userId,contactId));
+    ObjectNode objectNode = convertDTOToJson(myContactUCC.getContact(userId, contactId));
     logger.info("Status: 200 {getOne}");
     ThreadContext.clearAll();
     return objectNode;
@@ -103,7 +103,8 @@ public class ContactResource {
         || !json.hasNonNull("enterpriseAddress")
         || !json.hasNonNull("enterprisePhone") && !json.hasNonNull("enterpriseEmail")) {
       throw new WebApplicationException(
-          "contactId, enterpriseName, enterpriseLabel, enterpriseAddress and enterprisePhone or enterpriseEmail are required",
+          "contactId, enterpriseName, enterpriseLabel, enterpriseAddress and"
+              + " enterprisePhone or enterpriseEmail are required",
           Status.BAD_REQUEST);
     }
     ObjectNode objectNode = convertDTOToJson(
@@ -141,7 +142,7 @@ public class ContactResource {
     int contactId = json.get("contactId").asInt();
     String meetingPoint = json.get("meetingPoint").asText();
     ThreadContext.put("params", "contactId:" + contactId + "meetingPoint:" + meetingPoint);
-    ObjectNode objectNode = convertDTOToJson(myContactUCC.meetEnterprise(userId,contactId,
+    ObjectNode objectNode = convertDTOToJson(myContactUCC.meetEnterprise(userId, contactId,
         meetingPoint));
     logger.info("Status: 200 {meet}");
     ThreadContext.clearAll();
@@ -174,7 +175,7 @@ public class ContactResource {
     int contactId = json.get("contactId").asInt();
     String refusalReason = json.get("refusalReason").asText();
     ThreadContext.put("params", "contactId:" + contactId + "refusalReason:" + refusalReason);
-    ObjectNode objectNode = convertDTOToJson(myContactUCC.indicateAsRefused(userId,contactId,
+    ObjectNode objectNode = convertDTOToJson(myContactUCC.indicateAsRefused(userId, contactId,
         refusalReason));
     logger.info("Status: 200 {refuse}");
     ThreadContext.clearAll();
@@ -205,7 +206,7 @@ public class ContactResource {
     }
     int contactId = json.get("contactId").asInt();
     ThreadContext.put("params", "contactId:" + contactId);
-    ObjectNode objectNode = convertDTOToJson(myContactUCC.unfollow(userId,contactId));
+    ObjectNode objectNode = convertDTOToJson(myContactUCC.unfollow(userId, contactId));
     logger.info("Status: 200 {refuse}");
     ThreadContext.clearAll();
     return objectNode;

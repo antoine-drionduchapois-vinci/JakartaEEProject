@@ -55,7 +55,8 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
   }
 
   @Override
-  public EnterpriseDTO create(String name, String label, String adress, String phone, String email) {
+  public EnterpriseDTO create(String name, String label, String adress,
+      String phone, String email) {
     if (exists(name, label)) {
       throw new BusinessException(409,
           "enterprise with name: " + name + " and label: " + label + " already exists!");
