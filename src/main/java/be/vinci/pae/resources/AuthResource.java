@@ -100,12 +100,11 @@ public class AuthResource {
     String firstname = json.get("firstname").asText();
     String email = json.get("email").asText();
     String telephone = json.get("telephone").asText();
-    String password = json.get("password").asText();
     String role = json.get("role").asText();
     ThreadContext.put("params",
         "name:" + name + "firstname:" + firstname + "email:" + email + "telephone:" + telephone
             + "role:" + role);
-
+    String password = json.get("password").asText();
     UserDTO userTemp = myDomainFactory.getUser();
     userTemp.setName(name);
     userTemp.setSurname(firstname);
