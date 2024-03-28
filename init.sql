@@ -136,7 +136,7 @@ SELECT
         WHEN state = 'accepted' THEN 'Accepté'
         WHEN state = 'refused' THEN 'Refusé'
         WHEN state = 'suspended' THEN 'Suspendu'
-        WHEN state = 'contacted' THEN 'Contacté'
+        WHEN state = 'meet' THEN 'Contacté'
         WHEN state = 'initiated' THEN 'Initié'
         ELSE 'Inconnu'
     END AS etat_contact,
