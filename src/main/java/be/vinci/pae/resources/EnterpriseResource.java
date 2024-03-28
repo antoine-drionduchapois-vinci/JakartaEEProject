@@ -20,6 +20,9 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 
 /**
  * Implementation of the Enterprise interface.
@@ -29,6 +32,7 @@ import java.util.List;
 public class EnterpriseResource {
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
+  private static final Logger logger = LogManager.getLogger(EnterpriseResource.class);
   @Inject
   private EnterpriseUCC myEnterpriseUCC;
 
@@ -42,6 +46,9 @@ public class EnterpriseResource {
   @Path("enterprises")
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getAllEnterprises() {
+    ThreadContext.put("route", "/contact");
+    ThreadContext.put("method", "Get");
+    ThreadContext.put("params", "NoParam");
     ObjectMapper mapper = new ObjectMapper();
     ObjectNode response = mapper.createObjectNode();
     ArrayNode enterprisesArray = mapper.createArrayNode();
@@ -61,7 +68,8 @@ public class EnterpriseResource {
       // Gérer les erreurs éventuelles
       response.put("error", e.getMessage());
     }
-
+    logger.info("Status: 200 {getAllEnterprises}");
+    ThreadContext.clearAll();
     return response;
   }
 
@@ -76,9 +84,12 @@ public class EnterpriseResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getEnterprisesByUserId(JsonNode json) {
+    ThreadContext.put("route", "/contact");
+    ThreadContext.put("method", "Get");
+
     try {
       // Get token from JSON
-      System.out.println("here");
+
       String jsonToken = json.get("token").asText();
       // Decode Token
       DecodedJWT jwt = JWT.require(jwtAlgorithm)
@@ -87,15 +98,18 @@ public class EnterpriseResource {
           .verify(jsonToken); // verify the token
       // Het userId from decodedToken
       int userId = jwt.getClaim("user").asInt();
+      ThreadContext.put("params", "userId:" + userId);
       // Assuming the token includes a "user" claim holding the user ID
       if (userId == -1) {
         throw new JWTVerificationException("User ID claim is missing");
       }
-      System.out.println("user id : " + userId);
+
       // get entrprise that corresponds to user intership
       EnterpriseDTO enterpriseDTO = myEnterpriseUCC.getEnterprisesByUserId(userId);
-
-      return convertDTOToJson(enterpriseDTO);
+      ObjectNode objectNode = convertDTOToJson(enterpriseDTO);
+      logger.info("Status: 200 {getEnterprisesByUserId}");
+      ThreadContext.clearAll();
+      return objectNode;
     } catch (Exception e) {
       // Gérer les erreurs éventuelles
       e.printStackTrace();

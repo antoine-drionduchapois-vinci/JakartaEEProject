@@ -20,6 +20,7 @@ import jakarta.ws.rs.core.Response.Status;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 
 
 /**
@@ -44,7 +45,10 @@ public class UserResource {
   @Path("stats")
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getGlobalStats() {
-    logger.info("Fetching global statistics...");
+    ThreadContext.put("route", "/users/stats");
+    ThreadContext.put("method", "Post");
+    ThreadContext.put("params", "NoParam");
+
     int studentsWithoutInternship = myUserUCC.countStudentsWithoutStage();
     int countStudents = myUserUCC.countStudents();
 
@@ -53,6 +57,9 @@ public class UserResource {
     ObjectNode stats = mapper.createObjectNode();
     stats.put("noStage", studentsWithoutInternship);
     stats.put("all", countStudents);
+
+    logger.info("Status: 200 {Fetching global statistics}");
+    ThreadContext.clearAll();
 
     return stats;
   }
@@ -66,6 +73,9 @@ public class UserResource {
   @Path("All")
   @Produces(MediaType.APPLICATION_JSON)
   public ArrayNode getUsersAsJson() {
+    ThreadContext.put("route", "/users/stats");
+    ThreadContext.put("method", "Get");
+    ThreadContext.put("params", "NoParam");
     ObjectMapper mapper = new ObjectMapper();
     ArrayNode usersArray = mapper.createArrayNode();
 
@@ -89,7 +99,8 @@ public class UserResource {
       // Gérer les erreurs éventuelles
       e.printStackTrace();
     }
-    logger.info("Fetching all User...");
+    logger.info("Status: 200 {Fetching all User}");
+    ThreadContext.clearAll();
     return usersArray;
   }
 

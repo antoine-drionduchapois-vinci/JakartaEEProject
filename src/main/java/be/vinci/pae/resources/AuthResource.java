@@ -4,10 +4,7 @@ import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.domain.UserDTO.Role;
 import be.vinci.pae.ucc.AuthUCC;
-import be.vinci.pae.utils.Config;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -19,6 +16,9 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 
 /**
  * Resource class for handling authentication-related endpoints.
@@ -27,8 +27,7 @@ import jakarta.ws.rs.core.Response.Status;
 @Path("/auths")
 public class AuthResource {
 
-  private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
-  private final ObjectMapper jsonMapper = new ObjectMapper();
+  private static final Logger logger = LogManager.getLogger(UserResource.class);
 
   @Inject
   private DomainFactory myDomainFactory;
@@ -50,12 +49,17 @@ public class AuthResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode login(JsonNode json) {
+    ThreadContext.put("route", "/auths/login");
+    ThreadContext.put("method", "Post");
+
     if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
       throw new WebApplicationException("Login or password required", Response.Status.BAD_REQUEST);
     }
 
     String email = json.get("email").asText();
     String password = json.get("password").asText();
+    ThreadContext.put("params", "email:" + email);
+
     UserDTO userTemp = myDomainFactory.getUser();
     userTemp.setPassword(password);
     System.out.println("userTemp resource " + userTemp.getPassword());
@@ -67,6 +71,8 @@ public class AuthResource {
       throw new WebApplicationException("Login or password incorrect",
           Response.Status.UNAUTHORIZED);
     }
+    logger.info("Status: 200 {login}");
+    ThreadContext.clearAll();
     return publicUser;
   }
 
@@ -82,6 +88,8 @@ public class AuthResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode register(JsonNode json) {
+    ThreadContext.put("route", "/auths/register");
+    ThreadContext.put("method", "Post");
     // Get and check credentials
     if (!json.hasNonNull("email") || !json.hasNonNull("password") || !json.hasNonNull("name")
         || !json.hasNonNull("firstname") || !json.hasNonNull("email") || !json.hasNonNull(
@@ -94,6 +102,9 @@ public class AuthResource {
     String telephone = json.get("telephone").asText();
     String password = json.get("password").asText();
     String role = json.get("role").asText();
+    ThreadContext.put("params",
+        "name:" + name + "firstname:" + firstname + "email:" + email + "telephone:" + telephone
+            + "role:" + role);
 
     UserDTO userTemp = myDomainFactory.getUser();
     userTemp.setName(name);
@@ -111,6 +122,8 @@ public class AuthResource {
       throw new WebApplicationException(Response.status(Response.Status.CONFLICT)
           .entity("This resource already exists").type(MediaType.TEXT_PLAIN).build());
     }
+    logger.info("Status: 200 {register}");
+    ThreadContext.clearAll();
     return publicUser;
   }
 }

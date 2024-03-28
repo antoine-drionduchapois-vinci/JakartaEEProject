@@ -19,6 +19,8 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Implementation of the internship interface.
@@ -29,6 +31,7 @@ public class InternshipResource {
 
 
   private JWTDecryptToken decryptToken = new JWTDecryptToken();
+  private static final Logger logger = LogManager.getLogger(InternshipResource.class);
 
   @Inject
   private InternshipUCC myInternshipUCC;
