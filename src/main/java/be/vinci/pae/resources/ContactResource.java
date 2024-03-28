@@ -43,6 +43,7 @@ public class ContactResource {
    * Retrieves a contact by its ID.
    *
    * @param contactId The ID of the contact to retrieve.
+   * @param token The authorization token.
    * @return The contact as JSON.
    */
   @GET
@@ -65,9 +66,9 @@ public class ContactResource {
    * Initiates a new contact between a user and an enterprise.
    *
    * @param json The JSON containing information about the contact.
+   * @param token The authorization token.
    * @return The newly initiated contact as JSON.
    */
-
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
@@ -100,6 +101,7 @@ public class ContactResource {
    * Marks a contact as having a meeting.
    *
    * @param json The JSON containing the contact ID and meeting point.
+   * @param token The authorization token.
    * @return The updated contact as JSON.
    */
   @POST
@@ -124,6 +126,7 @@ public class ContactResource {
    * Indicates that a contact has been refused.
    *
    * @param json The JSON containing the contact ID and refusal reason.
+   * @param token The authorization token.
    * @return The updated contact as JSON.
    */
   @POST
@@ -148,6 +151,7 @@ public class ContactResource {
    * Unfollows a contact.
    *
    * @param json The JSON containing the contact ID.
+   * @param token The authorization token.
    * @return The result of the unfollow operation as JSON.
    */
   @POST

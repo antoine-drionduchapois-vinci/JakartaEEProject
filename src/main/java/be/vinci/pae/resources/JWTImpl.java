@@ -49,6 +49,12 @@ public class JWTImpl implements JWT {
     }
   }
 
+  /**
+   * Retrieves the user ID from a JWT token.
+   *
+   * @param token The JWT token.
+   * @return The user ID extracted from the token, or 0 if the token is invalid or missing.
+   */
   @Override
   public int getUserIdFromToken(String token) {
     try {

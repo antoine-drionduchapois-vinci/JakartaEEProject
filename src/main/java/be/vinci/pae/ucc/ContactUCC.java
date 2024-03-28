@@ -39,7 +39,17 @@ public interface ContactUCC {
    */
   ContactDTO initiateContact(int userId, int enterpriseId);
 
-
+  /**
+   * Initiates a new contact between a user and an enterprise using the provided information.
+   *
+   * @param userId            The ID of the user initiating the contact.
+   * @param enterpriseName    The name of the enterprise.
+   * @param enterpriseLabel   The label of the enterprise.
+   * @param enterpriseAddress The address of the enterprise.
+   * @param enterprisePhone   The phone number of the enterprise.
+   * @param enterpriseEmail   The email address of the enterprise.
+   * @return The newly initiated contact.
+   */
   ContactDTO initiateContact(int userId, String enterpriseName, String enterpriseLabel,
       String enterpriseAddress, String enterprisePhone, String enterpriseEmail);
 
@@ -71,6 +81,5 @@ public interface ContactUCC {
    * @param contactId The ID of the contact to unfollow.
    * @return An ObjectNode containing the updated contact information.
    */
-
   ContactDTO unfollow(int userId, int contactId);
 }
