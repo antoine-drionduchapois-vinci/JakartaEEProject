@@ -59,6 +59,8 @@ CREATE TABLE projetae.internships
     contact       INTEGER     NOT NULL REFERENCES projetae.contacts
 );
 
+-------------------------------------------------------------------------------
+
 INSERT INTO projetae.enterprises (name, phone, address)
 VALUES ('Assyst Europe', '02.609.25.00', 'Avenue du Japon, 1/B9, 1420 Braine-l''Alleud'),
        ('LetsBuild', '014 54 67 54', 'Chaussée de Bruxelles, 135A, 1310 La Hulpe'),
@@ -114,3 +116,32 @@ INSERT INTO projetae.internships(subject, year, "user", supervisor, contact,
 VALUES ('Un ERP : Odoo', '2023-2024', 9, 1, 1, 2),
        ('sBMS project - a complex environment', '2023-2024', 6, 2, 2, 4),
        ('CRM : Microsoft Dynamics 365 For Sales', '2023-2024', 7, 3, 4, 1);
+
+-------------------------------------------------------------------------------
+
+SELECT count(*) FROM projetae.users;
+
+SELECT count(*) FROM projetae.enterprises;
+
+SELECT year, COUNT(*) AS nombre_de_stages
+FROM projetae.internships
+GROUP BY year;
+
+SELECT year, COUNT(*) AS nombre_de_contacts
+FROM projetae.contacts
+GROUP BY year;
+
+SELECT
+    CASE
+        WHEN state = 'accepted' THEN 'Accepté'
+        WHEN state = 'refused' THEN 'Refusé'
+        WHEN state = 'suspended' THEN 'Suspendu'
+        WHEN state = 'contacted' THEN 'Contacté'
+        WHEN state = 'initiated' THEN 'Initié'
+        ELSE 'Inconnu'
+    END AS etat_contact,
+    COUNT(*) AS nombre_de_contacts
+FROM
+    projetae.contacts
+GROUP BY
+    state;
