@@ -1,14 +1,13 @@
 package be.vinci.pae.ucc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 import be.vinci.pae.dao.EnterpriseDAO;
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.Enterprise;
 import be.vinci.pae.domain.EnterpriseDTO;
-import be.vinci.pae.utils.NotFoundException;
 import be.vinci.pae.utils.TestBinder;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,8 +83,6 @@ class EnterpriseUCCImplTest {
   void testGetEnterprisesByUserIdWithNoCorrespondingEnterprise() {
     when(enterpriseDAO.getEnterpriseById(1)).thenReturn(null);
 
-    assertThrows(NotFoundException.class, () -> {
-      enterpriseUCC.getEnterprisesByUserId(1);
-    });
+    assertNull(enterpriseUCC.getEnterprisesByUserId(1));
   }
 }

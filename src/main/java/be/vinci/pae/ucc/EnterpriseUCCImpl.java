@@ -3,7 +3,6 @@ package be.vinci.pae.ucc;
 import be.vinci.pae.dao.EnterpriseDAO;
 import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.utils.DALService;
-import be.vinci.pae.utils.NotFoundException;
 import jakarta.inject.Inject;
 import java.util.List;
 
@@ -32,9 +31,6 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
     myDALService.start();
     // get entrprise that corresponds to user intership
     EnterpriseDTO enterpriseDTO = enterpriseDAO.getEnterpriseById(userId);
-    if (enterpriseDTO == null) {
-      throw new NotFoundException();
-    }
     myDALService.commit();
 
     return enterpriseDTO;
