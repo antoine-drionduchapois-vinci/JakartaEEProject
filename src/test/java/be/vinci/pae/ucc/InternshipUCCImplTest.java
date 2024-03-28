@@ -37,7 +37,7 @@ class InternshipUCCImplTest {
 
   @Test
   void testGetUserInternshipWithExistingInternship() {
-    int userId = 1;
+
     InternshipDTO internshipDTO = domainFactory.getInternship();
     internshipDTO.setInternshipId(1);
     internshipDTO.setUser(1);
@@ -46,6 +46,7 @@ class InternshipUCCImplTest {
     internshipDTO.setSupervisor(1);
     internshipDTO.setEnterprise(1);
     internshipDTO.setSubject("Internship in consulting agency");
+    int userId = 1;
     when(internshipDAO.getUserInternship(userId)).thenReturn(internshipDTO);
 
     InternshipDTO result = internshipUCC.getUserInternship(userId);

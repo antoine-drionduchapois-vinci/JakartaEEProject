@@ -23,6 +23,9 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 
 /**
  * Resource class for managing contacts between users and enterprises.
@@ -32,6 +35,7 @@ import java.util.List;
 public class ContactResource {
 
   private JWTDecryptToken decryptToken = new JWTDecryptToken();
+  private static final Logger logger = LogManager.getLogger(ContactResource.class);
   @Inject
   private JWT myJwt;
   @Inject
@@ -50,6 +54,10 @@ public class ContactResource {
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getOne(@DefaultValue("-1") @QueryParam("contactId") int contactId,
       @HeaderParam("Authorization") String token) {
+    ThreadContext.put("route", "/contact");
+    ThreadContext.put("method", "Get");
+    ThreadContext.put("params", "contactId:" + contactId);
+
     int userId = myJwt.getUserIdFromToken(token);
     if (userId == 0) {
       throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
@@ -58,8 +66,10 @@ public class ContactResource {
     if (contactId == -1) {
       throw new WebApplicationException("contactId required", Status.BAD_REQUEST);
     }
-
-    return convertDTOToJson(myContactUCC.getContact(userId, contactId));
+    ObjectNode objectNode = convertDTOToJson(myContactUCC.getContact(userId, contactId));
+    logger.info("Status: 200 {getOne}");
+    ThreadContext.clearAll();
+    return objectNode;
   }
 
   /**
@@ -74,27 +84,36 @@ public class ContactResource {
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode initiate(JsonNode json, @HeaderParam("Authorization") String token) {
     int userId = myJwt.getUserIdFromToken(token);
+    ThreadContext.put("route", "/contact");
+    ThreadContext.put("method", "Post");
+
     if (userId == 0) {
       throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
     }
 
     if (json.hasNonNull("enterpriseId")) {
-      return convertDTOToJson(
-          myContactUCC.initiateContact(userId, json.get("enterpriseId").asInt()));
+
+      int enterpriseId = json.get("enterpriseId").asInt();
+      ThreadContext.put("params", "userId:" + userId + "enterpriseId:" + enterpriseId);
+      return convertDTOToJson(myContactUCC.initiateContact(userId,
+          enterpriseId));
     }
 
     if (!json.hasNonNull("enterpriseName") || !json.hasNonNull("enterpriseLabel")
         || !json.hasNonNull("enterpriseAddress")
         || !json.hasNonNull("enterprisePhone") && !json.hasNonNull("enterpriseEmail")) {
       throw new WebApplicationException(
-          "contactId, enterpriseName, enterpriseLabel, enterpriseAddress and enterprisePhone or enterpriseEmail are required",
+          "contactId, enterpriseName, enterpriseLabel, enterpriseAddress and"
+              + " enterprisePhone or enterpriseEmail are required",
           Status.BAD_REQUEST);
     }
-
-    return convertDTOToJson(
+    ObjectNode objectNode = convertDTOToJson(
         myContactUCC.initiateContact(userId, json.get("enterpriseName").asText(),
             json.get("enterpriseLabel").asText(), json.get("enterpriseAddress").asText(),
             json.get("enterprisePhone").asText(), json.get("enterpriseEmail").asText()));
+    logger.info("Status: 200 {initiate}");
+    ThreadContext.clearAll();
+    return objectNode;
   }
 
   /**
@@ -109,6 +128,9 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode meet(JsonNode json, @HeaderParam("Authorization") String token) {
+    ThreadContext.put("route", "/contact/meet");
+    ThreadContext.put("method", "Post");
+
     int userId = myJwt.getUserIdFromToken(token);
     if (userId == 0) {
       throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
@@ -117,9 +139,14 @@ public class ContactResource {
     if (!json.hasNonNull("contactId") || !json.hasNonNull("meetingPoint")) {
       throw new WebApplicationException("contactId and meetingPoint required", Status.BAD_REQUEST);
     }
-
-    return convertDTOToJson(myContactUCC.meetEnterprise(userId, json.get("contactId").asInt(),
-        json.get("meetingPoint").asText()));
+    int contactId = json.get("contactId").asInt();
+    String meetingPoint = json.get("meetingPoint").asText();
+    ThreadContext.put("params", "contactId:" + contactId + "meetingPoint:" + meetingPoint);
+    ObjectNode objectNode = convertDTOToJson(myContactUCC.meetEnterprise(userId, contactId,
+        meetingPoint));
+    logger.info("Status: 200 {meet}");
+    ThreadContext.clearAll();
+    return objectNode;
   }
 
   /**
@@ -134,6 +161,9 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode refuse(JsonNode json, @HeaderParam("Authorization") String token) {
+    ThreadContext.put("route", "/contact/refuse");
+    ThreadContext.put("method", "Post");
+
     int userId = myJwt.getUserIdFromToken(token);
     if (userId == 0) {
       throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
@@ -142,9 +172,14 @@ public class ContactResource {
     if (!json.hasNonNull("contactId") || !json.hasNonNull("refusalReason")) {
       throw new WebApplicationException("contactId and refusalReason required", Status.BAD_REQUEST);
     }
-
-    return convertDTOToJson(myContactUCC.indicateAsRefused(userId, json.get("contactId").asInt(),
-        json.get("refusalReason").asText()));
+    int contactId = json.get("contactId").asInt();
+    String refusalReason = json.get("refusalReason").asText();
+    ThreadContext.put("params", "contactId:" + contactId + "refusalReason:" + refusalReason);
+    ObjectNode objectNode = convertDTOToJson(myContactUCC.indicateAsRefused(userId, contactId,
+        refusalReason));
+    logger.info("Status: 200 {refuse}");
+    ThreadContext.clearAll();
+    return objectNode;
   }
 
   /**
@@ -159,6 +194,9 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode unfollow(JsonNode json, @HeaderParam("Authorization") String token) {
+    ThreadContext.put("route", "/contact/unfollow");
+    ThreadContext.put("method", "Post");
+
     int userId = myJwt.getUserIdFromToken(token);
     if (userId == 0) {
       throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
@@ -166,8 +204,12 @@ public class ContactResource {
     if (!json.hasNonNull("contactId")) {
       throw new WebApplicationException("contactId required", Status.BAD_REQUEST);
     }
-
-    return convertDTOToJson(myContactUCC.unfollow(userId, json.get("contactId").asInt()));
+    int contactId = json.get("contactId").asInt();
+    ThreadContext.put("params", "contactId:" + contactId);
+    ObjectNode objectNode = convertDTOToJson(myContactUCC.unfollow(userId, contactId));
+    logger.info("Status: 200 {refuse}");
+    ThreadContext.clearAll();
+    return objectNode;
   }
 
   /**
@@ -181,9 +223,10 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getUsersByIdAsJson(JsonNode json) {
-    System.out.println("getUserContact");
+    ThreadContext.put("route", "/contact/getUserContacts");
+    ThreadContext.put("method", "Post");
     int userId = decryptToken.getIdFromJsonToken(json);
-
+    ThreadContext.put("params", "userId:" + userId);
     if (userId == 0) {
       throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
     }
@@ -209,6 +252,8 @@ public class ContactResource {
       // Handle error
       response.put("error", e.getMessage());
     }
+    logger.info("Status: 200 {getUsersByIdAsJson}");
+    ThreadContext.clearAll();
     return response;
 
   }

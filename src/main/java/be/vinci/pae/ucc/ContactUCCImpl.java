@@ -57,7 +57,7 @@ public class ContactUCCImpl implements ContactUCC {
   @Override
   public ContactDTO initiateContact(int userId, int enterpriseId) {
     myDALService.start();
-    ContactDTO contactDTO = myContactDAO.create(userId,enterpriseId);
+    ContactDTO contactDTO = myContactDAO.create(userId, enterpriseId);
     EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(contactDTO.getEnterprise());
     myDALService.commit();
     if (enterpriseDTO == null) {

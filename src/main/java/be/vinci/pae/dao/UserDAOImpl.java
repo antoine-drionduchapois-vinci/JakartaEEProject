@@ -58,7 +58,8 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public UserDTO addUser(UserDTO userDTO) {
     PreparedStatement ps = myDalService.getPS(
-        "INSERT INTO projetae.users (name, surname, email, phone, password, year, inscription_date, role)"
+        "INSERT INTO projetae.users (name, surname, email, phone, password,"
+            + " year, inscription_date, role)"
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING *");
     LocalDate currentDate = LocalDate.now();
     Date curDate = Date.valueOf(currentDate);

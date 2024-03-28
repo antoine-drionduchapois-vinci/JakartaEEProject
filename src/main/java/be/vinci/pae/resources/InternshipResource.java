@@ -19,6 +19,9 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 
 /**
  * Implementation of the internship interface.
@@ -29,6 +32,7 @@ public class InternshipResource {
 
 
   private JWTDecryptToken decryptToken = new JWTDecryptToken();
+  private static final Logger logger = LogManager.getLogger(InternshipResource.class);
 
   @Inject
   private InternshipUCC myInternshipUCC;
@@ -50,8 +54,10 @@ public class InternshipResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getUserInternship(JsonNode json) {
-    System.out.println("GetUserInternship");
+    ThreadContext.put("route", "/int");
+    ThreadContext.put("method", "Post");
     int userId = decryptToken.getIdFromJsonToken(json);
+    ThreadContext.put("params", "userId:" + userId);
 
     if (userId == 0) {
       throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
@@ -74,7 +80,8 @@ public class InternshipResource {
     internshipNode.put("responsbile", responsibleDTO.getName());
     internshipNode.put("phone", responsibleDTO.getPhone());
     internshipNode.put("contact", internshipDTO.getContact());
-
+    logger.info("Status: 200 {getUserInternship}");
+    ThreadContext.clearAll();
     return internshipNode;
   }
 }

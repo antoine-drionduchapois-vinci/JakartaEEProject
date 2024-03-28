@@ -1,9 +1,13 @@
 package be.vinci.pae.utils;
 
+import be.vinci.pae.resources.UserResource;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 
 /**
  * Provider class for mapping exceptions to appropriate HTTP responses.
@@ -11,29 +15,36 @@ import jakarta.ws.rs.ext.Provider;
 @Provider
 public class WebExceptionMapper implements ExceptionMapper<Throwable> {
 
+  private static final Logger logger = LogManager.getLogger(UserResource.class);
+
   @Override
   public Response toResponse(Throwable exception) {
     exception.printStackTrace();
 
     if (exception instanceof WebApplicationException exc) {
-      System.err.println(exc.getResponse().getStatus() + " " + exc.getMessage());
+      logger.error("Status: " + exc.getResponse().getStatus() + " " + exc.getMessage());
+      ThreadContext.clearAll();
+
       return Response.status(exc.getResponse().getStatus())
           .entity(exception.getMessage())
           .build();
     }
 
     if (exception instanceof BusinessException exc) {
-      System.err.println(exc.getCode() + " " + exc.getMessage());
+      logger.error("Status: " + exc.getCode() + " " + exc.getMessage());
+      ThreadContext.clearAll();
       return Response.status(((BusinessException) exception).getCode())
           .entity(exception.getMessage()).build();
     }
 
     if (exception instanceof NotFoundException exc) {
-      System.err.println("404 " + exc.getMessage());
+      logger.error("Status: 404 " + exc.getMessage());
+      ThreadContext.clearAll();
       return Response.status(404).entity("Not Found").build();
     }
 
-    System.err.println("500 " + exception.getMessage());
+    logger.error("Status: 500 " + exception.getMessage());
+    ThreadContext.clearAll();
     return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
         .entity(exception.getMessage())
         .build();
