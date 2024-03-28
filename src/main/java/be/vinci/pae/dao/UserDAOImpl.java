@@ -61,7 +61,7 @@ public class UserDAOImpl implements UserDAO {
         "INSERT INTO projetae.users (name, surname, email, phone, password, year, inscription_date, role)"
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING *");
     LocalDate currentDate = LocalDate.now();
-    java.sql.Date curDate = Date.valueOf(currentDate);
+    Date curDate = Date.valueOf(currentDate);
     int currentYear = currentDate.getYear();
     int previousYear = currentYear - 1;
     String academicYear = previousYear + "-" + currentYear;
