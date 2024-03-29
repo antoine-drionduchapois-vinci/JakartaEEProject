@@ -4,6 +4,7 @@ import be.vinci.pae.resources.filters.CorsFilter;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.utils.WebExceptionMapper;
+import com.fasterxml.jackson.core.util.JacksonFeature;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
@@ -40,7 +41,8 @@ public class Main {
     final ResourceConfig rc = new ResourceConfig().packages("be.vinci.pae.resources")
         .register(ApplicationBinder.class)
         .register(WebExceptionMapper.class)
-        .register(CorsFilter.class);
+        .register(CorsFilter.class)
+        .register(JacksonFeature.class);
 
     // create and start a new instance of grizzly http server
     // exposing the Jersey application at BASE_URI
