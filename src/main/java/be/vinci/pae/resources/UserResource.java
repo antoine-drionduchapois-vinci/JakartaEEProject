@@ -115,28 +115,22 @@ public class UserResource {
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getUsersByIdAsJson(JsonNode json) {
 
-    try {
-      // Get token from JSON
-      int userId = decryptToken.getIdFromJsonToken(json);
+    // Get token from JSON
+    int userId = decryptToken.getIdFromJsonToken(json);
 
-      if (userId == 0) {
-        throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
-      }
-
-      UserDTO user = myUserUCC.getUsersByIdAsJson(userId);
-
-      ObjectMapper mapper = new ObjectMapper();
-      ObjectNode userInfo = mapper.createObjectNode();
-      userInfo.put("name", user.getName());
-      userInfo.put("surName", user.getSurname());
-      userInfo.put("phone", user.getPhone());
-      userInfo.put("year", user.getYear());
-      userInfo.put("email", user.getEmail());
-      return userInfo;
-    } catch (Exception e) {
-      // Gérer les erreurs éventuelles
+    if (userId == 0) {
+      throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
     }
-    return null;
-  }
 
+    UserDTO user = myUserUCC.getUsersByIdAsJson(userId);
+
+    ObjectMapper mapper = new ObjectMapper();
+    ObjectNode userInfo = mapper.createObjectNode();
+    userInfo.put("name", user.getName());
+    userInfo.put("surName", user.getSurname());
+    userInfo.put("phone", user.getPhone());
+    userInfo.put("year", user.getYear());
+    userInfo.put("email", user.getEmail());
+    return userInfo;
+  }
 }
