@@ -112,7 +112,6 @@ public class EnterpriseResource {
       return objectNode;
     } catch (Exception e) {
       // Gérer les erreurs éventuelles
-      e.printStackTrace();
     }
     return null;
   }

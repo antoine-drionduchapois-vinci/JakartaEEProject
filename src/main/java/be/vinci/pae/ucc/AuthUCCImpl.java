@@ -47,7 +47,6 @@ public class AuthUCCImpl implements AuthUCC {
     }
     User user = (User) userTemp;
     user.hashPassword(userTemp.getPassword());
-    System.out.println(user.getPassword());
     UserDTO userDTO = myUserDAO.addUser(user);
     //faire dto dans ressource cast et check role
     myDALService.commit();

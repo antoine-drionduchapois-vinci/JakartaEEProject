@@ -97,7 +97,6 @@ public class UserResource {
       }
     } catch (Exception e) {
       // Gérer les erreurs éventuelles
-      e.printStackTrace();
     }
     logger.info("Status: 200 {Fetching all User}");
     ThreadContext.clearAll();
@@ -136,7 +135,6 @@ public class UserResource {
       return userInfo;
     } catch (Exception e) {
       // Gérer les erreurs éventuelles
-      e.printStackTrace();
     }
     return null;
   }
