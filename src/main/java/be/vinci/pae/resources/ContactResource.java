@@ -1,7 +1,6 @@
 package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.ContactDTO;
-import be.vinci.pae.domain.ContactImpl;
 import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.ucc.ContactUCC;
 import be.vinci.pae.ucc.EnterpriseUCC;
@@ -70,7 +69,7 @@ public class ContactResource {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ContactDTO initiate(@HeaderParam("Authorization") String token, ContactImpl contact) {
+  public ContactDTO initiate(@HeaderParam("Authorization") String token, ContactDTO contact) {
     int userId = myJwt.getUserIdFromToken(token);
 
     ThreadContext.put("route", "/contact");
@@ -99,13 +98,13 @@ public class ContactResource {
               + " enterprisePhone or enterpriseEmail are required", Status.BAD_REQUEST);
     }
 
-    ContactDTO updatedContact = myContactUCC.initiateContact(userId, enterpriseName,
+    contact = myContactUCC.initiateContact(userId, enterpriseName,
         enterpriseLabel, enterpriseAddress, enterprisePhone, enterpriseEmail);
 
     logger.info("Status: 200 {initiate}");
     ThreadContext.clearAll();
 
-    return updatedContact;
+    return contact;
   }
 
   /**
