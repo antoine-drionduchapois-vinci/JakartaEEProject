@@ -13,7 +13,7 @@ const initiateContact = (data) =>
   })
     .then((res) => (res.status === 200 ? res.json() : null))
     .then((d) => {
-      if (d) window.location.href = `http://localhost:3000/contact?id=${d.contact_id}`;
+      if (d) window.location.href = `http://localhost:3000/contact?id=${d.contactId}`;
     })
     .catch((error) => console.error(error));
 
@@ -59,6 +59,7 @@ const autoFillFields = (
 };
 
 const InitiatedRow = (htmlElement, userData, contactData, enterprisesData) => {
+  console.log('🚀 ~ InitiatedRow ~ contactData:', contactData);
   const html = htmlElement;
   html.innerHTML = `
     <div class="column is-one-fifth">
@@ -109,15 +110,21 @@ const InitiatedRow = (htmlElement, userData, contactData, enterprisesData) => {
   if (contactData) {
     if (contactData.state !== 'refused' || contactData.state !== 'unfollowed')
       initiatedCircle.removeAttribute('hidden');
-    enterpriseInput.element.value = contactData.enterprise.name;
+    enterpriseInput.element.value = contactData.enterpriseDTO.name;
     enterpriseInput.element.setAttribute('disabled', true);
-    labelInput.element.value = contactData.enterprise.label ? contactData.enterprise.label : '';
+    labelInput.element.value = contactData.enterpriseDTO.label
+      ? contactData.enterpriseDTO.label
+      : '';
     labelInput.element.setAttribute('disabled', true);
-    addressInput.element.value = contactData.enterprise.adress;
+    addressInput.element.value = contactData.enterpriseDTO.address;
     addressInput.element.setAttribute('disabled', true);
-    phoneInput.element.value = contactData.enterprise.contact ? contactData.enterprise.contact : '';
+    phoneInput.element.value = contactData.enterpriseDTO.contact
+      ? contactData.enterprise.phone
+      : '';
     phoneInput.element.setAttribute('disabled', true);
-    emailInput.element.value = contactData.enterprise.email ? contactData.enterprise.email : '';
+    emailInput.element.value = contactData.enterpriseDTO.email
+      ? contactData.enterpriseDTO.email
+      : '';
     emailInput.element.setAttribute('disabled', true);
     submit.setAttribute('disabled', true);
   }
