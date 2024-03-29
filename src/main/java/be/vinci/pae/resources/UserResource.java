@@ -2,8 +2,6 @@ package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.ucc.UserUCC;
-import be.vinci.pae.utils.JWTDecryptToken;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -11,7 +9,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
@@ -31,10 +29,12 @@ import org.apache.logging.log4j.ThreadContext;
 public class UserResource {
 
   private static final Logger logger = LogManager.getLogger(UserResource.class);
-  private JWTDecryptToken decryptToken = new JWTDecryptToken();
 
   @Inject
   private UserUCC myUserUCC;
+
+  @Inject
+  private JWT myJwt;
 
   /**
    * Retrieves global statistics.
@@ -107,18 +107,18 @@ public class UserResource {
   /**
    * Retrieves user information by user ID and returns it as JSON.
    *
-   * @param json The JSON object containing the JWT token.
+   * @param token The user JWT token.
    * @return An ObjectNode representing the user's information.
    */
-  @POST
+  @GET
   @Path("getUserInfoById")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getUsersByIdAsJson(JsonNode json) {
+  public ObjectNode getUsersByIdAsJson(@HeaderParam("Authorization") String token) {
 
     try {
       // Get token from JSON
-      int userId = decryptToken.getIdFromJsonToken(json);
+      int userId = myJwt.getUserIdFromToken(token);
 
       if (userId == 0) {
         throw new WebApplicationException("userId is required", Status.BAD_REQUEST);

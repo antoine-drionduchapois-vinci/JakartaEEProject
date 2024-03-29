@@ -4,23 +4,17 @@ import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.domain.Supervisor;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.ucc.SupervisorUCC;
-import be.vinci.pae.utils.Config;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
@@ -32,7 +26,6 @@ import org.apache.logging.log4j.ThreadContext;
 @Path("/res")
 public class SupervisorResource {
 
-  private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private static final Logger logger = LogManager.getLogger(EnterpriseResource.class);
 
   @Inject
@@ -40,37 +33,29 @@ public class SupervisorResource {
   @Inject
   private SupervisorUCC supervisorUCC;
 
+  @Inject
+  private be.vinci.pae.resources.JWT myJwt;
+
   /**
    * Retrieves the supervisor responsible for the user's internship enterprise by user ID.
    *
-   * @param json The JSON object containing the JWT token.
+   * @param token the user token
    * @return An ObjectNode representing the supervisor details.
    */
-  @POST
+  @GET
   @Path("responsable")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getResponsableByUserId(JsonNode json) {
+  public ObjectNode getResponsableByUserId(@HeaderParam("Authorization") String token) {
     ThreadContext.put("route", "/res/responsable");
-    ThreadContext.put("method", "Post");
-    try {
+    ThreadContext.put("method", "GET");
 
-      if (!json.hasNonNull("token")) {
-        throw new WebApplicationException("token is required", Status.BAD_REQUEST);
-      }
-      String jsonToken = json.get("token").asText();
-      // Decode Token
-      DecodedJWT jwt = JWT.require(jwtAlgorithm)
-          .withIssuer("auth0")
-          .build() // create the JWTVerifier instance
-          .verify(jsonToken); // verify the token
-      // Het userId from decodedToken
-      int userId = jwt.getClaim("user").asInt();
-      ThreadContext.put("params", "userId:" + userId);
-      // Assuming the token includes a "user" claim holding the user ID
-      if (userId == -1) {
-        throw new JWTVerificationException("User ID claim is missing");
-      }
+    int userId = myJwt.getUserIdFromToken(token);
+    if (userId == 0) {
+      throw new JWTVerificationException("User ID claim is missing");
+    }
+
+    try {
       // get entrprise that corresponds to user intership
       EnterpriseDTO enterpriseDTO = entrepriseUCC.getEnterprisesByUserId(userId);
       Supervisor supervisorDTO = supervisorUCC.getResponsibleByEnterpriseId(

@@ -4,7 +4,6 @@ import be.vinci.pae.domain.ContactDTO;
 import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.ucc.ContactUCC;
 import be.vinci.pae.ucc.EnterpriseUCC;
-import be.vinci.pae.utils.JWTDecryptToken;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -34,8 +33,8 @@ import org.apache.logging.log4j.ThreadContext;
 @Path("/contact")
 public class ContactResource {
 
-  private JWTDecryptToken decryptToken = new JWTDecryptToken();
   private static final Logger logger = LogManager.getLogger(ContactResource.class);
+
   @Inject
   private JWT myJwt;
   @Inject
@@ -215,17 +214,19 @@ public class ContactResource {
   /**
    * Retrieves contacts for a specific user.
    *
-   * @param json The JSON containing the user ID.
+   * @param token The JSON containing the user ID.
    * @return The user's contacts as JSON.
    */
-  @POST
+  @GET
   @Path("getUserContacts")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getUsersByIdAsJson(JsonNode json) {
+  public ObjectNode getUsersByIdAsJson(@HeaderParam("Authorization") String token) {
+    System.out.println("getUserByIdAsJson");
     ThreadContext.put("route", "/contact/getUserContacts");
-    ThreadContext.put("method", "Post");
-    int userId = decryptToken.getIdFromJsonToken(json);
+    ThreadContext.put("method", "Get");
+    int userId = myJwt.getUserIdFromToken(token);
+    System.out.println(userId);
     ThreadContext.put("params", "userId:" + userId);
     if (userId == 0) {
       throw new WebApplicationException("userId is required", Status.BAD_REQUEST);

@@ -2,12 +2,6 @@ package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.ucc.EnterpriseUCC;
-import be.vinci.pae.utils.Config;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -15,7 +9,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
@@ -31,10 +25,13 @@ import org.apache.logging.log4j.ThreadContext;
 @Path("/ent")
 public class EnterpriseResource {
 
-  private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private static final Logger logger = LogManager.getLogger(EnterpriseResource.class);
+
   @Inject
   private EnterpriseUCC myEnterpriseUCC;
+
+  @Inject
+  private JWT myJwt;
 
   /**
    * Retrieves all enterprise.
@@ -76,34 +73,19 @@ public class EnterpriseResource {
   /**
    * Retrieves the enterprise associated with the user's internship by user ID.
    *
-   * @param json The JSON object containing the JWT token.
+   * @param token The JSON object containing the JWT token.
    * @return An ObjectNode representing the enterprise details.
    */
-  @POST
+  @GET
   @Path("enterprises")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getEnterprisesByUserId(JsonNode json) {
+  public ObjectNode getEnterprisesByUserId(@HeaderParam("Authorization") String token) {
     ThreadContext.put("route", "/contact");
     ThreadContext.put("method", "Get");
-
+    // Get token from JSON
+    int userId = myJwt.getUserIdFromToken(token);
     try {
-      // Get token from JSON
-
-      String jsonToken = json.get("token").asText();
-      // Decode Token
-      DecodedJWT jwt = JWT.require(jwtAlgorithm)
-          .withIssuer("auth0")
-          .build() // create the JWTVerifier instance
-          .verify(jsonToken); // verify the token
-      // Het userId from decodedToken
-      int userId = jwt.getClaim("user").asInt();
-      ThreadContext.put("params", "userId:" + userId);
-      // Assuming the token includes a "user" claim holding the user ID
-      if (userId == -1) {
-        throw new JWTVerificationException("User ID claim is missing");
-      }
-
       // get entrprise that corresponds to user intership
       EnterpriseDTO enterpriseDTO = myEnterpriseUCC.getEnterprisesByUserId(userId);
       ObjectNode objectNode = convertDTOToJson(enterpriseDTO);
