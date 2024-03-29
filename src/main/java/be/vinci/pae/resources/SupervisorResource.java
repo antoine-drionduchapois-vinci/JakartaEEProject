@@ -34,7 +34,7 @@ public class SupervisorResource {
   private SupervisorUCC supervisorUCC;
 
   @Inject
-  private be.vinci.pae.resources.JWT myJwt;
+  private JWT myJwt;
 
   /**
    * Retrieves the supervisor responsible for the user's internship enterprise by user ID.
