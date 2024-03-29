@@ -138,6 +138,7 @@ SELECT
         WHEN state = 'suspended' THEN 'Suspendu'
         WHEN state = 'meet' THEN 'Contacté'
         WHEN state = 'initiated' THEN 'Initié'
+        WHEN state = 'unfollowed' THEN 'Non Suivis'
         ELSE 'Inconnu'
     END AS etat_contact,
     COUNT(*) AS nombre_de_contacts
