@@ -22,7 +22,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
 
-
 /**
  * Implementation of the UserDataService interface.
  */
@@ -79,24 +78,20 @@ public class UserResource {
     ObjectMapper mapper = new ObjectMapper();
     ArrayNode usersArray = mapper.createArrayNode();
 
-    try {
-      // Récupérer la liste complète des utilisateurs depuis votre DAO
-      List<UserDTO> userList = myUserUCC.getUsersAsJson();
+    // Récupérer la liste complète des utilisateurs depuis votre DAO
+    List<UserDTO> userList = myUserUCC.getUsersAsJson();
 
-      // Parcourir chaque utilisateur et les ajouter à l'ArrayNode
-      for (UserDTO user : userList) {
-        ObjectNode userNode = mapper.createObjectNode();
-        userNode.put("userId", user.getUserId());
-        userNode.put("name", user.getName());
-        userNode.put("surname", user.getSurname());
-        userNode.put("email", user.getEmail());
-        userNode.put("role", user.getRole().name());
-        userNode.put("annee", user.getYear());
-        // Ajoutez d'autres attributs utilisateur au besoin
-        usersArray.add(userNode);
-      }
-    } catch (Exception e) {
-      // Gérer les erreurs éventuelles
+    // Parcourir chaque utilisateur et les ajouter à l'ArrayNode
+    for (UserDTO user : userList) {
+      ObjectNode userNode = mapper.createObjectNode();
+      userNode.put("userId", user.getUserId());
+      userNode.put("name", user.getName());
+      userNode.put("surname", user.getSurname());
+      userNode.put("email", user.getEmail());
+      userNode.put("role", user.getRole().name());
+      userNode.put("annee", user.getYear());
+      // Ajoutez d'autres attributs utilisateur au besoin
+      usersArray.add(userNode);
     }
     logger.info("Status: 200 {Fetching all User}");
     ThreadContext.clearAll();

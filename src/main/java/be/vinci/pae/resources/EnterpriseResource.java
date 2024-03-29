@@ -86,23 +86,23 @@ public class EnterpriseResource {
   public ObjectNode getEnterprisesByUserId(JsonNode json) {
     ThreadContext.put("route", "/contact");
     ThreadContext.put("method", "Get");
-      // Get token from JSON
+    // Get token from JSON
 
     String jsonToken = json.get("token").asText();
-      // Decode Token
+    // Decode Token
     DecodedJWT jwt = JWT.require(jwtAlgorithm)
-          .withIssuer("auth0")
-          .build() // create the JWTVerifier instance
-          .verify(jsonToken); // verify the token
-      // Het userId from decodedToken
+        .withIssuer("auth0")
+        .build() // create the JWTVerifier instance
+        .verify(jsonToken); // verify the token
+    // Het userId from decodedToken
     int userId = jwt.getClaim("user").asInt();
     ThreadContext.put("params", "userId:" + userId);
-      // Assuming the token includes a "user" claim holding the user ID
+    // Assuming the token includes a "user" claim holding the user ID
     if (userId == -1) {
       throw new JWTVerificationException("User ID claim is missing");
     }
 
-      // get entrprise that corresponds to user intership
+    // get entrprise that corresponds to user intership
     EnterpriseDTO enterpriseDTO = myEnterpriseUCC.getEnterprisesByUserId(userId);
     ObjectNode objectNode = convertDTOToJson(enterpriseDTO);
     logger.info("Status: 200 {getEnterprisesByUserId}");
