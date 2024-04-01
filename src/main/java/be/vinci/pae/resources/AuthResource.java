@@ -62,7 +62,6 @@ public class AuthResource {
 
     UserDTO userTemp = myDomainFactory.getUser();
     userTemp.setPassword(password);
-    System.out.println("userTemp resource " + userTemp.getPassword());
     userTemp.setEmail(email);
     UserDTO userDTO = myAuthUCC.login(userTemp);
 

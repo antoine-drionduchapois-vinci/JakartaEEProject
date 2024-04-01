@@ -22,7 +22,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
 
-
 /**
  * Implementation of the UserDataService interface.
  */
@@ -79,25 +78,20 @@ public class UserResource {
     ObjectMapper mapper = new ObjectMapper();
     ArrayNode usersArray = mapper.createArrayNode();
 
-    try {
-      // Récupérer la liste complète des utilisateurs depuis votre DAO
-      List<UserDTO> userList = myUserUCC.getUsersAsJson();
+    // Récupérer la liste complète des utilisateurs depuis votre DAO
+    List<UserDTO> userList = myUserUCC.getUsersAsJson();
 
-      // Parcourir chaque utilisateur et les ajouter à l'ArrayNode
-      for (UserDTO user : userList) {
-        ObjectNode userNode = mapper.createObjectNode();
-        userNode.put("userId", user.getUserId());
-        userNode.put("name", user.getName());
-        userNode.put("surname", user.getSurname());
-        userNode.put("email", user.getEmail());
-        userNode.put("role", user.getRole().name());
-        userNode.put("annee", user.getYear());
-        // Ajoutez d'autres attributs utilisateur au besoin
-        usersArray.add(userNode);
-      }
-    } catch (Exception e) {
-      // Gérer les erreurs éventuelles
-      e.printStackTrace();
+    // Parcourir chaque utilisateur et les ajouter à l'ArrayNode
+    for (UserDTO user : userList) {
+      ObjectNode userNode = mapper.createObjectNode();
+      userNode.put("userId", user.getUserId());
+      userNode.put("name", user.getName());
+      userNode.put("surname", user.getSurname());
+      userNode.put("email", user.getEmail());
+      userNode.put("role", user.getRole().name());
+      userNode.put("annee", user.getYear());
+      // Ajoutez d'autres attributs utilisateur au besoin
+      usersArray.add(userNode);
     }
     logger.info("Status: 200 {Fetching all User}");
     ThreadContext.clearAll();
@@ -116,29 +110,22 @@ public class UserResource {
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getUsersByIdAsJson(JsonNode json) {
 
-    try {
-      // Get token from JSON
-      int userId = decryptToken.getIdFromJsonToken(json);
+    // Get token from JSON
+    int userId = decryptToken.getIdFromJsonToken(json);
 
-      if (userId == 0) {
-        throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
-      }
-
-      UserDTO user = myUserUCC.getUsersByIdAsJson(userId);
-
-      ObjectMapper mapper = new ObjectMapper();
-      ObjectNode userInfo = mapper.createObjectNode();
-      userInfo.put("name", user.getName());
-      userInfo.put("surName", user.getSurname());
-      userInfo.put("phone", user.getPhone());
-      userInfo.put("year", user.getYear());
-      userInfo.put("email", user.getEmail());
-      return userInfo;
-    } catch (Exception e) {
-      // Gérer les erreurs éventuelles
-      e.printStackTrace();
+    if (userId == 0) {
+      throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
     }
-    return null;
-  }
 
+    UserDTO user = myUserUCC.getUsersByIdAsJson(userId);
+
+    ObjectMapper mapper = new ObjectMapper();
+    ObjectNode userInfo = mapper.createObjectNode();
+    userInfo.put("name", user.getName());
+    userInfo.put("surName", user.getSurname());
+    userInfo.put("phone", user.getPhone());
+    userInfo.put("year", user.getYear());
+    userInfo.put("email", user.getEmail());
+    return userInfo;
+  }
 }

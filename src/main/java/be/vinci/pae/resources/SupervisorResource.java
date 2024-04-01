@@ -41,7 +41,8 @@ public class SupervisorResource {
   private SupervisorUCC supervisorUCC;
 
   /**
-   * Retrieves the supervisor responsible for the user's internship enterprise by user ID.
+   * Retrieves the supervisor responsible for the user's internship enterprise by
+   * user ID.
    *
    * @param json The JSON object containing the JWT token.
    * @return An ObjectNode representing the supervisor details.
@@ -53,47 +54,39 @@ public class SupervisorResource {
   public ObjectNode getResponsableByUserId(JsonNode json) {
     ThreadContext.put("route", "/res/responsable");
     ThreadContext.put("method", "Post");
-    try {
-
-      if (!json.hasNonNull("token")) {
-        throw new WebApplicationException("token is required", Status.BAD_REQUEST);
-      }
-      String jsonToken = json.get("token").asText();
-      // Decode Token
-      DecodedJWT jwt = JWT.require(jwtAlgorithm)
-          .withIssuer("auth0")
-          .build() // create the JWTVerifier instance
-          .verify(jsonToken); // verify the token
-      // Het userId from decodedToken
-      int userId = jwt.getClaim("user").asInt();
-      ThreadContext.put("params", "userId:" + userId);
-      // Assuming the token includes a "user" claim holding the user ID
-      if (userId == -1) {
-        throw new JWTVerificationException("User ID claim is missing");
-      }
-      // get entrprise that corresponds to user intership
-      EnterpriseDTO enterpriseDTO = entrepriseUCC.getEnterprisesByUserId(userId);
-      Supervisor supervisorDTO = supervisorUCC.getResponsibleByEnterpriseId(
-          enterpriseDTO.getEnterpriseId());
-
-      // transform responsibleDTO to JSOn
-      ObjectMapper mapper = new ObjectMapper();
-      ObjectNode responsibleNode = mapper.createObjectNode();
-      responsibleNode.put("responsible_id", supervisorDTO.getResponsibleId());
-      responsibleNode.put("name", supervisorDTO.getName());
-      responsibleNode.put("surname", supervisorDTO.getSurname());
-      responsibleNode.put("phone", supervisorDTO.getPhone());
-      responsibleNode.put("email", supervisorDTO.getEmail());
-      responsibleNode.put("enterprise_id", supervisorDTO.getEnterprise());
-      logger.info("Status: 200 {getResponsableByUserId}");
-      ThreadContext.clearAll();
-      return responsibleNode;
-
-    } catch (Exception e) {
-      // Gérer les erreurs éventuelles
-      e.printStackTrace();
+    if (!json.hasNonNull("token")) {
+      throw new WebApplicationException("token is required", Status.BAD_REQUEST);
     }
-    return null;
+    String jsonToken = json.get("token").asText();
+    // Decode Token
+    DecodedJWT jwt = JWT.require(jwtAlgorithm)
+        .withIssuer("auth0")
+        .build() // create the JWTVerifier instance
+        .verify(jsonToken); // verify the token
+    // Het userId from decodedToken
+    int userId = jwt.getClaim("user").asInt();
+    ThreadContext.put("params", "userId:" + userId);
+    // Assuming the token includes a "user" claim holding the user ID
+    if (userId == -1) {
+      throw new JWTVerificationException("User ID claim is missing");
+    }
+    // get entrprise that corresponds to user intership
+    EnterpriseDTO enterpriseDTO = entrepriseUCC.getEnterprisesByUserId(userId);
+    Supervisor supervisorDTO = supervisorUCC.getResponsibleByEnterpriseId(
+        enterpriseDTO.getEnterpriseId());
+
+    // transform responsibleDTO to JSOn
+    ObjectMapper mapper = new ObjectMapper();
+    ObjectNode responsibleNode = mapper.createObjectNode();
+    responsibleNode.put("responsible_id", supervisorDTO.getResponsibleId());
+    responsibleNode.put("name", supervisorDTO.getName());
+    responsibleNode.put("surname", supervisorDTO.getSurname());
+    responsibleNode.put("phone", supervisorDTO.getPhone());
+    responsibleNode.put("email", supervisorDTO.getEmail());
+    responsibleNode.put("enterprise_id", supervisorDTO.getEnterprise());
+    logger.info("Status: 200 {getResponsableByUserId}");
+    ThreadContext.clearAll();
+    return responsibleNode;
   }
 
 }
