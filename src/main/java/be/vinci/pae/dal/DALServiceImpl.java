@@ -27,10 +27,10 @@ public class DALServiceImpl implements DALService, DALBackService {
 
   @Override
   public void start() {
-    Connection();
+    connection();
   }
 
-  private void Connection() {
+  private void connection() {
     try {
       Connection conn = connectionThreadLocal.get();
       if (conn == null || conn.isClosed() || !conn.isValid(5)) {
