@@ -1,5 +1,8 @@
 package be.vinci.pae.utils;
 
+import be.vinci.pae.dal.DALBackService;
+import be.vinci.pae.dal.DALService;
+import be.vinci.pae.dal.DALServiceImpl;
 import be.vinci.pae.dao.ContactDAO;
 import be.vinci.pae.dao.ContactDAOImpl;
 import be.vinci.pae.dao.EnterpriseDAO;

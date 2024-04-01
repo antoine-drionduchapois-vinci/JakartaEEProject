@@ -1,4 +1,4 @@
-package be.vinci.pae.utils;
+package be.vinci.pae.dal;
 
 /**
  * The DALService interface defines methods for starting and commit database access.

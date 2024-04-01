@@ -1,8 +1,8 @@
 package be.vinci.pae.ucc;
 
+import be.vinci.pae.dal.DALService;
 import be.vinci.pae.dao.InternshipDAO;
 import be.vinci.pae.domain.InternshipDTO;
-import be.vinci.pae.utils.DALService;
 import jakarta.inject.Inject;
 
 /**
