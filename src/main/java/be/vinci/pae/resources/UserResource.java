@@ -72,7 +72,7 @@ public class UserResource {
   @Path("All")
   @Produces(MediaType.APPLICATION_JSON)
   public ArrayNode getUsersAsJson() {
-    ThreadContext.put("route", "/users/stats");
+    ThreadContext.put("route", "/users/All");
     ThreadContext.put("method", "Get");
     ThreadContext.put("params", "NoParam");
     ObjectMapper mapper = new ObjectMapper();
