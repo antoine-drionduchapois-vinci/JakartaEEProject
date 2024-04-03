@@ -38,7 +38,7 @@ const RefusedRow = (htmlElement, contactData) => {
   const submit = document.querySelector('#submit-refused');
 
   if (!contactData || (contactData.state !== 'initiated' && contactData.state !== 'meet')) {
-    reasonInput.element.value = contactData?.refusal_reason ? contactData.refusal_reason : '';
+    reasonInput.element.value = contactData?.refusalReason ? contactData.refusalReason : '';
     reasonInput.element.setAttribute('disabled', true);
     submit.setAttribute('disabled', true);
   }
@@ -56,7 +56,7 @@ const RefusedRow = (htmlElement, contactData) => {
     }
 
     indicateAsRefused({
-      contactId: contactData.contact_id,
+      contactId: contactData.contactId,
       refusalReason: reasonInput.element.value,
     });
   });
