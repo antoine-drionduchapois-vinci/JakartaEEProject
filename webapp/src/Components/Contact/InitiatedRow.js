@@ -118,8 +118,8 @@ const InitiatedRow = (htmlElement, userData, contactData, enterprisesData) => {
     labelInput.element.setAttribute('disabled', true);
     addressInput.element.value = contactData.enterpriseDTO.address;
     addressInput.element.setAttribute('disabled', true);
-    phoneInput.element.value = contactData.enterpriseDTO.contact
-      ? contactData.enterprise.phone
+    phoneInput.element.value = contactData.enterpriseDTO.phone
+      ? contactData.enterpriseDTO.phone
       : '';
     phoneInput.element.setAttribute('disabled', true);
     emailInput.element.value = contactData.enterpriseDTO.email
@@ -175,7 +175,7 @@ const InitiatedRow = (htmlElement, userData, contactData, enterprisesData) => {
 
   submit.addEventListener('click', () => {
     if (foundEnterprise) {
-      initiateContact({ userId: userData.id, enterpriseId: foundEnterprise.entreprise_id });
+      initiateContact({ enterprise: foundEnterprise.entreprise_id });
       return;
     }
 
@@ -193,12 +193,13 @@ const InitiatedRow = (htmlElement, userData, contactData, enterprisesData) => {
       return;
     }
     initiateContact({
-      userId: userData.id,
-      enterpriseName: enterpriseInput.element.value,
-      enterpriseLabel: labelInput.element.value,
-      enterpriseAddress: addressInput.element.value,
-      enterprisePhone: phoneInput.element.value,
-      enterpriseEmail: emailInput.element.value,
+      enterpriseDTO: {
+        name: enterpriseInput.element.value,
+        label: labelInput.element.value,
+        address: addressInput.element.value,
+        phone: phoneInput.element.value,
+        email: emailInput.element.value,
+      },
     });
   });
 };
