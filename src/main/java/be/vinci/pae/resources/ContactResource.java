@@ -82,6 +82,7 @@ public class ContactResource {
     if (contact.getEnterprise() != 0) {
       int enterpriseId = contact.getEnterprise();
       ThreadContext.put("params", "userId:" + userId + "enterpriseId:" + enterpriseId);
+      logger.info("Status: 200 {initiate}");
       return myContactUCC.initiateContact(userId, enterpriseId);
     }
 
