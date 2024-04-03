@@ -208,7 +208,7 @@ public class ContactResource {
   @Path("/unfollow")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode unfollow(JsonNode json, @HeaderParam("Authorization") String token) {
+  public ContactDTO unfollow(@HeaderParam("Authorization") String token, ContactDTO contact) {
     ThreadContext.put("route", "/contact/unfollow");
     ThreadContext.put("method", "Post");
 
@@ -216,15 +216,17 @@ public class ContactResource {
     if (userId == 0) {
       throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
     }
-    if (!json.hasNonNull("contactId")) {
+
+    int contactId = contact.getContactId();
+
+    if (contactId == 0) {
       throw new WebApplicationException("contactId required", Status.BAD_REQUEST);
     }
-    int contactId = json.get("contactId").asInt();
     ThreadContext.put("params", "contactId:" + contactId);
-    ObjectNode objectNode = convertDTOToJson(myContactUCC.unfollow(userId, contactId));
+    contact = myContactUCC.unfollow(userId, contactId);
     logger.info("Status: 200 {refuse}");
     ThreadContext.clearAll();
-    return objectNode;
+    return contact;
   }
 
   /**
