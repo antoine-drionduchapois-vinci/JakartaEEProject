@@ -43,6 +43,13 @@ public class ContactResource {
   @Inject
   private EnterpriseUCC myEnterpriseUCC;
 
+  /**
+   * Retrieves a contact by its ID.
+   *
+   * @param token     The authorization token.
+   * @param contactId The ID of the contact to retrieve.
+   * @return The contact as JSON.
+   */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public ContactDTO getOne(@HeaderParam("Authorization") String token,
@@ -66,6 +73,13 @@ public class ContactResource {
     return contact;
   }
 
+  /**
+   * Initiates a new contact between a user and an enterprise.
+   *
+   * @param token   The authorization token.
+   * @param contact The contact information to be initiated.
+   * @return The newly initiated contact.
+   */
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
