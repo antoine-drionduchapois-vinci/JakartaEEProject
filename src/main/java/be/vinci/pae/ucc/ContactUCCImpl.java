@@ -1,12 +1,12 @@
 package be.vinci.pae.ucc;
 
+import be.vinci.pae.dal.DALService;
 import be.vinci.pae.dao.ContactDAO;
 import be.vinci.pae.dao.EnterpriseDAO;
 import be.vinci.pae.domain.Contact;
 import be.vinci.pae.domain.ContactDTO;
 import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.utils.BusinessException;
-import be.vinci.pae.utils.DALService;
 import be.vinci.pae.utils.NotFoundException;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

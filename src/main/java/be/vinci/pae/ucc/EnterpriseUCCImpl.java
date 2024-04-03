@@ -1,8 +1,8 @@
 package be.vinci.pae.ucc;
 
+import be.vinci.pae.dal.DALService;
 import be.vinci.pae.dao.EnterpriseDAO;
 import be.vinci.pae.domain.EnterpriseDTO;
-import be.vinci.pae.utils.DALService;
 import jakarta.inject.Inject;
 import java.util.List;
 
