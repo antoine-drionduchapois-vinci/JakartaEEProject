@@ -125,9 +125,9 @@ public class ContactResource {
   /**
    * Marks a contact as having a meeting.
    *
-   * @param json The JSON containing the contact ID and meeting point.
-   * @param token The authorization token.
-   * @return The updated contact as JSON.
+   * @param token   The authorization token.
+   * @param contact The contact information indicating the meeting.
+   * @return The updated contact after the meeting.
    */
   @POST
   @Path("/meet")
