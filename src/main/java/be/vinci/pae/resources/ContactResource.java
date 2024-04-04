@@ -46,14 +46,14 @@ public class ContactResource {
   /**
    * Retrieves a contact by its ID.
    *
+   * @param token     The authorization token.
    * @param contactId The ID of the contact to retrieve.
-   * @param token The authorization token.
    * @return The contact as JSON.
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getOne(@DefaultValue("-1") @QueryParam("contactId") int contactId,
-      @HeaderParam("Authorization") String token) {
+  public ContactDTO getOne(@HeaderParam("Authorization") String token,
+      @DefaultValue("-1") @QueryParam("contactId") int contactId) {
     ThreadContext.put("route", "/contact");
     ThreadContext.put("method", "Get");
     ThreadContext.put("params", "contactId:" + contactId);
@@ -66,24 +66,26 @@ public class ContactResource {
     if (contactId == -1) {
       throw new WebApplicationException("contactId required", Status.BAD_REQUEST);
     }
-    ObjectNode objectNode = convertDTOToJson(myContactUCC.getContact(userId, contactId));
+
+    ContactDTO contact = myContactUCC.getContact(userId, contactId);
     logger.info("Status: 200 {getOne}");
     ThreadContext.clearAll();
-    return objectNode;
+    return contact;
   }
 
   /**
    * Initiates a new contact between a user and an enterprise.
    *
-   * @param json The JSON containing information about the contact.
-   * @param token The authorization token.
-   * @return The newly initiated contact as JSON.
+   * @param token   The authorization token.
+   * @param contact The contact information to be initiated.
+   * @return The newly initiated contact.
    */
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode initiate(JsonNode json, @HeaderParam("Authorization") String token) {
+  public ContactDTO initiate(@HeaderParam("Authorization") String token, ContactDTO contact) {
     int userId = myJwt.getUserIdFromToken(token);
+
     ThreadContext.put("route", "/contact");
     ThreadContext.put("method", "Post");
 
@@ -91,29 +93,33 @@ public class ContactResource {
       throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
     }
 
-    if (json.hasNonNull("enterpriseId")) {
-
-      int enterpriseId = json.get("enterpriseId").asInt();
+    if (contact.getEnterprise() != 0) {
+      int enterpriseId = contact.getEnterprise();
       ThreadContext.put("params", "userId:" + userId + "enterpriseId:" + enterpriseId);
-      return convertDTOToJson(myContactUCC.initiateContact(userId,
-          enterpriseId));
+      logger.info("Status: 200 {initiate}");
+      return myContactUCC.initiateContact(userId, enterpriseId);
     }
 
-    if (!json.hasNonNull("enterpriseName") || !json.hasNonNull("enterpriseLabel")
-        || !json.hasNonNull("enterpriseAddress")
-        || !json.hasNonNull("enterprisePhone") && !json.hasNonNull("enterpriseEmail")) {
+    String enterpriseName = contact.getEnterpriseDTO().getName();
+    String enterpriseLabel = contact.getEnterpriseDTO().getLabel();
+    String enterpriseAddress = contact.getEnterpriseDTO().getAddress();
+    String enterprisePhone = contact.getEnterpriseDTO().getPhone();
+    String enterpriseEmail = contact.getEnterpriseDTO().getEmail();
+
+    if (enterpriseName == null || enterpriseLabel == null || enterpriseAddress == null
+        || enterprisePhone == null && enterpriseEmail == null) {
       throw new WebApplicationException(
           "contactId, enterpriseName, enterpriseLabel, enterpriseAddress and"
-              + " enterprisePhone or enterpriseEmail are required",
-          Status.BAD_REQUEST);
+              + " enterprisePhone or enterpriseEmail are required", Status.BAD_REQUEST);
     }
-    ObjectNode objectNode = convertDTOToJson(
-        myContactUCC.initiateContact(userId, json.get("enterpriseName").asText(),
-            json.get("enterpriseLabel").asText(), json.get("enterpriseAddress").asText(),
-            json.get("enterprisePhone").asText(), json.get("enterpriseEmail").asText()));
+
+    contact = myContactUCC.initiateContact(userId, enterpriseName,
+        enterpriseLabel, enterpriseAddress, enterprisePhone, enterpriseEmail);
+
     logger.info("Status: 200 {initiate}");
     ThreadContext.clearAll();
-    return objectNode;
+
+    return contact;
   }
 
   /**
