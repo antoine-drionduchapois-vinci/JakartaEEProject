@@ -104,7 +104,7 @@ public class SupervisorImpl implements Supervisor {
         + ", email='" + email + '\''
         + ", enterprise=" + enterprise
         + ", enterpriseDTO=" + enterpriseDTO
-        + ", numVersion=" + version
+        + ", version=" + version
         + '}';
   }
 }

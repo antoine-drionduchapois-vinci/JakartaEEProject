@@ -59,14 +59,14 @@ public class UserDAOImpl implements UserDAO {
   public UserDTO addUser(UserDTO userDTO) {
     PreparedStatement ps = myDalService.getPS(
         "INSERT INTO projetae.users (name, surname, email, phone, password,"
-            + " year, inscription_date, role, num_version)"
+            + " year, inscription_date, role, version)"
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING *");
     LocalDate currentDate = LocalDate.now();
     Date curDate = Date.valueOf(currentDate);
     int currentYear = currentDate.getYear();
     int previousYear = currentYear - 1;
     String academicYear = previousYear + "-" + currentYear;
-    int initialNumVersion = 1;
+    int initialVersion = 1;
 
     try {
       ps.setString(1, userDTO.getName());
@@ -77,7 +77,7 @@ public class UserDAOImpl implements UserDAO {
       ps.setString(6, academicYear);
       ps.setDate(7, curDate);
       ps.setString(8, userDTO.getRole().name());
-      ps.setInt(9, initialNumVersion);
+      ps.setInt(9, initialVersion);
       ps.execute();
       return userMapper.mapResultSetToObject(ps.getResultSet(), UserImpl.class,
           myDomainFactory::getUser);

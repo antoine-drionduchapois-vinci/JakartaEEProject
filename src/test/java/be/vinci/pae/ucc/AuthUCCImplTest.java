@@ -142,8 +142,8 @@ class AuthUCCImplTest {
     when(userDAO.getOneByEmail("test@example.com")).thenReturn(null);
     when(userDAO.addUser(userDTO)).thenReturn(userDTO);
 
-    UserDTO result = authUCC.register(userDTO);
+    int versionResult = authUCC.register(userDTO).getVersion();
 
-    assertEquals(1, result.getVersion());
+    assertEquals(1, versionResult);
   }
 }

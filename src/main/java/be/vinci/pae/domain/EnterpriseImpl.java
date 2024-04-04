@@ -116,7 +116,7 @@ public class EnterpriseImpl implements Enterprise {
         + ", email='" + email + '\''
         + ", isBlacklisted=" + isBlacklisted
         + ", blacklistedReason='" + blacklistedReason + '\''
-        + ", numVersion=" + version
+        + ", version=" + version
         + '}';
   }
 }

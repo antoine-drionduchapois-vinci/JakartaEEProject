@@ -128,7 +128,7 @@ public class UserImpl implements User {
         + ", password='" + password + '\''
         + ", year='" + year + '\''
         + ", role=" + role
-        + ", numVersion=" + version
+        + ", version=" + version
         + '}';
   }
 }
