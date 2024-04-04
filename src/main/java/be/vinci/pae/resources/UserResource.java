@@ -89,7 +89,7 @@ public class UserResource {
       userNode.put("surname", user.getSurname());
       userNode.put("email", user.getEmail());
       userNode.put("role", user.getRole().name());
-      userNode.put("annee", user.getYear());
+      userNode.put("année", user.getYear());
       // Ajoutez d'autres attributs utilisateur au besoin
       usersArray.add(userNode);
     }
