@@ -82,13 +82,16 @@ public class ContactDAOImpl implements ContactDAO {
       throw new BusinessException(409,
           "contact with user: " + userId + " and enterprise " + enterpriseId + " already exists");
     }
+    int initialVersion = 1;
     try (PreparedStatement ps = myDalService.getPS(
-        "INSERT INTO projetae.contacts (state, year, \"user\", enterprise)"
-            + "VALUES (?, ?, ?, ?) RETURNING *;")) {
+        "INSERT INTO projetae.contacts (state, year, \"user\", enterprise, version)"
+            + "VALUES (?, ?, ?, ?, ?) RETURNING *;")) {
       ps.setString(1, "initiated");
       ps.setString(2, getCurrentYearString());
       ps.setInt(3, userId);
       ps.setInt(4, enterpriseId);
+      ps.setInt(5, initialVersion);
+
       ps.execute();
       return contactMapper.mapResultSetToObject(ps.getResultSet(), ContactImpl.class,
           myDomainFactory::getContact);
@@ -100,15 +103,17 @@ public class ContactDAOImpl implements ContactDAO {
   @Override
   public ContactDTO update(ContactDTO newContactDTO) {
     try (PreparedStatement ps = myDalService.getPS(
-        "UPDATE projetae.contacts SET meeting_point = ?, state = ?, refusal_reason = ?,"
-            + " year = ?, \"user\" = ?, enterprise = ? WHERE contact_id = ? RETURNING *;")) {
+        "UPDATE projetae.contacts SET meeting_point = ?, state = ?, refusal_reason = ?, version = ?"
+            + " year = ?, \"user\" = ?, enterprise = ? WHERE contact_id = ? AND version = ? RETURNING *;")) {
       ps.setString(1, newContactDTO.getMeetingPoint());
       ps.setString(2, newContactDTO.getState());
       ps.setString(3, newContactDTO.getRefusalReason());
-      ps.setString(4, newContactDTO.getYear());
-      ps.setInt(5, newContactDTO.getUser());
-      ps.setInt(6, newContactDTO.getEnterprise());
-      ps.setInt(7, newContactDTO.getContactId());
+      ps.setInt(4, newContactDTO.getVersion() + 1);
+      ps.setString(5, newContactDTO.getYear());
+      ps.setInt(6, newContactDTO.getUser());
+      ps.setInt(7, newContactDTO.getEnterprise());
+      ps.setInt(8, newContactDTO.getContactId());
+      ps.setInt(9, newContactDTO.getVersion());
       ps.execute();
       return contactMapper.mapResultSetToObject(ps.getResultSet(), ContactImpl.class,
           myDomainFactory::getContact);

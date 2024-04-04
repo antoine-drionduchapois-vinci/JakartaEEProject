@@ -13,6 +13,7 @@ public class ContactImpl implements Contact {
   private int user;
   private int enterprise;
   private EnterpriseDTO enterpriseDTO;
+  private int version;
 
   @Override
   public boolean meet(String meetingPoint) {
@@ -124,16 +125,27 @@ public class ContactImpl implements Contact {
   }
 
   @Override
+  public int getVersion() {
+    return version;
+  }
+
+  @Override
+  public void setVersion(int version) {
+    this.version = version;
+  }
+
+  @Override
   public String toString() {
-    return "ContactImpl{"
-        + "contactId=" + contactId
-        + ", meetingPoint='" + meetingPoint + '\''
-        + ", state='" + state + '\''
-        + ", refusalReason='" + refusalReason + '\''
-        + ", year='" + year + '\''
-        + ", user=" + user
-        + ", enterprise=" + enterprise
-        + ", enterpriseDTO=" + enterpriseDTO
-        + '}';
+    return "ContactImpl{" +
+        "contactId=" + contactId +
+        ", meetingPoint='" + meetingPoint + '\'' +
+        ", state='" + state + '\'' +
+        ", refusalReason='" + refusalReason + '\'' +
+        ", year='" + year + '\'' +
+        ", user=" + user +
+        ", enterprise=" + enterprise +
+        ", enterpriseDTO=" + enterpriseDTO +
+        ", numVersion=" + version +
+        '}';
   }
 }

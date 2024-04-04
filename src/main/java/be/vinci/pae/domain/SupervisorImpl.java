@@ -12,6 +12,7 @@ public class SupervisorImpl implements Supervisor {
   private String email;
   private int enterprise;
   private Enterprise enterpriseDTO;
+  private int version;
 
   @Override
   public int getResponsibleId() {
@@ -84,15 +85,26 @@ public class SupervisorImpl implements Supervisor {
   }
 
   @Override
+  public int getVersion() {
+    return version;
+  }
+
+  @Override
+  public void setVersion(int version) {
+    this.version = version;
+  }
+
+  @Override
   public String toString() {
-    return "ResponsibleImpl{"
-        + "responsibleId=" + supervisorId
-        + ", name='" + name + '\''
-        + ", surname='" + surname + '\''
-        + ", phone='" + phone + '\''
-        + ", email='" + email + '\''
-        + ", enterprise=" + enterprise
-        + ", enterpriseDTO=" + enterpriseDTO
-        + '}';
+    return "SupervisorImpl{" +
+        "supervisorId=" + supervisorId +
+        ", name='" + name + '\'' +
+        ", surname='" + surname + '\'' +
+        ", phone='" + phone + '\'' +
+        ", email='" + email + '\'' +
+        ", enterprise=" + enterprise +
+        ", enterpriseDTO=" + enterpriseDTO +
+        ", numVersion=" + version +
+        '}';
   }
 }

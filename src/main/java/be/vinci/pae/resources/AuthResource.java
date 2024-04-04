@@ -112,6 +112,7 @@ public class AuthResource {
     userTemp.setPhone(telephone);
     userTemp.setPassword(password);
     userTemp.setRole(Role.valueOf(role));
+    //userTemp.setVersion(1);
 
     UserDTO user = myAuthUCC.register(userTemp);
 
