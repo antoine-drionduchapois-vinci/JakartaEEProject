@@ -104,7 +104,8 @@ public class ContactDAOImpl implements ContactDAO {
   public ContactDTO update(ContactDTO newContactDTO) {
     try (PreparedStatement ps = myDalService.getPS(
         "UPDATE projetae.contacts SET meeting_point = ?, state = ?, refusal_reason = ?, version = ?"
-            + " year = ?, \"user\" = ?, enterprise = ? WHERE contact_id = ? AND version = ? RETURNING *;")) {
+            + " year = ?, \"user\" = ?, enterprise = ? WHERE contact_id = ? AND version = ? "
+            + "RETURNING *;")) {
       ps.setString(1, newContactDTO.getMeetingPoint());
       ps.setString(2, newContactDTO.getState());
       ps.setString(3, newContactDTO.getRefusalReason());

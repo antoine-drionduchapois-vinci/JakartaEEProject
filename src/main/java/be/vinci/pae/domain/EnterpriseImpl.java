@@ -107,16 +107,16 @@ public class EnterpriseImpl implements Enterprise {
 
   @Override
   public String toString() {
-    return "EnterpriseImpl{" +
-        "enterpriseId=" + enterpriseId +
-        ", name='" + name + '\'' +
-        ", label='" + label + '\'' +
-        ", address='" + address + '\'' +
-        ", phone='" + phone + '\'' +
-        ", email='" + email + '\'' +
-        ", isBlacklisted=" + isBlacklisted +
-        ", blacklistedReason='" + blacklistedReason + '\'' +
-        ", numVersion=" + version +
-        '}';
+    return "EnterpriseImpl{"
+        + "enterpriseId=" + enterpriseId
+        + ", name='" + name + '\''
+        + ", label='" + label + '\''
+        + ", address='" + address + '\''
+        + ", phone='" + phone + '\''
+        + ", email='" + email + '\''
+        + ", isBlacklisted=" + isBlacklisted
+        + ", blacklistedReason='" + blacklistedReason + '\''
+        + ", numVersion=" + version
+        + '}';
   }
 }

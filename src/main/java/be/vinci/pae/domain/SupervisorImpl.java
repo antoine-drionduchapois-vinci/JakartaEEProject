@@ -96,15 +96,15 @@ public class SupervisorImpl implements Supervisor {
 
   @Override
   public String toString() {
-    return "SupervisorImpl{" +
-        "supervisorId=" + supervisorId +
-        ", name='" + name + '\'' +
-        ", surname='" + surname + '\'' +
-        ", phone='" + phone + '\'' +
-        ", email='" + email + '\'' +
-        ", enterprise=" + enterprise +
-        ", enterpriseDTO=" + enterpriseDTO +
-        ", numVersion=" + version +
-        '}';
+    return "SupervisorImpl{"
+        + "supervisorId=" + supervisorId
+        + ", name='" + name + '\''
+        + ", surname='" + surname + '\''
+        + ", phone='" + phone + '\''
+        + ", email='" + email + '\''
+        + ", enterprise=" + enterprise
+        + ", enterpriseDTO=" + enterpriseDTO
+        + ", numVersion=" + version
+        + '}';
   }
 }

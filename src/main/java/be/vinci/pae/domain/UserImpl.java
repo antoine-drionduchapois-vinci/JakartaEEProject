@@ -119,16 +119,16 @@ public class UserImpl implements User {
 
   @Override
   public String toString() {
-    return "UserImpl{" +
-        "userId=" + userId +
-        ", name='" + name + '\'' +
-        ", surname='" + surname + '\'' +
-        ", email='" + email + '\'' +
-        ", phone='" + phone + '\'' +
-        ", password='" + password + '\'' +
-        ", year='" + year + '\'' +
-        ", role=" + role +
-        ", numVersion=" + version +
-        '}';
+    return "UserImpl{"
+        + "userId=" + userId
+        + ", name='" + name + '\''
+        + ", surname='" + surname + '\''
+        + ", email='" + email + '\''
+        + ", phone='" + phone + '\''
+        + ", password='" + password + '\''
+        + ", year='" + year + '\''
+        + ", role=" + role
+        + ", numVersion=" + version
+        + '}';
   }
 }

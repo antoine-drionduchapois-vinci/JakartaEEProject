@@ -136,16 +136,16 @@ public class ContactImpl implements Contact {
 
   @Override
   public String toString() {
-    return "ContactImpl{" +
-        "contactId=" + contactId +
-        ", meetingPoint='" + meetingPoint + '\'' +
-        ", state='" + state + '\'' +
-        ", refusalReason='" + refusalReason + '\'' +
-        ", year='" + year + '\'' +
-        ", user=" + user +
-        ", enterprise=" + enterprise +
-        ", enterpriseDTO=" + enterpriseDTO +
-        ", numVersion=" + version +
-        '}';
+    return "ContactImpl{"
+        + "contactId=" + contactId
+        + ", meetingPoint='" + meetingPoint + '\''
+        + ", state='" + state + '\'' +
+        ", refusalReason='" + refusalReason + '\''
+        + ", year='" + year + '\''
+        + ", user=" + user
+        + ", enterprise=" + enterprise
+        + ", enterpriseDTO=" + enterpriseDTO
+        + ", version=" + version
+        + '}';
   }
 }
