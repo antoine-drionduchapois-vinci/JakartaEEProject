@@ -200,9 +200,9 @@ public class ContactResource {
   /**
    * Unfollows a contact.
    *
-   * @param json The JSON containing the contact ID.
-   * @param token The authorization token.
-   * @return The result of the unfollow operation as JSON.
+   * @param token   The authorization token.
+   * @param contact The contact information to be unfollowed.
+   * @return The result of the unfollow operation.
    */
   @POST
   @Path("/unfollow")
