@@ -157,9 +157,9 @@ public class ContactResource {
   /**
    * Indicates that a contact has been refused.
    *
-   * @param json The JSON containing the contact ID and refusal reason.
-   * @param token The authorization token.
-   * @return The updated contact as JSON.
+   * @param token          The authorization token.
+   * @param contact        The contact information to be refused.
+   * @return The updated contact after indicating refusal.
    */
   @POST
   @Path("/refuse")
