@@ -139,8 +139,8 @@ public class ContactImpl implements Contact {
     return "ContactImpl{"
         + "contactId=" + contactId
         + ", meetingPoint='" + meetingPoint + '\''
-        + ", state='" + state + '\'' +
-        ", refusalReason='" + refusalReason + '\''
+        + ", state='" + state + '\''
+        + ", refusalReason='" + refusalReason + '\''
         + ", year='" + year + '\''
         + ", user=" + user
         + ", enterprise=" + enterprise
