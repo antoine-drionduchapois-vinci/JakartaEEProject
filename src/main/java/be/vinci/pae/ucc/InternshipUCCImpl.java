@@ -87,7 +87,7 @@ public class InternshipUCCImpl implements InternshipUCC {
 
     // Accept
     if (!((Internship) internship).accept()) {
-      throw new BusinessException(403, "contact must be in initiated or meet state");
+      throw new BusinessException(403, "contact must be in meet state");
     }
 
     internship = internshipDAO.create(internship);
