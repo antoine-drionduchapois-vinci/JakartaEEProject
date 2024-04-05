@@ -18,6 +18,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
@@ -91,8 +92,25 @@ public class SupervisorResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public List<SupervisorDTO> getAll() {
+  public SupervisorDTO getOne(@QueryParam("enterprise") int enterpriseId) {
     ThreadContext.put("route", "/ent");
+    ThreadContext.put("method", "Get");
+    ThreadContext.put("params", "enterprise: " + enterpriseId);
+
+    SupervisorDTO supervisor = supervisorUCC.getResponsibleByEnterpriseId(enterpriseId);
+
+    logger.info("Status: 200 {getAllSupervisors}");
+    ThreadContext.clearAll();
+
+    return supervisor;
+
+  }
+
+  @GET
+  @Path("/all")
+  @Produces(MediaType.APPLICATION_JSON)
+  public List<SupervisorDTO> getAll() {
+    ThreadContext.put("route", "/ent/all");
     ThreadContext.put("method", "Get");
     ThreadContext.put("params", "NoParam");
 
