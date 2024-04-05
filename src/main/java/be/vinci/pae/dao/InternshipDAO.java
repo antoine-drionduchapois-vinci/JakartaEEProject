@@ -14,4 +14,6 @@ public interface InternshipDAO {
    * @return a InternshipDTO object representing the user internship with the specified ID
    */
   InternshipDTO getUserInternship(int id);
+
+  InternshipDTO create(InternshipDTO internship);
 }

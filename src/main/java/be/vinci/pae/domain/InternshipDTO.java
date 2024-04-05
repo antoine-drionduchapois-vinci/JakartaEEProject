@@ -1,8 +1,11 @@
 package be.vinci.pae.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 /**
  * The InternshipDTO interface represents the internship details.
  */
+@JsonDeserialize(as = InternshipImpl.class)
 public interface InternshipDTO {
 
   /**
@@ -24,7 +27,7 @@ public interface InternshipDTO {
    *
    * @return The ID of the responsible person.
    */
-  int getResponsible();
+  int getSupervisor();
 
   /**
    * Gets the subject of the internship.
@@ -102,6 +105,14 @@ public interface InternshipDTO {
    * @param supervisor The new ID of the supervisor responsible for the internship.
    */
   void setSupervisor(int supervisor);
+
+  SupervisorDTO getSupervisorDTO();
+
+  void setSupervisorDTO(SupervisorDTO supervisorDTO);
+
+  ContactDTO getContactDTO();
+
+  void setContactDTO(ContactDTO contactDTO);
 
   /**
    * Gets the version of the internship.

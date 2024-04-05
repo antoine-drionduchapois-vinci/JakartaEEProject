@@ -105,8 +105,11 @@ public class ContactResource {
     if (contact.getEnterprise() != 0) {
       int enterpriseId = contact.getEnterprise();
       ThreadContext.put("params", "userId:" + userId + "enterpriseId:" + enterpriseId);
+
+      contact = myContactUCC.initiateContact(userId, enterpriseId);
       logger.info("Status: 200 {initiate}");
-      return myContactUCC.initiateContact(userId, enterpriseId);
+      ThreadContext.clearAll();
+      return contact;
     }
 
     String enterpriseName = contact.getEnterpriseDTO().getName();
@@ -114,6 +117,11 @@ public class ContactResource {
     String enterpriseAddress = contact.getEnterpriseDTO().getAddress();
     String enterprisePhone = contact.getEnterpriseDTO().getPhone();
     String enterpriseEmail = contact.getEnterpriseDTO().getEmail();
+
+    ThreadContext.put("params",
+        "userId:" + userId + "enterpriseName:" + enterpriseName + "enterpriseLabel:"
+            + enterpriseLabel + "enterpriseAddress:" + enterpriseAddress + "enterprisePhone:"
+            + enterprisePhone + "enterpriseEmail:" + enterpriseEmail);
 
     if (enterpriseName == null || enterpriseLabel == null || enterpriseAddress == null
         || enterprisePhone == null && enterpriseEmail == null) {

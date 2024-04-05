@@ -47,7 +47,7 @@ class SupervisorUCCImplTest {
     supervisor.setSurname("test");
     supervisor.setPhone("0484752145");
     supervisor.setEnterpriseDTO(domainFactory.getEnterprise());
-    supervisor.setResponsibleId(1);
+    supervisor.setSupervisorId(1);
     when(supervisorDAO.getResponsibleByEnterpriseId(supervisor.getEnterprise())).thenReturn(
         supervisor);
 

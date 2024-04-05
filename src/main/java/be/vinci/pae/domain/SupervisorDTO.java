@@ -1,23 +1,12 @@
 package be.vinci.pae.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 /**
  * The SupervisorDTO interface represents supervisor informations.
  */
+@JsonDeserialize(as = SupervisorImpl.class)
 public interface SupervisorDTO {
-
-  /**
-   * Gets the ID of the supervisor.
-   *
-   * @return The ID of the supervisor.
-   */
-  int getResponsibleId();
-
-  /**
-   * Sets the ID of the supervisor.
-   *
-   * @param responsibleId The ID of the supervisor to set.
-   */
-  void setResponsibleId(int responsibleId);
 
   /**
    * Gets the name of the supervisor.
@@ -102,6 +91,10 @@ public interface SupervisorDTO {
    * @param enterpriseDTO The enterprise DTO associated with the supervisor to set.
    */
   void setEnterpriseDTO(Enterprise enterpriseDTO);
+
+  int getSupervisorId();
+
+  void setSupervisorId(int supervisorId);
 
   /**
    * Gets the version of the supervisor.

@@ -5,5 +5,5 @@ package be.vinci.pae.domain;
  */
 public interface Internship extends InternshipDTO {
 
-
+  boolean accept();
 }

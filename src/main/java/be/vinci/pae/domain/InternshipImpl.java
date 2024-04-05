@@ -1,5 +1,7 @@
 package be.vinci.pae.domain;
 
+import java.time.LocalDate;
+
 /**
  * Implementation of the Internship interface.
  */
@@ -11,9 +13,20 @@ public class InternshipImpl implements Internship {
   private int user;
   private int enterprise;
   private int supervisor;
+  private SupervisorDTO supervisorDTO;
   private int contact;
+  private ContactDTO contactDTO;
   private int version;
 
+  @Override
+  public boolean accept() {
+    if (!contactDTO.getState().equals("initiated") && !contactDTO.getState().equals("meet")) {
+      return false;
+    }
+    contactDTO.setState("accepted");
+    year = getCurrentYearString();
+    return true;
+  }
 
   @Override
   public int getInternshipId() {
@@ -26,7 +39,7 @@ public class InternshipImpl implements Internship {
   }
 
   @Override
-  public int getResponsible() {
+  public int getSupervisor() {
     return supervisor;
   }
 
@@ -86,6 +99,26 @@ public class InternshipImpl implements Internship {
   }
 
   @Override
+  public SupervisorDTO getSupervisorDTO() {
+    return supervisorDTO;
+  }
+
+  @Override
+  public void setSupervisorDTO(SupervisorDTO supervisorDTO) {
+    this.supervisorDTO = supervisorDTO;
+  }
+
+  @Override
+  public ContactDTO getContactDTO() {
+    return contactDTO;
+  }
+
+  @Override
+  public void setContactDTO(ContactDTO contactDTO) {
+    this.contactDTO = contactDTO;
+  }
+
+  @Override
   public int getVersion() {
     return version;
   }
@@ -93,5 +126,27 @@ public class InternshipImpl implements Internship {
   @Override
   public void setVersion(int version) {
     this.version = version;
+  }
+
+  @Override
+  public String toString() {
+    return "InternshipImpl{" +
+        "internshipId=" + internshipId +
+        ", subject='" + subject + '\'' +
+        ", year='" + year + '\'' +
+        ", user=" + user +
+        ", enterprise=" + enterprise +
+        ", supervisor=" + supervisor +
+        ", supervisorDTO=" + supervisorDTO +
+        ", contact=" + contact +
+        ", contactDTO=" + contactDTO +
+        '}';
+  }
+
+  private String getCurrentYearString() {
+    LocalDate currentDate = LocalDate.now();
+    LocalDate startDate = LocalDate.of(currentDate.getYear() - 1, 9, 1);
+    LocalDate endDate = LocalDate.of(currentDate.getYear(), 9, 1);
+    return startDate.getYear() + "-" + endDate.getYear();
   }
 }

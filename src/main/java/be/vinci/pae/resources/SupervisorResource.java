@@ -64,7 +64,7 @@ public class SupervisorResource {
       // transform responsibleDTO to JSOn
       ObjectMapper mapper = new ObjectMapper();
       ObjectNode responsibleNode = mapper.createObjectNode();
-      responsibleNode.put("responsible_id", supervisorDTO.getResponsibleId());
+      responsibleNode.put("responsible_id", supervisorDTO.getSupervisorId());
       responsibleNode.put("name", supervisorDTO.getName());
       responsibleNode.put("surname", supervisorDTO.getSurname());
       responsibleNode.put("phone", supervisorDTO.getPhone());

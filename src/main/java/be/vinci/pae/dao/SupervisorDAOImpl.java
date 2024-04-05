@@ -3,6 +3,7 @@ package be.vinci.pae.dao;
 import be.vinci.pae.dal.DALBackService;
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.Supervisor;
+import be.vinci.pae.domain.SupervisorDTO;
 import be.vinci.pae.domain.SupervisorImpl;
 import be.vinci.pae.utils.FatalErrorException;
 import be.vinci.pae.utils.ResultSetMapper;
@@ -29,6 +30,39 @@ public class SupervisorDAOImpl implements SupervisorDAO {
       ps.setInt(1, id);
       ps.execute();
       return supervisorMapper.mapResultSetToObject(ps.getResultSet(), SupervisorImpl.class,
+          myDomainFactory::getSupervisor);
+    } catch (SQLException | IllegalAccessException e) {
+      throw new FatalErrorException(e);
+    }
+  }
+
+  @Override
+  public SupervisorDTO create(SupervisorDTO supervisor) {
+    try (PreparedStatement ps = myDalService.getPS(
+        "INSERT INTO projetae.supervisors(name, surname, phone, email, enterprise, version)"
+            + " VALUES (?, ?, ?, ?, ?, ?) RETURNING *;")) {
+      ps.setString(1, supervisor.getName());
+      ps.setString(2, supervisor.getSurname());
+      ps.setString(3, supervisor.getPhone());
+      ps.setString(4, supervisor.getEmail());
+      ps.setInt(5, supervisor.getEnterprise());
+      ps.setInt(6, 1);
+      ps.execute();
+      return supervisorMapper.mapResultSetToObject(ps.getResultSet(), SupervisorImpl.class,
+          myDomainFactory::getSupervisor);
+    } catch (SQLException | IllegalAccessException e) {
+      throw new FatalErrorException(e);
+    }
+  }
+
+  @Override
+  public SupervisorDTO readOne(int supervisorId) {
+    try (PreparedStatement ps = myDalService.getPS(
+        "SELECT * FROM projetae.supervisors WHERE supervisor_id = ?;")) {
+      ps.setInt(1, supervisorId);
+      ps.execute();
+      return supervisorMapper.mapResultSetToObject(ps.getResultSet(),
+          SupervisorImpl.class,
           myDomainFactory::getSupervisor);
     } catch (SQLException | IllegalAccessException e) {
       throw new FatalErrorException(e);
