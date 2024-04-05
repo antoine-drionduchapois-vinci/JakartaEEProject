@@ -155,6 +155,7 @@ public class ContactDAOImpl implements ContactDAO {
       return contactMapper.mapResultSetToObjectList(ps.getResultSet(), ContactImpl.class,
           myDomainFactory::getContact);
     } catch (SQLException | IllegalAccessException e) {
+      System.out.println("DAO sql error");
       throw new FatalErrorException(e);
     }
   }

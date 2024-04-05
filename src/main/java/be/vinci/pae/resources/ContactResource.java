@@ -17,6 +17,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.WebApplicationException;
@@ -270,35 +271,17 @@ public class ContactResource {
    * @return The user's contacts as JSON.
    */
   @GET
-  @Path("getEnterpriseContacts")
+  @Path("getEnterpriseContacts/{entrepriseId}")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getEnterpriseContact(
-      @DefaultValue("-1") @QueryParam("contactId") int enterpriseId) {
-
+  public List<ContactDTO> getEnterpriseContact(
+      @PathParam("entrepriseId") int enterpriseId) {
     ThreadContext.put("route", "/contact/getEnterpriseContacts");
     ThreadContext.put("method", "GET");
 
-    ObjectMapper mapper = new ObjectMapper();
-    ObjectNode response = mapper.createObjectNode();
-    ArrayNode contactArray = mapper.createArrayNode();
-
-    try {
-      List<ContactDTO> contacts = myContactUCC.getEnterpriseContacts(enterpriseId);
-      for (ContactDTO contactDTO : contacts) {
-        contactArray.add(
-            convertDTOToJson(contactDTO));
-      }
-
-      // Add table enterprise to response
-      response.set("contact", contactArray);
-    } catch (Exception e) {
-      // Handle error
-      response.put("error", e.getMessage());
-    }
-    logger.info("Status: 200 {getEnterpriseContacts}");
-    ThreadContext.clearAll();
-    return response;
+    List<ContactDTO> contacts = myContactUCC.getEnterpriseContacts(enterpriseId);
+    
+    return contacts;
 
   }
 
