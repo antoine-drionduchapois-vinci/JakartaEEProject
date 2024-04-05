@@ -3,7 +3,6 @@ package be.vinci.pae.resources;
 import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.ucc.UserUCC;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -19,7 +18,6 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
-
 
 /**
  * Implementation of the UserDataService interface.
@@ -72,36 +70,18 @@ public class UserResource {
   @GET
   @Path("All")
   @Produces(MediaType.APPLICATION_JSON)
-  public ArrayNode getUsersAsJson() {
-    ThreadContext.put("route", "/users/stats");
+  public List<UserDTO> getUsersAsJson() {
+    ThreadContext.put("route", "/users/All");
     ThreadContext.put("method", "Get");
     ThreadContext.put("params", "NoParam");
-    ObjectMapper mapper = new ObjectMapper();
-    ArrayNode usersArray = mapper.createArrayNode();
 
-    try {
-      // Récupérer la liste complète des utilisateurs depuis votre DAO
-      List<UserDTO> userList = myUserUCC.getUsersAsJson();
 
-      // Parcourir chaque utilisateur et les ajouter à l'ArrayNode
-      for (UserDTO user : userList) {
-        ObjectNode userNode = mapper.createObjectNode();
-        userNode.put("userId", user.getUserId());
-        userNode.put("name", user.getName());
-        userNode.put("surname", user.getSurname());
-        userNode.put("email", user.getEmail());
-        userNode.put("role", user.getRole().name());
-        userNode.put("annee", user.getYear());
-        // Ajoutez d'autres attributs utilisateur au besoin
-        usersArray.add(userNode);
-      }
-    } catch (Exception e) {
-      // Gérer les erreurs éventuelles
-      e.printStackTrace();
-    }
+    // Récupérer la liste complète des utilisateurs depuis votre DAO
+    List<UserDTO> userList = myUserUCC.getUsersAsJson();
+
     logger.info("Status: 200 {Fetching all User}");
     ThreadContext.clearAll();
-    return usersArray;
+    return userList;
   }
 
   /**
@@ -120,25 +100,19 @@ public class UserResource {
       // Get token from JSON
       int userId = myJwt.getUserIdFromToken(token);
 
-      if (userId == 0) {
-        throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
-      }
-
-      UserDTO user = myUserUCC.getUsersByIdAsJson(userId);
-
-      ObjectMapper mapper = new ObjectMapper();
-      ObjectNode userInfo = mapper.createObjectNode();
-      userInfo.put("name", user.getName());
-      userInfo.put("surName", user.getSurname());
-      userInfo.put("phone", user.getPhone());
-      userInfo.put("year", user.getYear());
-      userInfo.put("email", user.getEmail());
-      return userInfo;
-    } catch (Exception e) {
-      // Gérer les erreurs éventuelles
-      e.printStackTrace();
+    if (userId == 0) {
+      throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
     }
-    return null;
-  }
 
+    UserDTO user = myUserUCC.getUsersByIdAsJson(userId);
+
+    ObjectMapper mapper = new ObjectMapper();
+    ObjectNode userInfo = mapper.createObjectNode();
+    userInfo.put("name", user.getName());
+    userInfo.put("surName", user.getSurname());
+    userInfo.put("phone", user.getPhone());
+    userInfo.put("year", user.getYear());
+    userInfo.put("email", user.getEmail());
+    return userInfo;
+  }
 }

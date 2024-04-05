@@ -44,21 +44,35 @@ canvas {
 .table-container {
   width: 50%; /* Adjust the width of the table container */
   max-width: 100%; /* Ensure the table container does not exceed 100% of its parent container's width */
-  gap: 8%; 
+  gap: 8%;
 }
 
 .tableUser-container {
   margin-top: 5%;
+  margin-right: 5%;
+  margin-bottom: 5%;
   display: flex;
   flex-direction: column;
   gap: 8%; /* Spacing between elements in column layout */
 }
 
 tbody tr:hover {
-  transform: scale(1.05); /* Increase size by 5% on hover */
+  transform: scale(1.02); /* Increase size by 5% on hover */
   border-radius: 10px; /* Rounded corners */
   transition: background-color 0.3s ease; /* Smooth transition for background color */
+  padding: 5px;
 }
+
+.table-scroll-container {
+  max-height: calc(5 * 60px); /* Exemple : 5 lignes à 2.25rem par ligne */
+  overflow-y: auto;
+  margin-top: 25px;
+}
+
+.table.is-fullwidth {
+  margin-top: 0px;
+}
+
 /* End Style DashboardTeacher */
 
 /* Autocomplete credit: https://www.w3schools.com/howto/howto_js_autocomplete.asp */

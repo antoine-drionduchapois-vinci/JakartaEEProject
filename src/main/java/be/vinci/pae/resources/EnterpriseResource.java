@@ -3,7 +3,6 @@ package be.vinci.pae.resources;
 import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -42,32 +41,16 @@ public class EnterpriseResource {
   @GET
   @Path("enterprises")
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getAllEnterprises() {
+  public List<EnterpriseDTO> getAllEnterprises() {
     ThreadContext.put("route", "/contact");
     ThreadContext.put("method", "Get");
     ThreadContext.put("params", "NoParam");
-    ObjectMapper mapper = new ObjectMapper();
-    ObjectNode response = mapper.createObjectNode();
-    ArrayNode enterprisesArray = mapper.createArrayNode();
 
-    try {
-      // Récupérer toutes les entreprises depuis votre DAO
-      List<EnterpriseDTO> enterprises = myEnterpriseUCC.getAllEnterprises();
+    List<EnterpriseDTO> enterprises = myEnterpriseUCC.getAllEnterprises();
 
-      // Parcourir chaque entreprise et les ajouter à la réponse
-      for (EnterpriseDTO enterpriseDTO : enterprises) {
-        enterprisesArray.add(convertDTOToJson(enterpriseDTO));
-      }
-
-      // Ajouter le tableau d'entreprises à la réponse
-      response.set("enterprises", enterprisesArray);
-    } catch (Exception e) {
-      // Gérer les erreurs éventuelles
-      response.put("error", e.getMessage());
-    }
     logger.info("Status: 200 {getAllEnterprises}");
     ThreadContext.clearAll();
-    return response;
+    return enterprises;
   }
 
   /**
@@ -96,7 +79,13 @@ public class EnterpriseResource {
       // Gérer les erreurs éventuelles
       e.printStackTrace();
     }
-    return null;
+
+    // get entrprise that corresponds to user intership
+    EnterpriseDTO enterpriseDTO = myEnterpriseUCC.getEnterprisesByUserId(userId);
+    ObjectNode objectNode = convertDTOToJson(enterpriseDTO);
+    logger.info("Status: 200 {getEnterprisesByUserId}");
+    ThreadContext.clearAll();
+    return objectNode;
   }
 
   private ObjectNode convertDTOToJson(EnterpriseDTO enterpriseDTO) {
