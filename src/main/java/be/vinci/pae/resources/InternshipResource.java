@@ -6,13 +6,12 @@ import be.vinci.pae.domain.SupervisorDTO;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.ucc.InternshipUCC;
 import be.vinci.pae.ucc.SupervisorUCC;
-import be.vinci.pae.utils.JWTDecryptToken;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -31,7 +30,6 @@ import org.apache.logging.log4j.ThreadContext;
 public class InternshipResource {
 
 
-  private JWTDecryptToken decryptToken = new JWTDecryptToken();
   private static final Logger logger = LogManager.getLogger(InternshipResource.class);
 
   @Inject
@@ -43,20 +41,24 @@ public class InternshipResource {
   @Inject
   private SupervisorUCC myResponsbileUCC;
 
+  @Inject
+  private JWT myJwt;
+
 
   /**
    * Retrieves users internship info.
    *
-   * @param json user
+   * @param token from the user
    * @return an ObjectNode containing users info
    */
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getUserInternship(JsonNode json) {
+  public ObjectNode getUserInternship(@HeaderParam("Authorization") String token) {
     ThreadContext.put("route", "/int");
     ThreadContext.put("method", "Post");
-    int userId = decryptToken.getIdFromJsonToken(json);
+
+    int userId = myJwt.getUserIdFromToken(token);
     ThreadContext.put("params", "userId:" + userId);
 
     if (userId == 0) {
