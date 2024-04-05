@@ -1,6 +1,7 @@
 package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.resources.filters.Authorize;
 import be.vinci.pae.ucc.UserUCC;
 import be.vinci.pae.utils.JWTDecryptToken;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -70,6 +71,7 @@ public class UserResource {
   @GET
   @Path("All")
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize({"TEACHER", "ADMIN"})
   public List<UserDTO> getUsersAsJson() {
     ThreadContext.put("route", "/users/All");
     ThreadContext.put("method", "Get");
