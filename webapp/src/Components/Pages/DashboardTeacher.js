@@ -129,9 +129,7 @@ const updateTable = (tableBody, list) => {
   list.forEach((e) => {
     const row = document.createElement('tr');
     row.addEventListener('click', () => {
-      window.location.href = `details-page.html?id=${
-        e.entreprise_id !== undefined ? e.entreprise_id : e.utilisateur_id
-      }`;
+      window.location.href = `details-page.html?id=${e.id}`;
     });
     const values = Object.values(e).slice(1);
     values.forEach((value) => {
