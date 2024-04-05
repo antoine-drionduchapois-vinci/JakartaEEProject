@@ -1,3 +1,4 @@
+import { getAuthenticatedUser } from "../../utils/auths";
 import { clearPage, renderPageTitle } from "../../utils/render";
 
 
@@ -7,6 +8,49 @@ const ProfilePage = () => {
     renderPageTitle('Profil');
 
     renderProfilePage();
+
+    const passwordForm = document.querySelector('#password-form');
+    passwordForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const currentPassword = passwordForm.elements.currentPassword.value;
+        const newPassword = passwordForm.elements.newPassword.value;
+        const confirmPassword = passwordForm.elements.confirmPassword.value;
+
+        const error = document.getElementById('error1');
+
+        const user = getAuthenticatedUser();
+        console.log(user);
+        
+        if (newPassword !== confirmPassword) {
+            error.innerHTML = "Le mot de passe de confirmation n'est pas le même"
+            error.style.display = 'block';
+            error.style.color = 'red';
+            return;
+        }
+        const data = {
+            email : user.email,
+            password : currentPassword,
+            newPassWord : newPassword
+        }
+        
+        try {
+            const response = await fetch('http://localhost:8080/users/changePassword', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': user.token
+                },
+                body: JSON.stringify(data)
+            });
+            if (!response.ok) {
+                throw new Error('Failed to change password');
+            }
+            // Afficher un message de succès
+        } catch (e) {
+            console.error('Error:', e);
+            // Afficher un message d'erreur générique
+        }
+    });
 }
 
 function renderProfilePage() {
@@ -18,7 +62,7 @@ function renderProfilePage() {
             <div class="column is-half">
                 <h4 class="title is-4 has-text-centered">Modifier mot de passe</h4>
                 <div class="box">
-                    <form>
+                    <form id="password-form">
                         <div class="field">
                             <label class="label">Mot de passe actuel</label>
                             <div class="control">
@@ -44,7 +88,7 @@ function renderProfilePage() {
                         </div>
                     </form>
                 </div>
-                <div class="error">
+                <div id="error1">
                 </div>
             </div>
             <div class="column is-half">
@@ -70,7 +114,7 @@ function renderProfilePage() {
                         </div>
                     </form>
                 </div>
-                <div class="error">
+                <div id="error2">
                 </div>
             </div>
         </div>

@@ -1,6 +1,8 @@
 package be.vinci.pae.resources;
 
+import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.ucc.AuthUCC;
 import be.vinci.pae.ucc.UserUCC;
 import be.vinci.pae.utils.JWTDecryptToken;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -11,6 +13,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -33,7 +36,14 @@ public class UserResource {
   private JWTDecryptToken decryptToken = new JWTDecryptToken();
 
   @Inject
+  private JWT myJwt;
+
+  @Inject
+  private DomainFactory domainFactory;
+  @Inject
   private UserUCC myUserUCC;
+  @Inject
+  private AuthUCC authUCC;
 
   /**
    * Retrieves global statistics.
@@ -127,5 +137,25 @@ public class UserResource {
     userInfo.put("year", user.getYear());
     userInfo.put("email", user.getEmail());
     return userInfo;
+  }
+
+  @POST
+  @Path("changePassword")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public UserDTO modifyPassword(@HeaderParam("Authorization") String token, UserDTO userDTO) {
+    int userId = myJwt.getUserIdFromToken(token);
+    String userEmail = myJwt.getUserEmailFromToken(token);
+
+    ThreadContext.put("route", "/users");
+    ThreadContext.put("method", "Post");
+
+    if (userId == 0) {
+      throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
+    }
+    System.out.println(userDTO);
+
+    return userDTO;
+
   }
 }
