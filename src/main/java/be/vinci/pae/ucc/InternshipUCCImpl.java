@@ -44,6 +44,10 @@ public class InternshipUCCImpl implements InternshipUCC {
   public InternshipDTO acceptInternship(InternshipDTO internship) {
     myDALService.start();
 
+    if (internshipDAO.getUserInternship(internship.getUser()) != null) {
+      throw new BusinessException(409, "user already have an internship");
+    }
+
     // Check contactDTO
     ContactDTO contact = contactDAO.readOne(internship.getContact());
 
