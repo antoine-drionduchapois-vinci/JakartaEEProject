@@ -60,7 +60,7 @@ public class EnterpriseResource {
    * @return An ObjectNode representing the enterprise details.
    */
   @GET
-  @Path("enterprises")
+  @Path("enterprise")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getEnterprisesByUserId(@HeaderParam("Authorization") String token) {

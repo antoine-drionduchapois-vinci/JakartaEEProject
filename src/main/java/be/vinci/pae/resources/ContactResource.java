@@ -228,11 +228,9 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getUsersByIdAsJson(@HeaderParam("Authorization") String token) {
-    System.out.println("getUserByIdAsJson");
     ThreadContext.put("route", "/contact/getUserContacts");
     ThreadContext.put("method", "Get");
     int userId = myJwt.getUserIdFromToken(token);
-    System.out.println(userId);
     ThreadContext.put("params", "userId:" + userId);
     if (userId == 0) {
       throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
