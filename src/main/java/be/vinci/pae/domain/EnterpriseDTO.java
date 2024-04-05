@@ -1,8 +1,11 @@
 package be.vinci.pae.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 /**
  * The EnterpriseDTO interface represents enterprise informations.
  */
+@JsonDeserialize(as = EnterpriseImpl.class)
 public interface EnterpriseDTO {
 
   /**
@@ -99,8 +102,7 @@ public interface EnterpriseDTO {
   /**
    * Sets the blacklisted status of the enterprise.
    *
-   * @param blacklisted True to mark the enterprise as blacklisted, false
-   *                    otherwise.
+   * @param blacklisted True to mark the enterprise as blacklisted, false otherwise.
    */
   void setBlacklisted(boolean blacklisted);
 
@@ -114,8 +116,21 @@ public interface EnterpriseDTO {
   /**
    * Sets the reason for the enterprise being blacklisted.
    *
-   * @param blacklistedReason The reason for the enterprise being blacklisted to
-   *                          set.
+   * @param blacklistedReason The reason for the enterprise being blacklisted to set.
    */
   void setBlacklistedReason(String blacklistedReason);
+
+  /**
+   * Gets the version of the enterprise.
+   *
+   * @return The version of the enterprise.
+   */
+  int getVersion();
+
+  /**
+   * Sets the version of the enterprise.
+   *
+   * @param version The version of the user to enterprise.
+   */
+  void setVersion(int version);
 }

@@ -77,8 +77,9 @@ public class SupervisorResource {
     } catch (Exception e) {
       // Gérer les erreurs éventuelles
       e.printStackTrace();
+      return null;
     }
-    return null;
+
   }
 
 }

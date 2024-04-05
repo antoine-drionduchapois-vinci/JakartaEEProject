@@ -16,6 +16,7 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class AuthUCCImplTest {
@@ -102,7 +103,7 @@ class AuthUCCImplTest {
     });
 
   }
-  
+
   @Test
   void testRegister() {
     UserDTO userDTO = domainFactory.getUser();
@@ -128,5 +129,21 @@ class AuthUCCImplTest {
       authUCC.register(existingUserDTO);
     });
 
+  }
+
+  @Test
+  @DisplayName("Check that a new user has version number 1 by registering")
+  void testRegisterNumVersion() {
+    UserDTO userDTO = domainFactory.getUser();
+    userDTO.setEmail("test@example.com");
+    userDTO.setPassword("password123");
+    userDTO.setVersion(1);
+
+    when(userDAO.getOneByEmail("test@example.com")).thenReturn(null);
+    when(userDAO.addUser(userDTO)).thenReturn(userDTO);
+
+    int versionResult = authUCC.register(userDTO).getVersion();
+
+    assertEquals(1, versionResult);
   }
 }

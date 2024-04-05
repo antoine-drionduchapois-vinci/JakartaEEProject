@@ -92,8 +92,7 @@ const fetchUserContacts = async () => {
     return contactsHtml;
   } catch (error) {
     console.error('Error retrieving user contacts:', error);
-    const blocError = `<p>${error}</p>`;
-    return blocError;
+    return "Pas de contact pour l'instant";
   }
 };
 

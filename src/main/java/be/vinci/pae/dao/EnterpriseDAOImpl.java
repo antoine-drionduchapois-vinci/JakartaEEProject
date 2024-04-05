@@ -1,10 +1,10 @@
 package be.vinci.pae.dao;
 
+import be.vinci.pae.dal.DALBackService;
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.domain.EnterpriseImpl;
 import be.vinci.pae.utils.BusinessException;
-import be.vinci.pae.utils.DALBackService;
 import be.vinci.pae.utils.FatalErrorException;
 import be.vinci.pae.utils.ResultSetMapper;
 import jakarta.inject.Inject;
@@ -61,14 +61,17 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       throw new BusinessException(409,
           "enterprise with name: " + name + " and label: " + label + " already exists!");
     }
+    int initialVersion = 1;
     try (PreparedStatement ps = myDalService.getPS(
-        "INSERT INTO projetae.enterprises (name, label, address, phone, email)"
-            + "VALUES (?, ?, ?, ?,  ?) RETURNING *;")) {
+        "INSERT INTO projetae.enterprises (name, label, address, phone, email, version)"
+            + "VALUES (?, ?, ?, ?, ?, ?) RETURNING *;")) {
       ps.setString(1, name);
       ps.setString(2, label);
       ps.setString(3, adress);
       ps.setString(4, phone);
       ps.setString(5, email);
+      ps.setInt(6, initialVersion);
+
       ps.execute();
       return enterpriseMapper.mapResultSetToObject(ps.getResultSet(), EnterpriseImpl.class,
           myDomainFactory::getEnterprise);

@@ -1,8 +1,11 @@
 package be.vinci.pae.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 /**
  * The Contact interface represents contact informations.
  */
+@JsonDeserialize(as = ContactImpl.class)
 public interface ContactDTO {
 
   /**
@@ -116,4 +119,18 @@ public interface ContactDTO {
    * @param enterpriseDTO The Enterprise object to set for the contact.
    */
   void setEnterpriseDTO(EnterpriseDTO enterpriseDTO);
+
+  /**
+   * Gets the version of the contact.
+   *
+   * @return The version of the contact.
+   */
+  int getVersion();
+
+  /**
+   * Sets the version of the contact.
+   *
+   * @param version The version of the user to contact.
+   */
+  void setVersion(int version);
 }

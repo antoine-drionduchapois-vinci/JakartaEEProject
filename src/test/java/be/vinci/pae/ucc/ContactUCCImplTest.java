@@ -19,6 +19,7 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class ContactUCCImplTest {
@@ -151,6 +152,24 @@ class ContactUCCImplTest {
     ContactDTO result = contactUCC.initiateContact(1, "name", "label", "address", "phone", "email");
 
     assertEquals(contactDTO, result);
+  }
+
+  @Test
+  @DisplayName("Checks that the version number of an initiated contact is 1 ")
+  void testVersionInitiateContact() {
+    ContactDTO contactDTO = domainFactory.getContact();
+    contactDTO.setVersion(1);
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterprise();
+    enterpriseDTO.setVersion(1);
+
+    when(enterpriseDAO.create("name", "label", "address", "phone", "email")).thenReturn(
+        enterpriseDTO);
+    when(contactDAO.create(1, enterpriseDTO.getEnterpriseId())).thenReturn(contactDTO);
+
+    int versionResult = contactUCC.initiateContact(1, "name", "label", "address", "phone", "email")
+        .getVersion();
+
+    assertEquals(1, versionResult);
   }
 
   @Test

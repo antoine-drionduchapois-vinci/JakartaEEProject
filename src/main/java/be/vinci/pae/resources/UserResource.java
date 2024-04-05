@@ -72,36 +72,18 @@ public class UserResource {
   @GET
   @Path("All")
   @Produces(MediaType.APPLICATION_JSON)
-  public ArrayNode getUsersAsJson() {
-    ThreadContext.put("route", "/users/stats");
+  public List<UserDTO> getUsersAsJson() {
+    ThreadContext.put("route", "/users/All");
     ThreadContext.put("method", "Get");
     ThreadContext.put("params", "NoParam");
-    ObjectMapper mapper = new ObjectMapper();
-    ArrayNode usersArray = mapper.createArrayNode();
 
-    try {
-      // Récupérer la liste complète des utilisateurs depuis votre DAO
-      List<UserDTO> userList = myUserUCC.getUsersAsJson();
 
-      // Parcourir chaque utilisateur et les ajouter à l'ArrayNode
-      for (UserDTO user : userList) {
-        ObjectNode userNode = mapper.createObjectNode();
-        userNode.put("userId", user.getUserId());
-        userNode.put("name", user.getName());
-        userNode.put("surname", user.getSurname());
-        userNode.put("email", user.getEmail());
-        userNode.put("role", user.getRole().name());
-        userNode.put("annee", user.getYear());
-        // Ajoutez d'autres attributs utilisateur au besoin
-        usersArray.add(userNode);
-      }
-    } catch (Exception e) {
-      // Gérer les erreurs éventuelles
-      e.printStackTrace();
-    }
+    // Récupérer la liste complète des utilisateurs depuis votre DAO
+    List<UserDTO> userList = myUserUCC.getUsersAsJson();
+
     logger.info("Status: 200 {Fetching all User}");
     ThreadContext.clearAll();
-    return usersArray;
+    return userList;
   }
 
   /**
@@ -115,34 +97,23 @@ public class UserResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getUsersByIdAsJson(@HeaderParam("Authorization") String token) {
-    try {
+
       // Get token from JSON
       int userId = myJwt.getUserIdFromToken(token);
 
-      if (userId == 0) {
-        throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
-      }
-
-      UserDTO user = myUserUCC.getUsersByIdAsJson(userId);
-
-      ObjectMapper mapper = new ObjectMapper();
-      ObjectNode userInfo = mapper.createObjectNode();
-      userInfo.put("name", user.getName());
-      userInfo.put("surName", user.getSurname());
-      userInfo.put("phone", user.getPhone());
-      userInfo.put("year", user.getYear());
-      userInfo.put("email", user.getEmail());
-      return userInfo;
-    } catch (WebApplicationException e) {
-      // Renvoyer l'exception directement
-      throw e;
-    } catch (Exception e) {
-      // Gérer les erreurs éventuelles
-      e.printStackTrace();
-      // Renvoyer une réponse d'erreur générique
-      throw new WebApplicationException("An error occurred while retrieving user information", e,
-          Status.INTERNAL_SERVER_ERROR);
+    if (userId == 0) {
+      throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
     }
-  }
 
+    UserDTO user = myUserUCC.getUsersByIdAsJson(userId);
+
+    ObjectMapper mapper = new ObjectMapper();
+    ObjectNode userInfo = mapper.createObjectNode();
+    userInfo.put("name", user.getName());
+    userInfo.put("surName", user.getSurname());
+    userInfo.put("phone", user.getPhone());
+    userInfo.put("year", user.getYear());
+    userInfo.put("email", user.getEmail());
+    return userInfo;
+  }
 }

@@ -164,28 +164,25 @@ async function handleSubmit(e) {
   };
   // Sending registration request to server
   try {
-    fetch('http://localhost:8080/auths/register', options)
-      .then((response) => {
-        if (!response.ok) {
-          return response.json().then((errorData) => {
-            errorMessage.innerHTML = errorData.message;
-            errorMessage.style.display = 'block';
-            throw new Error(errorData.message);
-          });
-        }
-        return response.json();
-      })
-      .then((authenticatedUser) => {
-        // Setting authenticated user in localStorage
-        setAuthenticatedUser(authenticatedUser);
-        // Render navbar components
-        Navbar();
-        // Navigating to home page
-        Redirect.redirect(authenticatedUser.role);
-      })
-      .catch((error) => {
-        console.error('Error during register:', error);
-      });
+    const response = await fetch('http://localhost:8080/auths/register', options);
+    
+    if (!response.ok) {
+      if(response.status === 409){
+        errorMessage.textContent = 'Cet utilisateur a déjà un compte';
+        errorMessage.style.display = 'block';
+        errorMessage.style.fontSize = '16px';
+      }else{
+        throw new Error ("Server error");
+      }
+    }
+
+    const authenticatedUser = await response.json();
+    // Setting authenticated user in localStorage
+    setAuthenticatedUser(authenticatedUser);
+    // Render navbar components
+    Navbar();
+    // Navigating to home page
+    Redirect.redirect(authenticatedUser.role);
   } catch (error) {
     console.error('Error during register:', error);
   }

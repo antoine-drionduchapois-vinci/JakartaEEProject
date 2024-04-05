@@ -1,10 +1,10 @@
 package be.vinci.pae.ucc;
 
+import be.vinci.pae.dal.DALService;
 import be.vinci.pae.dao.UserDAO;
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.utils.BusinessException;
-import be.vinci.pae.utils.DALService;
 import be.vinci.pae.utils.NotFoundException;
 import jakarta.inject.Inject;
 
@@ -47,7 +47,6 @@ public class AuthUCCImpl implements AuthUCC {
     }
     User user = (User) userTemp;
     user.hashPassword(userTemp.getPassword());
-    System.out.println(user.getPassword());
     UserDTO userDTO = myUserDAO.addUser(user);
     //faire dto dans ressource cast et check role
     myDALService.commit();

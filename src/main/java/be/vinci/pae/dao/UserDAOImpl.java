@@ -1,9 +1,9 @@
 package be.vinci.pae.dao;
 
+import be.vinci.pae.dal.DALBackService;
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.domain.UserImpl;
-import be.vinci.pae.utils.DALBackService;
 import be.vinci.pae.utils.FatalErrorException;
 import be.vinci.pae.utils.ResultSetMapper;
 import jakarta.inject.Inject;
@@ -59,13 +59,15 @@ public class UserDAOImpl implements UserDAO {
   public UserDTO addUser(UserDTO userDTO) {
     PreparedStatement ps = myDalService.getPS(
         "INSERT INTO projetae.users (name, surname, email, phone, password,"
-            + " year, inscription_date, role)"
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING *");
+            + " year, inscription_date, role, version)"
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING *");
     LocalDate currentDate = LocalDate.now();
     Date curDate = Date.valueOf(currentDate);
     int currentYear = currentDate.getYear();
     int previousYear = currentYear - 1;
     String academicYear = previousYear + "-" + currentYear;
+    int initialVersion = 1;
+
     try {
       ps.setString(1, userDTO.getName());
       ps.setString(2, userDTO.getSurname());
@@ -75,6 +77,7 @@ public class UserDAOImpl implements UserDAO {
       ps.setString(6, academicYear);
       ps.setDate(7, curDate);
       ps.setString(8, userDTO.getRole().name());
+      ps.setInt(9, initialVersion);
       ps.execute();
       return userMapper.mapResultSetToObject(ps.getResultSet(), UserImpl.class,
           myDomainFactory::getUser);

@@ -1,5 +1,7 @@
-package be.vinci.pae.utils;
+package be.vinci.pae.dal;
 
+import be.vinci.pae.utils.Config;
+import be.vinci.pae.utils.FatalErrorException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -19,22 +21,53 @@ public class DALServiceImpl implements DALService, DALBackService {
   private final ThreadLocal<Connection> connectionThreadLocal = new ThreadLocal<>();
   private final int MAX_CONNECTIONS = 3;
 
+  /**
+   * Constructs a new DALServiceImpl object and initializes the data source.
+   */
+  public DALServiceImpl() {
+    this.dataSource = createDataSource();
+  }
+
+  /**
+   * Starts the data access layer service.
+   */
   @Override
-  public PreparedStatement getPS(String sql) {
+  public void start() {
+    connection();
+  }
+
+  private void connection() {
     try {
-      return getConnection().prepareStatement(sql);
+      Connection conn = connectionThreadLocal.get();
+      if (conn == null || conn.isClosed() || !conn.isValid(5)) {
+        conn = dataSource.getConnection();
+        connectionThreadLocal.set(conn);
+      }
+
     } catch (SQLException e) {
       throw new FatalErrorException(e);
     }
   }
 
+  /**
+   * Gets a prepared statement for the given SQL query.
+   *
+   * @param sql the SQL query
+   * @return a prepared statement
+   */
   @Override
-  public void start() {
-    if (dataSource == null) {
-      dataSource = createDataSource();
+  public PreparedStatement getPS(String sql) {
+    try {
+      return connectionThreadLocal.get().prepareStatement(sql);
+    } catch (SQLException e) {
+      throw new FatalErrorException(e);
     }
   }
 
+
+  /**
+   * Commits the active connection.
+   */
   @Override
   public void commit() {
     Connection conn = connectionThreadLocal.get();
@@ -44,22 +77,20 @@ public class DALServiceImpl implements DALService, DALBackService {
     try {
       conn.commit();
     } catch (SQLException e) {
-      rollbackAndClose(conn);
+      rollback(conn);
       throw new FatalErrorException(e);
     } finally {
       closeConnection(conn);
     }
   }
 
-  private void rollbackAndClose(Connection conn) {
+  private void rollback(Connection conn) {
     try {
       if (conn != null) {
         conn.rollback();
       }
     } catch (SQLException rollbackEx) {
       throw new FatalErrorException(rollbackEx);
-    } finally {
-      closeConnection(conn);
     }
   }
 
@@ -75,21 +106,6 @@ public class DALServiceImpl implements DALService, DALBackService {
       }
     }
   }
-
-  private Connection getConnection() {
-    try {
-      Connection conn = connectionThreadLocal.get();
-      if (conn == null || conn.isClosed()) {
-        conn = dataSource.getConnection();
-        connectionThreadLocal.set(conn);
-      }
-      return conn;
-    } catch (SQLException e) {
-      throw new FatalErrorException(e);
-    }
-  }
-
-
 
   private DataSource createDataSource() {
     BasicDataSource ds = new BasicDataSource();
