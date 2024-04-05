@@ -3,7 +3,6 @@ package be.vinci.pae.resources;
 import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
