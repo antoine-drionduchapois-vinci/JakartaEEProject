@@ -5,7 +5,6 @@ import be.vinci.pae.ucc.UserUCC;
 import be.vinci.pae.utils.JWTDecryptToken;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -71,31 +70,18 @@ public class UserResource {
   @GET
   @Path("All")
   @Produces(MediaType.APPLICATION_JSON)
-  public ArrayNode getUsersAsJson() {
+  public List<UserDTO> getUsersAsJson() {
     ThreadContext.put("route", "/users/All");
     ThreadContext.put("method", "Get");
     ThreadContext.put("params", "NoParam");
-    ObjectMapper mapper = new ObjectMapper();
-    ArrayNode usersArray = mapper.createArrayNode();
+
 
     // Récupérer la liste complète des utilisateurs depuis votre DAO
     List<UserDTO> userList = myUserUCC.getUsersAsJson();
 
-    // Parcourir chaque utilisateur et les ajouter à l'ArrayNode
-    for (UserDTO user : userList) {
-      ObjectNode userNode = mapper.createObjectNode();
-      userNode.put("userId", user.getUserId());
-      userNode.put("name", user.getName());
-      userNode.put("surname", user.getSurname());
-      userNode.put("email", user.getEmail());
-      userNode.put("role", user.getRole().name());
-      userNode.put("année", user.getYear());
-      // Ajoutez d'autres attributs utilisateur au besoin
-      usersArray.add(userNode);
-    }
     logger.info("Status: 200 {Fetching all User}");
     ThreadContext.clearAll();
-    return usersArray;
+    return userList;
   }
 
   /**
