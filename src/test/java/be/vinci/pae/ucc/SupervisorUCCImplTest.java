@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 
 import be.vinci.pae.dao.SupervisorDAO;
 import be.vinci.pae.domain.DomainFactory;
-import be.vinci.pae.domain.Supervisor;
+import be.vinci.pae.domain.SupervisorDTO;
 import be.vinci.pae.utils.NotFoundException;
 import be.vinci.pae.utils.TestBinder;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -40,7 +40,7 @@ class SupervisorUCCImplTest {
 
   @Test
   void testGetResponsibleByEnterpriseIdWithExistingSupervisor() {
-    Supervisor supervisor = domainFactory.getSupervisor();
+    SupervisorDTO supervisor = domainFactory.getSupervisor();
     supervisor.setEnterprise(1);
     supervisor.setEmail("test@vinci.be");
     supervisor.setName("test");
@@ -51,7 +51,7 @@ class SupervisorUCCImplTest {
     when(supervisorDAO.getResponsibleByEnterpriseId(supervisor.getEnterprise())).thenReturn(
         supervisor);
 
-    Supervisor result = supervisorUCC.getResponsibleByEnterpriseId(supervisor.getEnterprise());
+    SupervisorDTO result = supervisorUCC.getResponsibleByEnterpriseId(supervisor.getEnterprise());
 
     assertEquals(supervisor, result);
     verify(supervisorDAO).getResponsibleByEnterpriseId(supervisor.getEnterprise());

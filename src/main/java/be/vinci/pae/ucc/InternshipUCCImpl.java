@@ -1,5 +1,6 @@
 package be.vinci.pae.ucc;
 
+import be.vinci.pae.dal.DALService;
 import be.vinci.pae.dao.ContactDAO;
 import be.vinci.pae.dao.InternshipDAO;
 import be.vinci.pae.dao.SupervisorDAO;
@@ -8,7 +9,6 @@ import be.vinci.pae.domain.Internship;
 import be.vinci.pae.domain.InternshipDTO;
 import be.vinci.pae.domain.SupervisorDTO;
 import be.vinci.pae.utils.BusinessException;
-import be.vinci.pae.utils.DALService;
 import be.vinci.pae.utils.NotFoundException;
 import jakarta.inject.Inject;
 
