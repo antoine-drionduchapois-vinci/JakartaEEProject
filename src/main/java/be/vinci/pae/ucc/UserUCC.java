@@ -37,4 +37,6 @@ public interface UserUCC {
    *         the given user ID.
    */
   UserDTO getUsersByIdAsJson(int userId);
+
+  UserDTO modifyPassword(UserDTO userDTO, String newMdp);
 }

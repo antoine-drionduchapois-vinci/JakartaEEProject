@@ -53,4 +53,6 @@ public interface UserDAO {
    */
   UserDTO addUser(UserDTO userDTO);
 
+  UserDTO modifyPassword(UserDTO userDTO);
+
 }

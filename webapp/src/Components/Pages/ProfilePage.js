@@ -19,7 +19,6 @@ const ProfilePage = () => {
         const error = document.getElementById('error1');
 
         const user = getAuthenticatedUser();
-        console.log(user);
         
         if (newPassword !== confirmPassword) {
             error.innerHTML = "Le mot de passe de confirmation n'est pas le même"
@@ -27,28 +26,37 @@ const ProfilePage = () => {
             error.style.color = 'red';
             return;
         }
+
         const data = {
+            userId : user.id,
             email : user.email,
             password : currentPassword,
-            newPassWord : newPassword
-        }
+        };
         
         try {
             const response = await fetch('http://localhost:8080/users/changePassword', {
                 method: 'POST',
+                body: JSON.stringify(data),
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': user.token
                 },
-                body: JSON.stringify(data)
             });
+            console.log(response);
             if (!response.ok) {
-                throw new Error('Failed to change password');
+                if(response.status === 401) {
+                    error.innerHTML = 'Mauvais mot de passe actuel !'
+                    error.style.display = 'block';
+                    error.style.color = 'red';
+                } else{
+                    throw new Error(`Failed to change password`);
+                }
+            }else{
+                alert('Mot de passe modifié avec succès !');
             }
             // Afficher un message de succès
         } catch (e) {
             console.error('Error:', e);
-            // Afficher un message d'erreur générique
         }
     });
 }
@@ -81,14 +89,14 @@ function renderProfilePage() {
                                 <input class="input" type="password" name="confirmPassword">
                             </div>
                         </div>
+                        <div id="error1">
+                        </div>
                         <div class="field">
                             <div class="control has-text-centered">
                                 <button class="button is-dark is-rounded" type="submit">Envoyer</button>
                             </div>
                         </div>
                     </form>
-                </div>
-                <div id="error1">
                 </div>
             </div>
             <div class="column is-half">
@@ -107,14 +115,14 @@ function renderProfilePage() {
                                 <input class="input" type="password" name="password">
                             </div>
                         </div>
+                        <div id="error2">
+                        </div>
                         <div class="field">
                             <div class="control has-text-centered">
                                 <button class="button is-dark is-rounded" type="submit">Envoyer</button>
                             </div>
                         </div>
                     </form>
-                </div>
-                <div id="error2">
                 </div>
             </div>
         </div>

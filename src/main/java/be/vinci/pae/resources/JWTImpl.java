@@ -65,14 +65,4 @@ public class JWTImpl implements JWT {
     }
   }
 
-  @Override
-  public String getUserEmailFromToken(String token) {
-    try {
-      JWTVerifier verifier = com.auth0.jwt.JWT.require(jwtAlgorithm).withIssuer("auth0").build();
-      DecodedJWT decodedJWT = verifier.verify(token);
-      return decodedJWT.getClaim("email").asString();
-    } catch (JWTVerificationException e) {
-      return null;
-    }
-  }
 }

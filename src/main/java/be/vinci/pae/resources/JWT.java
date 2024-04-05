@@ -24,5 +24,4 @@ public interface JWT {
    */
   int getUserIdFromToken(String token);
 
-  String getUserEmailFromToken(String token);
 }
