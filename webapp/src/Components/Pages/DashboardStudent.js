@@ -1,20 +1,18 @@
 /* eslint-disable camelcase */
 import { getAuthenticatedUser } from '../../utils/auths';
-import fetchUserOnRefresh from '../../utils/refresh';
+
 
 import { clearPage, renderPageTitle } from '../../utils/render';
 import Navigate from '../Router/Navigate';
 
-fetchUserOnRefresh();
 
 const fetchUser = async () => {
-  console.log(getAuthenticatedUser().token);
   const options = {
-    method: 'POST',
+    method: 'GET',
     headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ token: getAuthenticatedUser().token }), // Object shorthand used here
+      Authorization: getAuthenticatedUser().token
+    }, 
+     // Object shorthand used here
   };
 
   try {
@@ -63,13 +61,13 @@ const fetchUser = async () => {
 };
 
 const fetchUserContacts = async () => {
-  console.log(getAuthenticatedUser());
+  console.log(getAuthenticatedUser().token);
+
   const options = {
-    method: 'POST',
+    method: 'GET',
     headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ token: getAuthenticatedUser().token }),
+      Authorization: getAuthenticatedUser().token,
+    }, 
   };
 
   try {
@@ -99,12 +97,12 @@ const fetchUserContacts = async () => {
 };
 
 const fetchUserInternship = async () => {
+
   const options = {
-    method: 'POST',
+    method: 'GET',
     headers: {
-      'Content-Type': 'application/json',
+      Authorization: getAuthenticatedUser().token,
     },
-    body: JSON.stringify({ token: getAuthenticatedUser().token }),
   };
 
   try {
