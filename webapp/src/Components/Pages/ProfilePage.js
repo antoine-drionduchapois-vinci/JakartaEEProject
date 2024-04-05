@@ -1,8 +1,10 @@
-import { clearPage } from "../../utils/render";
+import { clearPage, renderPageTitle } from "../../utils/render";
 
 
 const ProfilePage = () => {
     clearPage();
+
+    renderPageTitle('Profil');
 
     renderProfilePage();
 }
@@ -12,7 +14,6 @@ function renderProfilePage() {
 
     const htmlContent = `
     <main class="section">
-        <h2 class="title is-2 has-text-centered">Profil</h2>
         <div class="columns">
             <div class="column is-half">
                 <h4 class="title is-4 has-text-centered">Modifier mot de passe</h4>
