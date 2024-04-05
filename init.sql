@@ -147,14 +147,18 @@ SELECT year, COUNT (*) AS nombre_de_contacts
 FROM projetae.contacts
 GROUP BY year;
 
-SELECT CASE
-           WHEN state = 'accepted' THEN 'Accepté'
-           WHEN state = 'refused' THEN 'Refusé'
-           WHEN state = 'suspended' THEN 'Suspendu'
-           WHEN state = 'meet' THEN 'Contacté'
-           WHEN state = 'initiated' THEN 'Initié'
-           ELSE 'Inconnu'
-           END  AS etat_contact,
-       COUNT(*) AS nombre_de_contacts
-FROM projetae.contacts
-GROUP BY state;
+SELECT
+    CASE
+        WHEN state = 'accepted' THEN 'Accepté'
+        WHEN state = 'refused' THEN 'Refusé'
+        WHEN state = 'suspended' THEN 'Suspendu'
+        WHEN state = 'meet' THEN 'Contacté'
+        WHEN state = 'initiated' THEN 'Initié'
+        WHEN state = 'unfollowed' THEN 'Non Suivis'
+        ELSE 'Inconnu'
+    END AS etat_contact,
+    COUNT(*) AS nombre_de_contacts
+FROM
+    projetae.contacts
+GROUP BY
+    state;

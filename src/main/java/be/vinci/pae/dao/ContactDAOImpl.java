@@ -1,10 +1,10 @@
 package be.vinci.pae.dao;
 
+import be.vinci.pae.dal.DALBackService;
 import be.vinci.pae.domain.ContactDTO;
 import be.vinci.pae.domain.ContactImpl;
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.utils.BusinessException;
-import be.vinci.pae.utils.DALBackService;
 import be.vinci.pae.utils.FatalErrorException;
 import be.vinci.pae.utils.NotFoundException;
 import be.vinci.pae.utils.ResultSetMapper;

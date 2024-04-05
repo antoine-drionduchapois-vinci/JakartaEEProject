@@ -19,8 +19,6 @@ public class WebExceptionMapper implements ExceptionMapper<Throwable> {
 
   @Override
   public Response toResponse(Throwable exception) {
-    exception.printStackTrace();
-
     if (exception instanceof WebApplicationException exc) {
       logger.error("Status: " + exc.getResponse().getStatus() + " " + exc.getMessage());
       ThreadContext.clearAll();

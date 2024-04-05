@@ -76,7 +76,7 @@ const Contact = async () => {
   }
 
   InitiatedRow(document.querySelector('#initiated-row'), user, contact, enterprises);
-  TookRow(document.querySelector('#took-row'), user, contact);
+  TookRow(document.querySelector('#took-row'), contact);
   RefusedRow(document.querySelector('#refused-row'), contact);
   UnfollowedRow(document.querySelector('#unfollowed-row'), contact);
 };

@@ -1,13 +1,15 @@
 import Chart from 'chart.js/auto';
 import { clearPage, renderPageTitle } from '../../utils/render';
+import { getAuthenticatedUser } from '../../utils/auths';
+import autocomplete from '../../services/autocomplete';
 
 // Fonction pour récupérer les données des entreprises
 const fetchEnterprises = async () => {
-  const token = localStorage.getItem('token');
+  const user = getAuthenticatedUser();
   const options = {
     method: 'GET',
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: user.token,
     },
   };
 
@@ -29,11 +31,11 @@ const fetchEnterprises = async () => {
 
 // Fonction pour récupérer les données et rendre le graphique
 const fetchDataAndRenderChart = async () => {
-  const token = localStorage.getItem('token');
+  const user = getAuthenticatedUser();
   const options = {
     method: 'GET',
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: user.token,
     },
   };
   try {
@@ -50,11 +52,11 @@ const fetchDataAndRenderChart = async () => {
 };
 
 const fetchUsers = async () => {
-  const token = localStorage.getItem('token');
+  const user = getAuthenticatedUser();
   const options = {
     method: 'GET',
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: user.token,
     },
   };
 
@@ -121,7 +123,7 @@ const updateTable = (tableBody, list) => {
   });
 };
 
-const renderForm = (formContainer, users,tableUserContainer) => {
+const renderForm = (formContainer, users, tableUserContainer) => {
   // Créer le formulaire
   const form = document.createElement('form');
   form.className = 'form';
@@ -142,6 +144,11 @@ const renderForm = (formContainer, users,tableUserContainer) => {
   inputField.className = 'input';
   inputField.type = 'text';
   inputField.placeholder = 'Entrez le nom';
+
+  autocomplete(
+    inputField,
+    users.map((u) => u.name),
+  );
   inputControlDiv.appendChild(inputField);
   inputFieldDiv.appendChild(inputLabel);
   inputFieldDiv.appendChild(inputControlDiv);
@@ -176,15 +183,18 @@ const renderForm = (formContainer, users,tableUserContainer) => {
   // Créer une option vide par défaut
   const defaultOption = document.createElement('option');
   defaultOption.textContent = 'Sélectionnez une année';
-  defaultOption.value = null; // Valeur vide
+  defaultOption.value = ''; // Valeur vide
   selectField.appendChild(defaultOption);
 
-  // Générer les options pour les années de 2000 à l'année actuelle
-  for (let year = 2000; year <= currentYear; year += 1) {
+  // Générer les options pour les années de l'année actuelle à 2000
+  for (let year = currentYear; year >= 2000; year-=1) {
     const option = document.createElement('option');
-    option.textContent = year.toString(); // Convertir l'année en chaîne de caractères
+    const nextYear = year + 1;
+    option.textContent = `${year}-${nextYear}`; // Format "2000-2001"
+    option.value = `${year}-${nextYear}`;
     selectField.appendChild(option);
   }
+
 
   selectControlDiv.appendChild(selectField);
   selectDiv.appendChild(selectLabel);
@@ -201,19 +211,35 @@ const renderForm = (formContainer, users,tableUserContainer) => {
       // Récupérer les valeurs du formulaire
       const name = inputField.value.trim();
       const isStudent = checkboxField.checked;
-      const selectedYear = parseInt(selectField.value, 10);
+      const selectedYear =selectField.value;
+      console.log(selectedYear);
+      
 
       // Filtrer les utilisateurs en fonction des critères
       const filteredUsers = users.filter((user) => {
         const matchesName = !name || user.name.toLowerCase().includes(name.toLowerCase());
         const matchesIsStudent = !isStudent || user.role === 'STUDENT';
-        const matchesYear = Number.isNaN(selectedYear) || user.annee === selectedYear.toString();
+
+          // Vérifier si selectedYear est null ou vide
+        if (!selectedYear) {
+          
+          return matchesName && matchesIsStudent;
+        }
+
+        const userYearParts = user.année.split('-');
+        const selectedYearParts = selectedYear.split('-');
+
+        // Vérifier si les parties des années correspondent
+        const matchesYear = !selectedYear || (userYearParts[0] === selectedYearParts[0] && userYearParts[1] === selectedYearParts[1]);
         return matchesName && matchesIsStudent && matchesYear;
       });
-      updateTable(tableUserContainer,filteredUsers);
+      
 
-      // Afficher les utilisateurs filtrés (vous pouvez appeler une fonction appropriée ici)
-      console.log(filteredUsers);
+      const tbody = tableUserContainer.querySelector('.table-scroll-container table tbody');
+
+      updateTable(tbody, filteredUsers);
+
+
     });
   });
 
@@ -221,21 +247,17 @@ const renderForm = (formContainer, users,tableUserContainer) => {
   formContainer.appendChild(form);
 };
 
-
-
 // Fonction pour rendre le tableau des entreprises avec recherche et tri
 const renderEnterpriseTable = (tableContainer, enterprises) => {
-  // Créer la div pour le tableau avec une barre de défilement
-  const tableWrapper = document.createElement('div');
-  tableWrapper.className = 'table-wrapper';
-  tableWrapper.style.maxHeight = '250px'; // Définir la hauteur maximale
-  tableWrapper.style.overflowY = 'auto'; // Activer la barre de défilement
-  tableContainer.appendChild(tableWrapper);
-
+  // Conteneur pour le tableau avec défilement
+  const scrollContainer = document.createElement('div');
+  scrollContainer.className = 'table-scroll-container';
   // Créer le tableau
   const table = document.createElement('table');
   table.className = 'table is-fullwidth';
-  tableContainer.appendChild(table);
+  table.style.maxHeight = '250px'; // Définir la hauteur maximale
+  table.style.overflowY = 'auto';
+  
   // Créer le corps du tableau
   const tbody = document.createElement('tbody');
   // Fonction pour trier les colonnes
@@ -249,7 +271,7 @@ const renderEnterpriseTable = (tableContainer, enterprises) => {
       // Utilisation de localeCompare pour le tri alphabétique
       return valueA.localeCompare(valueB);
     });
-    console.log('update T');
+    
     // Mettre à jour le tableau avec les entreprises triées
     updateTable(tbody, enterprises);
   };
@@ -274,30 +296,28 @@ const renderEnterpriseTable = (tableContainer, enterprises) => {
   table.appendChild(thead);
   // Ajouter le corps du tableau au tableau
   table.appendChild(tbody);
-
-  // Ajouter le tableau à la div du wrapper
-  tableWrapper.appendChild(table);
+  scrollContainer.appendChild(table);
+  tableContainer.appendChild(scrollContainer);
 
   // Afficher le tableau avec toutes les entreprises au chargement initial
   updateTable(tbody, enterprises);
 };
 
 const renderUserTable = (tableUserContainer, users) => {
+  // Conteneur pour le formulaire
   const formContainer = document.createElement('div');
   tableUserContainer.appendChild(formContainer);
+
+  // Appel de la fonction pour créer le formulaire
+  renderForm(formContainer, users, tableUserContainer);
+
+  // Conteneur pour le tableau avec défilement
+  const scrollContainer = document.createElement('div');
+  scrollContainer.className = 'table-scroll-container';
+
+  // Créer le tableau des utilisateurs
   const table = document.createElement('table');
   table.className = 'table is-fullwidth';
-
-  const tableWrapper = document.createElement('div');
-  tableWrapper.className = 'table-wrapper';
-  tableWrapper.style.maxHeight = '250px'; // Définir la hauteur maximale
-  tableWrapper.style.overflowY = 'auto'; // Activer la barre de défilement
-  tableUserContainer.appendChild(tableWrapper);
-
-    // Créer le corps du tableau
-  const tbody = document.createElement('tbody');
-  renderForm(formContainer, users,tbody);
-  table.appendChild(tbody);
 
   // Créer la première ligne pour les en-têtes de colonne
   const thead = document.createElement('thead');
@@ -314,9 +334,17 @@ const renderUserTable = (tableUserContainer, users) => {
   thead.appendChild(headerRow);
   table.appendChild(thead);
 
+  // Créer le corps du tableau
+  const tbody = document.createElement('tbody');
+  table.appendChild(tbody);
 
-  tableWrapper.appendChild(table);
+  // Ajouter le tableau au conteneur de défilement
+  scrollContainer.appendChild(table);
 
+  // Ajouter le conteneur de défilement au conteneur principal
+  tableUserContainer.appendChild(scrollContainer);
+
+  // Afficher les utilisateurs dans le tableau
   updateTable(tbody, users);
 };
 
@@ -328,7 +356,7 @@ const renderDashboardTeacher = async () => {
   renderPageTitle('Dashboard Teacher');
 
   // Création d'un conteneur pour le graphique et le tableau
-  const main =document.querySelector('main');
+  const main = document.querySelector('main');
   const container = document.createElement('div');
   container.className = 'dashboard-container';
   main.appendChild(container);

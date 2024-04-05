@@ -1,8 +1,11 @@
 package be.vinci.pae.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 /**
  * The EnterpriseDTO interface represents enterprise informations.
  */
+@JsonDeserialize(as = EnterpriseImpl.class)
 public interface EnterpriseDTO {
 
   /**

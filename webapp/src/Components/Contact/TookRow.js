@@ -13,7 +13,7 @@ const meetEnterprise = (data) =>
     .then(() => window.location.reload())
     .catch((error) => console.error(error));
 
-const TookRow = (htmlElement, userData, contactData) => {
+const TookRow = (htmlElement, contactData) => {
   const html = htmlElement;
   html.innerHTML = `
   <div class="column is-one-fifth">
@@ -38,12 +38,12 @@ const TookRow = (htmlElement, userData, contactData) => {
   const submit = document.querySelector('#submit-took');
 
   if (!contactData || contactData.state !== 'initiated') {
-    meetingInput.element.value = contactData?.meeting_point ? contactData.meeting_point : '';
+    meetingInput.element.value = contactData?.meetingPoint ? contactData.meetingPoint : '';
     meetingInput.element.setAttribute('disabled', true);
     submit.setAttribute('disabled', true);
   }
 
-  if (contactData && contactData.state !== 'initiated' && contactData.meeting_point)
+  if (contactData && contactData.state !== 'initiated' && contactData.meetingPoint)
     tookCircle.removeAttribute('hidden');
 
   meetingInput.element.addEventListener('input', (e) => {
@@ -56,7 +56,7 @@ const TookRow = (htmlElement, userData, contactData) => {
       return;
     }
 
-    meetEnterprise({ contactId: contactData.contact_id, meetingPoint: meetingInput.element.value });
+    meetEnterprise({ contactId: contactData.contactId, meetingPoint: meetingInput.element.value });
   });
 };
 

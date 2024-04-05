@@ -44,7 +44,6 @@ public class JWTImpl implements JWT {
           .put("role", userDTO.getRole().name());
     } catch (Exception e) {
       // Log error message if token creation fails
-      System.out.println("Unable to create token: " + e.getMessage());
       return null;
     }
   }

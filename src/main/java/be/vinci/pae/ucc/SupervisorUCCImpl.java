@@ -1,8 +1,8 @@
 package be.vinci.pae.ucc;
 
+import be.vinci.pae.dal.DALService;
 import be.vinci.pae.dao.SupervisorDAO;
 import be.vinci.pae.domain.Supervisor;
-import be.vinci.pae.utils.DALService;
 import be.vinci.pae.utils.NotFoundException;
 import jakarta.inject.Inject;
 
