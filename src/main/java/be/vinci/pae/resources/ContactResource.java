@@ -125,15 +125,15 @@ public class ContactResource {
   /**
    * Marks a contact as having a meeting.
    *
-   * @param json The JSON containing the contact ID and meeting point.
-   * @param token The authorization token.
-   * @return The updated contact as JSON.
+   * @param token   The authorization token.
+   * @param contact The contact information indicating the meeting.
+   * @return The updated contact after the meeting.
    */
   @POST
   @Path("/meet")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode meet(JsonNode json, @HeaderParam("Authorization") String token) {
+  public ContactDTO meet(@HeaderParam("Authorization") String token, ContactDTO contact) {
     ThreadContext.put("route", "/contact/meet");
     ThreadContext.put("method", "Post");
 
@@ -142,17 +142,16 @@ public class ContactResource {
       throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
     }
 
-    if (!json.hasNonNull("contactId") || !json.hasNonNull("meetingPoint")) {
+    int contactId = contact.getContactId();
+    String meetingPoint = contact.getMeetingPoint();
+    if (contactId == 0 || meetingPoint == null) {
       throw new WebApplicationException("contactId and meetingPoint required", Status.BAD_REQUEST);
     }
-    int contactId = json.get("contactId").asInt();
-    String meetingPoint = json.get("meetingPoint").asText();
     ThreadContext.put("params", "contactId:" + contactId + "meetingPoint:" + meetingPoint);
-    ObjectNode objectNode = convertDTOToJson(myContactUCC.meetEnterprise(userId, contactId,
-        meetingPoint));
+    contact = myContactUCC.meetEnterprise(userId, contactId, meetingPoint);
     logger.info("Status: 200 {meet}");
     ThreadContext.clearAll();
-    return objectNode;
+    return contact;
   }
 
   /**
