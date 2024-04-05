@@ -2,6 +2,7 @@ import Chart from 'chart.js/auto';
 import { clearPage, renderPageTitle } from '../../utils/render';
 import { getAuthenticatedUser } from '../../utils/auths';
 import autocomplete from '../../services/autocomplete';
+import Navigate from '../Router/Navigate';
 
 // Fonction pour récupérer les données des entreprises
 const fetchEnterprises = async () => {
@@ -129,7 +130,14 @@ const updateTable = (tableBody, list) => {
   list.forEach((e) => {
     const row = document.createElement('tr');
     row.addEventListener('click', () => {
-      window.location.href = `details-page.html?id=${e.id}`;
+
+      if (e.blacklist === undefined){
+        Navigate(`/studentDetails?id=${e.id}`);
+      }else {
+        Navigate(`/enterpriseDetails?id=${e.id}`);
+        
+      }
+      
     });
     const values = Object.values(e).slice(1);
     values.forEach((value) => {

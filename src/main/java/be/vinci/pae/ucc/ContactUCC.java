@@ -80,4 +80,14 @@ public interface ContactUCC {
    * @return An ObjectNode containing the updated contact information.
    */
   ContactDTO unfollow(int userId, int contactId);
+
+  /**
+   * Retrieves a list of contacts associated with the enterprise.
+   *
+   * @param enterpriseId The ID of the user whose contacts are to be retrieved.
+   * @return A list of contacts associated with the specified enterprise ID, or null if
+   *         no contacts are
+   *         found.
+   */
+  List<ContactDTO> getEnterpriseContacts(int enterpriseId);
 }

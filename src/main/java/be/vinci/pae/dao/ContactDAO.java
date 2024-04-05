@@ -57,4 +57,13 @@ public interface ContactDAO {
   ContactDTO update(ContactDTO newContactDTO);
 
 
+  /**
+   * Retrieves a list of contacts associated with the specified enterprise.
+   *
+   * @param enterpriseId The ID of the user for whom to retrieve contacts.
+   * @return A List containing Contact objects representing the contacts
+   *         associated with the
+   *         specified enterprise ID.
+   */
+  List<ContactDTO> readEnterpriseContacts(int enterpriseId);
 }

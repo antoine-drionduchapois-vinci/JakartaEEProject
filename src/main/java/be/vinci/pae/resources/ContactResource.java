@@ -2,8 +2,10 @@ package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.ContactDTO;
 import be.vinci.pae.domain.EnterpriseDTO;
+import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.ucc.ContactUCC;
 import be.vinci.pae.ucc.EnterpriseUCC;
+import be.vinci.pae.ucc.UserUCC;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -16,6 +18,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.WebApplicationException;
@@ -41,6 +44,9 @@ public class ContactResource {
   private ContactUCC myContactUCC;
   @Inject
   private EnterpriseUCC myEnterpriseUCC;
+
+  @Inject
+  private UserUCC myUserUCC;
 
   /**
    * Retrieves a contact by its ID.
@@ -260,6 +266,45 @@ public class ContactResource {
     logger.info("Status: 200 {getUsersByIdAsJson}");
     ThreadContext.clearAll();
     return response;
+
+  }
+
+  /**
+   * Retrieves contacts for a specific user.
+   *
+   * @param enterpriseId The enterprise ID.
+   * @return The user's contacts as JSON.
+   */
+  @GET
+  @Path("getEnterpriseContacts/{entrepriseId}")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public ArrayNode getEnterpriseContact(
+      @PathParam("entrepriseId") int enterpriseId) {
+    ThreadContext.put("route", "/contact/getEnterpriseContacts");
+    ThreadContext.put("method", "GET");
+
+    ObjectMapper mapper = new ObjectMapper();
+    ArrayNode contactArray = mapper.createArrayNode();
+
+    List<ContactDTO> contacts = myContactUCC.getEnterpriseContacts(enterpriseId);
+    List<EnterpriseDTO> enterprises = myEnterpriseUCC.getAllEnterprises();
+    List<UserDTO> user = myUserUCC.getUsersAsJson();
+
+    for (ContactDTO contactDTO : contacts) {
+      contactArray.add(
+          mapper.createObjectNode()
+              .put("enterprise_name", enterprises.get(contactDTO.getEnterprise() - 1).getName())
+              .put("student_name", user.get(contactDTO.getUser()).getName())
+              .put("student_surname", user.get(contactDTO.getUser()).getSurname())
+              .put("state", contactDTO.getState())
+              .put("year", contactDTO.getYear())
+              .put("refusal_reason", contactDTO.getRefusalReason())
+              .put("meeting_point", contactDTO.getMeetingPoint())
+      );
+    }
+
+    return contactArray;
 
   }
 

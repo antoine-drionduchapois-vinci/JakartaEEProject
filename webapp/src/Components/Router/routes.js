@@ -5,6 +5,9 @@ import RegisterPage from '../Pages/RegisterPage';
 import DashboardTeacher from '../Pages/DashboardTeacher';
 import Contact from '../Pages/Contact';
 import DashboardStudent from '../Pages/DashboardStudent';
+import EnterpriseDetails from '../Pages/EnterpriseDetails';
+import StudentDetails from '../Pages/StudentDetails';
+
 
 const routes = {
   '/': HomePage,
@@ -13,7 +16,9 @@ const routes = {
   '/logout': Logout,
   '/dashboardT': DashboardTeacher,
   '/contact': Contact,
-  '/dashboardS': DashboardStudent
+  '/dashboardS': DashboardStudent,
+  '/enterpriseDetails': EnterpriseDetails,
+  '/studentDetails': StudentDetails
 };
 
 export default routes;

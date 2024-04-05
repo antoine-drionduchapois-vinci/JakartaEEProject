@@ -146,4 +146,20 @@ public class ContactDAOImpl implements ContactDAO {
     LocalDate endDate = LocalDate.of(currentDate.getYear(), 9, 1);
     return startDate.getYear() + "-" + endDate.getYear();
   }
+
+  @Override
+  public List<ContactDTO> readEnterpriseContacts(int enterpriseId) {
+    try (PreparedStatement ps = myDalService.getPS(
+        "SELECT * FROM projetae.contacts WHERE enterprise  = ?")) {
+      ps.setInt(1, enterpriseId);
+      ps.execute();
+      return contactMapper.mapResultSetToObjectList(ps.getResultSet(), ContactImpl.class,
+          myDomainFactory::getContact);
+    } catch (SQLException | IllegalAccessException e) {
+      System.out.println("DAO sql error");
+      throw new FatalErrorException(e);
+    }
+  }
+
+
 }
