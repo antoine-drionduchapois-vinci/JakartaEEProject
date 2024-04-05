@@ -16,6 +16,7 @@ public class UserImpl implements User {
   private String password;
   private String year;
   private Role role;
+  private int version;
 
 
   @Override
@@ -108,6 +109,14 @@ public class UserImpl implements User {
     this.role = role;
   }
 
+  public int getVersion() {
+    return version;
+  }
+
+  public void setVersion(int version) {
+    this.version = version;
+  }
+
   @Override
   public String toString() {
     return "UserImpl{"
@@ -119,6 +128,7 @@ public class UserImpl implements User {
         + ", password='" + password + '\''
         + ", year='" + year + '\''
         + ", role=" + role
+        + ", version=" + version
         + '}';
   }
 }

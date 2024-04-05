@@ -121,6 +121,20 @@ public interface UserDTO {
   void setRole(Role role);
 
   /**
+   * Gets the version of the user.
+   *
+   * @return The version of the user.
+   */
+  int getVersion();
+
+  /**
+   * Sets the version of the user.
+   *
+   * @param version The version of the user to set.
+   */
+  void setVersion(int version);
+
+  /**
    * Enum representing the roles that a user can have.
    */
   enum Role {
@@ -137,4 +151,6 @@ public interface UserDTO {
      */
     ADMIN
   }
+
+
 }

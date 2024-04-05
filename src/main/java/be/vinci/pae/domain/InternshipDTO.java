@@ -102,4 +102,18 @@ public interface InternshipDTO {
    * @param supervisor The new ID of the supervisor responsible for the internship.
    */
   void setSupervisor(int supervisor);
+
+  /**
+   * Gets the version of the internship.
+   *
+   * @return The version of the internship.
+   */
+  int getVersion();
+
+  /**
+   * Sets the version of the internship.
+   *
+   * @param version The version of the internship to set.
+   */
+  void setVersion(int version);
 }
