@@ -115,7 +115,6 @@ public class UserResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getUsersByIdAsJson(@HeaderParam("Authorization") String token) {
-
     try {
       // Get token from JSON
       int userId = myJwt.getUserIdFromToken(token);
@@ -134,11 +133,16 @@ public class UserResource {
       userInfo.put("year", user.getYear());
       userInfo.put("email", user.getEmail());
       return userInfo;
+    } catch (WebApplicationException e) {
+      // Renvoyer l'exception directement
+      throw e;
     } catch (Exception e) {
       // Gérer les erreurs éventuelles
       e.printStackTrace();
+      // Renvoyer une réponse d'erreur générique
+      throw new WebApplicationException("An error occurred while retrieving user information", e,
+          Status.INTERNAL_SERVER_ERROR);
     }
-    return null;
   }
 
 }
