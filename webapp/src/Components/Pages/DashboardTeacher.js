@@ -19,10 +19,20 @@ const fetchEnterprises = async () => {
       throw new Error('Erreur lors de la récupération des données des entreprises');
     }
 
-    // Accéder à la propriété "enterprises" de l'objet retourné
-    // Convertir la réponse en JSON
-    const jResponse = await response.json();
-    return jResponse.enterprises;
+    let data = await response.json();
+
+    // Modifier chaque objet entreprise pour ne garder que les propriétés désirées
+    data = data.map((enterprise) => ({
+      id: enterprise.enterpriseId,
+      nom: enterprise.name,
+      appellation: enterprise.label || '', // Utiliser une chaîne vide si la valeur est null
+      adresse: enterprise.address,
+      téléphone: enterprise.phone,
+      blacklist: enterprise.blacklisted,
+      avisprofesseur: enterprise.blacklistedReason || '', // Utiliser une chaîne vide si la valeur est null
+    }));
+
+    return data;
   } catch (error) {
     console.error('Erreur lors de la récupération des données des entreprises : ', error);
     return null; // Ajout d'un retour de valeur pour résoudre l'erreur
@@ -44,6 +54,7 @@ const fetchDataAndRenderChart = async () => {
       throw new Error('Erreur lors de la récupération des données');
     }
     const data = await response.json();
+
     return data;
   } catch (error) {
     console.error('Erreur lors de la récupération des données : ', error);
@@ -66,7 +77,16 @@ const fetchUsers = async () => {
       throw new Error('Erreur lors de la récupération des données des utilisateurs');
     }
 
-    const data = await response.json();
+    let data = await response.json();
+    data = data.map((u) => ({
+      id: u.userId,
+      nom: u.name,
+      prenom: u.surname,
+      email: u.email,
+      role: u.role,
+      année: u.year,
+    }));
+
     return data; // Retourner directement le tableau d'utilisateurs de la réponse JSON
   } catch (error) {
     console.error('Erreur lors de la récupération des données des utilisateurs : ', error);
@@ -109,9 +129,7 @@ const updateTable = (tableBody, list) => {
   list.forEach((e) => {
     const row = document.createElement('tr');
     row.addEventListener('click', () => {
-      window.location.href = `details-page.html?id=${
-        e.entreprise_id !== undefined ? e.entreprise_id : e.utilisateur_id
-      }`;
+      window.location.href = `details-page.html?id=${e.id}`;
     });
     const values = Object.values(e).slice(1);
     values.forEach((value) => {
@@ -187,14 +205,13 @@ const renderForm = (formContainer, users, tableUserContainer) => {
   selectField.appendChild(defaultOption);
 
   // Générer les options pour les années de l'année actuelle à 2000
-  for (let year = currentYear; year >= 2000; year-=1) {
+  for (let year = currentYear; year >= 2000; year -= 1) {
     const option = document.createElement('option');
     const nextYear = year + 1;
     option.textContent = `${year}-${nextYear}`; // Format "2000-2001"
     option.value = `${year}-${nextYear}`;
     selectField.appendChild(option);
   }
-
 
   selectControlDiv.appendChild(selectField);
   selectDiv.appendChild(selectLabel);
@@ -211,18 +228,15 @@ const renderForm = (formContainer, users, tableUserContainer) => {
       // Récupérer les valeurs du formulaire
       const name = inputField.value.trim();
       const isStudent = checkboxField.checked;
-      const selectedYear =selectField.value;
-      console.log(selectedYear);
-      
+      const selectedYear = selectField.value;
 
       // Filtrer les utilisateurs en fonction des critères
       const filteredUsers = users.filter((user) => {
         const matchesName = !name || user.name.toLowerCase().includes(name.toLowerCase());
         const matchesIsStudent = !isStudent || user.role === 'STUDENT';
 
-          // Vérifier si selectedYear est null ou vide
+        // Vérifier si selectedYear est null ou vide
         if (!selectedYear) {
-          
           return matchesName && matchesIsStudent;
         }
 
@@ -230,16 +244,15 @@ const renderForm = (formContainer, users, tableUserContainer) => {
         const selectedYearParts = selectedYear.split('-');
 
         // Vérifier si les parties des années correspondent
-        const matchesYear = !selectedYear || (userYearParts[0] === selectedYearParts[0] && userYearParts[1] === selectedYearParts[1]);
+        const matchesYear =
+          !selectedYear ||
+          (userYearParts[0] === selectedYearParts[0] && userYearParts[1] === selectedYearParts[1]);
         return matchesName && matchesIsStudent && matchesYear;
       });
-      
 
       const tbody = tableUserContainer.querySelector('.table-scroll-container table tbody');
 
       updateTable(tbody, filteredUsers);
-
-
     });
   });
 
@@ -257,24 +270,36 @@ const renderEnterpriseTable = (tableContainer, enterprises) => {
   table.className = 'table is-fullwidth';
   table.style.maxHeight = '250px'; // Définir la hauteur maximale
   table.style.overflowY = 'auto';
-  
+
   // Créer le corps du tableau
   const tbody = document.createElement('tbody');
   // Fonction pour trier les colonnes
   const sortColumn = (columnName) => {
-    const lowerColumnName = columnName.toLowerCase();
+    const lowerColumnName = columnName.trim().toLowerCase().replace(/\s/g, '');
+    
     enterprises.sort((a, b) => {
+      const valueA = a[lowerColumnName];
+      const valueB = b[lowerColumnName];
+
+      // Si les valeurs sont des booléens, trier true avant false
+      if (typeof valueA === 'boolean' && typeof valueB === 'boolean') {
+        if (valueA === valueB) {
+          return 0;
+        }
+        return valueA ? -1 : 1;
+      }
+
       // Comparaison des valeurs des colonnes
-      const valueA = a[lowerColumnName].toLowerCase();
-      const valueB = b[lowerColumnName].toLowerCase();
+      const stringValueA = typeof valueA === 'string' ? valueA.toLowerCase() : valueA;
+      const stringValueB = typeof valueB === 'string' ? valueB.toLowerCase() : valueB;
 
       // Utilisation de localeCompare pour le tri alphabétique
-      return valueA.localeCompare(valueB);
+      return stringValueA.localeCompare(stringValueB);
     });
-    
+
     // Mettre à jour le tableau avec les entreprises triées
     updateTable(tbody, enterprises);
-  };
+};
 
   // Créer la première ligne pour les en-têtes de colonne
   const thead = document.createElement('thead');
@@ -286,6 +311,7 @@ const renderEnterpriseTable = (tableContainer, enterprises) => {
     const header = document.createElement('th');
     header.textContent = headerText;
     header.addEventListener('click', () => {
+      console.log(headerText);
       sortColumn(headerText); // Fonction pour trier les colonnes
     });
     headerRow.appendChild(header);

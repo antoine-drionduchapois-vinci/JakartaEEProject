@@ -13,6 +13,7 @@ public class EnterpriseImpl implements Enterprise {
   private String email;
   private boolean isBlacklisted;
   private String blacklistedReason;
+  private int version;
 
   @Override
   public int getEnterpriseId() {
@@ -95,6 +96,16 @@ public class EnterpriseImpl implements Enterprise {
   }
 
   @Override
+  public int getVersion() {
+    return version;
+  }
+
+  @Override
+  public void setVersion(int version) {
+    this.version = version;
+  }
+
+  @Override
   public String toString() {
     return "EnterpriseImpl{"
         + "enterpriseId=" + enterpriseId
@@ -105,6 +116,7 @@ public class EnterpriseImpl implements Enterprise {
         + ", email='" + email + '\''
         + ", isBlacklisted=" + isBlacklisted
         + ", blacklistedReason='" + blacklistedReason + '\''
+        + ", version=" + version
         + '}';
   }
 }
