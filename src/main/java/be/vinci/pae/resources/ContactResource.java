@@ -156,15 +156,15 @@ public class ContactResource {
   /**
    * Indicates that a contact has been refused.
    *
-   * @param json The JSON containing the contact ID and refusal reason.
-   * @param token The authorization token.
-   * @return The updated contact as JSON.
+   * @param token          The authorization token.
+   * @param contact        The contact information to be refused.
+   * @return The updated contact after indicating refusal.
    */
   @POST
   @Path("/refuse")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode refuse(JsonNode json, @HeaderParam("Authorization") String token) {
+  public ContactDTO refuse(@HeaderParam("Authorization") String token, ContactDTO contact) {
     ThreadContext.put("route", "/contact/refuse");
     ThreadContext.put("method", "Post");
 
@@ -173,17 +173,18 @@ public class ContactResource {
       throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
     }
 
-    if (!json.hasNonNull("contactId") || !json.hasNonNull("refusalReason")) {
+    int contactId = contact.getContactId();
+    String refusalReason = contact.getRefusalReason();
+
+    if (contactId == 0 || refusalReason == null) {
       throw new WebApplicationException("contactId and refusalReason required", Status.BAD_REQUEST);
     }
-    int contactId = json.get("contactId").asInt();
-    String refusalReason = json.get("refusalReason").asText();
     ThreadContext.put("params", "contactId:" + contactId + "refusalReason:" + refusalReason);
-    ObjectNode objectNode = convertDTOToJson(myContactUCC.indicateAsRefused(userId, contactId,
-        refusalReason));
+    contact = myContactUCC.indicateAsRefused(userId, contactId,
+        refusalReason);
     logger.info("Status: 200 {refuse}");
     ThreadContext.clearAll();
-    return objectNode;
+    return contact;
   }
 
   /**
