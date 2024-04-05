@@ -21,10 +21,16 @@ public class DALServiceImpl implements DALService, DALBackService {
   private final ThreadLocal<Connection> connectionThreadLocal = new ThreadLocal<>();
   private final int MAX_CONNECTIONS = 3;
 
+  /**
+   * Constructs a new DALServiceImpl object and initializes the data source.
+   */
   public DALServiceImpl() {
     this.dataSource = createDataSource();
   }
 
+  /**
+   * Starts the data access layer service.
+   */
   @Override
   public void start() {
     connection();
@@ -43,6 +49,12 @@ public class DALServiceImpl implements DALService, DALBackService {
     }
   }
 
+  /**
+   * Gets a prepared statement for the given SQL query.
+   *
+   * @param sql the SQL query
+   * @return a prepared statement
+   */
   @Override
   public PreparedStatement getPS(String sql) {
     try {
@@ -53,7 +65,9 @@ public class DALServiceImpl implements DALService, DALBackService {
   }
 
 
-
+  /**
+   * Commits the active connection.
+   */
   @Override
   public void commit() {
     Connection conn = connectionThreadLocal.get();

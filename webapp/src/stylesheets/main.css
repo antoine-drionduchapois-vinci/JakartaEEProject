@@ -49,6 +49,8 @@ canvas {
 
 .tableUser-container {
   margin-top: 5%;
+  margin-right: 5%;
+  margin-bottom: 5%;
   display: flex;
   flex-direction: column;
   gap: 8%; /* Spacing between elements in column layout */
@@ -62,13 +64,13 @@ tbody tr:hover {
 }
 
 .table-scroll-container {
-  max-height: calc(5 * 50px); /* Exemple : 5 lignes à 2.25rem par ligne */
+  max-height: calc(5 * 60px); /* Exemple : 5 lignes à 2.25rem par ligne */
   overflow-y: auto;
-  
+  margin-top: 25px;
 }
 
 .table.is-fullwidth {
-  margin-top: 25px;
+  margin-top: 0px;
 }
 
 /* End Style DashboardTeacher */
