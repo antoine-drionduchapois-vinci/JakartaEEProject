@@ -3,7 +3,6 @@ package be.vinci.pae.resources;
 import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.ucc.UserUCC;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -77,7 +76,6 @@ public class UserResource {
     ThreadContext.put("method", "Get");
     ThreadContext.put("params", "NoParam");
 
-
     // Récupérer la liste complète des utilisateurs depuis votre DAO
     List<UserDTO> userList = myUserUCC.getUsersAsJson();
 
@@ -98,8 +96,7 @@ public class UserResource {
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getUsersByIdAsJson(@HeaderParam("Authorization") String token) {
 
-      // Get token from JSON
-      int userId = myJwt.getUserIdFromToken(token);
+    int userId = myJwt.getUserIdFromToken(token);
 
     if (userId == 0) {
       throw new WebApplicationException("userId is required", Status.BAD_REQUEST);

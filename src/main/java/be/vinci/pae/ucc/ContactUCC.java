@@ -13,7 +13,7 @@ public interface ContactUCC {
    *
    * @param userId The ID of the user whose contacts are to be retrieved.
    * @return A list of contacts associated with the specified user ID, or null if no contacts are
-   * found.
+   *         found.
    */
   List<ContactDTO> getContacts(int userId);
 
