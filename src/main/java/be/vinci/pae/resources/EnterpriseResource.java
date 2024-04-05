@@ -9,7 +9,6 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -45,32 +44,16 @@ public class EnterpriseResource {
   @GET
   @Path("enterprises")
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getAllEnterprises() {
+  public List<EnterpriseDTO> getAllEnterprises() {
     ThreadContext.put("route", "/contact");
     ThreadContext.put("method", "Get");
     ThreadContext.put("params", "NoParam");
-    ObjectMapper mapper = new ObjectMapper();
-    ObjectNode response = mapper.createObjectNode();
-    ArrayNode enterprisesArray = mapper.createArrayNode();
 
-    try {
-      // Récupérer toutes les entreprises depuis votre DAO
-      List<EnterpriseDTO> enterprises = myEnterpriseUCC.getAllEnterprises();
+    List<EnterpriseDTO> enterprises = myEnterpriseUCC.getAllEnterprises();
 
-      // Parcourir chaque entreprise et les ajouter à la réponse
-      for (EnterpriseDTO enterpriseDTO : enterprises) {
-        enterprisesArray.add(convertDTOToJson(enterpriseDTO));
-      }
-
-      // Ajouter le tableau d'entreprises à la réponse
-      response.set("enterprises", enterprisesArray);
-    } catch (Exception e) {
-      // Gérer les erreurs éventuelles
-      response.put("error", e.getMessage());
-    }
     logger.info("Status: 200 {getAllEnterprises}");
     ThreadContext.clearAll();
-    return response;
+    return enterprises;
   }
 
   /**
