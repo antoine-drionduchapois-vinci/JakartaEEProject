@@ -34,8 +34,8 @@ import org.apache.logging.log4j.ThreadContext;
 @Path("/contact")
 public class ContactResource {
 
-  private JWTDecryptToken decryptToken = new JWTDecryptToken();
   private static final Logger logger = LogManager.getLogger(ContactResource.class);
+  private JWTDecryptToken decryptToken = new JWTDecryptToken();
   @Inject
   private JWT myJwt;
   @Inject
@@ -258,6 +258,45 @@ public class ContactResource {
       response.put("error", e.getMessage());
     }
     logger.info("Status: 200 {getUsersByIdAsJson}");
+    ThreadContext.clearAll();
+    return response;
+
+  }
+
+  /**
+   * Retrieves contacts for a specific user.
+   *
+   * @param enterpriseId The enterprise ID.
+   * @return The user's contacts as JSON.
+   */
+  @GET
+  @Path("getEnterpriseContacts")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public ObjectNode getEnterpriseContact(
+      @DefaultValue("-1") @QueryParam("contactId") int enterpriseId) {
+
+    ThreadContext.put("route", "/contact/getEnterpriseContacts");
+    ThreadContext.put("method", "GET");
+
+    ObjectMapper mapper = new ObjectMapper();
+    ObjectNode response = mapper.createObjectNode();
+    ArrayNode contactArray = mapper.createArrayNode();
+
+    try {
+      List<ContactDTO> contacts = myContactUCC.getEnterpriseContacts(enterpriseId);
+      for (ContactDTO contactDTO : contacts) {
+        contactArray.add(
+            convertDTOToJson(contactDTO));
+      }
+
+      // Add table enterprise to response
+      response.set("contact", contactArray);
+    } catch (Exception e) {
+      // Handle error
+      response.put("error", e.getMessage());
+    }
+    logger.info("Status: 200 {getEnterpriseContacts}");
     ThreadContext.clearAll();
     return response;
 

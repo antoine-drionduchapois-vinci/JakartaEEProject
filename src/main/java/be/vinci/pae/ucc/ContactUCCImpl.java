@@ -131,7 +131,7 @@ public class ContactUCCImpl implements ContactUCC {
     if (contact.getUser() != userId) {
       throw new NotFoundException();
     }
-    
+
     if (!contact.unfollow()) {
       throw new BusinessException(403, "contact must be initiated or meet");
     }
@@ -145,4 +145,17 @@ public class ContactUCCImpl implements ContactUCC {
     updatedContactDTO.setEnterpriseDTO(enterpriseDTO);
     return updatedContactDTO;
   }
+
+  @Override
+  public List<ContactDTO> getEnterpriseContacts(int enterpriseId) {
+    myDALService.start();
+    List<ContactDTO> contactDTOS = myContactDAO.readEnterpriseContacts(enterpriseId);
+    if (contactDTOS == null) {
+      throw new NotFoundException();
+    }
+    myDALService.commit();
+    return contactDTOS;
+  }
+
+
 }
