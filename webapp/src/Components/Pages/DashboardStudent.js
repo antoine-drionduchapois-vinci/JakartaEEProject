@@ -82,11 +82,12 @@ const fetchUserContacts = async () => {
     for (let index = 0; index < contactsArray.length; index += 1) {
       const { contact_id, enterprise_name, state, meeting_point, refusal_reason, year } = contactsArray[index];
       const reason = refusal_reason === null ? '' : refusal_reason;
+      const meeting = meeting_point === null ? '' : meeting_point;
       contactsHtml += `
             <tr>
             <td><a class="enterprise_link" data-contact-id="${contact_id}">${enterprise_name}</a></td>
             <td> ${state}</td>
-            <td> ${meeting_point}</td>
+            <td> ${meeting}</td>
             <td> ${reason}</td>
             <td> ${year}</td>
             </tr>
