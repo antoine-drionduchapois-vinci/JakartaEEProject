@@ -143,26 +143,38 @@ public class UserResource {
   @Path("changePassword")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public UserDTO modifyPassword(@HeaderParam("Authorization") String token, @,UserDTO userDTO) {
-    int userId = myJwt.getUserIdFromToken(token);
-    String newPassword = "mdp";
-
+  public UserDTO modifyPassword(@HeaderParam("Authorization") String token, JsonNode json) {
     ThreadContext.put("route", "/users/changePassword");
     ThreadContext.put("method", "Post");
 
+    int userId = myJwt.getUserIdFromToken(token);
     if (userId == 0) {
-      System.out.println("error");
       throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
     }
+
+    if (!json.hasNonNull("userId") || !json.hasNonNull("email") || !json.hasNonNull("password")
+        || !json.hasNonNull(
+        "newPassword1")) {
+      throw new WebApplicationException("user info required", Status.BAD_REQUEST);
+    }
+    UserDTO userDTO = domainFactory.getUser();
+    userDTO.setUserId(json.get("userId").asInt());
+    userDTO.setEmail(json.get("email").asText());
+    userDTO.setPassword(json.get("password").asText());
+
+    String newPassword = json.get("newPassword1").asText();
+
     //Check if mdp in front same as mdp in db
     authUCC.login(userDTO);
     //Modify password
     UserDTO userDTO1 = myUserUCC.modifyPassword(userDTO, newPassword);
 
-    System.out.println("good" + userDTO1);
+    ThreadContext.put("params",
+        "userId: " + userDTO.getUserId() + " oldPassword: " + userDTO.getPassword()
+            + " newPassword: "
+            + userDTO1.getPassword());
     logger.info("Status: 200 {passord changed}");
 
     return userDTO1;
-
   }
 }

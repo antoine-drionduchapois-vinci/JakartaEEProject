@@ -1,5 +1,6 @@
 import { getAuthenticatedUser } from "../../utils/auths";
 import { clearPage, renderPageTitle } from "../../utils/render";
+import Navigate from "../Router/Navigate";
 
 
 const ProfilePage = () => {
@@ -10,55 +11,101 @@ const ProfilePage = () => {
     renderProfilePage();
 
     const passwordForm = document.querySelector('#password-form');
-    passwordForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const currentPassword = passwordForm.elements.currentPassword.value;
-        const newPassword = passwordForm.elements.newPassword.value;
-        const confirmPassword = passwordForm.elements.confirmPassword.value;
+    passwordForm.addEventListener('submit', handlePasswordChange);
+}
 
-        const error = document.getElementById('error1');
+async function handlePasswordChange(event) {
+    event.preventDefault();
+    resetFormErrors();
 
-        const user = getAuthenticatedUser();
-        
-        if (newPassword !== confirmPassword) {
-            error.innerHTML = "Le mot de passe de confirmation n'est pas le même"
-            error.style.display = 'block';
-            error.style.color = 'red';
-            return;
-        }
+    const main = document.querySelector('main');
 
+    const passwordForm = document.querySelector('#password-form');
+    const currentPassword = passwordForm.elements.currentPassword.value;
+    const newPassword = passwordForm.elements.newPassword.value;
+    const confirmPassword = passwordForm.elements.confirmPassword.value;
+    const error = document.getElementById('error1');
+    const user = getAuthenticatedUser();
+
+    if (newPassword !== confirmPassword) {
+        error.innerHTML = "Le mot de passe de confirmation n'est pas le même";
+        error.style.display = 'block';
+        error.style.color = 'red';
+        return;
+    }
+    
+    if (!currentPassword || !newPassword || !confirmPassword) {
+        error.innerHTML = "Veuillez remplir tous les champs";
+        error.style.display = 'block';
+        error.style.color = 'red';
+        if (!currentPassword) addRedBorder('currentPassword');
+        if (!newPassword) addRedBorder('newPassword');
+        if (!confirmPassword) addRedBorder('confirmPassword');
+        return;
+    }
+
+    try {
         const data = {
-            userId : user.id,
-            email : user.email,
-            password : currentPassword,
+            userId: user.id,
+            email: user.email,
+            password: currentPassword,
+            newPassword1: newPassword,
         };
-        
-        try {
-            const response = await fetch('http://localhost:8080/users/changePassword', {
-                method: 'POST',
-                body: JSON.stringify(data),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': user.token
-                },
-            });
-            console.log(response);
-            if (!response.ok) {
-                if(response.status === 401) {
-                    error.innerHTML = 'Mauvais mot de passe actuel !'
-                    error.style.display = 'block';
-                    error.style.color = 'red';
-                } else{
-                    throw new Error(`Failed to change password`);
-                }
-            }else{
-                alert('Mot de passe modifié avec succès !');
+
+        const response = await fetch('http://localhost:8080/users/changePassword', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': user.token
+            },
+        });
+
+        if (!response.ok) {
+            if (response.status === 401) {
+                error.innerHTML = 'Mauvais mot de passe actuel !';
+                error.style.display = 'block';
+                error.style.color = 'red';
+            } else {
+                throw new Error(`Failed to change password`);
             }
-            // Afficher un message de succès
-        } catch (e) {
-            console.error('Error:', e);
+        } else {
+            const successMessage = document.createElement('div');
+            successMessage.innerHTML = 'Mot de passe modifié avec succès !';
+            successMessage.style.color = 'green';
+
+            // Création du cadre entouré en vert avec le message supplémentaire et le compteur
+            const countdownFrame = document.createElement('div');
+            countdownFrame.style.position = 'absolute';
+            countdownFrame.style.top = '50%';
+            countdownFrame.style.left = '50%';
+            countdownFrame.style.transform = 'translate(-50%, -50%)';
+            countdownFrame.style.padding = '20px';
+            countdownFrame.style.border = '2px solid green';
+            countdownFrame.style.backgroundColor = 'white';
+            countdownFrame.style.zIndex = '9999';
+
+            const countdownMessage = document.createElement('div');
+            countdownMessage.innerHTML = 'Vous allez être redirigé dans <span id="countdown">2</span> secondes';
+            countdownFrame.appendChild(successMessage);
+            countdownFrame.appendChild(countdownMessage);
+            main.appendChild(countdownFrame);
+
+            // Redirection vers le tableau de bord après 2 secondes
+            let secondsLeft = 3;
+            const countdownInterval = setInterval(() => {
+                secondsLeft -=1;
+                document.getElementById('countdown').innerText = secondsLeft;
+
+                if (secondsLeft === 0) {
+                    clearInterval(countdownInterval);
+                    Navigate('/dashboardS');
+                }
+            }, 1000);
         }
-    });
+    } catch (e) {
+        console.error('Error:', e);
+    }
 }
 
 function renderProfilePage() {
@@ -74,19 +121,19 @@ function renderProfilePage() {
                         <div class="field">
                             <label class="label">Mot de passe actuel</label>
                             <div class="control">
-                                <input class="input" type="password" name="currentPassword">
+                                <input class="input" type="password" name="currentPassword" id="currentPassword">
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Nouveau mot de passe</label>
                             <div class="control">
-                                <input class="input" type="password" name="newPassword">
+                                <input class="input" type="password" name="newPassword" id="newPassword">
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Confirmer nouveau mot de passe</label>
                             <div class="control">
-                                <input class="input" type="password" name="confirmPassword">
+                                <input class="input" type="password" name="confirmPassword" id="confirmPassword">
                             </div>
                         </div>
                         <div id="error1">
@@ -131,5 +178,24 @@ function renderProfilePage() {
 
     main.innerHTML = htmlContent;
 }
+
+function addRedBorder(elementId) {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.style.border = '1px solid red';
+    } 
+  }
+  
+  function resetFormErrors() {
+    const errorMessage = document.getElementById('error1');
+    errorMessage.textContent = '';
+    errorMessage.style.display = 'none';
+  
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(input => {
+      const inputElement = input;
+      inputElement.style.border = '0.5px solid lightgray';
+    });
+  }
 
 export default ProfilePage;

@@ -138,7 +138,6 @@ public class UserDAOImpl implements UserDAO {
     String sql = "UPDATE projetae.users  SET password = ? WHERE user_id = ? RETURNING *;";
 
     try (PreparedStatement ps = myDalService.getPS(sql)) {
-      System.out.println("DAL " + userDTO.getPassword() + " " + userDTO.getUserId());
       ps.setString(1, userDTO.getPassword());
       ps.setInt(2, userDTO.getUserId());
       ps.execute();

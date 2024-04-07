@@ -186,7 +186,6 @@ function resetFormErrors() {
   errorMessage.style.display = 'none';
 
   const inputs = document.querySelectorAll('input');
-  console.log(`hhhhh: ${inputs}`);
   inputs.forEach(input => {
     const inputElement = input;
     inputElement.style.border = '1px solid lightgray';
