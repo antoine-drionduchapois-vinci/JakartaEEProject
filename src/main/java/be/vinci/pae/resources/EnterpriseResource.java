@@ -1,7 +1,9 @@
 package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.EnterpriseDTO;
+import be.vinci.pae.resources.filters.Authorize;
 import be.vinci.pae.ucc.EnterpriseUCC;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
@@ -9,9 +11,12 @@ import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response.Status;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -82,6 +87,46 @@ public class EnterpriseResource {
     return null;
   }
 
+  /**
+   * Blacklisted an enterprise
+   *
+   * @param json  The JSON containing information about the enterprise.
+   * @param token The authorization token.
+   * @return An ObjectNode representing the enterprise blacklisted.
+   */
+  @POST
+  @Path("enterprises")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize({"TEACHER", "ADMIN"})
+  public ObjectNode blacklisted(JsonNode json, @HeaderParam("Authorization") String token) {
+    ThreadContext.put("route", "/ent/blacklist");
+    ThreadContext.put("method", "Post");
+
+    int userId = myJwt.getUserIdFromToken(token);
+    if (userId == 0) {
+      throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
+    }
+
+    if (!json.hasNonNull("enterprise_id") || !json.hasNonNull("blacklisted_reason")) {
+      throw new WebApplicationException("enterprise_id and blacklisted_reason required",
+          Status.BAD_REQUEST);
+    }
+
+    // Get enterprise ID from JSON
+    int enterpriseId = json.get("enterprise_id").asInt();
+    String blacklistedReason = json.get("blacklisted_reason").asText();
+
+    ThreadContext.put("params", "contactId:" + enterpriseId + "refusalReason:" + blacklistedReason);
+    // Blacklist the enterprise
+    ObjectNode objectNode = convertDTOToJson(myEnterpriseUCC.blacklistEnterprise(enterpriseId,
+        blacklistedReason));
+    logger.info("Status: 200 {blacklist}");
+    ThreadContext.clearAll();
+    return objectNode;
+  }
+
+
   private ObjectNode convertDTOToJson(EnterpriseDTO enterpriseDTO) {
     ObjectMapper mapper = new ObjectMapper();
     ObjectNode enterpriseNode = mapper.createObjectNode();
@@ -95,5 +140,6 @@ public class EnterpriseResource {
     enterpriseNode.put("avis_professeur", enterpriseDTO.getBlacklistedReason());
     return enterpriseNode;
   }
+
 
 }

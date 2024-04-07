@@ -111,6 +111,24 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
     }
   }
 
+  @Override
+  public EnterpriseDTO toBlacklist(EnterpriseDTO blacklistedEnterpriseDTO) {
+    try (PreparedStatement ps = myDalService.getPS(
+        "UPDATE projetae.enterprises SET is_blacklisted = ?, blacklisted_reason = ?"
+            + ", version = ? WHERE enterprise_id = ? AND version = ? RETURNING *;")) {
+      ps.setBoolean(1, blacklistedEnterpriseDTO.isBlacklisted());
+      ps.setString(2, blacklistedEnterpriseDTO.getBlacklistedReason());
+      ps.setInt(3, blacklistedEnterpriseDTO.getVersion() + 1);
+      ps.setInt(4, blacklistedEnterpriseDTO.getEnterpriseId());
+      ps.setInt(5, blacklistedEnterpriseDTO.getVersion());
+      ps.execute();
+      return enterpriseMapper.mapResultSetToObject(ps.getResultSet(), EnterpriseImpl.class,
+          myDomainFactory::getEnterprise);
+    } catch (SQLException | IllegalAccessException e) {
+      throw new FatalErrorException(e);
+    }
+  }
+
   private boolean exists(String name, String label) {
     try (PreparedStatement ps = myDalService.getPS(
         "SELECT COUNT(*) FROM projetae.enterprises WHERE name = ? AND label = ?")) {
