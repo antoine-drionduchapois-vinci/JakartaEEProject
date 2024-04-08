@@ -3,28 +3,41 @@ import { clearPage, renderPageTitle } from "../../utils/render";
 import Navigate from "../Router/Navigate";
 
 
+// ProfilePage component
 const ProfilePage = () => {
+    // Clear the page
     clearPage();
 
+    // Render the page title
     renderPageTitle('Profil');
 
+    // Render the profile page content
     renderProfilePage();
 
+    // Add event listener for password form submission
     const passwordForm = document.querySelector('#password-form');
     passwordForm.addEventListener('submit', handlePasswordChange);
 
+    // Add event listener for telephone form submission
     const telForm = document.querySelector('#telForm');
     telForm.addEventListener('submit', handleTelChange);
 }
 
+// Function to handle password change submission
 async function handlePasswordChange(event) {
+    // Prevent default form submission behavior
     event.preventDefault();
+
+    // Reset form errors
     resetFormErrors('password-form');
 
+    // Log message for debugging
     console.log('passer par handlePassword');
 
+    // Get the main element
     const main = document.querySelector('main');
 
+    // Get form elements and user information
     const passwordForm = document.querySelector('#password-form');
     const currentPassword = passwordForm.elements.currentPassword.value;
     const newPassword = passwordForm.elements.newPassword.value;
@@ -32,6 +45,7 @@ async function handlePasswordChange(event) {
     const error = document.getElementById('error1');
     const user = getAuthenticatedUser();
 
+    // Validate new password confirmation
     if (newPassword !== confirmPassword) {
         error.innerHTML = "Le mot de passe de confirmation n'est pas le même";
         error.style.display = 'block';
@@ -39,6 +53,7 @@ async function handlePasswordChange(event) {
         return;
     }
     
+    // Validate if all fields are filled
     if (!currentPassword || !newPassword || !confirmPassword) {
         error.innerHTML = "Veuillez remplir tous les champs";
         error.style.display = 'block';
@@ -50,6 +65,7 @@ async function handlePasswordChange(event) {
     }
 
     try {
+        // Prepare data for API request
         const data = {
             userId: user.id,
             email: user.email,
@@ -57,6 +73,7 @@ async function handlePasswordChange(event) {
             newPassword1: newPassword,
         };
 
+        // Make API request to change password
         const response = await fetch('http://localhost:8080/users/changePassword', {
             method: 'POST',
             body: JSON.stringify(data),
@@ -66,6 +83,7 @@ async function handlePasswordChange(event) {
             },
         });
 
+        // Handle response from the server
         if (!response.ok) {
             if (response.status === 401) {
                 error.innerHTML = 'Mauvais mot de passe actuel !';
@@ -75,6 +93,7 @@ async function handlePasswordChange(event) {
                 throw new Error(`Failed to change password`);
             }
         } else {
+            // Display success message and initiate redirection countdown
             const successMessage = document.createElement('div');
             successMessage.innerHTML = 'Mot de passe modifié avec succès !';
             successMessage.style.color = 'green';
@@ -111,18 +130,25 @@ async function handlePasswordChange(event) {
     }
 }
 
+// Function to handle telephone change submission
 async function handleTelChange(event) {
+    // Prevent default form submission behavior
     event.preventDefault();
+
+    // Reset form errors
     resetFormErrors('telForm');
 
+    // Get the main element
     const main = document.querySelector('main');
 
+    // Get form elements and user information
     const telForm = document.querySelector('#telForm');
     const currentPassword = telForm.elements.passwordTel.value;
     const newPhoneNumber = telForm.elements.newPhoneNumber.value;
     const error = document.getElementById('error2');
     const user = getAuthenticatedUser();
 
+    // Validate if all fields are filled
     if (!currentPassword || !newPhoneNumber) {
         error.innerHTML = "Veuillez remplir tous les champs";
         error.style.display = 'block';
@@ -133,6 +159,7 @@ async function handleTelChange(event) {
     }
 
     try {
+        // Prepare data for API request
         const data = {
             userId: user.id,
             email: user.email,
@@ -140,6 +167,7 @@ async function handleTelChange(event) {
             phone: newPhoneNumber,
         };
 
+        // Make API request to change phone number
         const response = await fetch('http://localhost:8080/users/changePhoneNumber', {
             method: 'POST',
             body: JSON.stringify(data),
@@ -149,6 +177,7 @@ async function handleTelChange(event) {
             },
         });
 
+        // Handle response from the server
         if (!response.ok) {
             if (response.status === 401) {
                 error.innerHTML = 'Mauvais mot de passe actuel !';
@@ -158,6 +187,7 @@ async function handleTelChange(event) {
                 throw new Error(`Failed to change phone`);
             }
         } else {
+            // Display success message and initiate redirection countdown
             const successMessage = document.createElement('div');
             successMessage.innerHTML = 'Numéro de téléphone modifié avec succès !';
             successMessage.style.color = 'green';
@@ -194,9 +224,11 @@ async function handleTelChange(event) {
     }
 }
 
+// Function to render profile page content
 function renderProfilePage() {
     const main = document.querySelector('main');
 
+    // HTML content for the profile page
     const htmlContent = `
     <main class="section">
         <div class="columns">
@@ -262,17 +294,20 @@ function renderProfilePage() {
     </main>
     `;
 
+    // Set the HTML content to the main element
     main.innerHTML = htmlContent;
 }
 
+// Function to add red border to an element
 function addRedBorder(elementId) {
     const element = document.getElementById(elementId);
     if (element) {
       element.style.border = '1px solid red';
     } 
-  }
-  
-  function resetFormErrors(formId) {
+}
+
+// Function to reset form errors
+function resetFormErrors(formId) {
     const errorMessage = document.getElementById(formId === 'password-form' ? 'error1' : 'error2');
     errorMessage.textContent = '';
     errorMessage.style.display = 'none';
@@ -282,6 +317,7 @@ function addRedBorder(elementId) {
       const inputElement = input;
       inputElement.style.border = '0.5px solid lightgray';
     });
-  }
+}
 
+// Export the ProfilePage component
 export default ProfilePage;
