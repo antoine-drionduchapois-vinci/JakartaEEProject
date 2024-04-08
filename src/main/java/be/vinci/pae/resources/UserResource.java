@@ -189,7 +189,7 @@ public class UserResource {
   }
 
   /**
-   * Changes the phone number associated with the user.
+   * Changes the phone number of the user.
    *
    * @param token   The authorization token.
    * @param userDTO The UserDTO object containing user information including userId, email,
