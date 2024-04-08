@@ -12,11 +12,16 @@ const ProfilePage = () => {
 
     const passwordForm = document.querySelector('#password-form');
     passwordForm.addEventListener('submit', handlePasswordChange);
+
+    const telForm = document.querySelector('#telForm');
+    telForm.addEventListener('submit', handleTelChange);
 }
 
 async function handlePasswordChange(event) {
     event.preventDefault();
-    resetFormErrors();
+    resetFormErrors('password-form');
+
+    console.log('passer par handlePassword');
 
     const main = document.querySelector('main');
 
@@ -71,10 +76,9 @@ async function handlePasswordChange(event) {
             }
         } else {
             const successMessage = document.createElement('div');
-            successMessage.innerHTML = 'Mot de passe modifié avec succès !';
+            successMessage.innerHTML = 'Numéro de téléphone modifié avec succès !';
             successMessage.style.color = 'green';
 
-            // Création du cadre entouré en vert avec le message supplémentaire et le compteur
             const countdownFrame = document.createElement('div');
             countdownFrame.style.position = 'absolute';
             countdownFrame.style.top = '50%';
@@ -91,7 +95,89 @@ async function handlePasswordChange(event) {
             countdownFrame.appendChild(countdownMessage);
             main.appendChild(countdownFrame);
 
-            // Redirection vers le tableau de bord après 2 secondes
+            let secondsLeft = 3;
+            const countdownInterval = setInterval(() => {
+                secondsLeft -=1;
+                document.getElementById('countdown').innerText = secondsLeft;
+
+                if (secondsLeft === 0) {
+                    clearInterval(countdownInterval);
+                    Navigate('/dashboardS');
+                }
+            }, 1000);
+        }
+    } catch (e) {
+        console.error('Error:', e);
+    }
+}
+
+async function handleTelChange(event) {
+    event.preventDefault();
+    resetFormErrors('telForm');
+
+    const main = document.querySelector('main');
+
+    const telForm = document.querySelector('#telForm');
+    const currentPassword = telForm.elements.passwordTel.value;
+    const newPhoneNumber = telForm.elements.newPhoneNumber.value;
+    const error = document.getElementById('error2');
+    const user = getAuthenticatedUser();
+
+    if (!currentPassword || !newPhoneNumber) {
+        error.innerHTML = "Veuillez remplir tous les champs";
+        error.style.display = 'block';
+        error.style.color = 'red';
+        if (!currentPassword) addRedBorder('passwordTel');
+        if (!newPhoneNumber) addRedBorder('newPhoneNumber');
+        return;
+    }
+
+    try {
+        const data = {
+            userId: user.id,
+            email: user.email,
+            password: currentPassword,
+            phone: newPhoneNumber,
+        };
+
+        const response = await fetch('http://localhost:8080/users/changePhoneNumber', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': user.token
+            },
+        });
+
+        if (!response.ok) {
+            if (response.status === 401) {
+                error.innerHTML = 'Mauvais mot de passe actuel !';
+                error.style.display = 'block';
+                error.style.color = 'red';
+            } else {
+                throw new Error(`Failed to change phone`);
+            }
+        } else {
+            const successMessage = document.createElement('div');
+            successMessage.innerHTML = 'Mot de passe modifié avec succès !';
+            successMessage.style.color = 'green';
+
+            const countdownFrame = document.createElement('div');
+            countdownFrame.style.position = 'absolute';
+            countdownFrame.style.top = '50%';
+            countdownFrame.style.left = '50%';
+            countdownFrame.style.transform = 'translate(-50%, -50%)';
+            countdownFrame.style.padding = '20px';
+            countdownFrame.style.border = '2px solid green';
+            countdownFrame.style.backgroundColor = 'white';
+            countdownFrame.style.zIndex = '9999';
+
+            const countdownMessage = document.createElement('div');
+            countdownMessage.innerHTML = 'Vous allez être redirigé dans <span id="countdown">2</span> secondes';
+            countdownFrame.appendChild(successMessage);
+            countdownFrame.appendChild(countdownMessage);
+            main.appendChild(countdownFrame);
+
             let secondsLeft = 3;
             const countdownInterval = setInterval(() => {
                 secondsLeft -=1;
@@ -140,7 +226,7 @@ function renderProfilePage() {
                         </div>
                         <div class="field">
                             <div class="control has-text-centered">
-                                <button class="button is-dark is-rounded" type="submit">Envoyer</button>
+                                <button class="button is-dark is-rounded" type="submit" id="password-submit">Envoyer</button>
                             </div>
                         </div>
                     </form>
@@ -149,24 +235,24 @@ function renderProfilePage() {
             <div class="column is-half">
                 <h4 class="title is-4 has-text-centered">Modifier numéro de téléphone</h4>
                 <div class="box">
-                    <form>
-                        <div class="field">
-                            <label class="label">Nouveau numéro de téléphone</label>
-                            <div class="control">
-                                <input class="input" type="text" name="newPhoneNumber">
-                            </div>
-                        </div>
+                    <form id="telForm">
                         <div class="field">
                             <label class="label">Mot de passe</label>
                             <div class="control">
-                                <input class="input" type="password" name="password">
+                                <input class="input" type="password" name="password" id= "passwordTel">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Nouveau numéro de téléphone</label>
+                            <div class="control">
+                                <input class="input" type="text" name="newPhoneNumber" id="newPhoneNumber">
                             </div>
                         </div>
                         <div id="error2">
                         </div>
                         <div class="field">
                             <div class="control has-text-centered">
-                                <button class="button is-dark is-rounded" type="submit">Envoyer</button>
+                                <button class="button is-dark is-rounded" type="submit" id="tel-submit">Envoyer</button>
                             </div>
                         </div>
                     </form>
@@ -186,8 +272,8 @@ function addRedBorder(elementId) {
     } 
   }
   
-  function resetFormErrors() {
-    const errorMessage = document.getElementById('error1');
+  function resetFormErrors(formId) {
+    const errorMessage = document.getElementById(formId === 'password-form' ? 'error1' : 'error2');
     errorMessage.textContent = '';
     errorMessage.style.display = 'none';
   

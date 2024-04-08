@@ -177,4 +177,29 @@ public class UserResource {
 
     return userDTO1;
   }
+
+  @POST
+  @Path("changePhoneNumber")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public UserDTO changePhoneNumber(@HeaderParam("Authorization") String token, UserDTO userDTO) {
+    ThreadContext.put("route", "/users/changePhoneNumber");
+    ThreadContext.put("method", "Post");
+
+    int userId = myJwt.getUserIdFromToken(token);
+    if (userId == 0) {
+      throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
+    }
+
+    //Check if mdp in front same as mdp in db
+    authUCC.login(userDTO);
+
+    UserDTO userDTO1 = myUserUCC.changePhoneNumber(userDTO);
+
+    ThreadContext.put("params",
+        "userId: " + userDTO.getUserId() + " newPhoneNumber: " + userDTO1.getPhone());
+    logger.info("Status: 200 {phone number changed}");
+
+    return userDTO1;
+  }
 }

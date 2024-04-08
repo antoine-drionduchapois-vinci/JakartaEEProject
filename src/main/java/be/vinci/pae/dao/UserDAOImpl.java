@@ -147,4 +147,18 @@ public class UserDAOImpl implements UserDAO {
       throw new FatalErrorException(e);
     }
   }
+
+  public UserDTO changePhoneNumber(UserDTO userDTO) {
+    String sql = "UPDATE projetae.users SET phone = ? WHERE user_id = ? RETURNING *;";
+
+    try (PreparedStatement ps = myDalService.getPS(sql)) {
+      ps.setString(1, userDTO.getPhone());
+      ps.setInt(2, userDTO.getUserId());
+      ps.execute();
+      return userMapper.mapResultSetToObject(ps.getResultSet(), UserImpl.class,
+          myDomainFactory::getUser);
+    } catch (SQLException | IllegalAccessException e) {
+      throw new FatalErrorException(e);
+    }
+  }
 }

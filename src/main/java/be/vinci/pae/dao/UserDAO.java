@@ -55,4 +55,6 @@ public interface UserDAO {
 
   UserDTO modifyPassword(UserDTO userDTO);
 
+  UserDTO changePhoneNumber(UserDTO userDTO);
+
 }

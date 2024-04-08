@@ -75,4 +75,13 @@ public class UserUCCImpl implements UserUCC {
     return userDTO1;
   }
 
+  public UserDTO changePhoneNumber(UserDTO userDTO) {
+    myDALService.start();
+
+    UserDTO userDTO1 = myUserDAO.changePhoneNumber(userDTO);
+
+    myDALService.commit();
+    return userDTO1;
+  }
+
 }

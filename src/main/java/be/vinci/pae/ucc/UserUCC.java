@@ -39,4 +39,6 @@ public interface UserUCC {
   UserDTO getUsersByIdAsJson(int userId);
 
   UserDTO modifyPassword(UserDTO userDTO, String newMdp);
+
+  UserDTO changePhoneNumber(UserDTO userDTO);
 }
