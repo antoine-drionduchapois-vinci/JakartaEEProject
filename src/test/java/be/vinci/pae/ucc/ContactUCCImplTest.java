@@ -2,6 +2,8 @@ package be.vinci.pae.ucc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import be.vinci.pae.dao.ContactDAO;
@@ -392,5 +394,35 @@ class ContactUCCImplTest {
     ContactDTO result = contactUCC.unfollow(1, 1);
 
     assertEquals(contactDTO, result);
+  }
+
+  @Test
+  void testGetEnterpriseContacts_Success() {
+    // Arrange
+    int enterpriseId = 1;
+    List<ContactDTO> expectedContacts = new ArrayList<>();
+    ContactDTO contact1 = createcontactDTO(1, 1, 1);
+    ContactDTO contact2 = createcontactDTO(2, 2, 1);
+    expectedContacts.add(contact1);
+    expectedContacts.add(contact2);
+    when(contactDAO.readEnterpriseContacts(enterpriseId)).thenReturn(expectedContacts);
+
+    // Act
+    List<ContactDTO> result = contactUCC.getEnterpriseContacts(enterpriseId);
+
+    // Assert
+    assertEquals(expectedContacts, result);
+    verify(contactDAO, times(1)).readEnterpriseContacts(enterpriseId);
+  }
+
+  @Test
+  void testGetEnterpriseContacts_NotFound() {
+    // Arrange
+    int enterpriseId = 1;
+    when(contactDAO.readEnterpriseContacts(enterpriseId)).thenReturn(null);
+
+    // Act & Assert
+    assertThrows(NotFoundException.class, () -> contactUCC.getEnterpriseContacts(enterpriseId));
+    verify(contactDAO, times(2)).readEnterpriseContacts(enterpriseId);
   }
 }
