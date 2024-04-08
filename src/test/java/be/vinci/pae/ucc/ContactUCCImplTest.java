@@ -2,6 +2,7 @@ package be.vinci.pae.ucc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -411,7 +412,7 @@ class ContactUCCImplTest {
 
     // Assert
     assertEquals(expectedContacts, result);
-    verify(contactDAO).readEnterpriseContacts(enterpriseId);
+    verify(contactDAO, times(1)).readEnterpriseContacts(enterpriseId);
   }
 
   @Test
@@ -422,6 +423,6 @@ class ContactUCCImplTest {
 
     // Act & Assert
     assertThrows(NotFoundException.class, () -> contactUCC.getEnterpriseContacts(enterpriseId));
-    verify(contactDAO).readEnterpriseContacts(enterpriseId);
+    verify(contactDAO, times(2)).readEnterpriseContacts(enterpriseId);
   }
 }
