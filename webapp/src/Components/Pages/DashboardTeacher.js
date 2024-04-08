@@ -2,6 +2,7 @@ import Chart from 'chart.js/auto';
 import { clearPage, renderPageTitle } from '../../utils/render';
 import { getAuthenticatedUser } from '../../utils/auths';
 import autocomplete from '../../services/autocomplete';
+import Navigate from '../Router/Navigate';
 
 // Fonction pour récupérer les données des entreprises
 const fetchEnterprises = async () => {
@@ -19,10 +20,20 @@ const fetchEnterprises = async () => {
       throw new Error('Erreur lors de la récupération des données des entreprises');
     }
 
-    // Accéder à la propriété "enterprises" de l'objet retourné
-    // Convertir la réponse en JSON
-    const jResponse = await response.json();
-    return jResponse.enterprises;
+    let data = await response.json();
+
+    // Modifier chaque objet entreprise pour ne garder que les propriétés désirées
+    data = data.map((enterprise) => ({
+      id: enterprise.enterpriseId,
+      nom: enterprise.name,
+      appellation: enterprise.label || '', // Utiliser une chaîne vide si la valeur est null
+      adresse: enterprise.address,
+      téléphone: enterprise.phone,
+      blacklist: enterprise.blacklisted,
+      avisprofesseur: enterprise.blacklistedReason || '', // Utiliser une chaîne vide si la valeur est null
+    }));
+
+    return data;
   } catch (error) {
     console.error('Erreur lors de la récupération des données des entreprises : ', error);
     return null; // Ajout d'un retour de valeur pour résoudre l'erreur
@@ -44,6 +55,7 @@ const fetchDataAndRenderChart = async () => {
       throw new Error('Erreur lors de la récupération des données');
     }
     const data = await response.json();
+
     return data;
   } catch (error) {
     console.error('Erreur lors de la récupération des données : ', error);
@@ -66,7 +78,16 @@ const fetchUsers = async () => {
       throw new Error('Erreur lors de la récupération des données des utilisateurs');
     }
 
-    const data = await response.json();
+    let data = await response.json();
+    data = data.map((u) => ({
+      id: u.userId,
+      nom: u.name,
+      prenom: u.surname,
+      email: u.email,
+      role: u.role,
+      année: u.year,
+    }));
+
     return data; // Retourner directement le tableau d'utilisateurs de la réponse JSON
   } catch (error) {
     console.error('Erreur lors de la récupération des données des utilisateurs : ', error);
@@ -109,9 +130,14 @@ const updateTable = (tableBody, list) => {
   list.forEach((e) => {
     const row = document.createElement('tr');
     row.addEventListener('click', () => {
-      window.location.href = `details-page.html?id=${
-        e.entreprise_id !== undefined ? e.entreprise_id : e.utilisateur_id
-      }`;
+
+      if (e.blacklist === undefined){
+        Navigate(`/studentDetails?id=${e.id}`);
+      }else {
+        Navigate(`/enterpriseDetails?id=${e.id}`);
+        
+      }
+      
     });
     const values = Object.values(e).slice(1);
     values.forEach((value) => {
@@ -183,13 +209,15 @@ const renderForm = (formContainer, users, tableUserContainer) => {
   // Créer une option vide par défaut
   const defaultOption = document.createElement('option');
   defaultOption.textContent = 'Sélectionnez une année';
-  defaultOption.value = null; // Valeur vide
+  defaultOption.value = ''; // Valeur vide
   selectField.appendChild(defaultOption);
 
-  // Générer les options pour les années de 2000 à l'année actuelle
-  for (let year = 2000; year <= currentYear; year += 1) {
+  // Générer les options pour les années de l'année actuelle à 2000
+  for (let year = currentYear; year >= 2000; year -= 1) {
     const option = document.createElement('option');
-    option.textContent = year.toString(); // Convertir l'année en chaîne de caractères
+    const nextYear = year + 1;
+    option.textContent = `${year}-${nextYear}`; // Format "2000-2001"
+    option.value = `${year}-${nextYear}`;
     selectField.appendChild(option);
   }
 
@@ -208,21 +236,31 @@ const renderForm = (formContainer, users, tableUserContainer) => {
       // Récupérer les valeurs du formulaire
       const name = inputField.value.trim();
       const isStudent = checkboxField.checked;
-      const selectedYear = parseInt(selectField.value, 10);
+      const selectedYear = selectField.value;
 
       // Filtrer les utilisateurs en fonction des critères
       const filteredUsers = users.filter((user) => {
         const matchesName = !name || user.name.toLowerCase().includes(name.toLowerCase());
         const matchesIsStudent = !isStudent || user.role === 'STUDENT';
-        const matchesYear = Number.isNaN(selectedYear) || user.annee === selectedYear.toString();
+
+        // Vérifier si selectedYear est null ou vide
+        if (!selectedYear) {
+          return matchesName && matchesIsStudent;
+        }
+
+        const userYearParts = user.année.split('-');
+        const selectedYearParts = selectedYear.split('-');
+
+        // Vérifier si les parties des années correspondent
+        const matchesYear =
+          !selectedYear ||
+          (userYearParts[0] === selectedYearParts[0] && userYearParts[1] === selectedYearParts[1]);
         return matchesName && matchesIsStudent && matchesYear;
       });
+
       const tbody = tableUserContainer.querySelector('.table-scroll-container table tbody');
 
       updateTable(tbody, filteredUsers);
-
-      // Afficher les utilisateurs filtrés (vous pouvez appeler une fonction appropriée ici)
-      console.log(filteredUsers);
     });
   });
 
@@ -232,29 +270,44 @@ const renderForm = (formContainer, users, tableUserContainer) => {
 
 // Fonction pour rendre le tableau des entreprises avec recherche et tri
 const renderEnterpriseTable = (tableContainer, enterprises) => {
+  // Conteneur pour le tableau avec défilement
+  const scrollContainer = document.createElement('div');
+  scrollContainer.className = 'table-scroll-container';
   // Créer le tableau
   const table = document.createElement('table');
   table.className = 'table is-fullwidth';
   table.style.maxHeight = '250px'; // Définir la hauteur maximale
   table.style.overflowY = 'auto';
-  tableContainer.appendChild(table);
+
   // Créer le corps du tableau
   const tbody = document.createElement('tbody');
   // Fonction pour trier les colonnes
   const sortColumn = (columnName) => {
-    const lowerColumnName = columnName.toLowerCase();
+    const lowerColumnName = columnName.trim().toLowerCase().replace(/\s/g, '');
+    
     enterprises.sort((a, b) => {
+      const valueA = a[lowerColumnName];
+      const valueB = b[lowerColumnName];
+
+      // Si les valeurs sont des booléens, trier true avant false
+      if (typeof valueA === 'boolean' && typeof valueB === 'boolean') {
+        if (valueA === valueB) {
+          return 0;
+        }
+        return valueA ? -1 : 1;
+      }
+
       // Comparaison des valeurs des colonnes
-      const valueA = a[lowerColumnName].toLowerCase();
-      const valueB = b[lowerColumnName].toLowerCase();
+      const stringValueA = typeof valueA === 'string' ? valueA.toLowerCase() : valueA;
+      const stringValueB = typeof valueB === 'string' ? valueB.toLowerCase() : valueB;
 
       // Utilisation de localeCompare pour le tri alphabétique
-      return valueA.localeCompare(valueB);
+      return stringValueA.localeCompare(stringValueB);
     });
-    console.log('update T');
+
     // Mettre à jour le tableau avec les entreprises triées
     updateTable(tbody, enterprises);
-  };
+};
 
   // Créer la première ligne pour les en-têtes de colonne
   const thead = document.createElement('thead');
@@ -266,6 +319,7 @@ const renderEnterpriseTable = (tableContainer, enterprises) => {
     const header = document.createElement('th');
     header.textContent = headerText;
     header.addEventListener('click', () => {
+      console.log(headerText);
       sortColumn(headerText); // Fonction pour trier les colonnes
     });
     headerRow.appendChild(header);
@@ -276,6 +330,8 @@ const renderEnterpriseTable = (tableContainer, enterprises) => {
   table.appendChild(thead);
   // Ajouter le corps du tableau au tableau
   table.appendChild(tbody);
+  scrollContainer.appendChild(table);
+  tableContainer.appendChild(scrollContainer);
 
   // Afficher le tableau avec toutes les entreprises au chargement initial
   updateTable(tbody, enterprises);
@@ -295,7 +351,7 @@ const renderUserTable = (tableUserContainer, users) => {
 
   // Créer le tableau des utilisateurs
   const table = document.createElement('table');
-  table.className = 'table';
+  table.className = 'table is-fullwidth';
 
   // Créer la première ligne pour les en-têtes de colonne
   const thead = document.createElement('thead');

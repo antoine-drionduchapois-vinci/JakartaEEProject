@@ -12,6 +12,7 @@ public class InternshipImpl implements Internship {
   private int enterprise;
   private int supervisor;
   private int contact;
+  private int version;
 
 
   @Override
@@ -82,5 +83,15 @@ public class InternshipImpl implements Internship {
   @Override
   public void setSupervisor(int supervisor) {
     this.supervisor = supervisor;
+  }
+
+  @Override
+  public int getVersion() {
+    return version;
+  }
+
+  @Override
+  public void setVersion(int version) {
+    this.version = version;
   }
 }

@@ -4,8 +4,7 @@ import be.vinci.pae.domain.ContactDTO;
 import java.util.List;
 
 /**
- * The ContactUCC interface provides methods for managing contact-related
- * functionality.
+ * The ContactUCC interface provides methods for managing contact-related functionality.
  */
 public interface ContactUCC {
 
@@ -21,7 +20,7 @@ public interface ContactUCC {
   /**
    * Retrieves the contact information associated with the specified contact ID.
    *
-   * @param userId       The ID of the user initiating the contact.
+   * @param userId    The ID of the user initiating the contact.
    * @param contactId The ID of the contact to retrieve.
    * @return An ObjectNode containing the contact information if found, or null if not found.
    */
@@ -66,9 +65,9 @@ public interface ContactUCC {
    * Indicates that the contact associated with the specified ID has been refused with the provided
    * reason.
    *
-   * @param userId           The ID of the user.
-   * @param contactId        The ID of the contact to mark as refused.
-   * @param refusalReason    The reason for refusing the contact.
+   * @param userId        The ID of the user.
+   * @param contactId     The ID of the contact to mark as refused.
+   * @param refusalReason The reason for refusing the contact.
    * @return An ObjectNode containing the updated contact information.
    */
   ContactDTO indicateAsRefused(int userId, int contactId, String refusalReason);
@@ -76,9 +75,19 @@ public interface ContactUCC {
   /**
    * Marks the contact associated with the specified ID as "non_suivis".
    *
-   * @param userId           The ID of the user.
+   * @param userId    The ID of the user.
    * @param contactId The ID of the contact to unfollow.
    * @return An ObjectNode containing the updated contact information.
    */
   ContactDTO unfollow(int userId, int contactId);
+
+  /**
+   * Retrieves a list of contacts associated with the enterprise.
+   *
+   * @param enterpriseId The ID of the user whose contacts are to be retrieved.
+   * @return A list of contacts associated with the specified enterprise ID, or null if
+   *         no contacts are
+   *         found.
+   */
+  List<ContactDTO> getEnterpriseContacts(int enterpriseId);
 }

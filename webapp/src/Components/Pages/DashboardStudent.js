@@ -1,20 +1,18 @@
 /* eslint-disable camelcase */
 import { getAuthenticatedUser } from '../../utils/auths';
-import fetchUserOnRefresh from '../../utils/refresh';
+
 
 import { clearPage, renderPageTitle } from '../../utils/render';
 import Navigate from '../Router/Navigate';
 
-fetchUserOnRefresh();
 
 const fetchUser = async () => {
-  console.log(getAuthenticatedUser().token);
   const options = {
-    method: 'POST',
+    method: 'GET',
     headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ token: getAuthenticatedUser().token }), // Object shorthand used here
+      Authorization: getAuthenticatedUser().token
+    }, 
+     // Object shorthand used here
   };
 
   try {
@@ -63,13 +61,13 @@ const fetchUser = async () => {
 };
 
 const fetchUserContacts = async () => {
-  console.log(getAuthenticatedUser());
+  console.log(getAuthenticatedUser().token);
+
   const options = {
-    method: 'POST',
+    method: 'GET',
     headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ token: getAuthenticatedUser().token }),
+      Authorization: getAuthenticatedUser().token,
+    }, 
   };
 
   try {
@@ -82,11 +80,16 @@ const fetchUserContacts = async () => {
     const contactsArray = contactsInfo.contact;
     let contactsHtml = ''; // Initialize an empty string to accumulate HTML content
     for (let index = 0; index < contactsArray.length; index += 1) {
-      const { contact_id, enterprise_name, state } = contactsArray[index];
+      const { contact_id, enterprise_name, state, meeting_point, refusal_reason, year } = contactsArray[index];
+      const reason = refusal_reason === null ? '' : refusal_reason;
+      const meeting = meeting_point === null ? '' : meeting_point;
       contactsHtml += `
             <tr>
             <td><a class="enterprise_link" data-contact-id="${contact_id}">${enterprise_name}</a></td>
             <td> ${state}</td>
+            <td> ${meeting}</td>
+            <td> ${reason}</td>
+            <td> ${year}</td>
             </tr>
         `;
     }
@@ -99,12 +102,12 @@ const fetchUserContacts = async () => {
 };
 
 const fetchUserInternship = async () => {
+
   const options = {
-    method: 'POST',
+    method: 'GET',
     headers: {
-      'Content-Type': 'application/json',
+      Authorization: getAuthenticatedUser().token,
     },
-    body: JSON.stringify({ token: getAuthenticatedUser().token }),
   };
 
   try {
@@ -178,6 +181,9 @@ const DashboardStudent = async () => {
           <tr>
             <th>Entreprise</th>
             <th>Etat</th>
+            <th>RDV</th>
+            <th>Raison refus</th>
+            <th>Année</th>
             <th><a id="addContact"> + </a></th>
           </tr>
         </thead>

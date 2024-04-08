@@ -2,9 +2,10 @@ package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.ContactDTO;
 import be.vinci.pae.domain.EnterpriseDTO;
+import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.ucc.ContactUCC;
 import be.vinci.pae.ucc.EnterpriseUCC;
-import be.vinci.pae.utils.JWTDecryptToken;
+import be.vinci.pae.ucc.UserUCC;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -17,6 +18,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.WebApplicationException;
@@ -34,14 +36,17 @@ import org.apache.logging.log4j.ThreadContext;
 @Path("/contact")
 public class ContactResource {
 
-  private JWTDecryptToken decryptToken = new JWTDecryptToken();
   private static final Logger logger = LogManager.getLogger(ContactResource.class);
+
   @Inject
   private JWT myJwt;
   @Inject
   private ContactUCC myContactUCC;
   @Inject
   private EnterpriseUCC myEnterpriseUCC;
+
+  @Inject
+  private UserUCC myUserUCC;
 
   /**
    * Retrieves a contact by its ID.
@@ -125,15 +130,15 @@ public class ContactResource {
   /**
    * Marks a contact as having a meeting.
    *
-   * @param json The JSON containing the contact ID and meeting point.
-   * @param token The authorization token.
-   * @return The updated contact as JSON.
+   * @param token   The authorization token.
+   * @param contact The contact information indicating the meeting.
+   * @return The updated contact after the meeting.
    */
   @POST
   @Path("/meet")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode meet(JsonNode json, @HeaderParam("Authorization") String token) {
+  public ContactDTO meet(@HeaderParam("Authorization") String token, ContactDTO contact) {
     ThreadContext.put("route", "/contact/meet");
     ThreadContext.put("method", "Post");
 
@@ -142,31 +147,30 @@ public class ContactResource {
       throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
     }
 
-    if (!json.hasNonNull("contactId") || !json.hasNonNull("meetingPoint")) {
+    int contactId = contact.getContactId();
+    String meetingPoint = contact.getMeetingPoint();
+    if (contactId == 0 || meetingPoint == null) {
       throw new WebApplicationException("contactId and meetingPoint required", Status.BAD_REQUEST);
     }
-    int contactId = json.get("contactId").asInt();
-    String meetingPoint = json.get("meetingPoint").asText();
     ThreadContext.put("params", "contactId:" + contactId + "meetingPoint:" + meetingPoint);
-    ObjectNode objectNode = convertDTOToJson(myContactUCC.meetEnterprise(userId, contactId,
-        meetingPoint));
+    contact = myContactUCC.meetEnterprise(userId, contactId, meetingPoint);
     logger.info("Status: 200 {meet}");
     ThreadContext.clearAll();
-    return objectNode;
+    return contact;
   }
 
   /**
    * Indicates that a contact has been refused.
    *
-   * @param json The JSON containing the contact ID and refusal reason.
-   * @param token The authorization token.
-   * @return The updated contact as JSON.
+   * @param token          The authorization token.
+   * @param contact        The contact information to be refused.
+   * @return The updated contact after indicating refusal.
    */
   @POST
   @Path("/refuse")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode refuse(JsonNode json, @HeaderParam("Authorization") String token) {
+  public ContactDTO refuse(@HeaderParam("Authorization") String token, ContactDTO contact) {
     ThreadContext.put("route", "/contact/refuse");
     ThreadContext.put("method", "Post");
 
@@ -175,17 +179,18 @@ public class ContactResource {
       throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
     }
 
-    if (!json.hasNonNull("contactId") || !json.hasNonNull("refusalReason")) {
+    int contactId = contact.getContactId();
+    String refusalReason = contact.getRefusalReason();
+
+    if (contactId == 0 || refusalReason == null) {
       throw new WebApplicationException("contactId and refusalReason required", Status.BAD_REQUEST);
     }
-    int contactId = json.get("contactId").asInt();
-    String refusalReason = json.get("refusalReason").asText();
     ThreadContext.put("params", "contactId:" + contactId + "refusalReason:" + refusalReason);
-    ObjectNode objectNode = convertDTOToJson(myContactUCC.indicateAsRefused(userId, contactId,
-        refusalReason));
+    contact = myContactUCC.indicateAsRefused(userId, contactId,
+        refusalReason);
     logger.info("Status: 200 {refuse}");
     ThreadContext.clearAll();
-    return objectNode;
+    return contact;
   }
 
   /**
@@ -221,17 +226,17 @@ public class ContactResource {
   /**
    * Retrieves contacts for a specific user.
    *
-   * @param json The JSON containing the user ID.
+   * @param token The JSON containing the user ID.
    * @return The user's contacts as JSON.
    */
-  @POST
+  @GET
   @Path("getUserContacts")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getUsersByIdAsJson(JsonNode json) {
+  public ObjectNode getUsersByIdAsJson(@HeaderParam("Authorization") String token) {
     ThreadContext.put("route", "/contact/getUserContacts");
-    ThreadContext.put("method", "Post");
-    int userId = decryptToken.getIdFromJsonToken(json);
+    ThreadContext.put("method", "Get");
+    int userId = myJwt.getUserIdFromToken(token);
     ThreadContext.put("params", "userId:" + userId);
     if (userId == 0) {
       throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
@@ -261,6 +266,45 @@ public class ContactResource {
     logger.info("Status: 200 {getUsersByIdAsJson}");
     ThreadContext.clearAll();
     return response;
+
+  }
+
+  /**
+   * Retrieves contacts for a specific user.
+   *
+   * @param enterpriseId The enterprise ID.
+   * @return The user's contacts as JSON.
+   */
+  @GET
+  @Path("getEnterpriseContacts/{entrepriseId}")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public ArrayNode getEnterpriseContact(
+      @PathParam("entrepriseId") int enterpriseId) {
+    ThreadContext.put("route", "/contact/getEnterpriseContacts");
+    ThreadContext.put("method", "GET");
+
+    ObjectMapper mapper = new ObjectMapper();
+    ArrayNode contactArray = mapper.createArrayNode();
+
+    List<ContactDTO> contacts = myContactUCC.getEnterpriseContacts(enterpriseId);
+    List<EnterpriseDTO> enterprises = myEnterpriseUCC.getAllEnterprises();
+    List<UserDTO> user = myUserUCC.getUsersAsJson();
+
+    for (ContactDTO contactDTO : contacts) {
+      contactArray.add(
+          mapper.createObjectNode()
+              .put("enterprise_name", enterprises.get(contactDTO.getEnterprise() - 1).getName())
+              .put("student_name", user.get(contactDTO.getUser()).getName())
+              .put("student_surname", user.get(contactDTO.getUser()).getSurname())
+              .put("state", contactDTO.getState())
+              .put("year", contactDTO.getYear())
+              .put("refusal_reason", contactDTO.getRefusalReason())
+              .put("meeting_point", contactDTO.getMeetingPoint())
+      );
+    }
+
+    return contactArray;
 
   }
 

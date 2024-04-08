@@ -8,6 +8,8 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.time.Instant;
+import java.util.Date;
 
 /**
  * Implementation of JWT (JSON Web Token) interface.
@@ -29,11 +31,20 @@ public class JWTImpl implements JWT {
   public ObjectNode createToken(UserDTO userDTO) {
     String token;
     try {
-      // Create the JWT token
-      token = com.auth0.jwt.JWT.create().withIssuer("auth0")
-          .withClaim("user", userDTO.getUserId()).sign(this.jwtAlgorithm);
+      // Obtenir l'instant actuel
+      Instant now = Instant.now();
 
-      // Create and return an ObjectNode containing token and user information
+      // Ajouter 15 minutes à l'instant actuel pour obtenir la date d'expiration du token
+      Instant expirationTime = now.plusSeconds(6);
+
+      // Créer le JWT token avec la date d'expiration
+      token = com.auth0.jwt.JWT.create()
+          .withIssuer("auth0")
+          .withClaim("user", userDTO.getUserId())
+          .withExpiresAt(Date.from(expirationTime)) // Définir la date d'expiration
+          .sign(this.jwtAlgorithm);
+
+      // Créer et retourner un ObjectNode contenant le token et les informations de l'utilisateur
       return jsonMapper.createObjectNode()
           .put("token", token)
           .put("id", userDTO.getUserId())
