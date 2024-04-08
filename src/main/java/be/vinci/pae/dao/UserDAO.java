@@ -53,8 +53,20 @@ public interface UserDAO {
    */
   UserDTO addUser(UserDTO userDTO);
 
+  /**
+   * Modifies the password of the user in the database.
+   *
+   * @param userDTO The UserDTO object containing user information.
+   * @return The modified UserDTO object with updated password.
+   */
   UserDTO modifyPassword(UserDTO userDTO);
 
+  /**
+   * Changes the phone number of the user in the database.
+   *
+   * @param userDTO The UserDTO object containing user information.
+   * @return The modified UserDTO object with updated phone number.
+   */
   UserDTO changePhoneNumber(UserDTO userDTO);
 
 }

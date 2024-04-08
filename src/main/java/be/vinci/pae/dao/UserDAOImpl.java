@@ -148,6 +148,7 @@ public class UserDAOImpl implements UserDAO {
     }
   }
 
+  @Override
   public UserDTO changePhoneNumber(UserDTO userDTO) {
     String sql = "UPDATE projetae.users SET phone = ? WHERE user_id = ? RETURNING *;";
 

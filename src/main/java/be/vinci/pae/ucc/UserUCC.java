@@ -38,7 +38,20 @@ public interface UserUCC {
    */
   UserDTO getUsersByIdAsJson(int userId);
 
+  /**
+   * Modifies the password of the user.
+   *
+   * @param userDTO The UserDTO object containing user information.
+   * @param newMdp  The new password to be set for the user.
+   * @return The modified UserDTO object with updated password.
+   */
   UserDTO modifyPassword(UserDTO userDTO, String newMdp);
 
+  /**
+   * Changes the phone number of the user.
+   *
+   * @param userDTO The UserDTO object containing user information.
+   * @return The modified UserDTO object with updated phone number.
+   */
   UserDTO changePhoneNumber(UserDTO userDTO);
 }

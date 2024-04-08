@@ -61,6 +61,7 @@ public class UserUCCImpl implements UserUCC {
     return userDTO;
   }
 
+  @Override
   public UserDTO modifyPassword(UserDTO userDTO, String newMdp) {
     myDALService.start();
 
@@ -75,6 +76,7 @@ public class UserUCCImpl implements UserUCC {
     return userDTO1;
   }
 
+  @Override
   public UserDTO changePhoneNumber(UserDTO userDTO) {
     myDALService.start();
 
