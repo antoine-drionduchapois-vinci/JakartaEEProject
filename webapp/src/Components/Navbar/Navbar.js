@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 // Importing necessary modules and functions
 import { getAuthenticatedUser, isAuthenticated } from '../../utils/auths';
+import Navigate from '../Router/Navigate';
 
 // Constant for site name
 const SITE_NAME = 'StageLink IPL';
@@ -20,7 +21,7 @@ function renderNavbar() {
   const anonymousUserNavbar = `
     <nav class="navbar navbar-expand-lg navbar-light bg-info">
       <div class="container-fluid d-flex justify-content-center">
-          <a class="navbar-brand bg-white border border-dark rounded-pill px-5 fs-4" href="#">${SITE_NAME}</a>
+          <a class="navbar-brand bg-white border border-dark rounded-pill px-5 fs-4" id="home" href="#">${SITE_NAME}</a>
       </div>
       <button
         class="navbar-toggler"
@@ -44,9 +45,9 @@ function renderNavbar() {
   // HTML for navbar when user is authenticated
   const authenticatedUserNavbar = `
     <nav class="navbar navbar-expand-lg navbar-light bg-info ">
-      <div class="container-fluid d-flex justify-content-center">
+      <div class="container-fluid d-flex justify-content-end">
         <div>
-          <a class="navbar-brand mx-auto bg-white border border-dark rounded-pill px-5 fs-4" href="#">${SITE_NAME}</a>
+          <a class="navbar-brand bg-white border border-dark rounded-pill px-5 fs-4" id="home1" href="#">${SITE_NAME}</a>
         </div>
       </div>
       <div>
@@ -61,14 +62,14 @@ function renderNavbar() {
         >
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+        <div class="collapse navbar-collapse justify-content-left" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <!-- Nav items for authenticated users -->
             <li class="nav-item">
               <a class="nav-link" href="#" data-uri="/logout">Logout</a>
             </li>    
             <li class="nav-item">
-              <a class="nav-link " href="#">${authenticatedUser?.email}</a>
+              <a class="nav-link " id="profileRedirect" href="#">${authenticatedUser?.email}</a>
             </li>           
           </ul>
         </div>
@@ -81,6 +82,24 @@ function renderNavbar() {
 
   // Setting innerHTML based on authentication status
   navbar.innerHTML = isAuthenticated() ? authenticatedUserNavbar : anonymousUserNavbar;
+
+  
+  if(isAuthenticated() === false){
+    const renderHome = document.getElementById('home');
+    renderHome.addEventListener('click', () => Navigate('/'));
+  }
+
+  if(isAuthenticated() === true){
+    const profile = document.getElementById('profileRedirect');
+    profile.addEventListener('click', () => Navigate('/profile'));
+    const renderHome1 = document.getElementById('home1')
+    if(authenticatedUser?.role === 'STUDENT'){
+      renderHome1.addEventListener('click', () => Navigate('/dashboardS'));
+    } else {
+      renderHome1.addEventListener('click', () => Navigate('/dashboardT'));
+    }
+  }
+  
 }
 
 // Exporting Navbar component

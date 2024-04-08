@@ -387,7 +387,7 @@ const renderDashboardTeacher = async () => {
   // Nettoyage de la page
   clearPage();
   // Rendu du titre de la page en 'Dashboard Teacher'
-  renderPageTitle('Dashboard Teacher');
+  renderPageTitle('Tableau de bord');
 
   // Création d'un conteneur pour le graphique et le tableau
   const main = document.querySelector('main');

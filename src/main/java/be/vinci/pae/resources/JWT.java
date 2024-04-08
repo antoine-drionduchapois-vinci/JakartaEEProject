@@ -23,4 +23,5 @@ public interface JWT {
    * @return user ID
    */
   int getUserIdFromToken(String token);
+
 }

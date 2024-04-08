@@ -160,7 +160,7 @@ const DashboardStudent = async () => {
   // Nettoyage de la page
   clearPage();
   // Rendu du titre de la page en 'Dashboard Teacher'
-  renderPageTitle('Dashboard Student');
+  renderPageTitle('Tableau de bord étudiant');
 
   try {
     main.innerHTML = `<p>Loading Data...</p>`;

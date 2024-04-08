@@ -2,6 +2,7 @@ package be.vinci.pae.ucc;
 
 import be.vinci.pae.dal.DALService;
 import be.vinci.pae.dao.UserDAO;
+import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.utils.NotFoundException;
 import jakarta.inject.Inject;
@@ -60,5 +61,29 @@ public class UserUCCImpl implements UserUCC {
     return userDTO;
   }
 
+  @Override
+  public UserDTO modifyPassword(UserDTO userDTO, String newMdp) {
+    myDALService.start();
+
+    userDTO.setPassword(newMdp);
+    User user = (User) userDTO;
+    user.hashPassword(userDTO.getPassword());
+
+    UserDTO userDTO1 = myUserDAO.modifyPassword(user);
+
+    myDALService.commit();
+
+    return userDTO1;
+  }
+
+  @Override
+  public UserDTO changePhoneNumber(UserDTO userDTO) {
+    myDALService.start();
+
+    UserDTO userDTO1 = myUserDAO.changePhoneNumber(userDTO);
+
+    myDALService.commit();
+    return userDTO1;
+  }
 
 }

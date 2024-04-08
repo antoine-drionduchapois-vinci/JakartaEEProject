@@ -135,4 +135,34 @@ public class UserDAOImpl implements UserDAO {
     }
     return 0;
   }
+
+  @Override
+  public UserDTO modifyPassword(UserDTO userDTO) {
+    String sql = "UPDATE projetae.users  SET password = ? WHERE user_id = ? RETURNING *;";
+
+    try (PreparedStatement ps = myDalService.getPS(sql)) {
+      ps.setString(1, userDTO.getPassword());
+      ps.setInt(2, userDTO.getUserId());
+      ps.execute();
+      return userMapper.mapResultSetToObject(ps.getResultSet(), UserImpl.class,
+          myDomainFactory::getUser);
+    } catch (SQLException | IllegalAccessException e) {
+      throw new FatalErrorException(e);
+    }
+  }
+
+  @Override
+  public UserDTO changePhoneNumber(UserDTO userDTO) {
+    String sql = "UPDATE projetae.users SET phone = ? WHERE user_id = ? RETURNING *;";
+
+    try (PreparedStatement ps = myDalService.getPS(sql)) {
+      ps.setString(1, userDTO.getPhone());
+      ps.setInt(2, userDTO.getUserId());
+      ps.execute();
+      return userMapper.mapResultSetToObject(ps.getResultSet(), UserImpl.class,
+          myDomainFactory::getUser);
+    } catch (SQLException | IllegalAccessException e) {
+      throw new FatalErrorException(e);
+    }
+  }
 }

@@ -8,6 +8,7 @@ import DashboardStudent from '../Pages/DashboardStudent';
 import EnterpriseDetails from '../Pages/EnterpriseDetails';
 import StudentDetails from '../Pages/StudentDetails';
 
+import ProfilePage from '../Pages/ProfilePage';
 
 const routes = {
   '/': HomePage,
@@ -18,7 +19,8 @@ const routes = {
   '/contact': Contact,
   '/dashboardS': DashboardStudent,
   '/enterpriseDetails': EnterpriseDetails,
-  '/studentDetails': StudentDetails
+  '/studentDetails': StudentDetails,
+  '/profile': ProfilePage
 };
 
 export default routes;
