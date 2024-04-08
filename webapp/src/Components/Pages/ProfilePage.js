@@ -76,7 +76,7 @@ async function handlePasswordChange(event) {
             }
         } else {
             const successMessage = document.createElement('div');
-            successMessage.innerHTML = 'Numéro de téléphone modifié avec succès !';
+            successMessage.innerHTML = 'Mot de passe modifié avec succès !';
             successMessage.style.color = 'green';
 
             const countdownFrame = document.createElement('div');
@@ -159,7 +159,7 @@ async function handleTelChange(event) {
             }
         } else {
             const successMessage = document.createElement('div');
-            successMessage.innerHTML = 'Mot de passe modifié avec succès !';
+            successMessage.innerHTML = 'Numéro de téléphone modifié avec succès !';
             successMessage.style.color = 'green';
 
             const countdownFrame = document.createElement('div');

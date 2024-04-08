@@ -4,7 +4,6 @@ import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.ucc.AuthUCC;
 import be.vinci.pae.ucc.UserUCC;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -142,14 +141,15 @@ public class UserResource {
     ThreadContext.put("method", "Post");
 
     int userId = myJwt.getUserIdFromToken(token);
+    System.out.println("blabla = " + token + " userId : " + userId);
     if (userId == 0) {
-      throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
+      throw new WebApplicationException("userID is required", Status.BAD_REQUEST);
     }
 
     if (!json.hasNonNull("userId") || !json.hasNonNull("email") || !json.hasNonNull("password")
         || !json.hasNonNull(
         "newPassword1")) {
-      throw new WebApplicationException("user info required", Status.BAD_REQUEST);
+      throw new WebApplicationException("user infos are required", Status.BAD_REQUEST);
     }
     UserDTO userDTO = domainFactory.getUser();
     userDTO.setUserId(json.get("userId").asInt());
