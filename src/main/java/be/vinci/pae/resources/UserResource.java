@@ -139,6 +139,16 @@ public class UserResource {
     return userInfo;
   }
 
+  /**
+   * Modifies the password of the user.
+   *
+   * @param token The authorization token.
+   * @param json  The JSON object containing user information including userId, email, password, and
+   *              newPassword1.
+   * @return The updated UserDTO object with the modified password.
+   * @throws WebApplicationException Thrown if user authentication fails or if required user
+   *                                 information is missing.
+   */
   @POST
   @Path("changePassword")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -178,6 +188,15 @@ public class UserResource {
     return userDTO1;
   }
 
+  /**
+   * Changes the phone number associated with the user.
+   *
+   * @param token   The authorization token.
+   * @param userDTO The UserDTO object containing user information including userId, email,
+   *                password, and new phone number.
+   * @return The updated UserDTO object with the modified phone number.
+   * @throws WebApplicationException Thrown if user authentication fails.
+   */
   @POST
   @Path("changePhoneNumber")
   @Consumes(MediaType.APPLICATION_JSON)
