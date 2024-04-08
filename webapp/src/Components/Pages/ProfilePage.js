@@ -31,9 +31,6 @@ async function handlePasswordChange(event) {
     // Reset form errors
     resetFormErrors('password-form');
 
-    // Log message for debugging
-    console.log('passer par handlePassword');
-
     // Get the main element
     const main = document.querySelector('main');
 
