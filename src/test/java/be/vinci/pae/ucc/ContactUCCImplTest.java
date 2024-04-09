@@ -2,6 +2,7 @@ package be.vinci.pae.ucc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,7 +15,6 @@ import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.utils.BusinessException;
 import be.vinci.pae.utils.NotFoundException;
 import be.vinci.pae.utils.TestBinder;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -33,7 +33,7 @@ class ContactUCCImplTest {
   private static ContactUCC contactUCC;
 
   @BeforeAll
-  static void setUp() throws SQLException {
+  static void setUp() {
     locator = ServiceLocatorUtilities.bind(new TestBinder());
     contactDAO = locator.getService(ContactDAO.class);
     enterpriseDAO = locator.getService(EnterpriseDAO.class);
@@ -44,7 +44,6 @@ class ContactUCCImplTest {
 
   @AfterAll
   static void tearDown() {
-    // Fermeture du ServiceLocator
     locator.shutdown();
   }
 
@@ -71,6 +70,7 @@ class ContactUCCImplTest {
     List<ContactDTO> result = contactUCC.getContacts(1);
 
     assertEquals(contactDTOs, result);
+    verify(contactDAO).readMany(1);
   }
 
   @Test
@@ -81,7 +81,7 @@ class ContactUCCImplTest {
     assertThrows(NotFoundException.class, () -> {
       contactUCC.getContact(1, 1);
     });
-
+    verify(contactDAO, atLeastOnce()).readOne(1);
   }
 
   @Test
@@ -98,6 +98,8 @@ class ContactUCCImplTest {
     ContactDTO result = contactUCC.getContact(1, 1);
 
     assertEquals(contactDTO, result);
+    verify(enterpriseDAO).readOne(contactDTO.getEnterprise());
+    verify(contactDAO, atLeastOnce()).readOne(1);
   }
 
   @Test
@@ -112,6 +114,8 @@ class ContactUCCImplTest {
     when(contactDAO.readOne(1)).thenReturn(contactDTO);
 
     assertThrows(NotFoundException.class, () -> contactUCC.getContact(2, 1));
+    verify(enterpriseDAO, atLeastOnce()).readOne(contactDTO.getEnterprise());
+    verify(contactDAO, atLeastOnce()).readOne(1);
   }
 
   @Test
@@ -127,6 +131,8 @@ class ContactUCCImplTest {
     assertThrows(NotFoundException.class, () -> {
       contactUCC.initiateContact(1, 1);
     });
+    verify(enterpriseDAO, atLeastOnce()).readOne(1);
+    verify(contactDAO, atLeastOnce()).create(1, 1);
   }
 
   @Test
@@ -140,6 +146,8 @@ class ContactUCCImplTest {
     ContactDTO result = contactUCC.initiateContact(1, 1);
 
     assertEquals(contactDTO, result);
+    verify(enterpriseDAO, atLeastOnce()).readOne(enterpriseDTO.getEnterpriseId());
+    verify(contactDAO, atLeastOnce()).create(1, 1);
   }
 
   @Test
@@ -154,6 +162,8 @@ class ContactUCCImplTest {
     ContactDTO result = contactUCC.initiateContact(1, "name", "label", "address", "phone", "email");
 
     assertEquals(contactDTO, result);
+    verify(enterpriseDAO, atLeastOnce()).create("name", "label", "address", "phone", "email");
+    verify(contactDAO, atLeastOnce()).create(1, enterpriseDTO.getEnterpriseId());
   }
 
   @Test
@@ -172,6 +182,8 @@ class ContactUCCImplTest {
         .getVersion();
 
     assertEquals(1, versionResult);
+    verify(enterpriseDAO, atLeastOnce()).create("name", "label", "address", "phone", "email");
+    verify(contactDAO, atLeastOnce()).create(1, enterpriseDTO.getEnterpriseId());
   }
 
   @Test
@@ -185,6 +197,7 @@ class ContactUCCImplTest {
     assertThrows(BusinessException.class, () -> {
       contactUCC.meetEnterprise(1, 1, "meetingPoint");
     });
+    verify(contactDAO, atLeastOnce()).readOne(1);
   }
 
   @Test
@@ -198,6 +211,7 @@ class ContactUCCImplTest {
     assertThrows(NotFoundException.class, () -> {
       contactUCC.meetEnterprise(2, 1, "meetingPoint");
     });
+    verify(contactDAO, atLeastOnce()).readOne(1);
   }
 
   @Test
@@ -213,6 +227,9 @@ class ContactUCCImplTest {
     assertThrows(NotFoundException.class, () -> {
       contactUCC.meetEnterprise(1, 1, "meetingPoint");
     });
+    verify(contactDAO, atLeastOnce()).readOne(1);
+    verify(contactDAO, atLeastOnce()).update(contactDTO);
+    verify(enterpriseDAO, atLeastOnce()).readOne(contactDTO.getEnterprise());
   }
 
   @Test
@@ -227,6 +244,9 @@ class ContactUCCImplTest {
     assertThrows(NotFoundException.class, () -> {
       contactUCC.meetEnterprise(1, 1, "meetingPoint");
     });
+    verify(contactDAO, atLeastOnce()).readOne(1);
+    verify(contactDAO, times(0)).update(contactDTO);
+    verify(enterpriseDAO, atLeastOnce()).readOne(contactDTO.getEnterprise());
   }
 
   @Test
@@ -244,6 +264,9 @@ class ContactUCCImplTest {
     ContactDTO result = contactUCC.meetEnterprise(1, 1, "meetingPoint");
 
     assertEquals(contactDTO, result);
+    verify(contactDAO, atLeastOnce()).readOne(1);
+    verify(contactDAO, atLeastOnce()).update(contactDTO);
+    verify(enterpriseDAO, atLeastOnce()).readOne(contactDTO.getEnterprise());
   }
 
   @Test
@@ -259,6 +282,7 @@ class ContactUCCImplTest {
     assertThrows(BusinessException.class, () -> {
       contactUCC.indicateAsRefused(1, 1, "refusalReason");
     });
+    verify(contactDAO, atLeastOnce()).readOne(1);
   }
 
   @Test
@@ -274,6 +298,7 @@ class ContactUCCImplTest {
     assertThrows(NotFoundException.class, () -> {
       contactUCC.indicateAsRefused(2, 1, "refusalReason");
     });
+    verify(contactDAO, atLeastOnce()).readOne(1);
   }
 
   @Test
@@ -287,6 +312,9 @@ class ContactUCCImplTest {
     assertThrows(NotFoundException.class, () -> {
       contactUCC.indicateAsRefused(1, 1, "refusalReason");
     });
+    verify(contactDAO, atLeastOnce()).readOne(1);
+    verify(contactDAO, times(0)).update(contactDTO);
+    verify(enterpriseDAO, atLeastOnce()).readOne(contactDTO.getEnterprise());
   }
 
   @Test
@@ -304,6 +332,9 @@ class ContactUCCImplTest {
     ContactDTO result = contactUCC.indicateAsRefused(1, 1, "refusalReason");
 
     assertEquals(contactDTO, result);
+    verify(contactDAO, atLeastOnce()).readOne(1);
+    verify(contactDAO, atLeastOnce()).update(contactDTO);
+    verify(enterpriseDAO, atLeastOnce()).readOne(contactDTO.getEnterprise());
   }
 
   @Test
@@ -320,6 +351,9 @@ class ContactUCCImplTest {
 
     assertThrows(NotFoundException.class,
         () -> contactUCC.indicateAsRefused(1, 1, "refusalReason"));
+    verify(contactDAO, atLeastOnce()).readOne(1);
+    verify(contactDAO, atLeastOnce()).update(contactDTO);
+    verify(enterpriseDAO, atLeastOnce()).readOne(contactDTO.getEnterprise());
   }
 
   @Test
@@ -332,6 +366,7 @@ class ContactUCCImplTest {
     assertThrows(BusinessException.class, () -> {
       contactUCC.unfollow(1, 1);
     });
+    verify(contactDAO, atLeastOnce()).readOne(1);
   }
 
   @Test
@@ -349,6 +384,9 @@ class ContactUCCImplTest {
     assertThrows(NotFoundException.class, () -> {
       contactUCC.unfollow(1, 1);
     });
+    verify(contactDAO, atLeastOnce()).readOne(1);
+    verify(contactDAO, atLeastOnce()).update(contactDTO);
+    verify(enterpriseDAO, atLeastOnce()).readOne(contactDTO.getEnterprise());
   }
 
 
@@ -362,6 +400,7 @@ class ContactUCCImplTest {
     assertThrows(NotFoundException.class, () -> {
       contactUCC.unfollow(2, 1);
     });
+    verify(contactDAO, atLeastOnce()).readOne(1);
   }
 
 
@@ -376,7 +415,9 @@ class ContactUCCImplTest {
     assertThrows(NotFoundException.class, () -> {
       contactUCC.unfollow(1, 1);
     });
-
+    verify(contactDAO, atLeastOnce()).readOne(1);
+    verify(contactDAO, times(0)).update(contactDTO);
+    verify(enterpriseDAO, atLeastOnce()).readOne(contactDTO.getEnterprise());
   }
 
   @Test
@@ -394,6 +435,9 @@ class ContactUCCImplTest {
     ContactDTO result = contactUCC.unfollow(1, 1);
 
     assertEquals(contactDTO, result);
+    verify(contactDAO, atLeastOnce()).readOne(1);
+    verify(contactDAO, atLeastOnce()).update(contactDTO);
+    verify(enterpriseDAO, atLeastOnce()).readOne(contactDTO.getEnterprise());
   }
 
   @Test
