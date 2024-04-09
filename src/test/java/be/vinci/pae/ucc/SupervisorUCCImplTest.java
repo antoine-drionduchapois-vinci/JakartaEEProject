@@ -2,6 +2,8 @@ package be.vinci.pae.ucc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import be.vinci.pae.dao.SupervisorDAO;
@@ -52,6 +54,7 @@ class SupervisorUCCImplTest {
     Supervisor result = supervisorUCC.getResponsibleByEnterpriseId(supervisor.getEnterprise());
 
     assertEquals(supervisor, result);
+    verify(supervisorDAO).getResponsibleByEnterpriseId(supervisor.getEnterprise());
   }
 
   @Test
@@ -62,5 +65,6 @@ class SupervisorUCCImplTest {
     assertThrows(NotFoundException.class, () -> {
       supervisorUCC.getResponsibleByEnterpriseId(enterpriseId);
     });
+    verify(supervisorDAO, times(2)).getResponsibleByEnterpriseId(enterpriseId);
   }
 }
