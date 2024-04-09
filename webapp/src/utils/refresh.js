@@ -19,11 +19,11 @@ async function fetchUserOnRefresh(){
     }
   
     const options = {
-      method: 'POST',
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': user.token
       },
-      body: JSON.stringify({ token: getAuthenticatedUser().token }), // Object shorthand used here
     };
   
     try {
