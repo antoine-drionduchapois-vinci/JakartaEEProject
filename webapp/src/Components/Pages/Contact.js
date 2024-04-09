@@ -29,7 +29,6 @@ const Contact = async () => {
     })
       .then((res) => {
         if (res.ok) return res.json();
-        if (res.status === 404);
         return 404;
       })
       .catch((error) => console.error(error));
@@ -37,8 +36,7 @@ const Contact = async () => {
 
   let enterprises = null;
   enterprises = await fetch('http://localhost:8080/ent/enterprises')
-    .then((res) => (res.status === 200 ? res.json() : null))
-    .then((data) => data.enterprises)
+    .then((res) => (res.ok ? res.json() : null))
     .catch((error) => console.error(error));
 
   if (!enterprises) return;
