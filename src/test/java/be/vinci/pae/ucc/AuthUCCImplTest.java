@@ -3,6 +3,8 @@ package be.vinci.pae.ucc;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import be.vinci.pae.dao.UserDAO;
@@ -16,7 +18,6 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class AuthUCCImplTest {
@@ -44,11 +45,9 @@ class AuthUCCImplTest {
 
   @Test
   void testLogin() {
-    // Créer un utilisateur de test
     UserDTO userDTO = domainFactory.getUser();
     userDTO.setEmail("test@example.com");
     userDTO.setPassword("password");
-    System.out.println("test userDTO password" + userDTO.getPassword());
 
     UserDTO userTemp = domainFactory.getUser();
     userTemp.setPassword("password");
@@ -57,16 +56,14 @@ class AuthUCCImplTest {
     User user = (User) userDTO;
     user.hashPassword(userDTO.getPassword());
 
-    // Configurer le comportement du mock userDAO pour retourner userDTO
     when(userDAO.getOneByEmail("test@example.com")).thenReturn(userDTO);
 
-    // Appeler la méthode à tester
     UserDTO result = authUCC.login(userTemp);
 
-    System.out.println(result);
-    // Vérifier le résultat
     assertNotNull(result);
     assertEquals(userTemp.getEmail(), result.getEmail());
+
+    verify(userDAO, atLeastOnce()).getOneByEmail("test@example.com");
   }
 
   @Test
@@ -79,7 +76,7 @@ class AuthUCCImplTest {
     assertThrows(NotFoundException.class, () -> {
       authUCC.login(userDTO);
     });
-
+    verify(userDAO, atLeastOnce()).getOneByEmail("test@example.com");
   }
 
   @Test
@@ -98,10 +95,10 @@ class AuthUCCImplTest {
 
     when(userDAO.getOneByEmail("test@example.com")).thenReturn(userDTO);
 
-    BusinessException exception = assertThrows(BusinessException.class, () -> {
+    assertThrows(BusinessException.class, () -> {
       authUCC.login(userTemp);
     });
-
+    verify(userDAO, atLeastOnce()).getOneByEmail("test@example.com");
   }
 
   @Test
@@ -116,6 +113,8 @@ class AuthUCCImplTest {
     UserDTO result = authUCC.register(userDTO);
 
     assertEquals(userDTO, result);
+    verify(userDAO, atLeastOnce()).getOneByEmail("test@example.com");
+    verify(userDAO).addUser(userDTO);
   }
 
   @Test
@@ -128,11 +127,10 @@ class AuthUCCImplTest {
     assertThrows(BusinessException.class, () -> {
       authUCC.register(existingUserDTO);
     });
-
+    verify(userDAO, atLeastOnce()).getOneByEmail("test@example.com");
   }
 
   @Test
-  @DisplayName("Check that a new user has version number 1 by registering")
   void testRegisterNumVersion() {
     UserDTO userDTO = domainFactory.getUser();
     userDTO.setEmail("test@example.com");
@@ -145,5 +143,7 @@ class AuthUCCImplTest {
     int versionResult = authUCC.register(userDTO).getVersion();
 
     assertEquals(1, versionResult);
+    verify(userDAO, atLeastOnce()).getOneByEmail("test@example.com");
+    verify(userDAO).addUser(userDTO);
   }
 }
