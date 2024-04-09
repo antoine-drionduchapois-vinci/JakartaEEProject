@@ -2,12 +2,12 @@ package be.vinci.pae.ucc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import be.vinci.pae.dao.UserDAO;
+import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.utils.NotFoundException;
 import be.vinci.pae.utils.TestBinder;
@@ -23,6 +23,7 @@ class UserUCCImplTest {
 
   private static UserUCC userUCC;
   private static UserDAO userDAO;
+  private static DomainFactory domainFactory;
   private static ServiceLocator locator;
 
   @BeforeAll
@@ -30,6 +31,7 @@ class UserUCCImplTest {
     locator = ServiceLocatorUtilities.bind(new TestBinder());
     userDAO = locator.getService(UserDAO.class);
     userUCC = locator.getService(UserUCC.class);
+    domainFactory = locator.getService(DomainFactory.class);
   }
 
   @AfterAll
@@ -65,12 +67,12 @@ class UserUCCImplTest {
   @Test
   void getUsersAsJson() {
     // Arrange
-    UserDTO user1 = mock(UserDTO.class);
-    when(user1.getSurname()).thenReturn("John");
-    when(user1.getName()).thenReturn("Doe");
-    UserDTO user2 = mock(UserDTO.class);
-    when(user2.getSurname()).thenReturn("Jane");
-    when(user2.getName()).thenReturn("Smith");
+    UserDTO user1 = domainFactory.getUser();
+    user1.setSurname("John");
+    user1.setName("Doe");
+    UserDTO user2 = domainFactory.getUser();
+    user2.setSurname("Jane");
+    user2.setName("Smith");
     List<UserDTO> userList = new ArrayList<>();
     userList.add(user1);
     userList.add(user2);
@@ -88,9 +90,9 @@ class UserUCCImplTest {
   void getUsersByIdAsJson() {
     // Arrange
     int userId = 123;
-    UserDTO user = mock(UserDTO.class);
-    when(user.getSurname()).thenReturn("John");
-    when(user.getName()).thenReturn("Doe");
+    UserDTO user = domainFactory.getUser();
+    user.setSurname("John");
+    user.setName("Doe");
     when(userDAO.getOneByID(userId)).thenReturn(user);
 
     // Act
@@ -108,5 +110,46 @@ class UserUCCImplTest {
     assertThrows(NotFoundException.class, () -> {
       userUCC.getUsersByIdAsJson(1);
     });
+  }
+
+  @Test
+  void testModifyPassword() {
+    // Arrange
+    UserDTO user1 = domainFactory.getUser();
+    user1.setSurname("John");
+    user1.setName("Doe");
+    user1.setPassword("password");
+    String newPassword = "newPassword";
+    UserDTO user2 = user1;
+    user2.setPassword(newPassword);
+
+    when(userDAO.modifyPassword(user1)).thenReturn(user2);
+
+    // Act
+    UserDTO result = userUCC.modifyPassword(user1, newPassword);
+
+    // Assert
+    assertEquals(user2, result);
+    verify(userDAO, times(1)).modifyPassword(user1);
+  }
+
+  @Test
+  void testChangePhoneNumber() {
+    // Arrange
+    UserDTO user1 = domainFactory.getUser();
+    user1.setSurname("John");
+    user1.setName("Doe");
+    user1.setPhone("0484754512");
+    UserDTO user2 = user1;
+    user2.setPhone("0484000001");
+
+    when(userDAO.changePhoneNumber(user1)).thenReturn(user2);
+
+    // Act
+    UserDTO result = userUCC.changePhoneNumber(user1);
+
+    // Assert
+    assertEquals(user2, result);
+    verify(userDAO, times(1)).changePhoneNumber(user1);
   }
 }
