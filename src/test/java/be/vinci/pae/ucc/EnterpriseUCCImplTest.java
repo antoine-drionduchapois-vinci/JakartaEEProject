@@ -2,6 +2,7 @@ package be.vinci.pae.ucc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import be.vinci.pae.dao.EnterpriseDAO;
@@ -59,6 +60,7 @@ class EnterpriseUCCImplTest {
 
     // Vérifier le résultat
     assertEquals(testData, result);
+    verify(enterpriseDAO).getAllEnterprises();
   }
 
   @Test
@@ -77,6 +79,7 @@ class EnterpriseUCCImplTest {
 
     // Vérifier le résultat
     assertEquals(testEnterprise, result);
+    verify(enterpriseDAO).getEnterpriseById(userId);
   }
 
   @Test
@@ -84,5 +87,6 @@ class EnterpriseUCCImplTest {
     when(enterpriseDAO.getEnterpriseById(1)).thenReturn(null);
 
     assertNull(enterpriseUCC.getEnterprisesByUserId(1));
+    verify(enterpriseDAO).getEnterpriseById(1);
   }
 }
