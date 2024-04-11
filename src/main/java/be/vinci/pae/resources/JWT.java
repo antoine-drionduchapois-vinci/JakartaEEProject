@@ -25,6 +25,12 @@ public interface JWT {
    */
   int getUserIdFromToken(String token);
 
+  /**
+   * Retrieves role from string token.
+   *
+   * @param token the token to be decrypted
+   * @return role
+   */
   Role getRoleFromToken(String token);
 
 }

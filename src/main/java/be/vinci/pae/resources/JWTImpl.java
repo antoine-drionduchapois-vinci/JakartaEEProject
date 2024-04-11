@@ -78,6 +78,12 @@ public class JWTImpl implements JWT {
     }
   }
 
+  /**
+   * Retrieves the role from a JWT token.
+   *
+   * @param token The JWT token.
+   * @return The role extracted from the token, or null if the token is invalid or missing.
+   */
   @Override
   public Role getRoleFromToken(String token) {
     try {
