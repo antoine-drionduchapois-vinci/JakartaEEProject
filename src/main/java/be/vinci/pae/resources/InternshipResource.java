@@ -3,6 +3,7 @@ package be.vinci.pae.resources;
 import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.domain.InternshipDTO;
 import be.vinci.pae.domain.SupervisorDTO;
+import be.vinci.pae.resources.filters.RoleId;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.ucc.InternshipUCC;
 import be.vinci.pae.ucc.SupervisorUCC;
@@ -46,6 +47,9 @@ public class InternshipResource {
   @Inject
   private JWT myJwt;
 
+  @Inject
+  private RoleId myRoleId;
+
 
   /**
    * Retrieves users internship info.
@@ -62,21 +66,7 @@ public class InternshipResource {
     ThreadContext.put("method", "Get");
     ThreadContext.put("params", "id:" + id);
 
-    int userId = 0;
-
-    if (myJwt.getRoleFromToken(token).equals("STUDENT")) {
-
-      userId = myJwt.getUserIdFromToken(token);
-      if (id == -1) {
-        id = userId;
-      }
-      if (userId != id) {
-        throw new WebApplicationException("error student id", Status.NOT_FOUND);
-      }
-    } else if (id != -1) {
-      userId = id;
-
-    }
+    int userId = myRoleId.chooseId(token, id);
 
     if (userId == 0) {
       throw new WebApplicationException("userId is required", Status.BAD_REQUEST);

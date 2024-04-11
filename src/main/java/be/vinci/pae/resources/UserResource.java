@@ -2,6 +2,7 @@ package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.resources.filters.RoleId;
 import be.vinci.pae.ucc.AuthUCC;
 import be.vinci.pae.ucc.UserUCC;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -37,6 +38,8 @@ public class UserResource {
 
   @Inject
   private JWT myJwt;
+  @Inject
+  private RoleId myRoleId;
 
   @Inject
   private DomainFactory domainFactory;
@@ -110,21 +113,7 @@ public class UserResource {
     ThreadContext.put("method", "Get");
     ThreadContext.put("params", "id:" + id);
 
-    int userId = 0;
-
-    if (myJwt.getRoleFromToken(token).equals("STUDENT")) {
-
-      userId = myJwt.getUserIdFromToken(token);
-      if (id == -1) {
-        id = userId;
-      }
-      if (userId != id) {
-        throw new WebApplicationException("error student id", Status.NOT_FOUND);
-      }
-    } else if (id != -1) {
-      userId = id;
-
-    }
+    int userId = myRoleId.chooseId(token, id);
 
     if (userId == 0) {
       throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
