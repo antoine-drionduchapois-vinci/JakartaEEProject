@@ -1,6 +1,7 @@
 package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.domain.UserDTO.Role;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
@@ -23,5 +24,7 @@ public interface JWT {
    * @return user ID
    */
   int getUserIdFromToken(String token);
+
+  Role getRoleFromToken(String token);
 
 }

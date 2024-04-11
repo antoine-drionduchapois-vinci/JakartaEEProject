@@ -1,22 +1,24 @@
 /* eslint-disable camelcase */
 import { getAuthenticatedUser } from '../../utils/auths';
 
-
 import { clearPage, renderPageTitle } from '../../utils/render';
 import Navigate from '../Router/Navigate';
 
+let urlId;
 
 const fetchUser = async () => {
   const options = {
     method: 'GET',
     headers: {
-      Authorization: getAuthenticatedUser().token
-    }, 
-     // Object shorthand used here
+      Authorization: getAuthenticatedUser().token,
+    },
+    // Object shorthand used here
   };
 
   try {
-    const response = await fetch('http://localhost:8080/users/getUserInfoById', options);
+
+    const url = `http://localhost:8080/users/getUserInfoById?id=${urlId}`;
+    const response = await fetch(url, options);
     if (!response.ok) {
       throw new Error('Erreur lors de la récupération des données du user');
     }
@@ -67,11 +69,12 @@ const fetchUserContacts = async () => {
     method: 'GET',
     headers: {
       Authorization: getAuthenticatedUser().token,
-    }, 
+    },
   };
 
   try {
-    const response = await fetch('http://localhost:8080/contact/getUserContacts', options);
+    const url = `http://localhost:8080/contact/getUserContacts?id=${urlId}`;
+    const response = await fetch(url, options);
     if (!response.ok) {
       throw new Error('Error retrieving user contacts');
     }
@@ -80,7 +83,14 @@ const fetchUserContacts = async () => {
     const contactsArray = contactsInfo.contact;
     let contactsHtml = ''; // Initialize an empty string to accumulate HTML content
     for (let index = 0; index < contactsArray.length; index += 1) {
-      const { contact_id, enterprise_name, state, meeting_point, refusal_reason, year } = contactsArray[index];
+      const {
+        contact_id,
+        enterprise_name,
+        state,
+        meeting_point,
+        refusal_reason,
+        year,
+      } = contactsArray[index];
       const reason = refusal_reason === null ? '' : refusal_reason;
       const meeting = meeting_point === null ? '' : meeting_point;
       contactsHtml += `
@@ -102,7 +112,6 @@ const fetchUserContacts = async () => {
 };
 
 const fetchUserInternship = async () => {
-
   const options = {
     method: 'GET',
     headers: {
@@ -111,7 +120,8 @@ const fetchUserInternship = async () => {
   };
 
   try {
-    const response = await fetch('http://localhost:8080/int', options);
+    const url = `http://localhost:8080/int?id=${urlId}`
+    const response = await fetch(url, options);
 
     if (!response.ok) {
       throw new Error('Error retrieving user internships');
@@ -159,6 +169,15 @@ const DashboardStudent = async () => {
 
   // Nettoyage de la page
   clearPage();
+  const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get('id');
+    
+    if (id) {
+      urlId = id;
+    } else {
+      urlId = getAuthenticatedUser().id;
+    }
   // Rendu du titre de la page en 'Dashboard Teacher'
   renderPageTitle('Tableau de bord étudiant');
 

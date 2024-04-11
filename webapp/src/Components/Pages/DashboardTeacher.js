@@ -132,7 +132,7 @@ const updateTable = (tableBody, list) => {
     row.addEventListener('click', () => {
 
       if (e.blacklist === undefined){
-        Navigate(`/studentDetails?id=${e.id}`);
+        Navigate(`/dashboardS?id=${e.id}`);
       }else {
         Navigate(`/enterpriseDetails?id=${e.id}`);
         

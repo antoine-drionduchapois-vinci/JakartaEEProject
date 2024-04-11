@@ -1,6 +1,7 @@
 package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.domain.UserDTO.Role;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
@@ -41,6 +42,7 @@ public class JWTImpl implements JWT {
       token = com.auth0.jwt.JWT.create()
           .withIssuer("auth0")
           .withClaim("user", userDTO.getUserId())
+          .withClaim("role", userDTO.getRole().name())
           .withExpiresAt(Date.from(expirationTime)) // Définir la date d'expiration
           .sign(this.jwtAlgorithm);
 
@@ -73,6 +75,18 @@ public class JWTImpl implements JWT {
       return decodedJWT.getClaim("user").asInt();
     } catch (JWTVerificationException e) {
       return 0;
+    }
+  }
+
+  @Override
+  public Role getRoleFromToken(String token) {
+    try {
+      JWTVerifier verifier = com.auth0.jwt.JWT.require(jwtAlgorithm).withIssuer("auth0").build();
+      DecodedJWT decodedJWT = verifier.verify(token);
+      String roleString = decodedJWT.getClaim("role").asString();
+      return Role.valueOf(roleString); // Convertit la chaîne en enum Role
+    } catch (JWTVerificationException e) {
+      return null; // Token invalide ou rôle manquant
     }
   }
 

@@ -11,10 +11,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DefaultValue;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
-import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
@@ -51,15 +53,30 @@ public class InternshipResource {
    * @param token from the user
    * @return an ObjectNode containing users info
    */
-  @POST
+  @GET
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getUserInternship(@HeaderParam("Authorization") String token) {
+  public ObjectNode getUserInternship(@HeaderParam("Authorization") String token,
+      @DefaultValue("-1") @QueryParam("id") int id) {
     ThreadContext.put("route", "/int");
-    ThreadContext.put("method", "Post");
+    ThreadContext.put("method", "Get");
+    ThreadContext.put("params", "id:" + id);
 
-    int userId = myJwt.getUserIdFromToken(token);
-    ThreadContext.put("params", "userId:" + userId);
+    int userId = 0;
+
+    if (myJwt.getRoleFromToken(token).equals("STUDENT")) {
+
+      userId = myJwt.getUserIdFromToken(token);
+      if (id == -1) {
+        id = userId;
+      }
+      if (userId != id) {
+        throw new WebApplicationException("error student id", Status.NOT_FOUND);
+      }
+    } else if (id != -1) {
+      userId = id;
+
+    }
 
     if (userId == 0) {
       throw new WebApplicationException("userId is required", Status.BAD_REQUEST);

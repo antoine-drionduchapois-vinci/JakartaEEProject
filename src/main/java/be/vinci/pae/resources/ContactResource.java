@@ -233,11 +233,28 @@ public class ContactResource {
   @Path("getUserContacts")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getUsersByIdAsJson(@HeaderParam("Authorization") String token) {
+  public ObjectNode getUsersByIdAsJson(@HeaderParam("Authorization") String token,
+      @DefaultValue("-1") @QueryParam("id") int id) {
     ThreadContext.put("route", "/contact/getUserContacts");
     ThreadContext.put("method", "Get");
-    int userId = myJwt.getUserIdFromToken(token);
-    ThreadContext.put("params", "userId:" + userId);
+    ThreadContext.put("params", "id:" + id);
+
+    int userId = 0;
+
+    if (myJwt.getRoleFromToken(token).equals("STUDENT")) {
+
+      userId = myJwt.getUserIdFromToken(token);
+      if (id == -1) {
+        id = userId;
+      }
+      if (userId != id) {
+        throw new WebApplicationException("error student id", Status.NOT_FOUND);
+      }
+    } else if (id != -1) {
+      userId = id;
+
+    }
+
     if (userId == 0) {
       throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
     }
