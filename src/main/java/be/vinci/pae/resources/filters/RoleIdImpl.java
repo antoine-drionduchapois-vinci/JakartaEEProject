@@ -19,7 +19,8 @@ public class RoleIdImpl implements RoleId {
    * @param token The JWT token.
    * @param id    The user ID.
    * @return The chosen user ID.
-   * @throws WebApplicationException If the user ID cannot be determined based on the role and ID provided.
+   * @throws WebApplicationException If the user ID cannot be
+   * determined based on the role and ID provided.
    */
   @Override
   public int chooseId(String token, int id) {

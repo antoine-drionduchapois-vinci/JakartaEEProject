@@ -1,7 +1,8 @@
 package be.vinci.pae.resources.filters;
 
 /**
- * The RoleId interface represents a service for choosing the appropriate user ID based on the user's role and provided ID.
+ * The RoleId interface represents a service for choosing the
+ * appropriate user ID based on the user's role and provided ID.
  */
 public interface RoleId {
 
