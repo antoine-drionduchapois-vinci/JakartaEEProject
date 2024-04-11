@@ -55,6 +55,7 @@ public class InternshipResource {
    * Retrieves users internship info.
    *
    * @param token from the user
+   * @param id the query id
    * @return an ObjectNode containing users info
    */
   @GET

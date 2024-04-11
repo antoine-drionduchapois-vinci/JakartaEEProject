@@ -101,6 +101,7 @@ public class UserResource {
    * Retrieves user information by user ID and returns it as JSON.
    *
    * @param token The user JWT token.
+   * @param id the query id
    * @return An ObjectNode representing the user's information.
    */
   @GET

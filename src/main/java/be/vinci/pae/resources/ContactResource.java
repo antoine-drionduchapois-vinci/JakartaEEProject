@@ -231,6 +231,7 @@ public class ContactResource {
    * Retrieves contacts for a specific user.
    *
    * @param token The JSON containing the user ID.
+   * @param id the query id
    * @return The user's contacts as JSON.
    */
   @GET
