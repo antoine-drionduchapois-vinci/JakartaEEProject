@@ -15,16 +15,6 @@ public class SupervisorImpl implements Supervisor {
   private int version;
 
   @Override
-  public int getResponsibleId() {
-    return supervisorId;
-  }
-
-  @Override
-  public void setResponsibleId(int responsibleId) {
-    this.supervisorId = responsibleId;
-  }
-
-  @Override
   public String getName() {
     return name;
   }
@@ -82,6 +72,16 @@ public class SupervisorImpl implements Supervisor {
   @Override
   public void setEnterpriseDTO(Enterprise enterpriseDTO) {
     this.enterpriseDTO = enterpriseDTO;
+  }
+
+  @Override
+  public int getSupervisorId() {
+    return supervisorId;
+  }
+
+  @Override
+  public void setSupervisorId(int supervisorId) {
+    this.supervisorId = supervisorId;
   }
 
   @Override

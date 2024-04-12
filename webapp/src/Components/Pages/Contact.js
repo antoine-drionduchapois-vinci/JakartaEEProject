@@ -6,6 +6,7 @@ import InitiatedRow from '../Contact/InitiatedRow';
 import TookRow from '../Contact/TookRow';
 import RefusedRow from '../Contact/RefusedRow';
 import UnfollowedRow from '../Contact/UnfollowedRow';
+import AcceptedRow from '../Contact/AcceptedRow';
 
 // Contact component definition
 const Contact = async () => {
@@ -41,6 +42,14 @@ const Contact = async () => {
 
   if (!enterprises) return;
 
+  let internship = null;
+  internship = await fetch('http://localhost:8080/int', {
+    method: 'GET',
+    headers: { Authorization: user.token },
+  })
+    .then((res) => (res.ok ? res.json() : null))
+    .catch((error) => console.error(error));
+
   const contentElement = document.createElement('div');
   contentElement.id = 'content';
   main.appendChild(contentElement);
@@ -59,6 +68,7 @@ const Contact = async () => {
     </div>
     <div id="initiated-row" class="columns p-4"></div>
     <div id="took-row" class="columns p-4"></div>
+    <div id="accepted-row" class="columns p-4"></div>
     <div id="refused-row" class="columns p-4"></div>
     <div id="unfollowed-row" class="columns p-4"></div>
   `;
@@ -75,6 +85,7 @@ const Contact = async () => {
 
   InitiatedRow(document.querySelector('#initiated-row'), user, contact, enterprises);
   TookRow(document.querySelector('#took-row'), contact);
+  AcceptedRow(document.querySelector('#accepted-row'), contact, internship);
   RefusedRow(document.querySelector('#refused-row'), contact);
   UnfollowedRow(document.querySelector('#unfollowed-row'), contact);
 };
