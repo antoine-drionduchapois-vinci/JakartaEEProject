@@ -3,6 +3,7 @@ package be.vinci.pae.resources;
 import be.vinci.pae.domain.ContactDTO;
 import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.resources.filters.RoleId;
 import be.vinci.pae.ucc.ContactUCC;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.ucc.UserUCC;
@@ -47,6 +48,9 @@ public class ContactResource {
 
   @Inject
   private UserUCC myUserUCC;
+
+  @Inject
+  private RoleId myRoleId;
 
   /**
    * Retrieves a contact by its ID.
@@ -227,17 +231,21 @@ public class ContactResource {
    * Retrieves contacts for a specific user.
    *
    * @param token The JSON containing the user ID.
+   * @param id the query id
    * @return The user's contacts as JSON.
    */
   @GET
   @Path("getUserContacts")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getUsersByIdAsJson(@HeaderParam("Authorization") String token) {
+  public ObjectNode getUsersByIdAsJson(@HeaderParam("Authorization") String token,
+      @DefaultValue("-1") @QueryParam("id") int id) {
     ThreadContext.put("route", "/contact/getUserContacts");
     ThreadContext.put("method", "Get");
-    int userId = myJwt.getUserIdFromToken(token);
-    ThreadContext.put("params", "userId:" + userId);
+    ThreadContext.put("params", "id:" + id);
+
+    int userId = myRoleId.chooseId(token, id);
+
     if (userId == 0) {
       throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
     }
