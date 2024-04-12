@@ -18,4 +18,6 @@ public interface InternshipUCC {
   InternshipDTO getUserInternship(int userId);
 
   InternshipDTO acceptInternship(InternshipDTO internship);
+
+  InternshipDTO modifySubject(int userId, String subject);
 }

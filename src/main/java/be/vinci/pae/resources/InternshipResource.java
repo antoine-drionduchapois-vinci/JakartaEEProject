@@ -126,4 +126,32 @@ public class InternshipResource {
     ThreadContext.clearAll();
     return internship;
   }
+
+  @POST
+  @Path("/subject")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public InternshipDTO modifySubject(@HeaderParam("Authorization") String token,
+      InternshipDTO internship) {
+    ThreadContext.put("route", "/int");
+    ThreadContext.put("method", "Get");
+    ThreadContext.put("params", "subject:" + internship.getSubject());
+
+    int userId = myJwt.getUserIdFromToken(token);
+    if (userId == 0) {
+      throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
+    }
+
+    String subject = internship.getSubject();
+    if (subject == null || subject.isBlank()) {
+      throw new WebApplicationException("subject field is required", Status.BAD_REQUEST);
+    }
+
+    ThreadContext.put("params", "userId:" + userId);
+
+    internship = myInternshipUCC.modifySubject(userId, subject);
+    logger.info("Status: 200 {modifySubject}");
+    ThreadContext.clearAll();
+    return internship;
+  }
 }
