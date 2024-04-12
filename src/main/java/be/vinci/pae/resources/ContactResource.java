@@ -247,6 +247,7 @@ public class ContactResource {
     ArrayNode contactArray = mapper.createArrayNode();
 
     try {
+      // Creating custom ObjectNode with contacts and enterprise
       List<ContactDTO> contacts = myContactUCC.getContacts(userId);
       List<EnterpriseDTO> enterprises = myEnterpriseUCC.getAllEnterprises();
       for (ContactDTO contactDTO : contacts) {
