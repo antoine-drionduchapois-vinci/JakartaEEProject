@@ -69,7 +69,7 @@ function renderNavbar() {
               <a class="nav-link" href="#" data-uri="/logout">Logout</a>
             </li>    
             <li class="nav-item">
-              <a class="nav-link " id="profileRedirect" href="#">${authenticatedUser?.email}</a>
+              <a class="nav-link " id="profileRedirect" href="">${authenticatedUser?.email} <img src="../img/profil.png"></a>
             </li>           
           </ul>
         </div>

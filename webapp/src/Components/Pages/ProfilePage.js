@@ -4,6 +4,7 @@ import Navigate from "../Router/Navigate";
 
 
 let main = document.querySelector('main');
+
 // ProfilePage component
 const ProfilePage = () => {
     // Clear the page
@@ -22,6 +23,7 @@ const ProfilePage = () => {
     // Add event listener for telephone form submission
     const telForm = document.querySelector('#telForm');
     telForm.addEventListener('submit', handleTelChange);
+
 }
 
 // Function to handle password change submission
