@@ -135,6 +135,33 @@ public class UserResource {
   }
 
   /**
+   * Retrieves user information by user ID and returns it as JSON.
+   *
+   * @param token The user JWT token.
+   * @return An ObjectNode representing the user's information.
+   */
+  @GET
+  @Path("getUser")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public UserDTO getUserById(@HeaderParam("Authorization") String token) {
+    ThreadContext.put("route", "/users/getUserInfoById");
+    ThreadContext.put("method", "Get");
+
+    int userId = myJwt.getUserIdFromToken(token);
+    ThreadContext.put("params", "userId:" + userId);
+    if (userId == 0) {
+      throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
+    }
+
+    UserDTO user = myUserUCC.getUsersByIdAsJson(userId);
+
+    logger.info("Status: 200 {getUserById}");
+    ThreadContext.clearAll();
+    return user;
+  }
+
+  /**
    * Modifies the password of the user.
    *
    * @param token The authorization token.
