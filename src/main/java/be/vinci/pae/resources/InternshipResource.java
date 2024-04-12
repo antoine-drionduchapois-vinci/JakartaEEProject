@@ -1,15 +1,7 @@
 package be.vinci.pae.resources;
 
-import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.domain.InternshipDTO;
-import be.vinci.pae.domain.SupervisorDTO;
-import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.ucc.InternshipUCC;
-import be.vinci.pae.ucc.SupervisorUCC;
-import be.vinci.pae.utils.JWTDecryptToken;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
@@ -43,12 +35,6 @@ public class InternshipResource {
   private InternshipUCC myInternshipUCC;
 
   @Inject
-  private EnterpriseUCC myEnterpriseUCC;
-
-  @Inject
-  private SupervisorUCC myResponsbileUCC;
-
-  @Inject
   private RoleId myRoleId;
 
   @POST
@@ -72,8 +58,9 @@ public class InternshipResource {
     }
 
     if (internship.getSupervisor() != 0) {
-      int supervisorId = internship.getSupervisor();
-      ThreadContext.put("params", "userId:" + userId + "responsibleId:" + supervisorId);
+      ThreadContext.put("params",
+          "userId:" + userId + "responsibleId:" + internship.getSupervisor() + "subject "
+              + internship.getSubject());
       internship = myInternshipUCC.acceptInternship(internship);
       logger.info("Status: 200 {accept}");
       return internship;
@@ -101,7 +88,7 @@ public class InternshipResource {
 
     logger.info("Status: 200 {accept}");
     ThreadContext.clearAll();
-    
+
     return internship;
   }
 
@@ -113,7 +100,6 @@ public class InternshipResource {
    * @return an ObjectNode containing users info
    */
   @GET
-  @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public InternshipDTO getUserInternship(@HeaderParam("Authorization") String token, @DefaultValue("-1") @QueryParam("id") int id) {
     ThreadContext.put("route", "/int");
@@ -127,7 +113,7 @@ public class InternshipResource {
     }
 
     InternshipDTO internship = myInternshipUCC.getUserInternship(userId);
-    logger.info("Status: 200 {accept}");
+    logger.info("Status: 200 {getUserInternship}");
     ThreadContext.clearAll();
     return internship;
   }

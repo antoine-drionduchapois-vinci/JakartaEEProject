@@ -7,8 +7,6 @@ import be.vinci.pae.ucc.SupervisorUCC;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
@@ -19,9 +17,7 @@ import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response.Status;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -99,7 +95,7 @@ public class SupervisorResource {
 
     SupervisorDTO supervisor = supervisorUCC.getResponsibleByEnterpriseId(enterpriseId);
 
-    logger.info("Status: 200 {getAllSupervisors}");
+    logger.info("Status: 200 {getOne}");
     ThreadContext.clearAll();
 
     return supervisor;
