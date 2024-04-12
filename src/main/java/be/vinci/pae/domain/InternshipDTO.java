@@ -127,4 +127,8 @@ public interface InternshipDTO {
    * @param version The version of the internship to set.
    */
   void setVersion(int version);
+
+  EnterpriseDTO getEnterpriseDTO();
+
+  void setEnterpriseDTO(EnterpriseDTO enterpriseDTO);
 }

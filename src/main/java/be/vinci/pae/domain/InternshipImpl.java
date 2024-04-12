@@ -12,6 +12,7 @@ public class InternshipImpl implements Internship {
   private String year;
   private int user;
   private int enterprise;
+  private EnterpriseDTO enterpriseDTO;
   private int supervisor;
   private SupervisorDTO supervisorDTO;
   private int contact;
@@ -129,6 +130,16 @@ public class InternshipImpl implements Internship {
   }
 
   @Override
+  public EnterpriseDTO getEnterpriseDTO() {
+    return enterpriseDTO;
+  }
+
+  @Override
+  public void setEnterpriseDTO(EnterpriseDTO enterpriseDTO) {
+    this.enterpriseDTO = enterpriseDTO;
+  }
+
+  @Override
   public String toString() {
     return "InternshipImpl{" +
         "internshipId=" + internshipId +
@@ -136,10 +147,12 @@ public class InternshipImpl implements Internship {
         ", year='" + year + '\'' +
         ", user=" + user +
         ", enterprise=" + enterprise +
+        ", enterpriseDTO=" + enterpriseDTO +
         ", supervisor=" + supervisor +
         ", supervisorDTO=" + supervisorDTO +
         ", contact=" + contact +
         ", contactDTO=" + contactDTO +
+        ", version=" + version +
         '}';
   }
 

@@ -2,9 +2,11 @@ package be.vinci.pae.ucc;
 
 import be.vinci.pae.dal.DALService;
 import be.vinci.pae.dao.ContactDAO;
+import be.vinci.pae.dao.EnterpriseDAO;
 import be.vinci.pae.dao.InternshipDAO;
 import be.vinci.pae.dao.SupervisorDAO;
 import be.vinci.pae.domain.ContactDTO;
+import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.domain.Internship;
 import be.vinci.pae.domain.InternshipDTO;
 import be.vinci.pae.domain.SupervisorDTO;
@@ -21,6 +23,8 @@ public class InternshipUCCImpl implements InternshipUCC {
   private InternshipDAO internshipDAO;
 
   @Inject
+  private EnterpriseDAO enterpriseDAO;
+  @Inject
   private ContactDAO contactDAO;
 
   @Inject
@@ -33,10 +37,27 @@ public class InternshipUCCImpl implements InternshipUCC {
   @Override
   public InternshipDTO getUserInternship(int userId) {
     myDALService.start();
-    // get entrprise that corresponds to user intership
     InternshipDTO internshipDTO = internshipDAO.getUserInternship(userId);
-    myDALService.commit();
 
+    EnterpriseDTO enterpriseDTO = enterpriseDAO.readOne(internshipDTO.getEnterprise());
+    if (enterpriseDTO == null) {
+      throw new NotFoundException();
+    }
+    internshipDTO.setEnterpriseDTO(enterpriseDTO);
+
+    ContactDTO contactDTO = contactDAO.readOne(internshipDTO.getContact());
+    if (contactDTO == null) {
+      throw new NotFoundException();
+    }
+    internshipDTO.setContactDTO(contactDTO);
+
+    SupervisorDTO supervisorDTO = supervisorDAO.readOne(internshipDTO.getSupervisor());
+    if (supervisorDTO == null) {
+      throw new NotFoundException();
+    }
+    internshipDTO.setSupervisorDTO(supervisorDTO);
+
+    myDALService.commit();
     return internshipDTO;
   }
 

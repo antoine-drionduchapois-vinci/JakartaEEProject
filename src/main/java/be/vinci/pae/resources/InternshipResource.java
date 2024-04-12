@@ -6,6 +6,8 @@ import be.vinci.pae.domain.SupervisorDTO;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.ucc.InternshipUCC;
 import be.vinci.pae.ucc.SupervisorUCC;
+import be.vinci.pae.utils.JWTDecryptToken;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
@@ -98,6 +100,8 @@ public class InternshipResource {
     internship = myInternshipUCC.acceptInternship(internship);
 
     logger.info("Status: 200 {accept}");
+    ThreadContext.clearAll();
+    
     return internship;
   }
 
@@ -111,8 +115,7 @@ public class InternshipResource {
   @GET
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getUserInternship(@HeaderParam("Authorization") String token,
-      @DefaultValue("-1") @QueryParam("id") int id) {
+  public InternshipDTO getUserInternship(@HeaderParam("Authorization") String token, @DefaultValue("-1") @QueryParam("id") int id) {
     ThreadContext.put("route", "/int");
     ThreadContext.put("method", "Get");
     ThreadContext.put("params", "id:" + id);
@@ -120,28 +123,12 @@ public class InternshipResource {
     int userId = myRoleId.chooseId(token, id);
 
     if (userId == 0) {
-      throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
+      throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
     }
 
-    //get entrprise that corresponds to user intership
-
-    InternshipDTO internshipDTO = myInternshipUCC.getUserInternship(userId);
-    EnterpriseDTO enterpriseDTO = myEnterpriseUCC.getEnterprisesByUserId(userId);
-    if (enterpriseDTO == null) {
-      return null;
-    }
-    SupervisorDTO responsibleDTO = myResponsbileUCC.getResponsibleByEnterpriseId(
-        enterpriseDTO.getEnterpriseId());
-
-    ObjectMapper mapper = new ObjectMapper();
-    ObjectNode internshipNode = mapper.createObjectNode();
-    internshipNode.put("enterprise", enterpriseDTO.getName());
-    internshipNode.put("year", internshipDTO.getYear());
-    internshipNode.put("responsbile", responsibleDTO.getName());
-    internshipNode.put("phone", responsibleDTO.getPhone());
-    internshipNode.put("contact", internshipDTO.getContact());
-    logger.info("Status: 200 {getUserInternship}");
+    InternshipDTO internship = myInternshipUCC.getUserInternship(userId);
+    logger.info("Status: 200 {accept}");
     ThreadContext.clearAll();
-    return internshipNode;
+    return internship;
   }
 }
