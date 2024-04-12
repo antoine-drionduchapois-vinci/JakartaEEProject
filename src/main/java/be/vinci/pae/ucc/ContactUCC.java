@@ -62,6 +62,14 @@ public interface ContactUCC {
   ContactDTO meetEnterprise(int userId, int contactId, String meetingPoint);
 
   /**
+   * Updates the contact state to "suspended" and sets the meeting point for the specified contact.
+   *
+   * @param contactId The ID of the contact to update.
+   * @return A contactDTO representing the contact update
+   */
+  ContactDTO indicateAsSuspended(int contactId);
+
+  /**
    * Indicates that the contact associated with the specified ID has been refused with the provided
    * reason.
    *
@@ -85,9 +93,8 @@ public interface ContactUCC {
    * Retrieves a list of contacts associated with the enterprise.
    *
    * @param enterpriseId The ID of the user whose contacts are to be retrieved.
-   * @return A list of contacts associated with the specified enterprise ID, or null if
-   *         no contacts are
-   *         found.
+   * @return A list of contacts associated with the specified enterprise ID, or null if no contacts
+   * are found.
    */
   List<ContactDTO> getEnterpriseContacts(int enterpriseId);
 }

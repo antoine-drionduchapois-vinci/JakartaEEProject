@@ -59,7 +59,7 @@ public interface EnterpriseDAO {
   EnterpriseDTO getEnterpriseById(int id);
 
   /**
-   * Blacklist an enterprise
+   * Blacklist an enterprise.
    *
    * @param blacklistedEnterpriseDTO the EnterpriseDTO of the enterprise to blacklist
    * @return The enterprise blacklisted

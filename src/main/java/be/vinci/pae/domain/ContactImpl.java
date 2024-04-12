@@ -36,6 +36,14 @@ public class ContactImpl implements Contact {
     return true;
   }
 
+  public boolean indicateAsSuspended() {
+    if (!state.equals("initiated") && !state.equals("meet")) {
+      return false;
+    }
+    state = "suspended";
+    return true;
+  }
+
   @Override
   public boolean unfollow() {
     if (!state.equals("initiated") && !state.equals("meet")) {

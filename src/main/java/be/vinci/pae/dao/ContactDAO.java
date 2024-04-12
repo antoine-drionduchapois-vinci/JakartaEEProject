@@ -4,8 +4,7 @@ import be.vinci.pae.domain.ContactDTO;
 import java.util.List;
 
 /**
- * The ContactDAO interface provides methods for accessing contact information
- * from the database.
+ * The ContactDAO interface provides methods for accessing contact information from the database.
  */
 public interface ContactDAO {
 
@@ -13,9 +12,8 @@ public interface ContactDAO {
    * Retrieves a list of contacts associated with the specified user ID.
    *
    * @param userId The ID of the user for whom to retrieve contacts.
-   * @return A List containing Contact objects representing the contacts
-   *         associated with the
-   *         specified user ID.
+   * @return A List containing Contact objects representing the contacts associated with the
+   * specified user ID.
    */
   List<ContactDTO> readMany(int userId);
 
@@ -23,19 +21,18 @@ public interface ContactDAO {
    * Retrieves the contact information associated with the specified contact ID.
    *
    * @param contactId The ID of the contact to retrieve.
-   * @return The Contact object representing the contact information, or null if
-   *         no contact with the given ID is found.
+   * @return The Contact object representing the contact information, or null if no contact with the
+   * given ID is found.
    */
   ContactDTO readOne(int contactId);
 
   /**
-   * Retrieves the contact information associated with the specified user ID and
-   * enterprise ID.
+   * Retrieves the contact information associated with the specified user ID and enterprise ID.
    *
    * @param userId       The ID of the user associated with the contact.
    * @param enterpriseId The ID of the enterprise associated with the contact.
-   * @return The Contact object representing the contact information, or null if
-   *         no contact with the given user ID and enterprise ID is found.
+   * @return The Contact object representing the contact information, or null if no contact with the
+   * given user ID and enterprise ID is found.
    */
   ContactDTO readOne(int userId, int enterpriseId);
 
@@ -61,9 +58,22 @@ public interface ContactDAO {
    * Retrieves a list of contacts associated with the specified enterprise.
    *
    * @param enterpriseId The ID of the user for whom to retrieve contacts.
-   * @return A List containing Contact objects representing the contacts
-   *         associated with the
-   *         specified enterprise ID.
+   * @return A List containing Contact objects representing the contacts associated with the
+   * specified enterprise ID.
    */
   List<ContactDTO> readEnterpriseContacts(int enterpriseId);
+
+  List<ContactDTO> readEnterpriseInitiatedOrMeetContacts(int enterpriseId);
+
+  /**
+   * Updates the state of all contacts "initiated" or "met" (those for the current year) associated
+   * with the specified company.
+   *
+   * @param contactDTO The contactDTO representing the contact for which the state 'initiated' or
+   *                   'met' will be changed.
+   * @param nState     The new contact state.
+   * @return A list containing ContactDTO objects representing all "initiated" or "meet" contacts
+   * (from the current year) associated with the specified contactDTO id, with their updated state.
+   */
+  List<ContactDTO> updateStateInitiatedOrMeetContacts(ContactDTO contactDTO, String nState);
 }

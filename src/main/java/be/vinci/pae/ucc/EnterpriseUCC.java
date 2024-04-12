@@ -27,12 +27,12 @@ public interface EnterpriseUCC {
 
 
   /**
-   * Blacklist an entreprise and justify the reason for blacklisting
+   * Blacklist an entreprise and justify the reason for blacklisting.
    *
-   * @param enterpriseId      The ID of the enterprise to blacklist
+   * @param enterpriseID      The ID of the enterprise to blacklist
    * @param blacklistedReason The justification for blacklisting
    * @return An EnterpriseDTO object representing the enterprise blacklisted with the reason for
    * blacklisting, or null if no enterprise is found, or if the enterprise is already on blacklist
    */
-  EnterpriseDTO blacklistEnterprise(int enterpriseId, String blacklistedReason);
+  EnterpriseDTO blacklistEnterprise(int enterpriseID, String blacklistedReason);
 }

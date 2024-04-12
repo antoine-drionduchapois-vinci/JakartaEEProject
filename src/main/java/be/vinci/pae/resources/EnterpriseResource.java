@@ -88,7 +88,7 @@ public class EnterpriseResource {
   }
 
   /**
-   * Blacklisted an enterprise
+   * Blacklisted an enterprise.
    *
    * @param json  The JSON containing information about the enterprise.
    * @param token The authorization token.
@@ -99,7 +99,7 @@ public class EnterpriseResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize({"TEACHER", "ADMIN"})
-  public ObjectNode blacklisted(JsonNode json, @HeaderParam("Authorization") String token) {
+  public EnterpriseDTO blacklisted(JsonNode json, @HeaderParam("Authorization") String token) {
     ThreadContext.put("route", "/ent/blacklist");
     ThreadContext.put("method", "Post");
 
@@ -117,13 +117,14 @@ public class EnterpriseResource {
     int enterpriseId = json.get("enterprise_id").asInt();
     String blacklistedReason = json.get("blacklisted_reason").asText();
 
-    ThreadContext.put("params", "contactId:" + enterpriseId + "refusalReason:" + blacklistedReason);
+    ThreadContext.put("params",
+        "enterpriseId:" + enterpriseId + "blacklistedReason:" + blacklistedReason);
     // Blacklist the enterprise
-    ObjectNode objectNode = convertDTOToJson(myEnterpriseUCC.blacklistEnterprise(enterpriseId,
-        blacklistedReason));
+    EnterpriseDTO blacklistedEnterpriseDTO = myEnterpriseUCC.blacklistEnterprise(enterpriseId,
+        blacklistedReason);
     logger.info("Status: 200 {blacklist}");
     ThreadContext.clearAll();
-    return objectNode;
+    return blacklistedEnterpriseDTO;
   }
 
 
