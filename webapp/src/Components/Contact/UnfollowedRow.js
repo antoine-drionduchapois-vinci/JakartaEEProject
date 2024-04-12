@@ -39,7 +39,7 @@ const UnfollowedRow = (htmlElement, contactData) => {
     unefollowedCircle.removeAttribute('hidden');
 
   submit.addEventListener('click', () => {
-    unfollow({ contactId: contactData.contact_id });
+    unfollow({ contactId: contactData.contactId });
   });
 };
 
