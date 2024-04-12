@@ -13,6 +13,7 @@ public class ContactImpl implements Contact {
   private int user;
   private int enterprise;
   private EnterpriseDTO enterpriseDTO;
+  private UserDTO userDTO;
   private int version;
 
   @Override
@@ -125,6 +126,16 @@ public class ContactImpl implements Contact {
   }
 
   @Override
+  public UserDTO getUserDTO() {
+    return userDTO;
+  }
+
+  @Override
+  public void setUserDTO(UserDTO userDTO) {
+    this.userDTO = userDTO;
+  }
+
+  @Override
   public int getVersion() {
     return version;
   }
@@ -148,4 +159,5 @@ public class ContactImpl implements Contact {
         + ", version=" + version
         + '}';
   }
+
 }

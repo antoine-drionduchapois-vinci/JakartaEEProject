@@ -1,15 +1,12 @@
 package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.ContactDTO;
-import be.vinci.pae.domain.EnterpriseDTO;
-import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.resources.filters.RoleId;
 import be.vinci.pae.ucc.ContactUCC;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.ucc.UserUCC;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -238,7 +235,7 @@ public class ContactResource {
   @Path("getUserContacts")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getUsersByIdAsJson(@HeaderParam("Authorization") String token,
+  public List<ContactDTO> getUsersByIdAsJson(@HeaderParam("Authorization") String token,
       @DefaultValue("-1") @QueryParam("id") int id) {
     ThreadContext.put("route", "/contact/getUserContacts");
     ThreadContext.put("method", "Get");
@@ -250,31 +247,12 @@ public class ContactResource {
       throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
     }
 
-    ObjectMapper mapper = new ObjectMapper();
-    ObjectNode response = mapper.createObjectNode();
-    ArrayNode contactArray = mapper.createArrayNode();
+    // Creating custom ObjectNode with contacts and enterprise
+    List<ContactDTO> contacts = myContactUCC.getContacts(userId);
 
-    try {
-      // Creating custom ObjectNode with contacts and enterprise
-      List<ContactDTO> contacts = myContactUCC.getContacts(userId);
-      List<EnterpriseDTO> enterprises = myEnterpriseUCC.getAllEnterprises();
-      for (ContactDTO contactDTO : contacts) {
-        contactArray.add(
-            convertDTOToJson(contactDTO).put("enterprise_name",
-                enterprises.get(contactDTO.getEnterprise() - 1)
-                    .getName()));
-
-      }
-
-      // Add table enterprise to response
-      response.set("contact", contactArray);
-    } catch (Exception e) {
-      // Handle error
-      response.put("error", e.getMessage());
-    }
     logger.info("Status: 200 {getUsersByIdAsJson}");
     ThreadContext.clearAll();
-    return response;
+    return contacts;
 
   }
 
@@ -288,32 +266,14 @@ public class ContactResource {
   @Path("getEnterpriseContacts/{entrepriseId}")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ArrayNode getEnterpriseContact(
+  public List<ContactDTO> getEnterpriseContact(
       @PathParam("entrepriseId") int enterpriseId) {
     ThreadContext.put("route", "/contact/getEnterpriseContacts");
     ThreadContext.put("method", "GET");
 
-    ObjectMapper mapper = new ObjectMapper();
-    ArrayNode contactArray = mapper.createArrayNode();
-
     List<ContactDTO> contacts = myContactUCC.getEnterpriseContacts(enterpriseId);
-    List<EnterpriseDTO> enterprises = myEnterpriseUCC.getAllEnterprises();
-    List<UserDTO> user = myUserUCC.getUsersAsJson();
 
-    for (ContactDTO contactDTO : contacts) {
-      contactArray.add(
-          mapper.createObjectNode()
-              .put("enterprise_name", enterprises.get(contactDTO.getEnterprise() - 1).getName())
-              .put("student_name", user.get(contactDTO.getUser()).getName())
-              .put("student_surname", user.get(contactDTO.getUser()).getSurname())
-              .put("state", contactDTO.getState())
-              .put("year", contactDTO.getYear())
-              .put("refusal_reason", contactDTO.getRefusalReason())
-              .put("meeting_point", contactDTO.getMeetingPoint())
-      );
-    }
-
-    return contactArray;
+    return contacts;
 
   }
 

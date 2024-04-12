@@ -133,4 +133,18 @@ public interface ContactDTO {
    * @param version The version of the user to contact.
    */
   void setVersion(int version);
+
+  /**
+   * Gets the user object associated with the contact.
+   *
+   * @return The user object associated with the contact.
+   */
+  UserDTO getUserDTO();
+
+  /**
+   * Sets the user object associated with the contact.
+   *
+   * @param userDTO The Enterprise object to set for the contact.
+   */
+  void setUserDTO(UserDTO userDTO);
 }
