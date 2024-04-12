@@ -1,6 +1,6 @@
 package be.vinci.pae.resources.filters;
 
-import be.vinci.pae.resources.JWT;
+import be.vinci.pae.resources.Jwt;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response.Status;
@@ -11,7 +11,7 @@ import jakarta.ws.rs.core.Response.Status;
 public class RoleIdImpl implements RoleId {
 
   @Inject
-  private JWT myJwt;
+  private Jwt myJwt;
 
   /**
    * Chooses the appropriate user ID based on the user's role and provided ID.
