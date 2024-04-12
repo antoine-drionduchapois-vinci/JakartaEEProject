@@ -1,8 +1,6 @@
 package be.vinci.pae.dao;
 
 import be.vinci.pae.domain.SupervisorDTO;
-import be.vinci.pae.utils.FatalErrorException;
-
 import java.util.List;
 
 /**

@@ -1,7 +1,6 @@
 package be.vinci.pae.dao;
 
 import be.vinci.pae.domain.InternshipDTO;
-import be.vinci.pae.utils.FatalErrorException;
 
 /**
  * Represents a Data Access Object (DAO) for internship entities.
