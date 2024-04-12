@@ -66,6 +66,7 @@ public class InternshipUCCImpl implements InternshipUCC {
       myDALService.rollback();
       throw t;
     }
+
   }
 
   @Override

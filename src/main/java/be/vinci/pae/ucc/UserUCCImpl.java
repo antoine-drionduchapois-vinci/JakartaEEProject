@@ -4,6 +4,7 @@ import be.vinci.pae.dal.DALService;
 import be.vinci.pae.dao.UserDAO;
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.utils.FatalErrorException;
 import be.vinci.pae.utils.NotFoundException;
 import jakarta.inject.Inject;
 import java.util.List;
