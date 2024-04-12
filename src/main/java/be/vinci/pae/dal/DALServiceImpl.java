@@ -64,6 +64,9 @@ public class DALServiceImpl implements DALService, DALBackService {
     }
   }
 
+  /**
+   * rollback the active connection.
+   */
   public void rollback() {
     try {
       Connection conn = connectionThreadLocal.get();

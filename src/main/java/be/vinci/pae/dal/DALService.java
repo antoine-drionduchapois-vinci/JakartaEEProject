@@ -16,6 +16,9 @@ public interface DALService {
    **/
   void commit();
 
+  /**
+   * make a rollback of the transaction.
+   **/
   void rollback();
 
 }
