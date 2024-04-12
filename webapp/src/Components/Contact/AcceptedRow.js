@@ -16,6 +16,21 @@ const acceptInternship = (data) =>
     })
     .catch((error) => console.error(error));
 
+const modifySubject = (data) =>
+  fetch('http://localhost:8080/int/subject', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: getAuthenticatedUser().token,
+    },
+    body: JSON.stringify(data),
+  })
+    .then((res) => (res.status === 200 ? res.json() : null))
+    .then((d) => {
+      if (d) window.location.href = `http://localhost:3000/contact?id=${d.contact}`;
+    })
+    .catch((error) => console.error(error));
+
 const AcceptedRow = async (htmlElement, contactData, internshipData) => {
   const html = htmlElement;
   html.innerHTML = `
@@ -80,7 +95,8 @@ const AcceptedRow = async (htmlElement, contactData, internshipData) => {
     emailInput.element.value = internshipData.supervisorDTO.email;
     emailInput.element.setAttribute('disabled', true);
     subjectInput.element.value = internshipData.subject;
-    submit.textContent = 'Modifier le sujet';
+    if (internshipData.subject) submit.textContent = 'Modifier le sujet';
+    else submit.textContent = 'Ajouter le sujet';
   } else if (supervisor) {
     nameInput.element.value = supervisor.name;
     nameInput.element.setAttribute('disabled', true);
@@ -113,6 +129,10 @@ const AcceptedRow = async (htmlElement, contactData, internshipData) => {
   });
 
   submit.addEventListener('click', () => {
+    if (internshipData) {
+      modifySubject({ subject: subjectInput.element.value });
+      return;
+    }
     if (supervisor) {
       acceptInternship({
         contact: contactData.contactId,
