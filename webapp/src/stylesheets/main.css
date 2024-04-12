@@ -125,3 +125,15 @@ tbody tr:hover {
 #home1 {
   margin-right: 350px;
 }
+
+/* CSS pour aligner les éléments horizontalement */
+.navbar-nav .nav-link {
+  display: flex;
+  align-items: center; /* Alignement vertical au centre */
+}
+
+/* CSS pour agrandir l'icône */
+.navbar-nav .nav-link .icon i {
+  font-size: 1.5em; /* Taille de l'icône */
+  margin-right: 5px; /* Marge à droite pour séparer l'icône de l'e-mail */
+}
