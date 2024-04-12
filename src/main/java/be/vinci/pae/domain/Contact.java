@@ -1,8 +1,8 @@
 package be.vinci.pae.domain;
 
 /**
- * The Contact interface represents a contact between a user and an enterprise.
- * It extends the ContactDTO interface and adds methods for interacting with the contact.
+ * The Contact interface represents a contact between a user and an enterprise. It extends the
+ * ContactDTO interface and adds methods for interacting with the contact.
  */
 public interface Contact extends ContactDTO {
 
@@ -21,6 +21,13 @@ public interface Contact extends ContactDTO {
    * @return true if the operation is successful, false otherwise.
    */
   boolean indicateAsRefused(String refusalReason);
+
+  /**
+   * Indicates that the contact has been suspended with the enterprise.
+   *
+   * @return true if the operation is successful, false otherwise.
+   */
+  boolean indicateAsSuspended();
 
   /**
    * Removes the contact from the user's list of contacts.

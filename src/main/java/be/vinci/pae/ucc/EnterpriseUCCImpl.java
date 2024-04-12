@@ -3,6 +3,7 @@ package be.vinci.pae.ucc;
 import be.vinci.pae.dal.DALService;
 import be.vinci.pae.dao.ContactDAO;
 import be.vinci.pae.dao.EnterpriseDAO;
+import be.vinci.pae.domain.ContactDTO;
 import be.vinci.pae.domain.Enterprise;
 import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.utils.BusinessException;
@@ -45,6 +46,7 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
   @Override
   public EnterpriseDTO blacklistEnterprise(int enterpriseId, String blacklistedReason) {
     myDALService.start();
+
     Enterprise enterprise = (Enterprise) myEnterpriseDAO.readOne(enterpriseId);
 
     if (enterprise.getEnterpriseId() != enterpriseId) {
@@ -57,16 +59,17 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
 
     EnterpriseDTO blacklistedEnterpriseDTO = myEnterpriseDAO.toBlacklist(enterprise);
 
-    //TODO
-    /*Annulation des contacts initiés avec l'entreprise
-    List<ContactDTO> suspendedContacts = myContactDAO.readEnterpriseContacts(enterpriseId);
-    for (ContactDTO c : suspendedContacts) {
-      c.
-    }*/
+    /*Annulation des contacts initiés avec l'entreprise*/
+    //Solution sans UCC Imbriqués !!!
+    List<ContactDTO> contactDTOS = myContactDAO.readEnterpriseInitiatedOrMeetContacts(
+        enterpriseId);
+    if (contactDTOS != null) {
+      for (ContactDTO cDTO : contactDTOS) {
+        cDTO.setState("suspended");
+        myContactDAO.updateStateInitiatedOrMeetContacts(cDTO, "suspended");
+      }
+    }
     myDALService.commit();
-
-    //blacklistedEnterpriseDTO.setBlacklisted(false);
-    //blacklistedEnterpriseDTO.setBlacklistedReason(blacklistedReason);
     return blacklistedEnterpriseDTO;
   }
 }
