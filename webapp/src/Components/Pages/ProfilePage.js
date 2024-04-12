@@ -3,6 +3,7 @@ import { clearPage, renderPageTitle } from "../../utils/render";
 import Navigate from "../Router/Navigate";
 
 
+let main = document.querySelector('main');
 // ProfilePage component
 const ProfilePage = () => {
     // Clear the page
@@ -32,7 +33,7 @@ async function handlePasswordChange(event) {
     resetFormErrors('password-form');
 
     // Get the main element
-    const main = document.querySelector('main');
+    main = document.querySelector('main');
 
     // Get form elements and user information
     const passwordForm = document.querySelector('#password-form');
@@ -91,36 +92,7 @@ async function handlePasswordChange(event) {
             }
         } else {
             // Display success message and initiate redirection countdown
-            const successMessage = document.createElement('div');
-            successMessage.innerHTML = 'Mot de passe modifié avec succès !';
-            successMessage.style.color = 'green';
-
-            const countdownFrame = document.createElement('div');
-            countdownFrame.style.position = 'absolute';
-            countdownFrame.style.top = '50%';
-            countdownFrame.style.left = '50%';
-            countdownFrame.style.transform = 'translate(-50%, -50%)';
-            countdownFrame.style.padding = '20px';
-            countdownFrame.style.border = '2px solid green';
-            countdownFrame.style.backgroundColor = 'white';
-            countdownFrame.style.zIndex = '9999';
-
-            const countdownMessage = document.createElement('div');
-            countdownMessage.innerHTML = 'Vous allez être redirigé dans <span id="countdown">2</span> secondes';
-            countdownFrame.appendChild(successMessage);
-            countdownFrame.appendChild(countdownMessage);
-            main.appendChild(countdownFrame);
-
-            let secondsLeft = 3;
-            const countdownInterval = setInterval(() => {
-                secondsLeft -=1;
-                document.getElementById('countdown').innerText = secondsLeft;
-
-                if (secondsLeft === 0) {
-                    clearInterval(countdownInterval);
-                    Navigate('/dashboardS');
-                }
-            }, 1000);
+            successMessage('Le mot de passe à bien été modifié');
         }
     } catch (e) {
         console.error('Error:', e);
@@ -136,7 +108,7 @@ async function handleTelChange(event) {
     resetFormErrors('telForm');
 
     // Get the main element
-    const main = document.querySelector('main');
+    main = document.querySelector('main');
 
     // Get form elements and user information
     const telForm = document.querySelector('#telForm');
@@ -185,9 +157,18 @@ async function handleTelChange(event) {
             }
         } else {
             // Display success message and initiate redirection countdown
-            const successMessage = document.createElement('div');
-            successMessage.innerHTML = 'Numéro de téléphone modifié avec succès !';
-            successMessage.style.color = 'green';
+            successMessage('Le numéro de téléphone à bien été modifié');
+        }
+    } catch (e) {
+        console.error('Error:', e);
+    }
+}
+
+function successMessage (message) {
+    const user = getAuthenticatedUser();
+    const successMessageDiv = document.createElement('div');
+            successMessageDiv.innerHTML = message;
+            successMessageDiv.style.color = 'green';
 
             const countdownFrame = document.createElement('div');
             countdownFrame.style.position = 'absolute';
@@ -201,7 +182,7 @@ async function handleTelChange(event) {
 
             const countdownMessage = document.createElement('div');
             countdownMessage.innerHTML = 'Vous allez être redirigé dans <span id="countdown">2</span> secondes';
-            countdownFrame.appendChild(successMessage);
+            countdownFrame.appendChild(successMessageDiv);
             countdownFrame.appendChild(countdownMessage);
             main.appendChild(countdownFrame);
 
@@ -212,18 +193,18 @@ async function handleTelChange(event) {
 
                 if (secondsLeft === 0) {
                     clearInterval(countdownInterval);
-                    Navigate('/dashboardS');
+                    if(user.role === 'STUDENT'){
+                        Navigate('/dashboardS')
+                    }else{
+                        Navigate('/dashboardT');
+                    }
                 }
             }, 1000);
-        }
-    } catch (e) {
-        console.error('Error:', e);
-    }
 }
 
 // Function to render profile page content
 function renderProfilePage() {
-    const main = document.querySelector('main');
+    main = document.querySelector('main');
 
     // HTML content for the profile page
     const htmlContent = `
