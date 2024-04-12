@@ -25,8 +25,6 @@ public class EnterpriseResource {
   @Inject
   private EnterpriseUCC myEnterpriseUCC;
 
-  @Inject
-  private Jwt myJwt;
 
   /**
    * Retrieves all enterprise.
