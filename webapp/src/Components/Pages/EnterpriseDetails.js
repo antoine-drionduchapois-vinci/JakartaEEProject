@@ -14,8 +14,7 @@ const fetchEnterpriseContacts = async (id) => {
       }
   
       const contactsArray = await response.json();
-      // Object { enterprise_name: "LetsBuild", student_name: "skile", student_surname: "Carole", state: "accepted", year: "2023-2024", refusal_reason: null, meeting_point: "Dans l'entreprise" }
-      
+     
       let contactsHtml = ''; // Initialize an empty string to accumulate HTML content
       for (let index = 0; index < contactsArray.length; index += 1) {
         contactsHtml += `

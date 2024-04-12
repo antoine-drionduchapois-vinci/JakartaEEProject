@@ -24,7 +24,6 @@ const fetchUser = async () => {
     }
 
     const userData = await response.json();
-    console.log(userData);
 
     const blocUser = `
       <h2 class="title is-3">Profil</h2>
@@ -36,7 +35,7 @@ const fetchUser = async () => {
           </tr>
           <tr>
             <th>Prénom</th>
-            <td>${userData.surName}</td>
+            <td>${userData.surname}</td>
           </tr>
           <tr>
             <th>Année</th>

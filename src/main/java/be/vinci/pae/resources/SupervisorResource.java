@@ -2,11 +2,10 @@ package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.domain.Supervisor;
+import be.vinci.pae.domain.SupervisorDTO;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.ucc.SupervisorUCC;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
@@ -46,7 +45,7 @@ public class SupervisorResource {
   @Path("responsable")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getResponsableByUserId(@HeaderParam("Authorization") String token) {
+  public SupervisorDTO getResponsableByUserId(@HeaderParam("Authorization") String token) {
     ThreadContext.put("route", "/res/responsable");
     ThreadContext.put("method", "GET");
 
@@ -61,18 +60,7 @@ public class SupervisorResource {
       Supervisor supervisorDTO = supervisorUCC.getResponsibleByEnterpriseId(
           enterpriseDTO.getEnterpriseId());
 
-      // transform responsibleDTO to JSOn
-      ObjectMapper mapper = new ObjectMapper();
-      ObjectNode responsibleNode = mapper.createObjectNode();
-      responsibleNode.put("responsible_id", supervisorDTO.getResponsibleId());
-      responsibleNode.put("name", supervisorDTO.getName());
-      responsibleNode.put("surname", supervisorDTO.getSurname());
-      responsibleNode.put("phone", supervisorDTO.getPhone());
-      responsibleNode.put("email", supervisorDTO.getEmail());
-      responsibleNode.put("enterprise_id", supervisorDTO.getEnterprise());
-      logger.info("Status: 200 {getResponsableByUserId}");
-      ThreadContext.clearAll();
-      return responsibleNode;
+      return supervisorDTO;
 
     } catch (Exception e) {
       // Gérer les erreurs éventuelles

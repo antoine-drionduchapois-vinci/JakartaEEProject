@@ -108,7 +108,7 @@ public class UserResource {
   @Path("getUserInfoById")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getUsersByIdAsJson(@HeaderParam("Authorization") String token,
+  public UserDTO getUsersByIdAsJson(@HeaderParam("Authorization") String token,
       @DefaultValue("-1") @QueryParam("id") int id) {
     ThreadContext.put("route", "/users/getUserInfoById");
     ThreadContext.put("method", "Get");
@@ -119,19 +119,10 @@ public class UserResource {
     if (userId == 0) {
       throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
     }
-
+    
     UserDTO user = myUserUCC.getUsersByIdAsJson(userId);
 
-    ObjectMapper mapper = new ObjectMapper();
-    ObjectNode userInfo = mapper.createObjectNode();
-    userInfo.put("name", user.getName());
-    userInfo.put("surName", user.getSurname());
-    userInfo.put("phone", user.getPhone());
-    userInfo.put("year", user.getYear());
-    userInfo.put("email", user.getEmail());
-    logger.info("Status: 200 {getUsersByIdAsJson}");
-    ThreadContext.clearAll();
-    return userInfo;
+    return user;
   }
 
   /**
