@@ -177,12 +177,12 @@ public class ContactDAOImpl implements ContactDAO {
   }
 
   public List<ContactDTO> updateStateInitiatedOrMeetContacts(ContactDTO contact,
-      String nState) {
+      String newState) {
     try (PreparedStatement ps = myDalService.getPS(
         "UPDATE projetae.contacts SET state = ?, version = ? "
             + "WHERE enterprise = ? AND (state = 'initiated' OR state = 'meet') "
             + "AND year = ? AND version = ? RETURNING *")) {
-      ps.setString(1, nState);
+      ps.setString(1, newState);
       ps.setInt(2, contact.getVersion() + 1);
       ps.setInt(3, contact.getEnterprise());
       ps.setString(4, getCurrentYearString());

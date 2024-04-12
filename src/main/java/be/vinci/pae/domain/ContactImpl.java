@@ -35,6 +35,7 @@ public class ContactImpl implements Contact {
     return true;
   }
 
+  @Override
   public boolean indicateAsSuspended() {
     if (!state.equals("initiated") && !state.equals("meet")) {
       return false;

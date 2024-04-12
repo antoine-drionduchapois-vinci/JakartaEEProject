@@ -124,6 +124,7 @@ public class ContactUCCImpl implements ContactUCC {
     return updatedContactDTO;
   }
 
+  @Override
   public ContactDTO indicateAsSuspended(int contactId) {
     myDALService.start();
 

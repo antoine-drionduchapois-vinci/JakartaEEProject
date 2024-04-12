@@ -64,9 +64,9 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
     List<ContactDTO> contactDTOS = myContactDAO.readEnterpriseInitiatedOrMeetContacts(
         enterpriseId);
     if (contactDTOS != null) {
-      for (ContactDTO cDTO : contactDTOS) {
-        cDTO.setState("suspended");
-        myContactDAO.updateStateInitiatedOrMeetContacts(cDTO, "suspended");
+      for (ContactDTO contactDTO : contactDTOS) {
+        contactDTO.setState("suspended");
+        myContactDAO.updateStateInitiatedOrMeetContacts(contactDTO, "suspended");
       }
     }
     myDALService.commit();
