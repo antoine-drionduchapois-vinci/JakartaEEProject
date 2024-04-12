@@ -59,7 +59,6 @@ const autoFillFields = (
 };
 
 const InitiatedRow = (htmlElement, userData, contactData, enterprisesData) => {
-  console.log('🚀 ~ InitiatedRow ~ contactData:', contactData);
   const html = htmlElement;
   html.innerHTML = `
     <div class="column is-one-fifth">
