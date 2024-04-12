@@ -12,7 +12,7 @@ import jakarta.ws.rs.core.Response.Status;
 public class RoleIdImpl implements RoleId {
 
   @Inject
-  private JWT myJwt;
+  private Jwt myJwt;
 
   /**
    * Chooses the appropriate user ID based on the user's role and provided ID.

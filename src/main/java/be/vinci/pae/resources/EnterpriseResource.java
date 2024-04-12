@@ -30,7 +30,7 @@ public class EnterpriseResource {
   private EnterpriseUCC myEnterpriseUCC;
 
   @Inject
-  private JWT myJwt;
+  private Jwt myJwt;
 
   /**
    * Retrieves all enterprise.

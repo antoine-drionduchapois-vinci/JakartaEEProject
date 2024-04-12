@@ -36,7 +36,7 @@ public class AuthResource {
   private AuthUCC myAuthUCC;
 
   @Inject
-  private JWT myJwt;
+  private Jwt myJwt;
 
   /**
    * Endpoint for user login.
