@@ -38,6 +38,9 @@ public class InternshipUCCImpl implements InternshipUCC {
   public InternshipDTO getUserInternship(int userId) {
     myDALService.start();
     InternshipDTO internshipDTO = internshipDAO.getUserInternship(userId);
+    if (internshipDTO == null) {
+      throw new NotFoundException();
+    }
 
     EnterpriseDTO enterpriseDTO = enterpriseDAO.readOne(internshipDTO.getEnterprise());
     if (enterpriseDTO == null) {
