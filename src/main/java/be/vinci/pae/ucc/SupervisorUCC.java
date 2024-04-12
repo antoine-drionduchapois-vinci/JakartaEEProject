@@ -9,6 +9,11 @@ import java.util.List;
  */
 public interface SupervisorUCC {
 
+  /**
+   * Retrieves all supervisors from the data source.
+   *
+   * @return A list of SupervisorDTO objects representing all supervisors.
+   */
   List<SupervisorDTO> getAll();
 
   /**

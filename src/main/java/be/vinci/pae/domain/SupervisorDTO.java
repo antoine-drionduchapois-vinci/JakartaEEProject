@@ -74,7 +74,8 @@ public interface SupervisorDTO {
   /**
    * Sets the ID of the enterprise associated with the supervisor.
    *
-   * @param enterprise The ID of the enterprise associated with the supervisor to set.
+   * @param enterprise The ID of the enterprise associated with the supervisor to
+   *                   set.
    */
   void setEnterprise(int enterprise);
 
@@ -88,12 +89,24 @@ public interface SupervisorDTO {
   /**
    * Sets the enterprise DTO associated with the supervisor.
    *
-   * @param enterpriseDTO The enterprise DTO associated with the supervisor to set.
+   * @param enterpriseDTO The enterprise DTO associated with the supervisor to
+   *                      set.
    */
   void setEnterpriseDTO(Enterprise enterpriseDTO);
 
+  /**
+   * Gets the supervisorId of the supervisor.
+   *
+   * @return The supervisorId of the supervisor.
+   */
   int getSupervisorId();
 
+  /**
+   * Sets the supervisorId associated with the supervisor.
+   *
+   * @param supervisorId The enterprise supervisorId associated with the
+   *                     supervisor to set.
+   */
   void setSupervisorId(int supervisorId);
 
   /**

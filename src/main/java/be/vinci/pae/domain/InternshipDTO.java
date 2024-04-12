@@ -102,16 +102,39 @@ public interface InternshipDTO {
   /**
    * Sets the ID of the supervisor responsible for the internship.
    *
-   * @param supervisor The new ID of the supervisor responsible for the internship.
+   * @param supervisor The new ID of the supervisor responsible for the
+   *                   internship.
    */
   void setSupervisor(int supervisor);
 
+  /**
+   * Gets the SupervisorDTO of the internship.
+   *
+   * @return The SupervisorDTO of the internship.
+   */
   SupervisorDTO getSupervisorDTO();
 
+  /**
+   * Sets the supervisorDTO of the supervisor responsible for the internship.
+   *
+   * @param supervisorDTO The new supervisorDTO of the responsible for the
+   *                      internship.
+   */
   void setSupervisorDTO(SupervisorDTO supervisorDTO);
 
+  /**
+   * Gets the ContactDTO of the internship.
+   *
+   * @return The ContactDTO of the internship.
+   */
   ContactDTO getContactDTO();
 
+  /**
+   * Sets the contactDTO of responsible for the internship.
+   *
+   * @param contactDTO The new contactDTO of the supervisor responsible for the
+   *                   internship.
+   */
   void setContactDTO(ContactDTO contactDTO);
 
   /**
@@ -128,7 +151,17 @@ public interface InternshipDTO {
    */
   void setVersion(int version);
 
+  /**
+   * Gets the enterpriseDTO of the internship.
+   *
+   * @return The enterpriseDTO of the internship.
+   */
   EnterpriseDTO getEnterpriseDTO();
 
+  /**
+   * Sets the enterpriseDTO of the internship.
+   *
+   * @param enterpriseDTO The enterpriseDTO of the internship to set.
+   */
   void setEnterpriseDTO(EnterpriseDTO enterpriseDTO);
 }

@@ -1,6 +1,8 @@
 package be.vinci.pae.dao;
 
 import be.vinci.pae.domain.SupervisorDTO;
+import be.vinci.pae.utils.FatalErrorException;
+
 import java.util.List;
 
 /**
@@ -22,9 +24,26 @@ public interface SupervisorDAO {
    */
   SupervisorDTO getResponsibleByEnterpriseId(int id);
 
+  /**
+   * Creates a new supervisor entry in the database.
+   *
+   * @param supervisor The supervisor object to be created.
+   * @return The created supervisor object.
+   */
   SupervisorDTO create(SupervisorDTO supervisor);
 
+  /**
+   * Retrieves a single supervisor from the database based on the supervisor ID.
+   *
+   * @param supervisorId The ID of the supervisor to retrieve.
+   * @return The supervisor object corresponding to the given ID.
+   */
   SupervisorDTO readOne(int supervisorId);
 
+  /**
+   * Retrieves all supervisors from the database.
+   *
+   * @return A list containing all supervisor objects stored in the database.
+   */
   List<SupervisorDTO> readAll();
 }
