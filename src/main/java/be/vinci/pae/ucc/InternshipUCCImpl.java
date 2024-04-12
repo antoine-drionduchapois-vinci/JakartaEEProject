@@ -19,11 +19,16 @@ public class InternshipUCCImpl implements InternshipUCC {
 
   @Override
   public InternshipDTO getUserInternship(int userId) {
-    myDALService.start();
-    // get entrprise that corresponds to user intership
-    InternshipDTO internshipDTO = internshipDAO.getUserInternship(userId);
-    myDALService.commit();
+    try {
+      myDALService.start();
+      // get entrprise that corresponds to user intership
+      InternshipDTO internshipDTO = internshipDAO.getUserInternship(userId);
+      myDALService.commit();
 
-    return internshipDTO;
+      return internshipDTO;
+    } catch (Throwable t) {
+      myDALService.rollback();
+      throw t;
+    }
   }
 }
