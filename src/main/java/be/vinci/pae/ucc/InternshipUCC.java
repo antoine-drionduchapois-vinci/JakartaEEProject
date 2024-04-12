@@ -16,4 +16,6 @@ public interface InternshipUCC {
    *         internship associated with the specified user ID
    */
   InternshipDTO getUserInternship(int userId);
+
+  InternshipDTO acceptInternship(InternshipDTO internship);
 }

@@ -5,7 +5,6 @@ import be.vinci.pae.resources.filters.RoleId;
 import be.vinci.pae.ucc.ContactUCC;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.ucc.UserUCC;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
@@ -37,7 +36,7 @@ public class ContactResource {
   private static final Logger logger = LogManager.getLogger(ContactResource.class);
 
   @Inject
-  private JWT myJwt;
+  private Jwt myJwt;
   @Inject
   private ContactUCC myContactUCC;
   @Inject
@@ -102,8 +101,11 @@ public class ContactResource {
     if (contact.getEnterprise() != 0) {
       int enterpriseId = contact.getEnterprise();
       ThreadContext.put("params", "userId:" + userId + "enterpriseId:" + enterpriseId);
+
+      contact = myContactUCC.initiateContact(userId, enterpriseId);
       logger.info("Status: 200 {initiate}");
-      return myContactUCC.initiateContact(userId, enterpriseId);
+      ThreadContext.clearAll();
+      return contact;
     }
 
     String enterpriseName = contact.getEnterpriseDTO().getName();
@@ -111,6 +113,11 @@ public class ContactResource {
     String enterpriseAddress = contact.getEnterpriseDTO().getAddress();
     String enterprisePhone = contact.getEnterpriseDTO().getPhone();
     String enterpriseEmail = contact.getEnterpriseDTO().getEmail();
+
+    ThreadContext.put("params",
+        "userId:" + userId + "enterpriseName:" + enterpriseName + "enterpriseLabel:"
+            + enterpriseLabel + "enterpriseAddress:" + enterpriseAddress + "enterprisePhone:"
+            + enterprisePhone + "enterpriseEmail:" + enterpriseEmail);
 
     if (enterpriseName == null || enterpriseLabel == null || enterpriseAddress == null
         || enterprisePhone == null && enterpriseEmail == null) {
@@ -197,15 +204,15 @@ public class ContactResource {
   /**
    * Unfollows a contact.
    *
-   * @param json The JSON containing the contact ID.
-   * @param token The authorization token.
-   * @return The result of the unfollow operation as JSON.
+   * @param token   The authorization token.
+   * @param contact The contact information to be unfollowed.
+   * @return The result of the unfollow operation.
    */
   @POST
   @Path("/unfollow")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode unfollow(JsonNode json, @HeaderParam("Authorization") String token) {
+  public ContactDTO unfollow(@HeaderParam("Authorization") String token, ContactDTO contact) {
     ThreadContext.put("route", "/contact/unfollow");
     ThreadContext.put("method", "Post");
 
@@ -213,15 +220,17 @@ public class ContactResource {
     if (userId == 0) {
       throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
     }
-    if (!json.hasNonNull("contactId")) {
+
+    int contactId = contact.getContactId();
+
+    if (contactId == 0) {
       throw new WebApplicationException("contactId required", Status.BAD_REQUEST);
     }
-    int contactId = json.get("contactId").asInt();
     ThreadContext.put("params", "contactId:" + contactId);
-    ObjectNode objectNode = convertDTOToJson(myContactUCC.unfollow(userId, contactId));
+    contact = myContactUCC.unfollow(userId, contactId);
     logger.info("Status: 200 {refuse}");
     ThreadContext.clearAll();
-    return objectNode;
+    return contact;
   }
 
   /**

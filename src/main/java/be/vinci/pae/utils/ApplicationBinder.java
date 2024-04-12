@@ -15,8 +15,8 @@ import be.vinci.pae.dao.UserDAO;
 import be.vinci.pae.dao.UserDAOImpl;
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.DomainFactoryImpl;
-import be.vinci.pae.resources.JWT;
-import be.vinci.pae.resources.JWTImpl;
+import be.vinci.pae.resources.Jwt;
+import be.vinci.pae.resources.JwtImpl;
 import be.vinci.pae.resources.filters.RoleId;
 import be.vinci.pae.resources.filters.RoleIdImpl;
 import be.vinci.pae.ucc.AuthUCC;
@@ -48,7 +48,7 @@ public class ApplicationBinder extends AbstractBinder {
   @Override
   protected void configure() {
     bind(DomainFactoryImpl.class).to(DomainFactory.class).in(Singleton.class);
-    bind(JWTImpl.class).to(JWT.class).in(Singleton.class);
+    bind(JwtImpl.class).to(Jwt.class).in(Singleton.class);
     bind(RoleIdImpl.class).to(RoleId.class).in(Singleton.class);
 
     bind(UserUCCImpl.class).to(UserUCC.class).in(Singleton.class);

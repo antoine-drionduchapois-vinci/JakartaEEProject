@@ -42,6 +42,25 @@ public class InternshipDAOImpl implements InternshipDAO {
     }
   }
 
+  @Override
+  public InternshipDTO create(InternshipDTO internship) {
+    try (PreparedStatement ps = myDalService.getPS(
+        "INSERT INTO projetae.internships (subject, year, \"user\", enterprise, supervisor,"
+            + " contact, version) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING *;")) {
+      ps.setString(1, internship.getSubject());
+      ps.setString(2, internship.getYear());
+      ps.setInt(3, internship.getUser());
+      ps.setInt(4, internship.getEnterprise());
+      ps.setInt(5, internship.getSupervisor());
+      ps.setInt(6, internship.getContact());
+      ps.setInt(7, 1);
+      ps.execute();
+      return internshipMapper.mapResultSetToObject(ps.getResultSet(), InternshipImpl.class,
+          myDomainFactory::getInternship);
+    } catch (SQLException | IllegalAccessException e) {
+      throw new FatalErrorException(e);
+    }
+  }
 }
 
 
