@@ -104,7 +104,7 @@ public class InternshipResource {
    * Retrieves users internship info.
    *
    * @param token from the user
-   * @param id the query id
+   * @param id    the query id
    * @return an ObjectNode containing users info
    */
   @GET
@@ -127,6 +127,15 @@ public class InternshipResource {
     return internship;
   }
 
+  /**
+   * Modifies the subject of an internship.
+   *
+   * @param token      The authorization token for the user.
+   * @param internship The InternshipDTO object containing the updated subject.
+   * @return The updated InternshipDTO object with the modified subject.
+   * @throws WebApplicationException If the user is not authenticated or if the
+   *                                 subject field is missing or blank.
+   */
   @POST
   @Path("/subject")
   @Consumes(MediaType.APPLICATION_JSON)

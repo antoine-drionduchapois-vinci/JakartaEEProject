@@ -63,13 +63,6 @@ public class InternshipUCCImpl implements InternshipUCC {
     return internshipDTO;
   }
 
-  /**
-   * Accepts the internship and performs necessary validations and updates.
-   *
-   * @param internship The InternshipDTO object representing the internship to
-   *                   accept.
-   * @return The updated InternshipDTO object after accepting the internship.
-   */
   @Override
   public InternshipDTO acceptInternship(InternshipDTO internship) {
     myDALService.start();
