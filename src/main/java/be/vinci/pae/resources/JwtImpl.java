@@ -15,7 +15,7 @@ import java.util.Date;
 /**
  * Implementation of JWT (JSON Web Token) interface.
  */
-public class JWTImpl implements JWT {
+public class JwtImpl implements Jwt {
 
   // Algorithm used for JWT token generation
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));

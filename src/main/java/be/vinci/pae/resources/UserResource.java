@@ -2,6 +2,7 @@ package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.resources.filters.Authorize;
 import be.vinci.pae.resources.filters.RoleId;
 import be.vinci.pae.ucc.AuthUCC;
 import be.vinci.pae.ucc.UserUCC;
@@ -37,7 +38,7 @@ public class UserResource {
   private static final Logger logger = LogManager.getLogger(UserResource.class);
 
   @Inject
-  private JWT myJwt;
+  private Jwt myJwt;
   @Inject
   private RoleId myRoleId;
 
@@ -84,6 +85,7 @@ public class UserResource {
   @GET
   @Path("All")
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize({"TEACHER", "ADMIN"})
   public List<UserDTO> getUsersAsJson() {
     ThreadContext.put("route", "/users/All");
     ThreadContext.put("method", "Get");
