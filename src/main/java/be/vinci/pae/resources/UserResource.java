@@ -134,6 +134,27 @@ public class UserResource {
     return userInfo;
   }
 
+  @GET
+  @Path("getUser")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public UserDTO getUserById(@HeaderParam("Authorization") String token) {
+    ThreadContext.put("route", "/users/getUserInfoById");
+    ThreadContext.put("method", "Get");
+
+    int userId = myJwt.getUserIdFromToken(token);
+    ThreadContext.put("params", "userId:" + userId);
+    if (userId == 0) {
+      throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
+    }
+
+    UserDTO user = myUserUCC.getUsersByIdAsJson(userId);
+
+    logger.info("Status: 200 {getUserById}");
+    ThreadContext.clearAll();
+    return user;
+  }
+
   /**
    * Modifies the password of the user.
    *
