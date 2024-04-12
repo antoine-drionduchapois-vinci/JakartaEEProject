@@ -12,7 +12,7 @@ public interface ContactDAO {
    * Retrieves a list of contacts associated with the specified user ID.
    *
    * @param userId The ID of the user for whom to retrieve contacts.
-   * @return A List containing Contact objects representing the contacts associated with the
+   * @return A List containing Contact objects representing the contacts associated with the 
    * specified user ID.
    */
   List<ContactDTO> readMany(int userId);
@@ -58,7 +58,7 @@ public interface ContactDAO {
    * Retrieves a list of contacts associated with the specified enterprise.
    *
    * @param enterpriseId The ID of the user for whom to retrieve contacts.
-   * @return A List containing Contact objects representing the contacts associated with the
+   * @return A List containing Contact objects representing the contacts associated with the 
    * specified enterprise ID.
    */
   List<ContactDTO> readEnterpriseContacts(int enterpriseId);
@@ -71,9 +71,9 @@ public interface ContactDAO {
    *
    * @param contactDTO The contactDTO representing the contact for which the state 'initiated' or
    *                   'met' will be changed.
-   * @param nState     The new contact state.
-   * @return A list containing ContactDTO objects representing all "initiated" or "meet" contacts
+   * @param newState   The new contact state.
+   * @return A list containing ContactDTO objects representing all "initiated" or "meet" contacts 
    * (from the current year) associated with the specified contactDTO id, with their updated state.
    */
-  List<ContactDTO> updateStateInitiatedOrMeetContacts(ContactDTO contactDTO, String nState);
+  List<ContactDTO> updateStateInitiatedOrMeetContacts(ContactDTO contactDTO, String newState);
 }
