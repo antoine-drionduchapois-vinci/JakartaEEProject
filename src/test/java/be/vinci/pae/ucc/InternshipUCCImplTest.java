@@ -2,6 +2,8 @@ package be.vinci.pae.ucc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import be.vinci.pae.dao.InternshipDAO;
@@ -52,6 +54,7 @@ class InternshipUCCImplTest {
     InternshipDTO result = internshipUCC.getUserInternship(userId);
 
     assertEquals(internshipDTO, result);
+    verify(internshipDAO).getUserInternship(userId);
   }
 
   @Test
@@ -60,5 +63,6 @@ class InternshipUCCImplTest {
     when(internshipDAO.getUserInternship(userId)).thenReturn(null);
 
     assertNull(internshipUCC.getUserInternship(userId));
+    verify(internshipDAO, times(2)).getUserInternship(userId);
   }
 }
