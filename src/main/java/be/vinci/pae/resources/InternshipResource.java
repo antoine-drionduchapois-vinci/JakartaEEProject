@@ -38,6 +38,13 @@ public class InternshipResource {
   @Inject
   private RoleId myRoleId;
 
+  /**
+   * Accept an internship.
+   *
+   * @param token      The authorization token.
+   * @param internship The internship request to be accepted.
+   * @return The accepted internship.
+   */
   @POST
   @Path("/accept")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -102,7 +109,8 @@ public class InternshipResource {
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public InternshipDTO getUserInternship(@HeaderParam("Authorization") String token, @DefaultValue("-1") @QueryParam("id") int id) {
+  public InternshipDTO getUserInternship(@HeaderParam("Authorization") String token,
+      @DefaultValue("-1") @QueryParam("id") int id) {
     ThreadContext.put("route", "/int");
     ThreadContext.put("method", "Get");
     ThreadContext.put("params", "id:" + id);

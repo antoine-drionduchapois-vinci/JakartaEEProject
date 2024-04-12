@@ -21,7 +21,7 @@ public class RoleIdImpl implements RoleId {
    * @param id    The user ID.
    * @return The chosen user ID.
    * @throws WebApplicationException If the user ID cannot be
-   * determined based on the role and ID provided.
+   *                                 determined based on the role and ID provided.
    */
   @Override
   public int chooseId(String token, int id) {

@@ -13,9 +13,12 @@ public interface SupervisorDAO {
   /**
    * Retrieves the responsible information associated with the enterprise ID.
    *
-   * @param id The ID of the enterprise for which to retrieve the responsible information.
-   * @return A ResponsibleDTO object representing the responsible information associated with the
-   * enterprise ID, or null if no responsible information is found for the given enterprise ID.
+   * @param id The ID of the enterprise for which to retrieve the responsible
+   *           information.
+   * @return A ResponsibleDTO object representing the responsible information
+   *         associated with the
+   *         enterprise ID, or null if no responsible information is found for the
+   *         given enterprise ID.
    */
   SupervisorDTO getResponsibleByEnterpriseId(int id);
 

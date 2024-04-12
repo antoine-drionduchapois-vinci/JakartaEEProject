@@ -45,8 +45,8 @@ public class InternshipDAOImpl implements InternshipDAO {
   @Override
   public InternshipDTO create(InternshipDTO internship) {
     try (PreparedStatement ps = myDalService.getPS(
-        "INSERT INTO projetae.internships (subject, year, \"user\", enterprise, supervisor, contact, version)"
-            + " VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING *;")) {
+        "INSERT INTO projetae.internships (subject, year, \"user\", enterprise, supervisor,"
+            + " contact, version) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING *;")) {
       ps.setString(1, internship.getSubject());
       ps.setString(2, internship.getYear());
       ps.setInt(3, internship.getUser());

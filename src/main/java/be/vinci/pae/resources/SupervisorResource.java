@@ -86,6 +86,12 @@ public class SupervisorResource {
     }
   }
 
+  /**
+   * Retrieves the supervisor for a specific enterprise.
+   *
+   * @param enterpriseId The ID of the enterprise.
+   * @return The supervisor associated with the enterprise.
+   */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public SupervisorDTO getOne(@QueryParam("enterprise") int enterpriseId) {
@@ -102,6 +108,11 @@ public class SupervisorResource {
 
   }
 
+  /**
+   * Retrieves all supervisors.
+   *
+   * @return A list containing all supervisors.
+   */
   @GET
   @Path("/all")
   @Produces(MediaType.APPLICATION_JSON)

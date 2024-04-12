@@ -141,19 +141,19 @@ public class InternshipImpl implements Internship {
 
   @Override
   public String toString() {
-    return "InternshipImpl{" +
-        "internshipId=" + internshipId +
-        ", subject='" + subject + '\'' +
-        ", year='" + year + '\'' +
-        ", user=" + user +
-        ", enterprise=" + enterprise +
-        ", enterpriseDTO=" + enterpriseDTO +
-        ", supervisor=" + supervisor +
-        ", supervisorDTO=" + supervisorDTO +
-        ", contact=" + contact +
-        ", contactDTO=" + contactDTO +
-        ", version=" + version +
-        '}';
+    return "InternshipImpl{"
+        + "internshipId=" + internshipId
+        + ", subject='" + subject + '\''
+        + ", year='" + year + '\''
+        + ", user=" + user
+        + ", enterprise=" + enterprise
+        + ", enterpriseDTO=" + enterpriseDTO
+        + ", supervisor=" + supervisor
+        + ", supervisorDTO=" + supervisorDTO
+        + ", contact=" + contact
+        + ", contactDTO=" + contactDTO
+        + ", version=" + version
+        + '}';
   }
 
   private String getCurrentYearString() {
