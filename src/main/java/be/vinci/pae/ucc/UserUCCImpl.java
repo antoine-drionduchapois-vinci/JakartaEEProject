@@ -4,7 +4,6 @@ import be.vinci.pae.dal.DALService;
 import be.vinci.pae.dao.UserDAO;
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserDTO;
-import be.vinci.pae.utils.FatalErrorException;
 import be.vinci.pae.utils.NotFoundException;
 import jakarta.inject.Inject;
 import java.util.List;
@@ -45,7 +44,7 @@ public class UserUCCImpl implements UserUCC {
       return t;
     } catch (Throwable t) {
       myDALService.rollback();
-      throw new FatalErrorException(t);
+      throw t;
     }
   }
 
@@ -61,7 +60,7 @@ public class UserUCCImpl implements UserUCC {
       return userList;
     } catch (Throwable t) {
       myDALService.rollback();
-      throw new FatalErrorException(t);
+      throw t;
     }
   }
 
@@ -78,7 +77,7 @@ public class UserUCCImpl implements UserUCC {
       return userDTO;
     } catch (Throwable t) {
       myDALService.rollback();
-      throw new FatalErrorException(t);
+      throw t;
     }
   }
 
@@ -98,7 +97,7 @@ public class UserUCCImpl implements UserUCC {
       return userDTO1;
     } catch (Throwable t) {
       myDALService.rollback();
-      throw new FatalErrorException(t);
+      throw t;
     }
   }
 
@@ -113,7 +112,7 @@ public class UserUCCImpl implements UserUCC {
       return userDTO1;
     } catch (Throwable t) {
       myDALService.rollback();
-      throw new FatalErrorException(t);
+      throw t;
     }
   }
 
