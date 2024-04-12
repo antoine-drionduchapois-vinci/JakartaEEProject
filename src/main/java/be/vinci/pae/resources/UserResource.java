@@ -134,6 +134,12 @@ public class UserResource {
     return userInfo;
   }
 
+  /**
+   * Retrieves user information by user ID and returns it as JSON.
+   *
+   * @param token The user JWT token.
+   * @return An ObjectNode representing the user's information.
+   */
   @GET
   @Path("getUser")
   @Consumes(MediaType.APPLICATION_JSON)
