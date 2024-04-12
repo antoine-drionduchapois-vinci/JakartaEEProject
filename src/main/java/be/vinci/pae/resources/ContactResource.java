@@ -37,7 +37,7 @@ public class ContactResource {
   private static final Logger logger = LogManager.getLogger(ContactResource.class);
 
   @Inject
-  private JWT myJwt;
+  private Jwt myJwt;
   @Inject
   private ContactUCC myContactUCC;
   @Inject

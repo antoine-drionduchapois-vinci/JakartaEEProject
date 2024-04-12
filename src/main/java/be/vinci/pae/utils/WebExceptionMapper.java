@@ -42,7 +42,7 @@ public class WebExceptionMapper implements ExceptionMapper<Throwable> {
       return Response.status(404).entity("Not Found").build();
     }
 
-    logger.error("Status: 500 " + exception.getMessage());
+    logger.fatal("Status: 500 " + exception.getMessage());
     ThreadContext.clearAll();
     return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
         .entity(exception.getMessage())

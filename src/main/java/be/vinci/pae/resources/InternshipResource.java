@@ -45,7 +45,7 @@ public class InternshipResource {
   private SupervisorUCC myResponsbileUCC;
 
   @Inject
-  private JWT myJwt;
+  private Jwt myJwt;
 
   @Inject
   private RoleId myRoleId;

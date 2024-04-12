@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 /**
  * Interface for JWT (JSON Web Token) operations.
  */
-public interface JWT {
+public interface Jwt {
 
   /**
    * Creates a JWT token for the given user DTO.
