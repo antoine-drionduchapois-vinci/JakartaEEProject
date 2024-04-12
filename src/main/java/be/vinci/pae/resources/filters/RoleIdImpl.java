@@ -1,7 +1,7 @@
 package be.vinci.pae.resources.filters;
 
 import be.vinci.pae.domain.UserDTO.Role;
-import be.vinci.pae.resources.JWT;
+import be.vinci.pae.resources.Jwt;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response.Status;

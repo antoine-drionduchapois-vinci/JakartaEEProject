@@ -28,7 +28,7 @@ import org.apache.logging.log4j.ThreadContext;
 public class InternshipResource {
 
   @Inject
-  private JWT myJwt;
+  private Jwt myJwt;
 
   private static final Logger logger = LogManager.getLogger(InternshipResource.class);
 
