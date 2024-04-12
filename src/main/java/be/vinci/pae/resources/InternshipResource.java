@@ -3,6 +3,7 @@ package be.vinci.pae.resources;
 import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.domain.InternshipDTO;
 import be.vinci.pae.domain.SupervisorDTO;
+import be.vinci.pae.resources.filters.RoleId;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.ucc.InternshipUCC;
 import be.vinci.pae.ucc.SupervisorUCC;
@@ -11,10 +12,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DefaultValue;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
-import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
@@ -44,22 +47,27 @@ public class InternshipResource {
   @Inject
   private JWT myJwt;
 
+  @Inject
+  private RoleId myRoleId;
+
 
   /**
    * Retrieves users internship info.
    *
    * @param token from the user
+   * @param id the query id
    * @return an ObjectNode containing users info
    */
-  @POST
+  @GET
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getUserInternship(@HeaderParam("Authorization") String token) {
+  public ObjectNode getUserInternship(@HeaderParam("Authorization") String token,
+      @DefaultValue("-1") @QueryParam("id") int id) {
     ThreadContext.put("route", "/int");
-    ThreadContext.put("method", "Post");
+    ThreadContext.put("method", "Get");
+    ThreadContext.put("params", "id:" + id);
 
-    int userId = myJwt.getUserIdFromToken(token);
-    ThreadContext.put("params", "userId:" + userId);
+    int userId = myRoleId.chooseId(token, id);
 
     if (userId == 0) {
       throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
