@@ -1,6 +1,7 @@
 package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.InternshipDTO;
+import be.vinci.pae.resources.filters.RoleId;
 import be.vinci.pae.ucc.InternshipUCC;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
