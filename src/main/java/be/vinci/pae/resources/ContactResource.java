@@ -5,8 +5,6 @@ import be.vinci.pae.resources.filters.RoleId;
 import be.vinci.pae.ucc.ContactUCC;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.ucc.UserUCC;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
@@ -286,32 +284,4 @@ public class ContactResource {
 
   }
 
-  /**
-   * Converts a ContactDTO object to JSON format.
-   *
-   * @param contactDTO The ContactDTO object to convert.
-   * @return The ContactDTO object as JSON.
-   */
-  private ObjectNode convertDTOToJson(ContactDTO contactDTO) {
-    ObjectMapper mapper = new ObjectMapper();
-    ObjectNode enterpriseNode = mapper.createObjectNode()
-        .put("enterpriseId", contactDTO.getEnterpriseDTO().getEnterpriseId())
-        .put("name", contactDTO.getEnterpriseDTO().getName())
-        .put("label", contactDTO.getEnterpriseDTO().getLabel())
-        .put("adress", contactDTO.getEnterpriseDTO().getAddress())
-        .put("contact", contactDTO.getEnterpriseDTO().getPhone())
-        .put("email", contactDTO.getEnterpriseDTO().getEmail())
-        .put("opinionTeacher", contactDTO.getEnterpriseDTO().getBlacklistedReason());
-
-    ObjectNode contactNode = mapper.createObjectNode();
-    contactNode.put("contact_id", contactDTO.getContactId());
-    contactNode.put("meeting_point", contactDTO.getMeetingPoint());
-    contactNode.put("state", contactDTO.getState());
-    contactNode.put("refusal_reason", contactDTO.getRefusalReason());
-    contactNode.put("year", contactDTO.getYear());
-    contactNode.put("user", contactDTO.getUser());
-    contactNode.put("enterpriseId", contactDTO.getEnterprise());
-    contactNode.put("enterprise", enterpriseNode);
-    return contactNode;
-  }
 }
