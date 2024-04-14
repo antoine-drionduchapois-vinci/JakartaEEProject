@@ -1,13 +1,9 @@
 package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.EnterpriseDTO;
-import be.vinci.pae.domain.Supervisor;
-import be.vinci.pae.domain.SupervisorDTO;
 import be.vinci.pae.domain.SupervisorDTO;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.ucc.SupervisorUCC;
-import be.vinci.pae.utils.Config;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
