@@ -1,10 +1,5 @@
 import { clearPage, renderPageTitle } from "../../utils/render";
 
-
-
-
-
-
 const fetchEnterpriseContacts = async (id) => {
   console.log(id);
   try {
@@ -18,9 +13,8 @@ const fetchEnterpriseContacts = async (id) => {
       let contactsHtml = ''; // Initialize an empty string to accumulate HTML content
       for (let index = 0; index < contactsArray.length; index += 1) {
           const {
-              contactId, 
-              userDTO: { name: student_name, surname: student_surname },
-              enterpriseDTO: { name: enterprise_name },
+              userDTO: { name: studentName, surname: studentSurname },
+              enterpriseDTO: { name: enterpriseName },
               meetingPoint,
               state,
               refusalReason,
@@ -32,9 +26,9 @@ const fetchEnterpriseContacts = async (id) => {
 
           contactsHtml += `
               <tr>
-              <td>${enterprise_name}</td>
-              <td>${student_name}</td>
-              <td>${student_surname}</td>
+              <td>${enterpriseName}</td>
+              <td>${studentName}</td>
+              <td>${studentSurname}</td>
               <td>${year}</td>
               <td>${meeting}</td>
               <td>${state}</td>
@@ -69,15 +63,12 @@ const EnterpriseDetails = async () => {
           <thead>
             <tr>
               <th>Entreprise</th>
-              <th>Nom</th>
-              <th>Prénom</th>  
+              <th>Nom étudiant</th>
+              <th>Prénom étudiant</th>  
               <th>Année</th>
-              <th>RDV</th>
+              <th>Lieu RDV</th>
               <th>Etat</th>
-              <th>Raison refus</th>
-             
-             
-            
+              <th>Raison refus</th> 
             </tr>
           </thead>
           <tbody>
