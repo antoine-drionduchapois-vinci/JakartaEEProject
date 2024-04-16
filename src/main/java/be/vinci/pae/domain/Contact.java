@@ -28,4 +28,6 @@ public interface Contact extends ContactDTO {
    * @return true if the operation is successful, false otherwise.
    */
   boolean unfollow();
+
+
 }

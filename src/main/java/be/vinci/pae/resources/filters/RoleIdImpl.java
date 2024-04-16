@@ -1,6 +1,7 @@
 package be.vinci.pae.resources.filters;
 
-import be.vinci.pae.resources.JWT;
+import be.vinci.pae.domain.UserDTO.Role;
+import be.vinci.pae.resources.Jwt;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response.Status;
@@ -11,7 +12,7 @@ import jakarta.ws.rs.core.Response.Status;
 public class RoleIdImpl implements RoleId {
 
   @Inject
-  private JWT myJwt;
+  private Jwt myJwt;
 
   /**
    * Chooses the appropriate user ID based on the user's role and provided ID.
@@ -20,7 +21,7 @@ public class RoleIdImpl implements RoleId {
    * @param id    The user ID.
    * @return The chosen user ID.
    * @throws WebApplicationException If the user ID cannot be
-   *        determined based on the role and ID provided.
+   *                                 determined based on the role and ID provided.
    */
   @Override
   public int chooseId(String token, int id) {

@@ -1,11 +1,11 @@
 package be.vinci.pae.resources.filters;
 
-import be.vinci.pae.dao.UserDAO;
-import be.vinci.pae.domain.UserDTO;
+
+import be.vinci.pae.domain.UserDTO.Role;
+import be.vinci.pae.resources.Jwt;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -37,7 +37,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
       .build();
 
   @Inject
-  private UserDAO myUserDAO;
+  private Jwt myJwt;
 
   /**
    * Filters the request to check for authorization.
@@ -52,15 +52,16 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
       throw new WebApplicationException(Response.status(Status.UNAUTHORIZED)
           .entity("A token is needed to access this resource").build());
     } else {
-      DecodedJWT decodedToken = null;
+
       try {
-        decodedToken = this.jwtVerifier.verify(token);
+        this.jwtVerifier.verify(token);
       } catch (Exception e) {
         throw new WebApplicationException(Response.status(Status.UNAUTHORIZED)
             .entity("Malformed token : " + e.getMessage()).type("text/plain").build());
       }
-      UserDTO authenticatedUser = myUserDAO.getOneByID(decodedToken.getClaim("user").asInt());
-      if (authenticatedUser == null) {
+
+      Role role = myJwt.getRoleFromToken(token);
+      if (role == null) {
         requestContext.abortWith(Response.status(Status.FORBIDDEN)
             .entity("You are forbidden to access this resource").build());
       }
@@ -69,14 +70,14 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
         Authorize authorizeAnnotation = resourceMethod.getAnnotation(Authorize.class);
         if (authorizeAnnotation != null) {
           List<String> authorizedRoles = Arrays.asList(authorizeAnnotation.value());
-          if (!authorizedRoles.contains(authenticatedUser.getRole().name())) {
+          if (!authorizedRoles.contains(role.name())) {
             throw new WebApplicationException(Response.status(Status.FORBIDDEN)
                 .entity("You do not have permission to access this resource").build());
           }
         }
       }
 
-      requestContext.setProperty("user", authenticatedUser);
+      requestContext.setProperty("user", role);
     }
   }
 

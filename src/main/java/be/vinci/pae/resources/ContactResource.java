@@ -1,16 +1,10 @@
 package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.ContactDTO;
-import be.vinci.pae.domain.EnterpriseDTO;
-import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.resources.filters.RoleId;
 import be.vinci.pae.ucc.ContactUCC;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.ucc.UserUCC;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
@@ -40,7 +34,7 @@ public class ContactResource {
   private static final Logger logger = LogManager.getLogger(ContactResource.class);
 
   @Inject
-  private JWT myJwt;
+  private Jwt myJwt;
   @Inject
   private ContactUCC myContactUCC;
   @Inject
@@ -105,8 +99,11 @@ public class ContactResource {
     if (contact.getEnterprise() != 0) {
       int enterpriseId = contact.getEnterprise();
       ThreadContext.put("params", "userId:" + userId + "enterpriseId:" + enterpriseId);
+
+      contact = myContactUCC.initiateContact(userId, enterpriseId);
       logger.info("Status: 200 {initiate}");
-      return myContactUCC.initiateContact(userId, enterpriseId);
+      ThreadContext.clearAll();
+      return contact;
     }
 
     String enterpriseName = contact.getEnterpriseDTO().getName();
@@ -114,6 +111,11 @@ public class ContactResource {
     String enterpriseAddress = contact.getEnterpriseDTO().getAddress();
     String enterprisePhone = contact.getEnterpriseDTO().getPhone();
     String enterpriseEmail = contact.getEnterpriseDTO().getEmail();
+
+    ThreadContext.put("params",
+        "userId:" + userId + "enterpriseName:" + enterpriseName + "enterpriseLabel:"
+            + enterpriseLabel + "enterpriseAddress:" + enterpriseAddress + "enterprisePhone:"
+            + enterprisePhone + "enterpriseEmail:" + enterpriseEmail);
 
     if (enterpriseName == null || enterpriseLabel == null || enterpriseAddress == null
         || enterprisePhone == null && enterpriseEmail == null) {
@@ -200,15 +202,15 @@ public class ContactResource {
   /**
    * Unfollows a contact.
    *
-   * @param json The JSON containing the contact ID.
-   * @param token The authorization token.
-   * @return The result of the unfollow operation as JSON.
+   * @param token   The authorization token.
+   * @param contact The contact information to be unfollowed.
+   * @return The result of the unfollow operation.
    */
   @POST
   @Path("/unfollow")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode unfollow(JsonNode json, @HeaderParam("Authorization") String token) {
+  public ContactDTO unfollow(@HeaderParam("Authorization") String token, ContactDTO contact) {
     ThreadContext.put("route", "/contact/unfollow");
     ThreadContext.put("method", "Post");
 
@@ -216,15 +218,17 @@ public class ContactResource {
     if (userId == 0) {
       throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
     }
-    if (!json.hasNonNull("contactId")) {
+
+    int contactId = contact.getContactId();
+
+    if (contactId == 0) {
       throw new WebApplicationException("contactId required", Status.BAD_REQUEST);
     }
-    int contactId = json.get("contactId").asInt();
     ThreadContext.put("params", "contactId:" + contactId);
-    ObjectNode objectNode = convertDTOToJson(myContactUCC.unfollow(userId, contactId));
+    contact = myContactUCC.unfollow(userId, contactId);
     logger.info("Status: 200 {refuse}");
     ThreadContext.clearAll();
-    return objectNode;
+    return contact;
   }
 
   /**
@@ -238,7 +242,7 @@ public class ContactResource {
   @Path("getUserContacts")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getUsersByIdAsJson(@HeaderParam("Authorization") String token,
+  public List<ContactDTO> getUsersByIdAsJson(@HeaderParam("Authorization") String token,
       @DefaultValue("-1") @QueryParam("id") int id) {
     ThreadContext.put("route", "/contact/getUserContacts");
     ThreadContext.put("method", "Get");
@@ -250,30 +254,12 @@ public class ContactResource {
       throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
     }
 
-    ObjectMapper mapper = new ObjectMapper();
-    ObjectNode response = mapper.createObjectNode();
-    ArrayNode contactArray = mapper.createArrayNode();
+    // Creating custom ObjectNode with contacts and enterprise
+    List<ContactDTO> contacts = myContactUCC.getContacts(userId);
 
-    try {
-      List<ContactDTO> contacts = myContactUCC.getContacts(userId);
-      List<EnterpriseDTO> enterprises = myEnterpriseUCC.getAllEnterprises();
-      for (ContactDTO contactDTO : contacts) {
-        contactArray.add(
-            convertDTOToJson(contactDTO).put("enterprise_name",
-                enterprises.get(contactDTO.getEnterprise() - 1)
-                    .getName()));
-
-      }
-
-      // Add table enterprise to response
-      response.set("contact", contactArray);
-    } catch (Exception e) {
-      // Handle error
-      response.put("error", e.getMessage());
-    }
     logger.info("Status: 200 {getUsersByIdAsJson}");
     ThreadContext.clearAll();
-    return response;
+    return contacts;
 
   }
 
@@ -287,61 +273,15 @@ public class ContactResource {
   @Path("getEnterpriseContacts/{entrepriseId}")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ArrayNode getEnterpriseContact(
+  public List<ContactDTO> getEnterpriseContact(
       @PathParam("entrepriseId") int enterpriseId) {
     ThreadContext.put("route", "/contact/getEnterpriseContacts");
     ThreadContext.put("method", "GET");
 
-    ObjectMapper mapper = new ObjectMapper();
-    ArrayNode contactArray = mapper.createArrayNode();
-
     List<ContactDTO> contacts = myContactUCC.getEnterpriseContacts(enterpriseId);
-    List<EnterpriseDTO> enterprises = myEnterpriseUCC.getAllEnterprises();
-    List<UserDTO> user = myUserUCC.getUsersAsJson();
 
-    for (ContactDTO contactDTO : contacts) {
-      contactArray.add(
-          mapper.createObjectNode()
-              .put("enterprise_name", enterprises.get(contactDTO.getEnterprise() - 1).getName())
-              .put("student_name", user.get(contactDTO.getUser()).getName())
-              .put("student_surname", user.get(contactDTO.getUser()).getSurname())
-              .put("state", contactDTO.getState())
-              .put("year", contactDTO.getYear())
-              .put("refusal_reason", contactDTO.getRefusalReason())
-              .put("meeting_point", contactDTO.getMeetingPoint())
-      );
-    }
-
-    return contactArray;
+    return contacts;
 
   }
 
-  /**
-   * Converts a ContactDTO object to JSON format.
-   *
-   * @param contactDTO The ContactDTO object to convert.
-   * @return The ContactDTO object as JSON.
-   */
-  private ObjectNode convertDTOToJson(ContactDTO contactDTO) {
-    ObjectMapper mapper = new ObjectMapper();
-    ObjectNode enterpriseNode = mapper.createObjectNode()
-        .put("enterpriseId", contactDTO.getEnterpriseDTO().getEnterpriseId())
-        .put("name", contactDTO.getEnterpriseDTO().getName())
-        .put("label", contactDTO.getEnterpriseDTO().getLabel())
-        .put("adress", contactDTO.getEnterpriseDTO().getAddress())
-        .put("contact", contactDTO.getEnterpriseDTO().getPhone())
-        .put("email", contactDTO.getEnterpriseDTO().getEmail())
-        .put("opinionTeacher", contactDTO.getEnterpriseDTO().getBlacklistedReason());
-
-    ObjectNode contactNode = mapper.createObjectNode();
-    contactNode.put("contact_id", contactDTO.getContactId());
-    contactNode.put("meeting_point", contactDTO.getMeetingPoint());
-    contactNode.put("state", contactDTO.getState());
-    contactNode.put("refusal_reason", contactDTO.getRefusalReason());
-    contactNode.put("year", contactDTO.getYear());
-    contactNode.put("user", contactDTO.getUser());
-    contactNode.put("enterpriseId", contactDTO.getEnterprise());
-    contactNode.put("enterprise", enterpriseNode);
-    return contactNode;
-  }
 }

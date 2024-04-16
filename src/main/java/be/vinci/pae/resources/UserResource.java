@@ -2,6 +2,7 @@ package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.resources.filters.Authorize;
 import be.vinci.pae.resources.filters.RoleId;
 import be.vinci.pae.ucc.AuthUCC;
 import be.vinci.pae.ucc.UserUCC;
@@ -37,7 +38,7 @@ public class UserResource {
   private static final Logger logger = LogManager.getLogger(UserResource.class);
 
   @Inject
-  private JWT myJwt;
+  private Jwt myJwt;
   @Inject
   private RoleId myRoleId;
 
@@ -84,6 +85,7 @@ public class UserResource {
   @GET
   @Path("All")
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize({"TEACHER", "ADMIN"})
   public List<UserDTO> getUsersAsJson() {
     ThreadContext.put("route", "/users/All");
     ThreadContext.put("method", "Get");
@@ -108,7 +110,7 @@ public class UserResource {
   @Path("getUserInfoById")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getUsersByIdAsJson(@HeaderParam("Authorization") String token,
+  public UserDTO getUsersByIdAsJson(@HeaderParam("Authorization") String token,
       @DefaultValue("-1") @QueryParam("id") int id) {
     ThreadContext.put("route", "/users/getUserInfoById");
     ThreadContext.put("method", "Get");
@@ -119,19 +121,37 @@ public class UserResource {
     if (userId == 0) {
       throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
     }
+    
+    UserDTO user = myUserUCC.getUsersByIdAsJson(userId);
+
+    return user;
+  }
+
+  /**
+   * Retrieves user information by user ID and returns it as JSON.
+   *
+   * @param token The user JWT token.
+   * @return An ObjectNode representing the user's information.
+   */
+  @GET
+  @Path("getUser")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public UserDTO getUserById(@HeaderParam("Authorization") String token) {
+    ThreadContext.put("route", "/users/getUserInfoById");
+    ThreadContext.put("method", "Get");
+
+    int userId = myJwt.getUserIdFromToken(token);
+    ThreadContext.put("params", "userId:" + userId);
+    if (userId == 0) {
+      throw new WebApplicationException("userId is required", Status.BAD_REQUEST);
+    }
 
     UserDTO user = myUserUCC.getUsersByIdAsJson(userId);
 
-    ObjectMapper mapper = new ObjectMapper();
-    ObjectNode userInfo = mapper.createObjectNode();
-    userInfo.put("name", user.getName());
-    userInfo.put("surName", user.getSurname());
-    userInfo.put("phone", user.getPhone());
-    userInfo.put("year", user.getYear());
-    userInfo.put("email", user.getEmail());
-    logger.info("Status: 200 {getUsersByIdAsJson}");
+    logger.info("Status: 200 {getUserById}");
     ThreadContext.clearAll();
-    return userInfo;
+    return user;
   }
 
   /**

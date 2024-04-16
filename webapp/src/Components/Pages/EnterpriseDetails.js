@@ -6,38 +6,50 @@ import { clearPage, renderPageTitle } from "../../utils/render";
 
 
 const fetchEnterpriseContacts = async (id) => {
-    console.log(id);
-    try {
+  console.log(id);
+  try {
       const response = await fetch(`http://localhost:8080/contact/getEnterpriseContacts/${id}`);
       if (!response.ok) {
-        throw new Error('Error retrieving user contacts');
+          throw new Error('Error retrieving enterprise contacts');
       }
-  
-      const contactsArray = await response.json();
-      // Object { enterprise_name: "LetsBuild", student_name: "skile", student_surname: "Carole", state: "accepted", year: "2023-2024", refusal_reason: null, meeting_point: "Dans l'entreprise" }
-      
+
+      const contactsArray = await response.json();  // Assume this response is an array
+      console.log(contactsArray);
       let contactsHtml = ''; // Initialize an empty string to accumulate HTML content
       for (let index = 0; index < contactsArray.length; index += 1) {
-        contactsHtml += `
+          const {
+              contactId, 
+              userDTO: { name: student_name, surname: student_surname },
+              enterpriseDTO: { name: enterprise_name },
+              meetingPoint,
+              state,
+              refusalReason,
+              year,
+          } = contactsArray[index];
+
+          const meeting = meetingPoint || '';  // Handle null values
+          const reason = refusalReason || '';
+
+          contactsHtml += `
               <tr>
-              <td>${contactsArray[index].enterprise_name}</td>
-              <td>${contactsArray[index].student_name}</td>
-              <td>${contactsArray[index].student_surname}</td>
-              <td>${contactsArray[index].year}</td>
-              <td>${contactsArray[index].meeting_point}</td>
-              <td>${contactsArray[index].state}</td>
-              <td>${contactsArray[index].refusal_reason}</td>
+              <td>${enterprise_name}</td>
+              <td>${student_name}</td>
+              <td>${student_surname}</td>
+              <td>${year}</td>
+              <td>${meeting}</td>
+              <td>${state}</td>
+              <td>${reason}</td>
               </tr>
           `;
       }
-      
+
       return contactsHtml;
-    } catch (error) {
-      console.error('Error retrieving user contacts:', error);
+  } catch (error) {
+      console.error('Error retrieving enterprise contacts:', error);
       return "Pas de contact pour l'instant";
-    }
-  };
-  
+  }
+};
+
 
 
 const EnterpriseDetails = async () => {
