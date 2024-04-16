@@ -24,7 +24,6 @@ const fetchUser = async () => {
     }
 
     const userData = await response.json();
-    console.log(userData);
 
     const blocUser = `
       <h2 class="title is-3">Profil</h2>
@@ -36,7 +35,7 @@ const fetchUser = async () => {
           </tr>
           <tr>
             <th>Prénom</th>
-            <td>${userData.surName}</td>
+            <td>${userData.surname}</td>
           </tr>
           <tr>
             <th>Année</th>
@@ -80,22 +79,24 @@ const fetchUserContacts = async () => {
     }
 
     const contactsInfo = await response.json();
-    const contactsArray = contactsInfo.contact;
+ 
+    const contactsArray = contactsInfo;  // Assuming the array is now directly the response JSON
+    console.log(contactsArray);
     let contactsHtml = ''; // Initialize an empty string to accumulate HTML content
     for (let index = 0; index < contactsArray.length; index += 1) {
       const {
-        contact_id,
-        enterprise_name,
+        contactId,
+        enterpriseDTO: { name: enterprise_name },
         state,
-        meeting_point,
-        refusal_reason,
+        meetingPoint,
+        refusalReason,
         year,
       } = contactsArray[index];
-      const reason = refusal_reason === null ? '' : refusal_reason;
-      const meeting = meeting_point === null ? '' : meeting_point;
+      const reason = refusalReason === null ? '' : refusalReason;
+      const meeting = meetingPoint === null ? '' : meetingPoint;
       contactsHtml += `
             <tr>
-            <td><a class="enterprise_link" data-contact-id="${contact_id}">${enterprise_name}</a></td>
+            <td><a class="enterprise_link" data-contact-id="${contactId}">${enterprise_name}</a></td>
             <td> ${state}</td>
             <td> ${meeting}</td>
             <td> ${reason}</td>
@@ -103,13 +104,13 @@ const fetchUserContacts = async () => {
             </tr>
         `;
     }
-
     return contactsHtml;
-  } catch (error) {
-    console.error('Error retrieving user contacts:', error);
+    } catch (error) {
+      console.error('Failed to load contacts:', error);
+    }
     return "Pas de contact pour l'instant";
-  }
-};
+  };
+
 
 const fetchUserInternship = async () => {
   const options = {

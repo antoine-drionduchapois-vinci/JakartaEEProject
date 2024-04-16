@@ -3,6 +3,7 @@ package be.vinci.pae.ucc;
 import be.vinci.pae.dal.DALService;
 import be.vinci.pae.dao.ContactDAO;
 import be.vinci.pae.dao.EnterpriseDAO;
+import be.vinci.pae.dao.UserDAO;
 import be.vinci.pae.domain.Contact;
 import be.vinci.pae.domain.ContactDTO;
 import be.vinci.pae.domain.EnterpriseDTO;
@@ -23,6 +24,9 @@ public class ContactUCCImpl implements ContactUCC {
   ContactDAO myContactDAO;
   @Inject
   EnterpriseDAO myEnterpriseDAO;
+
+  @Inject
+  UserDAO myUserDAO;
 
   @Inject
   private DALService myDALService;
@@ -152,6 +156,10 @@ public class ContactUCCImpl implements ContactUCC {
     List<ContactDTO> contactDTOS = myContactDAO.readEnterpriseContacts(enterpriseId);
     if (contactDTOS == null) {
       throw new NotFoundException();
+    }
+    for (ContactDTO contact : contactDTOS) {
+      contact.setEnterpriseDTO(myEnterpriseDAO.readOne(contact.getEnterprise()));
+      contact.setUserDTO(myUserDAO.getOneByID(contact.getUser()));
     }
     myDALService.commit();
     return contactDTOS;
