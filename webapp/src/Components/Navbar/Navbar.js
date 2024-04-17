@@ -19,21 +19,14 @@ function renderNavbar() {
 
   // HTML for navbar when user is anonymous
   const anonymousUserNavbar = `
-    <nav class="navbar navbar-expand-lg navbar-light bg-info">
+    <nav class="navbar navbar-expand-lg navbar-light bg-power-surge">
       <div class="container-fluid d-flex justify-content-center">
-          <a class="navbar-brand bg-white border border-dark rounded-pill px-5 fs-4" id="home" href="#">${SITE_NAME}</a>
+          <a class="navbar-brand text-white" id="home" href="#">${SITE_NAME}</a>
       </div>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
       </button>
+      
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <!-- Nav items for anonymous users -->
