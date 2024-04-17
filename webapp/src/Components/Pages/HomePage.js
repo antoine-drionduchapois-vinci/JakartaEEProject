@@ -45,7 +45,7 @@ const HomePage = () => {
               </button>
             </div>
             <div class="column is-narrow">
-              <button class="button is-large" id="connectButton" style="background-color : #b12763;">
+              <button class="button is-large text-white" id="connectButton" style="background-color : #b12763;">
                 <span class="icon">
                   <i class="fas fa-sign-in-alt"></i>
                 </span>

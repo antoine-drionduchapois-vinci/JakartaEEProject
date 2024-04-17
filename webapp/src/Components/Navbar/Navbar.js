@@ -48,9 +48,7 @@ function renderNavbar() {
             <!-- Nav items for authenticated users -->
             <li class="nav-item">
               <a class="nav-link text-white" href="#" data-uri="/logout">
-                <span>
-                  Logout <i class="fas fa-sign-out-alt"></i>
-                </span>
+                  Logout<i class="fas fa-sign-out-alt ml-1"></i> 
               </a>
             </li>    
             <li class="nav-item">
