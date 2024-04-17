@@ -156,7 +156,7 @@ const renderForm = (formContainer, users, tableUserContainer) => {
   form.style.display = 'flex'; // Utiliser Flexbox
   form.style.flexWrap = 'wrap'; // Permettre le retour à la ligne si nécessaire
   form.style.paddingBottom = '10px'; // Ajouter le padding-bottom
-  form.style.gap = '5%'; // Ajouter un espace entre les éléments
+  form.style.gap = '20px'; // Ajouter un espace entre les éléments
 
   // Créer le champ input avec Bulma
   const inputFieldDiv = document.createElement('div');
