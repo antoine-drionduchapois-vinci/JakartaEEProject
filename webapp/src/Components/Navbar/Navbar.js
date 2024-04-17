@@ -19,9 +19,9 @@ function renderNavbar() {
 
   // HTML for navbar when user is anonymous
   const anonymousUserNavbar = `
-    <nav class="navbar navbar-expand-lg navbar-light bg-power-surge">
-      <div class="container-fluid d-flex justify-content-center">
-          <a class="navbar-brand text-white" id="home" href="#">${SITE_NAME}</a>
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #8d9440;">
+      <div class="container-fluid">
+          <a class="navbar-brand text-white site-title" id="home" href="#">${SITE_NAME}</a>
       </div>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -37,34 +37,27 @@ function renderNavbar() {
 
   // HTML for navbar when user is authenticated
   const authenticatedUserNavbar = `
-    <nav class="navbar navbar-expand-lg navbar-light bg-info ">
-      <div class="container-fluid d-flex justify-content-end">
-        <div>
-          <a class="navbar-brand bg-white border border-dark rounded-pill px-5 fs-4" id="home1" href="#">${SITE_NAME}</a>
-        </div>
-      </div>
-      <div>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-left" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #8d9440;">
+      <div class="container-fluid">
+        <a class="navbar-brand text-white site-title" href="#" id="home1">${SITE_NAME}</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <!-- Nav items for authenticated users -->
             <li class="nav-item">
-              <a class="nav-link" href="#" data-uri="/logout">Logout</a>
+              <a class="nav-link text-white" href="#" data-uri="/logout">
+                <span>
+                  Logout <i class="fas fa-sign-out-alt"></i>
+                </span>
+              </a>
             </li>    
-            <li class="nav-item d-flex align-items-center">
-              <a class="nav-link " id="profileRedirect" href="">
-                <span>${authenticatedUser?.email}</span> 
-                <i class="fas fa-user fa-lg ml-2"></i>
+            <li class="nav-item">
+              <a class="nav-link text-white" id="profileRedirect" href="">
+                <span>
+                  ${authenticatedUser?.email} <i class="fas fa-user"></i>
+                </span> 
               </a>
             </li>           
           </ul>

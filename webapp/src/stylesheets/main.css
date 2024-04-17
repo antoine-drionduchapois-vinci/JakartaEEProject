@@ -122,8 +122,8 @@ tbody tr:hover {
   background: black;
 }
 
-#home1 {
-  margin-right: 350px;
+.site-title {
+  font-size: 24px; /* Tu peux ajuster cette valeur selon tes préférences */
 }
 
 /* CSS pour aligner les éléments horizontalement */
