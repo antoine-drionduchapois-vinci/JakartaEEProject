@@ -1,6 +1,5 @@
 package be.vinci.pae.resources.filters;
 
-import be.vinci.pae.domain.UserDTO.Role;
 import be.vinci.pae.resources.Jwt;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
@@ -26,7 +25,7 @@ public class RoleIdImpl implements RoleId {
   @Override
   public int chooseId(String token, int id) {
     int userId = 0;
-    if (myJwt.getRoleFromToken(token).equals(Role.STUDENT)) {
+    if (myJwt.getRoleFromToken(token).equals("STUDENT")) {
       userId = myJwt.getUserIdFromToken(token);
       if (id == -1) {
         id = userId;
