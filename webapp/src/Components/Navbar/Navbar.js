@@ -68,8 +68,11 @@ function renderNavbar() {
             <li class="nav-item">
               <a class="nav-link" href="#" data-uri="/logout">Logout</a>
             </li>    
-            <li class="nav-item">
-              <a class="nav-link " id="profileRedirect" href="#">${authenticatedUser?.email}</a>
+            <li class="nav-item d-flex align-items-center">
+              <a class="nav-link " id="profileRedirect" href="">
+                <span>${authenticatedUser?.email}</span> 
+                <i class="fas fa-user fa-lg ml-2"></i>
+              </a>
             </li>           
           </ul>
         </div>
