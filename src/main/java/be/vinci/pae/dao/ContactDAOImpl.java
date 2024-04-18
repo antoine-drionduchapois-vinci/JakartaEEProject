@@ -161,6 +161,7 @@ public class ContactDAOImpl implements ContactDAO {
     }
   }
 
+  @Override
   public List<ContactDTO> readEnterpriseInitiatedOrMeetContacts(int enterpriseId) {
     try (PreparedStatement ps = myDalService.getPS(
         "SELECT * FROM projetae.contacts WHERE (state = 'initiated' OR state = 'meet')"
@@ -176,6 +177,7 @@ public class ContactDAOImpl implements ContactDAO {
     }
   }
 
+  @Override
   public List<ContactDTO> updateStateInitiatedOrMeetContacts(ContactDTO contact,
       String newState) {
     try (PreparedStatement ps = myDalService.getPS(
