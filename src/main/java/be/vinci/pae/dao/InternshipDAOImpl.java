@@ -61,6 +61,29 @@ public class InternshipDAOImpl implements InternshipDAO {
       throw new FatalErrorException(e);
     }
   }
+
+  @Override
+  public InternshipDTO update(InternshipDTO newInternship) {
+    try (PreparedStatement ps = myDalService.getPS(
+        "UPDATE projetae.internships SET subject = ?, year = ?, \"user\" = ?, enterprise = ?,"
+            + " supervisor = ?, contact = ?, version = ? WHERE internship_id = ? AND version = ?"
+            + " RETURNING *;")) {
+      ps.setString(1, newInternship.getSubject());
+      ps.setString(2, newInternship.getYear());
+      ps.setInt(3, newInternship.getUser());
+      ps.setInt(4, newInternship.getEnterprise());
+      ps.setInt(5, newInternship.getSupervisor());
+      ps.setInt(6, newInternship.getContact());
+      ps.setInt(7, newInternship.getVersion() + 1);
+      ps.setInt(8, newInternship.getInternshipId());
+      ps.setInt(9, newInternship.getVersion());
+      ps.execute();
+      return internshipMapper.mapResultSetToObject(ps.getResultSet(), InternshipImpl.class,
+          myDomainFactory::getInternship);
+    } catch (SQLException | IllegalAccessException e) {
+      throw new FatalErrorException(e);
+    }
+  }
 }
 
 

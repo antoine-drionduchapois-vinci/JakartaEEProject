@@ -161,5 +161,21 @@ public class ContactDAOImpl implements ContactDAO {
     }
   }
 
+  @Override
+  public List<ContactDTO> readEnterpriseInitiatedOrMeetContacts(int enterpriseId) {
+    try (PreparedStatement ps = myDalService.getPS(
+        "SELECT * FROM projetae.contacts WHERE (state = 'initiated' OR state = 'meet')"
+            + " AND enterprise = ? AND year = ?")) {
+      ps.setInt(1, enterpriseId);
+      ps.setString(2, getCurrentYearString());
+      ps.execute();
+      return contactMapper.mapResultSetToObjectList(ps.getResultSet(), ContactImpl.class,
+          myDomainFactory::getContact);
+    } catch (SQLException | IllegalAccessException e) {
+      System.out.println("DAO sql error");
+      throw new FatalErrorException(e);
+    }
+  }
+
 
 }

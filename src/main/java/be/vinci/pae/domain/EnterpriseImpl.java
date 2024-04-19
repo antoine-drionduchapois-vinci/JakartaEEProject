@@ -15,6 +15,16 @@ public class EnterpriseImpl implements Enterprise {
   private String blacklistedReason;
   private int version;
 
+
+  @Override
+  public boolean toBlacklist(String blacklistedReason) {
+    if (isBlacklisted) {
+      return false;
+    }
+    this.blacklistedReason = blacklistedReason;
+    return true;
+  }
+
   @Override
   public int getEnterpriseId() {
     return enterpriseId;

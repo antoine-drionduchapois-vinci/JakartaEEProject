@@ -13,12 +13,14 @@ import org.apache.commons.dbcp2.BasicDataSource;
  * interaction.
  */
 public class DALServiceImpl implements DALService, DALBackService {
-  
+
   private DataSource dataSource;
   private final String url = Config.getProperty("db.url");
   private final String username = Config.getProperty("db.username");
   private final String password = Config.getProperty("db.password");
   private final ThreadLocal<Connection> connectionThreadLocal = new ThreadLocal<>();
+  private final ThreadLocal<Integer> transactionCounter = ThreadLocal.withInitial(
+      () -> 0);
   private final int MAX_CONNECTIONS = 3;
 
   /**
@@ -33,7 +35,10 @@ public class DALServiceImpl implements DALService, DALBackService {
    */
   @Override
   public void start() {
-    connection();
+    if (transactionCounter.get() == 0) {
+      connection();
+    }
+    transactionCounter.set(transactionCounter.get() + 1);
   }
 
   private void connection() {
@@ -64,6 +69,21 @@ public class DALServiceImpl implements DALService, DALBackService {
     }
   }
 
+  /**
+   * rollback the active connection.
+   */
+  public void rollback() {
+    try {
+      Connection conn = connectionThreadLocal.get();
+      if (conn != null) {
+        transactionCounter.set(0);
+        conn.rollback();
+      }
+    } catch (SQLException rollbackEx) {
+      throw new FatalErrorException(rollbackEx);
+    }
+  }
+
 
   /**
    * Commits the active connection.
@@ -75,16 +95,21 @@ public class DALServiceImpl implements DALService, DALBackService {
       throw new IllegalStateException("No active connection to commit.");
     }
     try {
-      conn.commit();
+      if (transactionCounter.get() == 1) {
+        conn.commit();
+      }
     } catch (SQLException e) {
-      rollback(conn);
+      rollbackWithConn(conn);
       throw new FatalErrorException(e);
     } finally {
-      closeConnection(conn);
+      transactionCounter.set(transactionCounter.get() - 1);
+      if (transactionCounter.get() == 0) {
+        closeConnection(conn);
+      }
     }
   }
 
-  private void rollback(Connection conn) {
+  private void rollbackWithConn(Connection conn) {
     try {
       if (conn != null) {
         conn.rollback();
