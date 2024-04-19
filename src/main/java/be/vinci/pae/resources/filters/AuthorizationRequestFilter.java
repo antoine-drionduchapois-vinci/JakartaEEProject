@@ -49,15 +49,15 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
   public void filter(ContainerRequestContext requestContext) throws IOException {
     String token = requestContext.getHeaderString("Authorization");
     if (token == null) {
-      throw new WebApplicationException(Response.status(Status.UNAUTHORIZED)
-          .entity("A token is needed to access this resource").build());
+      throw new WebApplicationException("A token is needed to access this resource",
+          Status.UNAUTHORIZED);
     } else {
 
       try {
         this.jwtVerifier.verify(token);
       } catch (Exception e) {
-        throw new WebApplicationException(Response.status(Status.UNAUTHORIZED)
-            .entity("Malformed token : " + e.getMessage()).type("text/plain").build());
+        throw new WebApplicationException("Malformed token : " + e.getMessage(),
+            Status.UNAUTHORIZED);
       }
 
       Role role = myJwt.getRoleFromToken(token);
@@ -69,10 +69,14 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
       if (resourceMethod != null) {
         Authorize authorizeAnnotation = resourceMethod.getAnnotation(Authorize.class);
         if (authorizeAnnotation != null) {
-          List<String> authorizedRoles = Arrays.asList(authorizeAnnotation.value());
-          if (!authorizedRoles.contains(role.name())) {
-            throw new WebApplicationException(Response.status(Status.FORBIDDEN)
-                .entity("You do not have permission to access this resource").build());
+          List<Role> authorizedRoles = Arrays.asList(authorizeAnnotation.value());
+          if (authorizedRoles.isEmpty()) {
+            requestContext.setProperty("user", role);
+            return;
+          }
+          if (!authorizedRoles.contains(role)) {
+            throw new WebApplicationException("You do not have permission to access this resource",
+                Status.FORBIDDEN);
           }
         }
       }

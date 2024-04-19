@@ -90,10 +90,10 @@ public class JwtImpl implements Jwt {
       JWTVerifier verifier = com.auth0.jwt.JWT.require(jwtAlgorithm).withIssuer("auth0").build();
       DecodedJWT decodedJWT = verifier.verify(token);
       String roleString = decodedJWT.getClaim("role").asString();
+      System.out.println(roleString);
       return Role.valueOf(roleString); // Convertit la chaîne en enum Role
     } catch (JWTVerificationException e) {
       return null; // Token invalide ou rôle manquant
     }
   }
-
 }
