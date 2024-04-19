@@ -103,9 +103,7 @@ public class EnterpriseResource {
     ThreadContext.put("method", "Post");
 
     int enterpriseId = enterprise.getEnterpriseId();
-    System.out.println(enterpriseId);
     String blacklistedReason = enterprise.getBlacklistedReason();
-    System.out.println(blacklistedReason);
 
     if (enterpriseId == 0 || blacklistedReason == null) {
       throw new WebApplicationException("enterpriseId and blacklistedReason required",

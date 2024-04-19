@@ -116,7 +116,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
     try (PreparedStatement ps = myDalService.getPS(
         "UPDATE projetae.enterprises SET is_blacklisted = ?, blacklisted_reason = ?"
             + ", version = ? WHERE enterprise_id = ? AND version = ? RETURNING *;")) {
-      ps.setBoolean(1, blacklistedEnterpriseDTO.isBlacklisted());
+      ps.setBoolean(1, true);
       ps.setString(2, blacklistedEnterpriseDTO.getBlacklistedReason());
       ps.setInt(3, blacklistedEnterpriseDTO.getVersion() + 1);
       ps.setInt(4, blacklistedEnterpriseDTO.getEnterpriseId());

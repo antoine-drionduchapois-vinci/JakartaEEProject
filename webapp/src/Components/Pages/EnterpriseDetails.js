@@ -112,10 +112,10 @@ const renderBlacklistForm = () => {
   main.innerHTML += htmlContent;
 };
 
-const blacklist = async (id) => {
+async function blacklistEnterprise (id) {
   const blacklistForm = document.querySelector('#blacklistForm');
   const blacklistMessage = blacklistForm.elements.blacklistReason.value;
-  console.log(blacklistMessage);
+  // console.log(blacklistMessage);
   try {
     // Prepare data for API request
     const data = {
@@ -123,23 +123,24 @@ const blacklist = async (id) => {
       blacklistedReason : blacklistMessage
     };
 
-    const user = getAuthenticatedUser();
-
-
     // Make API request to change phone number
     const response = await fetch('http://localhost:8080/ent/blacklist', {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': user.token
+            'Authorization': getAuthenticatedUser().token
         },
     });
 
     // Handle response from the server
     if (!response.ok) {
-      throw new Error(`Failed to change phone`);
+      throw new Error(`Failed to blacklist the enter`);
     }
+
+    // Si la mise sur liste noire réussit, mettre à jour les contacts de l'entreprise
+    const updatedEnterpriseContacts = await fetchEnterpriseContacts(id);
+    renderEnterprisePageDetails(updatedEnterpriseContacts);
 } catch (e) {
     console.error('Error:', e);
 }
@@ -157,9 +158,12 @@ const EnterpriseDetails = async () => {
     const enterpriseContacts = await fetchEnterpriseContacts(id); // Ensure this returns HTML string
     renderEnterprisePageDetails(enterpriseContacts);
     renderBlacklistForm();
-    // Add event listener for password form submission
+    // Empêcher le comportement par défaut du formulaire lors de la soumission
     const blacklistForm = document.querySelector('#blacklistForm');
-    blacklistForm.addEventListener('submit', blacklist(id));
+    blacklistForm.addEventListener('submit', (event) => {
+      event.preventDefault(); // Empêcher le comportement par défaut du formulaire
+      blacklistEnterprise(id); // Appeler la fonction blacklistEnterprise lors de la soumission
+    });
   } catch (error) {
     console.error('Error loading dashboard:', error);
     // Optionally, render an error message in the main container or log it
