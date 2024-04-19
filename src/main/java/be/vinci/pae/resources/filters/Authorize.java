@@ -1,5 +1,6 @@
 package be.vinci.pae.resources.filters;
 
+import be.vinci.pae.domain.UserDTO.Role;
 import jakarta.ws.rs.NameBinding;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -17,5 +18,5 @@ public @interface Authorize {
    *
    * @return An array of strings representing additional information related to authorization.
    */
-  String[] value() default {};
+  Role[] value() default {};
 }

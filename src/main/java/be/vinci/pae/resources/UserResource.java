@@ -2,6 +2,7 @@ package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.domain.UserDTO.Role;
 import be.vinci.pae.resources.filters.Authorize;
 import be.vinci.pae.resources.filters.RoleId;
 import be.vinci.pae.ucc.AuthUCC;
@@ -85,7 +86,7 @@ public class UserResource {
   @GET
   @Path("All")
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize({"TEACHER", "ADMIN"})
+  @Authorize({Role.TEACHER, Role.ADMIN})
   public List<UserDTO> getUsersAsJson() {
     ThreadContext.put("route", "/users/All");
     ThreadContext.put("method", "Get");
