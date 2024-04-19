@@ -124,6 +124,7 @@ public class ContactUCCImpl implements ContactUCC {
       updatedContactDTO.setEnterpriseDTO(enterpriseDTO);
       return updatedContactDTO;
     } catch (Throwable t) {
+      myDALService.rollback();
       throw t;
     }
   }

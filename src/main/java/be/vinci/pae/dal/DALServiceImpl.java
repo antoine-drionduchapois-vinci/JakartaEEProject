@@ -73,14 +73,19 @@ public class DALServiceImpl implements DALService, DALBackService {
    * rollback the active connection.
    */
   public void rollback() {
+    Connection conn = null;
     try {
-      Connection conn = connectionThreadLocal.get();
+      conn = connectionThreadLocal.get();
       if (conn != null) {
         transactionCounter.set(0);
         conn.rollback();
       }
     } catch (SQLException rollbackEx) {
       throw new FatalErrorException(rollbackEx);
+    } finally {
+      if (conn != null) {
+        closeConnection(conn);
+      }
     }
   }
 
@@ -112,10 +117,15 @@ public class DALServiceImpl implements DALService, DALBackService {
   private void rollbackWithConn(Connection conn) {
     try {
       if (conn != null) {
+        transactionCounter.set(0);
         conn.rollback();
       }
     } catch (SQLException rollbackEx) {
       throw new FatalErrorException(rollbackEx);
+    } finally {
+      if (conn != null) {
+        closeConnection(conn);
+      }
     }
   }
 
