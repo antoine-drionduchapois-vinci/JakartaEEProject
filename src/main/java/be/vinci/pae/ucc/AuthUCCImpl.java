@@ -22,35 +22,45 @@ public class AuthUCCImpl implements AuthUCC {
 
   @Override
   public UserDTO login(UserDTO userTemp) {
-    myDALService.start();
+    try {
+      myDALService.start();
 
-    UserDTO userDTO = myUserDAO.getOneByEmail(userTemp.getEmail());
+      UserDTO userDTO = myUserDAO.getOneByEmail(userTemp.getEmail());
 
-    myDALService.commit();
-    User user = (User) userDTO;
-    if (user == null) {
-      throw new NotFoundException();
+      myDALService.commit();
+      User user = (User) userDTO;
+      if (user == null) {
+        throw new NotFoundException();
+      }
+      if (!user.checkPassword(userTemp.getPassword())) {
+        throw new BusinessException(401, "Wrong password");
+      }
+      return userDTO;
+    } catch (Throwable t) {
+      myDALService.rollback();
+      throw t;
     }
-    if (!user.checkPassword(userTemp.getPassword())) {
-      throw new BusinessException(401, "Wrong password");
-    }
-    return userDTO;
 
   }
 
   @Override
   public UserDTO register(UserDTO userTemp) {
-    myDALService.start();
-    User tempUser = (User) myUserDAO.getOneByEmail(userTemp.getEmail());
-    if (tempUser != null) {
-      throw new BusinessException(409, "User already exists!");
+    try {
+      myDALService.start();
+      User tempUser = (User) myUserDAO.getOneByEmail(userTemp.getEmail());
+      if (tempUser != null) {
+        throw new BusinessException(409, "User already exists!");
+      }
+      User user = (User) userTemp;
+      user.hashPassword(userTemp.getPassword());
+      UserDTO userDTO = myUserDAO.addUser(user);
+      //faire dto dans ressource cast et check role
+      myDALService.commit();
+      return userDTO;
+    } catch (Throwable t) {
+      myDALService.rollback();
+      throw t;
     }
-    User user = (User) userTemp;
-    user.hashPassword(userTemp.getPassword());
-    UserDTO userDTO = myUserDAO.addUser(user);
-    //faire dto dans ressource cast et check role
-    myDALService.commit();
-    return userDTO;
   }
   
 }

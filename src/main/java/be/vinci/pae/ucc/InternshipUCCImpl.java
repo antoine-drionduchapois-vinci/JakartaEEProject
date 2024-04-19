@@ -35,32 +35,38 @@ public class InternshipUCCImpl implements InternshipUCC {
 
   @Override
   public InternshipDTO getUserInternship(int userId) {
-    myDALService.start();
-    InternshipDTO internshipDTO = internshipDAO.getUserInternship(userId);
-    if (internshipDTO == null) {
-      throw new NotFoundException();
-    }
+    try {
+      myDALService.start();
 
-    EnterpriseDTO enterpriseDTO = enterpriseDAO.readOne(internshipDTO.getEnterprise());
-    if (enterpriseDTO == null) {
-      throw new NotFoundException();
-    }
-    internshipDTO.setEnterpriseDTO(enterpriseDTO);
+      InternshipDTO internshipDTO = internshipDAO.getUserInternship(userId);
+      if (internshipDTO == null) {
+        throw new NotFoundException();
+      }
 
-    ContactDTO contactDTO = contactDAO.readOne(internshipDTO.getContact());
-    if (contactDTO == null) {
-      throw new NotFoundException();
-    }
-    internshipDTO.setContactDTO(contactDTO);
+      EnterpriseDTO enterpriseDTO = enterpriseDAO.readOne(internshipDTO.getEnterprise());
+      if (enterpriseDTO == null) {
+        throw new NotFoundException();
+      }
+      internshipDTO.setEnterpriseDTO(enterpriseDTO);
 
-    SupervisorDTO supervisorDTO = supervisorDAO.readOne(internshipDTO.getSupervisor());
-    if (supervisorDTO == null) {
-      throw new NotFoundException();
-    }
-    internshipDTO.setSupervisorDTO(supervisorDTO);
+      ContactDTO contactDTO = contactDAO.readOne(internshipDTO.getContact());
+      if (contactDTO == null) {
+        throw new NotFoundException();
+      }
+      internshipDTO.setContactDTO(contactDTO);
 
-    myDALService.commit();
-    return internshipDTO;
+      SupervisorDTO supervisorDTO = supervisorDAO.readOne(internshipDTO.getSupervisor());
+      if (supervisorDTO == null) {
+        throw new NotFoundException();
+      }
+      internshipDTO.setSupervisorDTO(supervisorDTO);
+      myDALService.commit();
+
+      return internshipDTO;
+    } catch (Throwable t) {
+      myDALService.rollback();
+      throw t;
+    }
   }
 
   @Override

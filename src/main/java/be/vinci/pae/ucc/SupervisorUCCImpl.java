@@ -49,13 +49,20 @@ public class SupervisorUCCImpl implements SupervisorUCC {
    */
   @Override
   public SupervisorDTO getResponsibleByEnterpriseId(int id) {
-    myDALService.start();
-    SupervisorDTO supervisor = supervisorDAO.getResponsibleByEnterpriseId(id);
-    if (supervisor == null) {
-      throw new NotFoundException();
+    try {
+
+      myDALService.start();
+      SupervisorDTO supervisor = supervisorDAO.getResponsibleByEnterpriseId(id);
+      if (supervisor == null) {
+        throw new NotFoundException();
+      }
+      myDALService.commit();
+      return supervisor;
+    } catch (Throwable t) {
+      myDALService.rollback();
+      throw t;
     }
-    myDALService.commit();
-    return supervisor;
   }
+
 
 }
