@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
  */
 @JsonDeserialize(as = InternshipImpl.class)
 public interface InternshipDTO {
-
+  
   /**
    * Gets the ID of the internship.
    *

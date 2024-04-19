@@ -26,9 +26,13 @@ public class InternshipUCCImpl implements InternshipUCC {
   private EnterpriseDAO enterpriseDAO;
   @Inject
   private ContactDAO contactDAO;
+  @Inject
+  private ContactUCC contactUCC;
 
   @Inject
   private SupervisorDAO supervisorDAO;
+  @Inject
+  private SupervisorUCC supervisorUCC;
 
   @Inject
   private DALService myDALService;
@@ -71,59 +75,57 @@ public class InternshipUCCImpl implements InternshipUCC {
 
   @Override
   public InternshipDTO acceptInternship(InternshipDTO internship) {
-    myDALService.start();
+    try {
+      myDALService.start();
 
-    if (internshipDAO.getUserInternship(internship.getUser()) != null) {
-      throw new BusinessException(409, "user already have an internship");
-    }
+      if (internshipDAO.getUserInternship(internship.getUser()) != null) {
+        throw new BusinessException(409, "user already have an internship");
+      }
 
-    // Check contactDTO
-    ContactDTO contact = contactDAO.readOne(internship.getContact());
+      // Check contactDTO
+      ContactDTO contact = contactUCC.accept(internship.getUser(), internship.getContact());
 
-    if (contact == null || contact.getUser() != internship.getUser()) {
-      throw new NotFoundException();
-    }
-
-    // Set enterprise
-    internship.setEnterprise(contact.getEnterprise());
-    if (internship.getSupervisorDTO() != null) {
-      internship.getSupervisorDTO().setEnterprise(contact.getEnterprise());
-    }
-
-    // Check supervisorDTO
-    SupervisorDTO supervisor;
-    if (internship.getSupervisor() != 0) {
-      supervisor = supervisorDAO.readOne(internship.getSupervisor());
-      if (supervisor == null) {
+      if (contact.getUser() != internship.getUser()) {
         throw new NotFoundException();
       }
-      System.out.println(supervisor.getEnterprise());
-      System.out.println(internship.getEnterprise());
-      if (supervisor.getEnterprise() != internship.getEnterprise()) {
-        throw new NotFoundException();
+
+      // Set enterprise
+      internship.setEnterprise(contact.getEnterprise());
+      if (internship.getSupervisorDTO() != null) {
+        internship.getSupervisorDTO().setEnterprise(contact.getEnterprise());
       }
-    } else {
-      if (supervisorDAO.getResponsibleByEnterpriseId(internship.getEnterprise()) != null) {
-        throw new BusinessException(409, "supervisor already exists for this enterprise");
+
+      // Check supervisorDTO
+      SupervisorDTO supervisor;
+      if (internship.getSupervisor() != 0) {
+        supervisor = supervisorUCC.getResponsibleByEnterpriseId(internship.getEnterprise());
+        if (supervisor == null) {
+          throw new NotFoundException();
+        }
+      } else {
+        if (supervisorDAO.getResponsibleByEnterpriseId(internship.getEnterprise()) != null) {
+          throw new BusinessException(409, "supervisor already exists for this enterprise");
+        }
+        supervisor = supervisorUCC.addOne(internship.getSupervisorDTO());
+        internship.setSupervisorDTO(supervisor);
+        internship.setSupervisor(supervisor.getSupervisorId());
       }
-      supervisor = supervisorDAO.create(internship.getSupervisorDTO());
-      internship.setSupervisor(supervisor.getSupervisorId());
+
+      // Set DTOs
+      internship.setContactDTO(contact);
+      internship.setSupervisorDTO(supervisor);
+
+      // Accept
+      ((Internship) internship).accept();
+
+      internship = internshipDAO.create(internship);
+
+      myDALService.commit();
+      return internship;
+    } catch (Throwable t) {
+      myDALService.rollback();
+      throw t;
     }
-
-    // Set DTOs
-    internship.setContactDTO(contact);
-    internship.setSupervisorDTO(supervisor);
-
-    // Accept
-    if (!((Internship) internship).accept()) {
-      throw new BusinessException(403, "contact must be in meet state");
-    }
-
-    internship = internshipDAO.create(internship);
-    contactDAO.update(contact);
-
-    myDALService.commit();
-    return internship;
   }
 
   @Override
