@@ -218,7 +218,8 @@ public class ContactUCCImpl implements ContactUCC {
       List<ContactDTO> contactDTOS = myContactDAO.readEnterpriseContacts(enterpriseId);
       if (contactDTOS == null) {
         throw new NotFoundException();
-      }for (ContactDTO contact : contactDTOS) {
+      }
+      for (ContactDTO contact : contactDTOS) {
         contact.setEnterpriseDTO(myEnterpriseDAO.readOne(contact.getEnterprise()));
         contact.setUserDTO(myUserDAO.getOneByID(contact.getUser()));
       }
