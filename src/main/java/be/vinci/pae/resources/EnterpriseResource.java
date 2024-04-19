@@ -1,6 +1,7 @@
 package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.EnterpriseDTO;
+import be.vinci.pae.domain.UserDTO.Role;
 import be.vinci.pae.resources.filters.Authorize;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -98,7 +99,7 @@ public class EnterpriseResource {
   @Path("/blacklist")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize({"TEACHER", "ADMIN"})
+  @Authorize({Role.TEACHER, Role.ADMIN})
   public EnterpriseDTO blacklisted(JsonNode json, @HeaderParam("Authorization") String token) {
     ThreadContext.put("route", "/ent/blacklist");
     ThreadContext.put("method", "Post");
