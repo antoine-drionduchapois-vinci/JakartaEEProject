@@ -4,7 +4,6 @@ import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.domain.UserDTO.Role;
 import be.vinci.pae.resources.filters.Authorize;
 import be.vinci.pae.ucc.EnterpriseUCC;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
@@ -91,36 +90,35 @@ public class EnterpriseResource {
   /**
    * Blacklisted an enterprise.
    *
-   * @param json  The JSON containing information about the enterprise.
-   * @param token The authorization token.
-   * @return An ObjectNode representing the enterprise blacklisted.
+   * @param enterprise The enterprise information to be blacklisted.
+   * @return The enterprise blacklisted.
    */
   @POST
   @Path("/blacklist")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize({Role.TEACHER, Role.ADMIN})
-  public EnterpriseDTO blacklisted(JsonNode json, @HeaderParam("Authorization") String token) {
+  public EnterpriseDTO blacklisted(EnterpriseDTO enterprise) {
     ThreadContext.put("route", "/ent/blacklist");
     ThreadContext.put("method", "Post");
 
-    if (!json.hasNonNull("enterprise_id") || !json.hasNonNull("blacklisted_reason")) {
-      throw new WebApplicationException("enterprise_id and blacklisted_reason required",
+    int enterpriseId = enterprise.getEnterpriseId();
+    System.out.println(enterpriseId);
+    String blacklistedReason = enterprise.getBlacklistedReason();
+    System.out.println(blacklistedReason);
+
+    if (enterpriseId == 0 || blacklistedReason == null) {
+      throw new WebApplicationException("enterpriseId and blacklistedReason required",
           Status.BAD_REQUEST);
     }
-
-    // Get enterprise ID from JSON
-    int enterpriseId = json.get("enterprise_id").asInt();
-    String blacklistedReason = json.get("blacklisted_reason").asText();
-
     ThreadContext.put("params",
         "enterpriseId:" + enterpriseId + "blacklistedReason:" + blacklistedReason);
     // Blacklist the enterprise
-    EnterpriseDTO blacklistedEnterpriseDTO = myEnterpriseUCC.blacklistEnterprise(enterpriseId,
+    enterprise = myEnterpriseUCC.blacklistEnterprise(enterpriseId,
         blacklistedReason);
     logger.info("Status: 200 {blacklist}");
     ThreadContext.clearAll();
-    return blacklistedEnterpriseDTO;
+    return enterprise;
   }
 
 

@@ -1,7 +1,9 @@
+import { getAuthenticatedUser } from "../../utils/auths";
 import { clearPage} from "../../utils/render";
 
 let enterprise;
 const main = document.querySelector('main');
+
 const fetchEnterpriseContacts = async (id) => {
   console.log(id);
   try {
@@ -76,6 +78,73 @@ const renderEnterprisePageDetails = (enterpriseContacts) => {
   }
 };
 
+const renderBlacklistForm = () => {
+
+  // HTML content for the profile page
+  const htmlContent = `
+  <main class="section">
+      <div class="columns">
+          <div class="column is-half">
+              <h4 class="title is-4 has-text-centered">Blacklistage</h4>
+              <div class="box">
+                  <form id="blacklistForm">
+                      <div class="field">
+                          <label class="label">Motivation blacklistage</label>
+                          <div class="control">
+                              <input class="input" type="text" id= "blacklistReason">
+                          </div>
+                      </div>
+                      <div id="error2">
+                      </div>
+                      <div class="field">
+                          <div class="control has-text-centered">
+                              <button class="button is-dark is-rounded" type="submit" id="blacklist-submit">Blacklister</button>
+                          </div>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </main>
+  `;
+
+  // Set the HTML content to the main element
+  main.innerHTML += htmlContent;
+};
+
+const blacklist = async (id) => {
+  const blacklistForm = document.querySelector('#blacklistForm');
+  const blacklistMessage = blacklistForm.elements.blacklistReason.value;
+  console.log(blacklistMessage);
+  try {
+    // Prepare data for API request
+    const data = {
+      enterpriseId: id,
+      blacklistedReason : blacklistMessage
+    };
+
+    const user = getAuthenticatedUser();
+
+
+    // Make API request to change phone number
+    const response = await fetch('http://localhost:8080/ent/blacklist', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': user.token
+        },
+    });
+
+    // Handle response from the server
+    if (!response.ok) {
+      throw new Error(`Failed to change phone`);
+    }
+} catch (e) {
+    console.error('Error:', e);
+}
+};
+
 const EnterpriseDetails = async () => {
   
   clearPage();
@@ -87,7 +156,10 @@ const EnterpriseDetails = async () => {
     main.innerHTML = `<p>Loading Data...</p>`;
     const enterpriseContacts = await fetchEnterpriseContacts(id); // Ensure this returns HTML string
     renderEnterprisePageDetails(enterpriseContacts);
-    
+    renderBlacklistForm();
+    // Add event listener for password form submission
+    const blacklistForm = document.querySelector('#blacklistForm');
+    blacklistForm.addEventListener('submit', blacklist(id));
   } catch (error) {
     console.error('Error loading dashboard:', error);
     // Optionally, render an error message in the main container or log it
