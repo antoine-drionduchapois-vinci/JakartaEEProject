@@ -35,9 +35,11 @@ public class InternshipUCCImpl implements InternshipUCC {
 
   @Override
   public InternshipDTO getUserInternship(int userId) {
-    myDALService.start();
-    InternshipDTO internshipDTO = internshipDAO.getUserInternship(userId);
-    if (internshipDTO == null) {
+    try {
+      myDALService.start();
+
+      InternshipDTO internshipDTO = internshipDAO.getUserInternship(userId);
+      if (internshipDTO == null) {
       throw new NotFoundException();
     }
 
@@ -57,10 +59,13 @@ public class InternshipUCCImpl implements InternshipUCC {
     if (supervisorDTO == null) {
       throw new NotFoundException();
     }
-    internshipDTO.setSupervisorDTO(supervisorDTO);
+    internshipDTO.setSupervisorDTO(supervisorDTO);myDALService.commit();
 
-    myDALService.commit();
-    return internshipDTO;
+      return internshipDTO;
+    } catch (Throwable t) {
+      myDALService.rollback();
+      throw t;
+    }
   }
 
   @Override

@@ -64,6 +64,17 @@ public class DALServiceImpl implements DALService, DALBackService {
     }
   }
 
+  public void rollback() {
+    try {
+      Connection conn = connectionThreadLocal.get();
+      if (conn != null) {
+        conn.rollback();
+      }
+    } catch (SQLException rollbackEx) {
+      throw new FatalErrorException(rollbackEx);
+    }
+  }
+
 
   /**
    * Commits the active connection.
@@ -77,14 +88,14 @@ public class DALServiceImpl implements DALService, DALBackService {
     try {
       conn.commit();
     } catch (SQLException e) {
-      rollback(conn);
+      rollbackWithConn(conn);
       throw new FatalErrorException(e);
     } finally {
       closeConnection(conn);
     }
   }
 
-  private void rollback(Connection conn) {
+  private void rollbackWithConn(Connection conn) {
     try {
       if (conn != null) {
         conn.rollback();
