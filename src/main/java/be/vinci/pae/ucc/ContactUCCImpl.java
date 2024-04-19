@@ -13,7 +13,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.List;
 
-
 /**
  * Implementation of the EnterpriseUCC interface.
  */
@@ -193,15 +192,15 @@ public class ContactUCCImpl implements ContactUCC {
         throw new NotFoundException();
       }
       for (ContactDTO contact : contactDTOS) {
-      contact.setEnterpriseDTO(myEnterpriseDAO.readOne(contact.getEnterprise()));
-      contact.setUserDTO(myUserDAO.getOneByID(contact.getUser()));
-      }myDALService.commit();
+        contact.setEnterpriseDTO(myEnterpriseDAO.readOne(contact.getEnterprise()));
+        contact.setUserDTO(myUserDAO.getOneByID(contact.getUser()));
+      }
+      myDALService.commit();
       return contactDTOS;
     } catch (Throwable t) {
       myDALService.rollback();
       throw t;
     }
   }
-
 
 }
