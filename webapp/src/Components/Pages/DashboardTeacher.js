@@ -111,7 +111,7 @@ const renderChart = (chartContainer, noStage, total) => {
       {
         label: "Nombre d'étudiants",
         data: [noStage, total - noStage],
-        backgroundColor: ['rgb(255, 99, 132)', 'rgb(54, 162, 235)'],
+        backgroundColor: ['rgb(221,255,0)','rgb(69, 176, 103)'],
         hoverOffset: 4,
       },
     ],

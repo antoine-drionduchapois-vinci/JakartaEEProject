@@ -37,7 +37,7 @@ const HomePage = () => {
           </h2>
           <div class="columns is-centered mt-6">
             <div class="column is-narrow">
-              <button class="button is-large text-white is-rounded" id="registerButton" style="background-color: #004182;">
+              <button class="button is-large text-white is-rounded" id="registerButton" style="background-color: #b12763;">
                 <span class="icon">
                   <i class="fas fa-user-plus"></i>
                 </span>
