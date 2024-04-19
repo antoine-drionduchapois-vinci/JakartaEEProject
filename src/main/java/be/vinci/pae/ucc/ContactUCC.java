@@ -12,8 +12,8 @@ public interface ContactUCC {
    * Retrieves a list of contacts associated with the specified user ID.
    *
    * @param userId The ID of the user whose contacts are to be retrieved.
-   * @return A list of contacts associated with the specified user ID,
-   *         or null if no contacts are found.
+   * @return A list of contacts associated with the specified user ID, or null if no contacts are
+   *         found.
    */
   List<ContactDTO> getContacts(int userId);
 
@@ -33,7 +33,7 @@ public interface ContactUCC {
    * @param userId       The ID of the user initiating the contact.
    * @param enterpriseId The ID of the enterprise to initiate contact with.
    * @return An ObjectNode containing the newly created contact information if successful, or null
-   *        if the contact already exists.
+   *         if the contact already exists.
    */
   ContactDTO initiateContact(int userId, int enterpriseId);
 
@@ -93,8 +93,9 @@ public interface ContactUCC {
    * Retrieves a list of contacts associated with the enterprise.
    *
    * @param enterpriseId The ID of the user whose contacts are to be retrieved.
-   * @return A list of contacts associated with the specified enterprise ID, or null if no contacts
-   * are found.
+   * @return A list of contacts associated with the specified enterprise ID, or null if
+   *         no contacts are
+   *         found.
    */
   List<ContactDTO> getEnterpriseContacts(int enterpriseId);
 }

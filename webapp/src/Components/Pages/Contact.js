@@ -7,7 +7,6 @@ import TookRow from '../Contact/TookRow';
 import RefusedRow from '../Contact/RefusedRow';
 import UnfollowedRow from '../Contact/UnfollowedRow';
 import AcceptedRow from '../Contact/AcceptedRow';
-import SuspendedRow from '../Contact/suspendedRow';
 
 // Contact component definition
 const Contact = async () => {
@@ -72,7 +71,6 @@ const Contact = async () => {
     <div id="accepted-row" class="columns p-4"></div>
     <div id="refused-row" class="columns p-4"></div>
     <div id="unfollowed-row" class="columns p-4"></div>
-    <div id="suspended-row" class="columns p-4"></div>
   `;
 
   const backButton = document.querySelector('#back');
@@ -90,7 +88,6 @@ const Contact = async () => {
   AcceptedRow(document.querySelector('#accepted-row'), contact, internship);
   RefusedRow(document.querySelector('#refused-row'), contact);
   UnfollowedRow(document.querySelector('#unfollowed-row'), contact);
-  SuspendedRow(document.querySelector('#suspended-row'), contact);
 };
 
 // Exporting Contact component
