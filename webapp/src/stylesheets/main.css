@@ -132,14 +132,14 @@ tbody tr:hover {
   font-size: 24px; /* Tu peux ajuster cette valeur selon tes préférences */
 }
 
-/* CSS pour aligner les éléments horizontalement */
+/* CSS for Navbar */
 .navbar-nav .nav-link {
   display: flex;
-  align-items: center; /* Alignement vertical au centre */
+  align-items: center;
 }
 
-/* CSS pour agrandir l'icône */
+/* CSS for icon */
 .navbar-nav .nav-link .icon i {
-  font-size: 1.5em; /* Taille de l'icône */
-  margin-right: 5px; /* Marge à droite pour séparer l'icône de l'e-mail */
+  font-size: 1.5em;
+  margin-right: 5px;
 }
