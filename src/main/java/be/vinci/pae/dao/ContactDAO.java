@@ -13,8 +13,9 @@ public interface ContactDAO {
    * Retrieves a list of contacts associated with the specified user ID.
    *
    * @param userId The ID of the user for whom to retrieve contacts.
-   * @return A List containing Contact objects representing the contacts associated with the
-   * specified user ID.
+   * @return A List containing Contact objects representing the contacts
+   *         associated with the
+   *         specified user ID.
    */
   List<ContactDTO> readMany(int userId);
 
@@ -55,7 +56,6 @@ public interface ContactDAO {
    */
   ContactDTO update(ContactDTO newContactDTO);
 
-
   /**
    * Retrieves a list of contacts associated with the specified enterprise.
    *
@@ -66,13 +66,15 @@ public interface ContactDAO {
    */
   List<ContactDTO> readEnterpriseContacts(int enterpriseId);
 
-
   /**
-   * Retrieves a list of "initiated" or "meet" contacts associated with the specified company.
+   * Retrieves a list of "initiated" or "meet" contacts associated with the
+   * specified company.
    *
-   * @param enterpriseId The ID of the enterprise for which the contacts are to be retrieved.
-   * @return A List containing Contact objects representing the contacts "initiated" or "meet"
-   * associated with the specified enterprise ID.
+   * @param enterpriseId The ID of the enterprise for which the contacts are to be
+   *                     retrieved.
+   * @return A List containing Contact objects representing the contacts
+   *         "initiated" or "meet"
+   *         associated with the specified enterprise ID.
    */
   List<ContactDTO> readEnterpriseInitiatedOrMeetContacts(int enterpriseId);
 

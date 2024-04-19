@@ -19,8 +19,8 @@ public class DALServiceImpl implements DALService, DALBackService {
   private final String username = Config.getProperty("db.username");
   private final String password = Config.getProperty("db.password");
   private final ThreadLocal<Connection> connectionThreadLocal = new ThreadLocal<>();
-  private final static ThreadLocal<Integer> transactionCounter = ThreadLocal.withInitial(
-      () -> 0); // Thread-local counter variable
+  private final ThreadLocal<Integer> transactionCounter = ThreadLocal.withInitial(
+      () -> 0);
   private final int MAX_CONNECTIONS = 3;
 
   /**
@@ -38,7 +38,7 @@ public class DALServiceImpl implements DALService, DALBackService {
     if (transactionCounter.get() == 0) {
       connection();
     }
-    transactionCounter.set(transactionCounter.get() + 1); // Increment the thread-local counter
+    transactionCounter.set(transactionCounter.get() + 1);
   }
 
   private void connection() {

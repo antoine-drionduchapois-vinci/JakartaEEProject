@@ -6,7 +6,7 @@ package be.vinci.pae.dal;
 public interface DALService {
 
   /**
-   * Initializes the data source for database connections and increased the transaction counter.
+   * Initializes the data source for database connections and increments the transaction counter.
    */
   void start();
 
