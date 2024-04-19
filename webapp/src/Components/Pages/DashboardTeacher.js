@@ -130,14 +130,13 @@ const updateTable = (tableBody, list) => {
   list.forEach((e) => {
     const row = document.createElement('tr');
     row.addEventListener('click', () => {
-
-      if (e.blacklist === undefined){
-        Navigate(`/dashboardS?id=${e.id}`);
-      }else {
+      if (e.blacklist === undefined) {
+        if (e.role === 'STUDENT') {
+          Navigate(`/dashboardS?id=${e.id}`);
+        }
+      } else {
         Navigate(`/enterpriseDetails?id=${e.id}`);
-        
       }
-      
     });
     const values = Object.values(e).slice(1);
     values.forEach((value) => {
@@ -283,8 +282,11 @@ const renderEnterpriseTable = (tableContainer, enterprises) => {
   const tbody = document.createElement('tbody');
   // Fonction pour trier les colonnes
   const sortColumn = (columnName) => {
-    const lowerColumnName = columnName.trim().toLowerCase().replace(/\s/g, '');
-    
+    const lowerColumnName = columnName
+      .trim()
+      .toLowerCase()
+      .replace(/\s/g, '');
+
     enterprises.sort((a, b) => {
       const valueA = a[lowerColumnName];
       const valueB = b[lowerColumnName];
@@ -307,7 +309,7 @@ const renderEnterpriseTable = (tableContainer, enterprises) => {
 
     // Mettre à jour le tableau avec les entreprises triées
     updateTable(tbody, enterprises);
-};
+  };
 
   // Créer la première ligne pour les en-têtes de colonne
   const thead = document.createElement('thead');
