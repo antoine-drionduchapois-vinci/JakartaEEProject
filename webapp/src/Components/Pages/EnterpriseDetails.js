@@ -1,15 +1,8 @@
 import { clearPage} from "../../utils/render";
+import stateTranslation from "../../utils/translation";
 
 let enterprise;
 const main = document.querySelector('main');
-
-const stateTranslation = {
-  suspended: 'Suspendu',
-  accepted: 'Accepté',
-  refused: 'Refusé',
-  meet: 'Rencontré',
-  initiated: 'Initié',
-};
 
 const fetchEnterpriseContacts = async (id) => {
   try {

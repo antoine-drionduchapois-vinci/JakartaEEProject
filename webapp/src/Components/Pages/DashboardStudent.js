@@ -2,6 +2,7 @@
 import { getAuthenticatedUser } from '../../utils/auths';
 
 import { clearPage} from '../../utils/render';
+import translation from '../../utils/translation';
 import Navigate from '../Router/Navigate';
 
 let urlId;
@@ -94,10 +95,11 @@ const fetchUserContacts = async () => {
       } = contactsArray[index];
       const reason = refusalReason === null ? '' : refusalReason;
       const meeting = meetingPoint === null ? '' : meetingPoint;
+      const translatedState = translation[state] || state;
       contactsHtml += `
             <tr>
             <td><a class="enterprise_link" data-contact-id="${contactId}">${enterprise_name}</a></td>
-            <td> ${state}</td>
+            <td> ${translatedState}</td>
             <td> ${meeting}</td>
             <td> ${reason}</td>
             <td> ${year}</td>

@@ -2,6 +2,7 @@ import Chart from 'chart.js/auto';
 import { clearPage, renderPageTitle } from '../../utils/render';
 import { getAuthenticatedUser } from '../../utils/auths';
 import autocomplete from '../../services/autocomplete';
+import translation from '../../utils/translation';
 import Navigate from '../Router/Navigate';
 
 // Fonction pour récupérer les données des entreprises
@@ -77,16 +78,19 @@ const fetchUsers = async () => {
     if (!response.ok) {
       throw new Error('Erreur lors de la récupération des données des utilisateurs');
     }
-
+    let translatedRole = '';
     let data = await response.json();
-    data = data.map((u) => ({
+    data = data.map((u) => {
+      translatedRole = translation[u.role] || u.role;
+      return {
       id: u.userId,
       nom: u.name,
       prenom: u.surname,
       email: u.email,
-      role: u.role,
+      role: translatedRole,
       année: u.year,
-    }));
+      };
+    });
 
     return data; // Retourner directement le tableau d'utilisateurs de la réponse JSON
   } catch (error) {
@@ -241,7 +245,7 @@ const renderForm = (formContainer, users, tableUserContainer) => {
       // Filtrer les utilisateurs en fonction des critères
       const filteredUsers = users.filter((user) => {
         const matchesName = !name || user.name.toLowerCase().includes(name.toLowerCase());
-        const matchesIsStudent = !isStudent || user.role === 'STUDENT';
+        const matchesIsStudent = !isStudent || user.role === 'Etudiant';
 
         // Vérifier si selectedYear est null ou vide
         if (!selectedYear) {
