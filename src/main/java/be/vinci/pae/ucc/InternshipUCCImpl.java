@@ -40,26 +40,27 @@ public class InternshipUCCImpl implements InternshipUCC {
 
       InternshipDTO internshipDTO = internshipDAO.getUserInternship(userId);
       if (internshipDTO == null) {
-      throw new NotFoundException();
-    }
+        throw new NotFoundException();
+      }
 
-    EnterpriseDTO enterpriseDTO = enterpriseDAO.readOne(internshipDTO.getEnterprise());
-    if (enterpriseDTO == null) {
-      throw new NotFoundException();
-    }
-    internshipDTO.setEnterpriseDTO(enterpriseDTO);
+      EnterpriseDTO enterpriseDTO = enterpriseDAO.readOne(internshipDTO.getEnterprise());
+      if (enterpriseDTO == null) {
+        throw new NotFoundException();
+      }
+      internshipDTO.setEnterpriseDTO(enterpriseDTO);
 
-    ContactDTO contactDTO = contactDAO.readOne(internshipDTO.getContact());
-    if (contactDTO == null) {
-      throw new NotFoundException();
-    }
-    internshipDTO.setContactDTO(contactDTO);
+      ContactDTO contactDTO = contactDAO.readOne(internshipDTO.getContact());
+      if (contactDTO == null) {
+        throw new NotFoundException();
+      }
+      internshipDTO.setContactDTO(contactDTO);
 
-    SupervisorDTO supervisorDTO = supervisorDAO.readOne(internshipDTO.getSupervisor());
-    if (supervisorDTO == null) {
-      throw new NotFoundException();
-    }
-    internshipDTO.setSupervisorDTO(supervisorDTO);myDALService.commit();
+      SupervisorDTO supervisorDTO = supervisorDAO.readOne(internshipDTO.getSupervisor());
+      if (supervisorDTO == null) {
+        throw new NotFoundException();
+      }
+      internshipDTO.setSupervisorDTO(supervisorDTO);
+      myDALService.commit();
 
       return internshipDTO;
     } catch (Throwable t) {
