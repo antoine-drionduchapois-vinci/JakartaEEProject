@@ -2,8 +2,16 @@ import { clearPage} from "../../utils/render";
 
 let enterprise;
 const main = document.querySelector('main');
+
+const stateTranslation = {
+  suspended: 'Suspendu',
+  accepted: 'Accepté',
+  refused: 'Refusé',
+  meet: 'Rencontré',
+  initiated: 'Initié',
+};
+
 const fetchEnterpriseContacts = async (id) => {
-  console.log(id);
   try {
       const response = await fetch(`http://localhost:8080/contact/getEnterpriseContacts/${id}`);
       if (!response.ok) {
@@ -11,7 +19,6 @@ const fetchEnterpriseContacts = async (id) => {
       }
 
       const contactsArray = await response.json();  // Assume this response is an array
-      console.log(contactsArray);
       let contactsHtml = ''; // Initialize an empty string to accumulate HTML content
       for (let index = 0; index < contactsArray.length; index += 1) {
           const {
@@ -28,6 +35,8 @@ const fetchEnterpriseContacts = async (id) => {
 
           enterprise = enterpriseName;
 
+          const translatedState = stateTranslation[state] || state;
+
           contactsHtml += `
               <tr>
               <td>${enterpriseName}</td>
@@ -35,7 +44,7 @@ const fetchEnterpriseContacts = async (id) => {
               <td>${studentSurname}</td>
               <td>${year}</td>
               <td>${meeting}</td>
-              <td>${state}</td>
+              <td>${translatedState}</td>
               <td>${reason}</td>
               </tr>
           `;
@@ -52,7 +61,7 @@ const renderEnterprisePageDetails = (enterpriseContacts) => {
   try {
     const combinedHtml = `
     <h2 class="title is-3 mt-3 mb-3 has-text-centered">Contact avec l'entreprise ${enterprise}</h2>
-      <table class="table is-striped is-fullwidth">
+      <table class="table is-striped ">
         <thead>
           <tr>
             <th>Entreprise</th>
