@@ -177,24 +177,5 @@ public class ContactDAOImpl implements ContactDAO {
     }
   }
 
-  @Override
-  public List<ContactDTO> updateStateInitiatedOrMeetContacts(ContactDTO contact,
-      String newState) {
-    try (PreparedStatement ps = myDalService.getPS(
-        "UPDATE projetae.contacts SET state = ?, version = ? "
-            + "WHERE enterprise = ? AND (state = 'initiated' OR state = 'meet') "
-            + "AND year = ? AND version = ? RETURNING *")) {
-      ps.setString(1, newState);
-      ps.setInt(2, contact.getVersion() + 1);
-      ps.setInt(3, contact.getEnterprise());
-      ps.setString(4, getCurrentYearString());
-      ps.setInt(5, contact.getVersion());
-      ps.execute();
-      return contactMapper.mapResultSetToObjectList(ps.getResultSet(), ContactImpl.class,
-          myDomainFactory::getContact);
-    } catch (SQLException | IllegalAccessException e) {
-      System.out.println("DAO sql error");
-      throw new FatalErrorException(e);
-    }
-  }
+
 }

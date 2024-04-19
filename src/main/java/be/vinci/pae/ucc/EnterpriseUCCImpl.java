@@ -21,6 +21,8 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
   @Inject
   private ContactDAO myContactDAO;
   @Inject
+  private ContactUCC myContactUCC;
+  @Inject
   private DALService myDALService;
 
   @Override
@@ -45,31 +47,35 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
 
   @Override
   public EnterpriseDTO blacklistEnterprise(int enterpriseId, String blacklistedReason) {
-    myDALService.start();
+    try {
+      myDALService.start();
 
-    Enterprise enterprise = (Enterprise) myEnterpriseDAO.readOne(enterpriseId);
+      Enterprise enterprise = (Enterprise) myEnterpriseDAO.readOne(enterpriseId);
 
-    if (enterprise.getEnterpriseId() != enterpriseId) {
-      throw new NotFoundException();
-    }
-
-    if (!enterprise.toBlacklist(blacklistedReason)) {
-      throw new BusinessException(403, "enterprise must not be already blacklisted");
-    }
-
-    EnterpriseDTO blacklistedEnterpriseDTO = myEnterpriseDAO.toBlacklist(enterprise);
-
-    /*Annulation des contacts initiés avec l'entreprise*/
-    //Solution sans UCC Imbriqués !!!
-    List<ContactDTO> contactDTOS = myContactDAO.readEnterpriseInitiatedOrMeetContacts(
-        enterpriseId);
-    if (contactDTOS != null) {
-      for (ContactDTO contactDTO : contactDTOS) {
-        contactDTO.setState("suspended");
-        myContactDAO.updateStateInitiatedOrMeetContacts(contactDTO, "suspended");
+      if (enterprise.getEnterpriseId() != enterpriseId) {
+        throw new NotFoundException();
       }
+
+      if (!enterprise.toBlacklist(blacklistedReason)) {
+        throw new BusinessException(403, "enterprise must not be already blacklisted");
+      }
+
+      EnterpriseDTO blacklistedEnterpriseDTO = myEnterpriseDAO.toBlacklist(enterprise);
+
+      //Solution avec UCC Imbriqués !!!
+      List<ContactDTO> contactDTOS = myContactDAO.readEnterpriseInitiatedOrMeetContacts(
+          enterpriseId);
+      if (contactDTOS != null) {
+        for (ContactDTO contactDTO : contactDTOS) {
+          myContactUCC.indicateAsSuspended(contactDTO.getContactId());
+        }
+      }
+
+      myDALService.commit();
+      return blacklistedEnterpriseDTO;
+    } catch (Throwable t) {
+      myDALService.rollback();
+      throw t;
     }
-    myDALService.commit();
-    return blacklistedEnterpriseDTO;
   }
 }

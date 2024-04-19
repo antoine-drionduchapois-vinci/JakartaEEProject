@@ -35,7 +35,7 @@ public class EnterpriseResource {
   private EnterpriseUCC myEnterpriseUCC;
 
   @Inject
-  private JWT myJwt;
+  private Jwt myJwt;
 
   /**
    * Retrieves all enterprise.
@@ -95,18 +95,13 @@ public class EnterpriseResource {
    * @return An ObjectNode representing the enterprise blacklisted.
    */
   @POST
-  @Path("enterprises")
+  @Path("/blacklist")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize({"TEACHER", "ADMIN"})
   public EnterpriseDTO blacklisted(JsonNode json, @HeaderParam("Authorization") String token) {
     ThreadContext.put("route", "/ent/blacklist");
     ThreadContext.put("method", "Post");
-
-    int userId = myJwt.getUserIdFromToken(token);
-    if (userId == 0) {
-      throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
-    }
 
     if (!json.hasNonNull("enterprise_id") || !json.hasNonNull("blacklisted_reason")) {
       throw new WebApplicationException("enterprise_id and blacklisted_reason required",

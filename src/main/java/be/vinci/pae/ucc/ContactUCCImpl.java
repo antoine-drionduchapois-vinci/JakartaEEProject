@@ -130,25 +130,30 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public ContactDTO indicateAsSuspended(int contactId) {
-    myDALService.start();
+    try {
+      myDALService.start();
 
-    Contact contact = (Contact) myContactDAO.readOne(contactId);
-    if (contact.getContactId() != contactId) {
-      throw new NotFoundException();
-    }
+      Contact contact = (Contact) myContactDAO.readOne(contactId);
+      if (contact.getContactId() != contactId) {
+        throw new NotFoundException();
+      }
 
-    if (!contact.indicateAsSuspended()) {
-      throw new BusinessException(403, "contact must be initiated or meet");
-    }
+      if (!contact.indicateAsSuspended()) {
+        throw new BusinessException(403, "contact must be initiated or meet");
+      }
 
-    ContactDTO updatedContactDTO = myContactDAO.update(contact);
-    EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(updatedContactDTO.getEnterprise());
-    myDALService.commit();
-    if (enterpriseDTO == null) {
-      throw new NotFoundException();
+      ContactDTO updatedContactDTO = myContactDAO.update(contact);
+      EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(updatedContactDTO.getEnterprise());
+      myDALService.commit();
+      if (enterpriseDTO == null) {
+        throw new NotFoundException();
+      }
+      updatedContactDTO.setEnterpriseDTO(enterpriseDTO);
+      return updatedContactDTO;
+    } catch (Throwable t) {
+      myDALService.rollback();
+      throw t;
     }
-    updatedContactDTO.setEnterpriseDTO(enterpriseDTO);
-    return updatedContactDTO;
   }
 
   @Override

@@ -12,7 +12,7 @@ public interface ContactDAO {
    * Retrieves a list of contacts associated with the specified user ID.
    *
    * @param userId The ID of the user for whom to retrieve contacts.
-   * @return A List containing Contact objects representing the contacts associated with the 
+   * @return A List containing Contact objects representing the contacts associated with the
    * specified user ID.
    */
   List<ContactDTO> readMany(int userId);
@@ -57,23 +57,20 @@ public interface ContactDAO {
   /**
    * Retrieves a list of contacts associated with the specified enterprise.
    *
-   * @param enterpriseId The ID of the user for whom to retrieve contacts.
-   * @return A List containing Contact objects representing the contacts associated with the 
+   * @param enterpriseId The ID of the enterprise for whom to retrieve contacts.
+   * @return A List containing Contact objects representing the contacts associated with the
    * specified enterprise ID.
    */
   List<ContactDTO> readEnterpriseContacts(int enterpriseId);
 
-  List<ContactDTO> readEnterpriseInitiatedOrMeetContacts(int enterpriseId);
 
   /**
-   * Updates the state of all contacts "initiated" or "met" (those for the current year) associated
-   * with the specified company.
+   * Retrieves a list of "initiated" or "meet" contacts associated with the specified company.
    *
-   * @param contactDTO The contactDTO representing the contact for which the state 'initiated' or
-   *                   'met' will be changed.
-   * @param newState   The new contact state.
-   * @return A list containing ContactDTO objects representing all "initiated" or "meet" contacts 
-   * (from the current year) associated with the specified contactDTO id, with their updated state.
+   * @param enterpriseId The ID of the enterprise for which the contacts are to be retrieved.
+   * @return A List containing Contact objects representing the contacts "initiated" or "meet"
+   * associated with the specified enterprise ID.
    */
-  List<ContactDTO> updateStateInitiatedOrMeetContacts(ContactDTO contactDTO, String newState);
+  List<ContactDTO> readEnterpriseInitiatedOrMeetContacts(int enterpriseId);
+
 }
