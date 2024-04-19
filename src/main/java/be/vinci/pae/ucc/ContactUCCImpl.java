@@ -33,99 +33,128 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public List<ContactDTO> getContacts(int userId) {
-    myDALService.start();
-    List<ContactDTO> contactDTOS = myContactDAO.readMany(userId);
-    for (ContactDTO contact : contactDTOS) {
-      contact.setEnterpriseDTO(myEnterpriseDAO.readOne(contact.getEnterprise()));
+    try {
+      myDALService.start();
+      List<ContactDTO> contactDTOS = myContactDAO.readMany(userId);
+      for (ContactDTO contact : contactDTOS) {
+        contact.setEnterpriseDTO(myEnterpriseDAO.readOne(contact.getEnterprise()));
+      }
+      myDALService.commit();
+      return contactDTOS;
+    } catch (Throwable t) {
+      myDALService.rollback();
+      throw t;
     }
-    myDALService.commit();
-    return contactDTOS;
   }
 
   @Override
   public ContactDTO getContact(int userId, int contactId) {
-    myDALService.start();
-    ContactDTO contactDTO = myContactDAO.readOne(contactId);
-    if (contactDTO.getUser() != userId) {
-      throw new NotFoundException();
+    try {
+      myDALService.start();
+      ContactDTO contactDTO = myContactDAO.readOne(contactId);
+      if (contactDTO.getUser() != userId) {
+        throw new NotFoundException();
+      }
+      EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(contactDTO.getEnterprise());
+      myDALService.commit();
+      if (enterpriseDTO == null) {
+        throw new NotFoundException();
+      }
+      contactDTO.setEnterpriseDTO(enterpriseDTO);
+      return contactDTO;
+    } catch (Throwable t) {
+      myDALService.rollback();
+      throw t;
     }
-    EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(contactDTO.getEnterprise());
-    myDALService.commit();
-    if (enterpriseDTO == null) {
-      throw new NotFoundException();
-    }
-    contactDTO.setEnterpriseDTO(enterpriseDTO);
-    return contactDTO;
   }
 
   @Override
   public ContactDTO initiateContact(int userId, int enterpriseId) {
-    myDALService.start();
-    ContactDTO contactDTO = myContactDAO.create(userId, enterpriseId);
-    EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(contactDTO.getEnterprise());
-    myDALService.commit();
-    if (enterpriseDTO == null) {
-      throw new NotFoundException();
+    try {
+      myDALService.start();
+      ContactDTO contactDTO = myContactDAO.create(userId, enterpriseId);
+      EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(contactDTO.getEnterprise());
+      myDALService.commit();
+      if (enterpriseDTO == null) {
+        throw new NotFoundException();
+      }
+      contactDTO.setEnterpriseDTO(enterpriseDTO);
+      return contactDTO;
+    } catch (Throwable t) {
+      myDALService.rollback();
+      throw t;
     }
-    contactDTO.setEnterpriseDTO(enterpriseDTO);
-    return contactDTO;
   }
 
   @Override
   public ContactDTO initiateContact(int userId, String enterpriseName, String enterpriseLabel,
       String enterpriseAddress, String enterprisePhone, String enterpriseEmail) {
-    myDALService.start();
-    EnterpriseDTO enterpriseDTO = myEnterpriseDAO.create(enterpriseName, enterpriseLabel,
-        enterpriseAddress, enterprisePhone, enterpriseEmail);
-    ContactDTO contactDTO = myContactDAO.create(userId, enterpriseDTO.getEnterpriseId());
-    myDALService.commit();
-    contactDTO.setEnterpriseDTO(enterpriseDTO);
-    return contactDTO;
+    try {
+      myDALService.start();
+      EnterpriseDTO enterpriseDTO = myEnterpriseDAO.create(enterpriseName, enterpriseLabel,
+          enterpriseAddress, enterprisePhone, enterpriseEmail);
+      ContactDTO contactDTO = myContactDAO.create(userId, enterpriseDTO.getEnterpriseId());
+      myDALService.commit();
+      contactDTO.setEnterpriseDTO(enterpriseDTO);
+      return contactDTO;
+    } catch (Throwable t) {
+      myDALService.rollback();
+      throw t;
+    }
   }
 
   @Override
   public ContactDTO meetEnterprise(int userId, int contactId, String meetingPoint) {
-    myDALService.start();
-    Contact contact = (Contact) myContactDAO.readOne(contactId);
-    if (contact.getUser() != userId) {
-      throw new NotFoundException();
-    }
+    try {
+      myDALService.start();
+      Contact contact = (Contact) myContactDAO.readOne(contactId);
+      if (contact.getUser() != userId) {
+        throw new NotFoundException();
+      }
 
-    if (!contact.meet(meetingPoint)) {
-      throw new BusinessException(403, "contact must be initiated");
-    }
+      if (!contact.meet(meetingPoint)) {
+        throw new BusinessException(403, "contact must be initiated");
+      }
 
-    ContactDTO updatedContactDTO = myContactDAO.update(contact);
-    EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(updatedContactDTO.getEnterprise());
-    myDALService.commit();
-    if (enterpriseDTO == null) {
-      throw new NotFoundException();
+      ContactDTO updatedContactDTO = myContactDAO.update(contact);
+      EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(updatedContactDTO.getEnterprise());
+      myDALService.commit();
+      if (enterpriseDTO == null) {
+        throw new NotFoundException();
+      }
+      updatedContactDTO.setEnterpriseDTO(enterpriseDTO);
+      return updatedContactDTO;
+    } catch (Throwable t) {
+      throw t;
     }
-    updatedContactDTO.setEnterpriseDTO(enterpriseDTO);
-    return updatedContactDTO;
   }
 
   @Override
   public ContactDTO indicateAsRefused(int userId, int contactId, String refusalReason) {
-    myDALService.start();
-    Contact contact = (Contact) myContactDAO.readOne(contactId);
-    if (contact.getUser() != userId) {
-      throw new NotFoundException();
-    }
+    try {
+      myDALService.start();
+      Contact contact = (Contact) myContactDAO.readOne(contactId);
+      if (contact.getUser() != userId) {
+        throw new NotFoundException();
+      }
 
-    if (!contact.indicateAsRefused(refusalReason)) {
-      throw new BusinessException(403, "contact must be initiated or meet");
-    }
+      if (!contact.indicateAsRefused(refusalReason)) {
+        throw new BusinessException(403, "contact must be initiated or meet");
+      }
 
-    ContactDTO updatedContactDTO = myContactDAO.update(contact);
-    EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(updatedContactDTO.getEnterprise());
-    myDALService.commit();
-    if (enterpriseDTO == null) {
-      throw new NotFoundException();
-    }
+      ContactDTO updatedContactDTO = myContactDAO.update(contact);
+      EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(updatedContactDTO.getEnterprise());
+      myDALService.commit();
+      if (enterpriseDTO == null) {
+        throw new NotFoundException();
+      }
 
-    updatedContactDTO.setEnterpriseDTO(enterpriseDTO);
-    return updatedContactDTO;
+      updatedContactDTO.setEnterpriseDTO(enterpriseDTO);
+      return updatedContactDTO;
+    } catch (Throwable t) {
+      myDALService.rollback();
+      throw t;
+    }
   }
 
   @Override
@@ -158,39 +187,48 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public ContactDTO unfollow(int userId, int contactId) {
-    myDALService.start();
-    Contact contact = (Contact) myContactDAO.readOne(contactId);
-    if (contact.getUser() != userId) {
-      throw new NotFoundException();
-    }
+    try {
+      myDALService.start();
+      Contact contact = (Contact) myContactDAO.readOne(contactId);
+      if (contact.getUser() != userId) {
+        throw new NotFoundException();
+      }
 
-    if (!contact.unfollow()) {
-      throw new BusinessException(403, "contact must be initiated or meet");
-    }
+      if (!contact.unfollow()) {
+        throw new BusinessException(403, "contact must be initiated or meet");
+      }
 
-    ContactDTO updatedContactDTO = myContactDAO.update(contact);
-    EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(updatedContactDTO.getEnterprise());
-    myDALService.commit();
-    if (enterpriseDTO == null) {
-      throw new NotFoundException();
+      ContactDTO updatedContactDTO = myContactDAO.update(contact);
+      EnterpriseDTO enterpriseDTO = myEnterpriseDAO.readOne(updatedContactDTO.getEnterprise());
+      myDALService.commit();
+      if (enterpriseDTO == null) {
+        throw new NotFoundException();
+      }
+      updatedContactDTO.setEnterpriseDTO(enterpriseDTO);
+      return updatedContactDTO;
+    } catch (Throwable t) {
+      myDALService.rollback();
+      throw t;
     }
-    updatedContactDTO.setEnterpriseDTO(enterpriseDTO);
-    return updatedContactDTO;
   }
 
   @Override
   public List<ContactDTO> getEnterpriseContacts(int enterpriseId) {
-    myDALService.start();
-    List<ContactDTO> contactDTOS = myContactDAO.readEnterpriseContacts(enterpriseId);
-    if (contactDTOS == null) {
-      throw new NotFoundException();
-    }
-    for (ContactDTO contact : contactDTOS) {
+    try {
+      myDALService.start();
+      List<ContactDTO> contactDTOS = myContactDAO.readEnterpriseContacts(enterpriseId);
+      if (contactDTOS == null) {
+        throw new NotFoundException();
+      }
+      for (ContactDTO contact : contactDTOS) {
       contact.setEnterpriseDTO(myEnterpriseDAO.readOne(contact.getEnterprise()));
       contact.setUserDTO(myUserDAO.getOneByID(contact.getUser()));
+    }myDALService.commit();
+      return contactDTOS;
+    } catch (Throwable t) {
+      myDALService.rollback();
+      throw t;
     }
-    myDALService.commit();
-    return contactDTOS;
   }
 
 

@@ -27,22 +27,32 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
 
   @Override
   public List<EnterpriseDTO> getAllEnterprises() {
-    myDALService.start();
+    try {
+      myDALService.start();
 
-    List<EnterpriseDTO> enterpriseDTOS = myEnterpriseDAO.getAllEnterprises();
-    myDALService.commit();
+      List<EnterpriseDTO> enterpriseDTOS = myEnterpriseDAO.getAllEnterprises();
+      myDALService.commit();
 
-    return enterpriseDTOS;
+      return enterpriseDTOS;
+    } catch (Throwable t) {
+      myDALService.rollback();
+      throw t;
+    }
   }
 
   @Override
   public EnterpriseDTO getEnterprisesByUserId(int userId) {
-    myDALService.start();
-    // get entrprise that corresponds to user intership
-    EnterpriseDTO enterpriseDTO = myEnterpriseDAO.getEnterpriseById(userId);
-    myDALService.commit();
+    try {
+      myDALService.start();
+      // get entrprise that corresponds to user intership
+      EnterpriseDTO enterpriseDTO = myEnterpriseDAO.getEnterpriseById(userId);
+      myDALService.commit();
 
-    return enterpriseDTO;
+      return enterpriseDTO;
+    } catch (Throwable t) {
+      myDALService.rollback();
+      throw t;
+    }
   }
 
   @Override
