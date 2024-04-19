@@ -4,11 +4,7 @@ import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.domain.SupervisorDTO;
 import be.vinci.pae.ucc.EnterpriseUCC;
 import be.vinci.pae.ucc.SupervisorUCC;
-import be.vinci.pae.utils.Config;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
@@ -30,7 +26,6 @@ import org.apache.logging.log4j.ThreadContext;
 @Path("/res")
 public class SupervisorResource {
 
-  private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private static final Logger logger = LogManager.getLogger(EnterpriseResource.class);
 
   @Inject
@@ -39,7 +34,7 @@ public class SupervisorResource {
   private SupervisorUCC supervisorUCC;
 
   @Inject
-  private JWT myJwt;
+  private Jwt myJwt;
 
   /**
    * Retrieves the supervisor responsible for the user's internship enterprise by user ID.
@@ -51,7 +46,7 @@ public class SupervisorResource {
   @Path("responsable")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getResponsableByUserId(@HeaderParam("Authorization") String token) {
+  public SupervisorDTO getResponsableByUserId(@HeaderParam("Authorization") String token) {
     ThreadContext.put("route", "/res/responsable");
     ThreadContext.put("method", "GET");
 
@@ -66,18 +61,7 @@ public class SupervisorResource {
       SupervisorDTO supervisorDTO = supervisorUCC.getResponsibleByEnterpriseId(
           enterpriseDTO.getEnterpriseId());
 
-      // transform responsibleDTO to JSOn
-      ObjectMapper mapper = new ObjectMapper();
-      ObjectNode responsibleNode = mapper.createObjectNode();
-      responsibleNode.put("responsible_id", supervisorDTO.getSupervisorId());
-      responsibleNode.put("name", supervisorDTO.getName());
-      responsibleNode.put("surname", supervisorDTO.getSurname());
-      responsibleNode.put("phone", supervisorDTO.getPhone());
-      responsibleNode.put("email", supervisorDTO.getEmail());
-      responsibleNode.put("enterprise_id", supervisorDTO.getEnterprise());
-      logger.info("Status: 200 {getResponsableByUserId}");
-      ThreadContext.clearAll();
-      return responsibleNode;
+      return supervisorDTO;
 
     } catch (Exception e) {
       // Gérer les erreurs éventuelles
