@@ -236,10 +236,11 @@ const renderForm = (formContainer, users, tableUserContainer) => {
       const name = inputField.value.trim();
       const isStudent = checkboxField.checked;
       const selectedYear = selectField.value;
-
+      console.log('input');
       // Filtrer les utilisateurs en fonction des critères
       const filteredUsers = users.filter((user) => {
-        const matchesName = !name || user.name.toLowerCase().includes(name.toLowerCase());
+        const userName = user.name || '';
+        const matchesName = !name || userName.toLowerCase().includes(name.toLowerCase());
         const matchesIsStudent = !isStudent || user.role === 'STUDENT';
 
         // Vérifier si selectedYear est null ou vide
