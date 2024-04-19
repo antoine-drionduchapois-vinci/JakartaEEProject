@@ -195,7 +195,7 @@ public class ContactUCCImpl implements ContactUCC {
       for (ContactDTO contact : contactDTOS) {
       contact.setEnterpriseDTO(myEnterpriseDAO.readOne(contact.getEnterprise()));
       contact.setUserDTO(myUserDAO.getOneByID(contact.getUser()));
-    }myDALService.commit();
+      }myDALService.commit();
       return contactDTOS;
     } catch (Throwable t) {
       myDALService.rollback();
