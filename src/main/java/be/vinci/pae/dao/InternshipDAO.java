@@ -23,4 +23,13 @@ public interface InternshipDAO {
    * @return The created internship object.
    */
   InternshipDTO create(InternshipDTO internship);
+
+  /**
+   * Updates an existing internship with the provided new internship information.
+   *
+   * @param newInternship The new InternshipDTO object containing the updated
+   *                      internship information.
+   * @return The updated InternshipDTO object with the modified information.
+   */
+  InternshipDTO update(InternshipDTO newInternship);
 }
