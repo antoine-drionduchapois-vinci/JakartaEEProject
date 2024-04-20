@@ -218,6 +218,7 @@ public class ContactUCCImpl implements ContactUCC {
       myDALService.start();
 
       Contact contact = (Contact) myContactDAO.readOne(contactId);
+      System.out.println(contact);
       if (contact == null) {
         throw new NotFoundException();
       }
@@ -227,7 +228,7 @@ public class ContactUCCImpl implements ContactUCC {
       }
 
       for (ContactDTO c : myContactDAO.readMany(userId)) {
-        if (((Contact) c).unfollow()) {
+        if (c.getContactId() != contact.getContactId() && ((Contact) c).unfollow()) {
           myContactDAO.update(c);
         }
       }
