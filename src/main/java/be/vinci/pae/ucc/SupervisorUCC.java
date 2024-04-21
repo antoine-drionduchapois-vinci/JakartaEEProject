@@ -26,4 +26,5 @@ public interface SupervisorUCC {
    */
   SupervisorDTO getResponsibleByEnterpriseId(int id);
 
+  SupervisorDTO addOne(SupervisorDTO supervisor);
 }

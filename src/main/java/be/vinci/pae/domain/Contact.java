@@ -36,5 +36,5 @@ public interface Contact extends ContactDTO {
    */
   boolean unfollow();
 
-
+  boolean accept();
 }
