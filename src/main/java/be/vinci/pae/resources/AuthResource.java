@@ -100,14 +100,21 @@ public class AuthResource {
     String role = userDTO.getRole().toString();
     String password = userDTO.getPassword();
 
-    if (name == null || name.trim().isEmpty() ||
-        firstname == null || firstname.trim().isEmpty() ||
-        email == null || email.trim().isEmpty() ||
-        telephone == null || telephone.trim().isEmpty() ||
-        role == null || role.trim().isEmpty() ||
-        password == null || password.trim().isEmpty()) {
+    if (name == null ||
+        name.trim().isEmpty() ||
+        firstname == null ||
+        firstname.trim().isEmpty() ||
+        email == null ||
+        email.trim().isEmpty() ||
+        telephone == null ||
+        telephone.trim().isEmpty() ||
+        role == null ||
+        role.trim().isEmpty() ||
+        password == null ||
+        password.trim().isEmpty()) {
       throw new WebApplicationException("All fields are required", Status.BAD_REQUEST);
     }
+
     ThreadContext.put("params",
         "name:" + name + "firstname:" + firstname + "email:" + email + "telephone:" + telephone
             + "role:" + role);
