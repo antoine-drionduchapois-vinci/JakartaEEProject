@@ -2,7 +2,6 @@ package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.UserDTO;
-import be.vinci.pae.domain.UserDTO.Role;
 import be.vinci.pae.ucc.AuthUCC;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -58,6 +57,10 @@ public class AuthResource {
 
     String email = json.get("email").asText();
     String password = json.get("password").asText();
+    if (email.isEmpty() || password.isEmpty()) {
+      throw new WebApplicationException("Login or password cannot be empty",
+          Response.Status.BAD_REQUEST);
+    }
     ThreadContext.put("params", "email:" + email);
 
     UserDTO userTemp = myDomainFactory.getUser();
@@ -78,7 +81,7 @@ public class AuthResource {
   /**
    * Endpoint for user registration.
    *
-   * @param json JSON containing user registration data (name, firstname, email, telephone,
+   * @param userDTO dto containing user registration data (name, firstname, email, telephone,
    *             password, role).
    * @return JSON representing the registered user.
    */
@@ -86,33 +89,29 @@ public class AuthResource {
   @Path("register")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode register(JsonNode json) {
+  public ObjectNode register(UserDTO userDTO) {
     ThreadContext.put("route", "/auths/register");
     ThreadContext.put("method", "Post");
-    // Get and check credentials
-    if (!json.hasNonNull("email") || !json.hasNonNull("password") || !json.hasNonNull("name")
-        || !json.hasNonNull("firstname") || !json.hasNonNull("email") || !json.hasNonNull(
-        "telephone") || !json.hasNonNull("role")) {
+    String name = userDTO.getName();
+    String firstname = userDTO.getSurname();
+    String email = userDTO.getEmail();
+    String telephone = userDTO.getPhone();
+    String role = userDTO.getRole().toString();
+    String password = userDTO.getPassword();
+
+    if (name == null || name.trim().isEmpty() ||
+        firstname == null || firstname.trim().isEmpty() ||
+        email == null || email.trim().isEmpty() ||
+        telephone == null || telephone.trim().isEmpty() ||
+        role == null || role.trim().isEmpty() ||
+        password == null || password.trim().isEmpty()) {
       throw new WebApplicationException("All fields are required", Status.BAD_REQUEST);
     }
-    String name = json.get("name").asText();
-    String firstname = json.get("firstname").asText();
-    String email = json.get("email").asText();
-    String telephone = json.get("telephone").asText();
-    String role = json.get("role").asText();
     ThreadContext.put("params",
         "name:" + name + "firstname:" + firstname + "email:" + email + "telephone:" + telephone
             + "role:" + role);
-    String password = json.get("password").asText();
-    UserDTO userTemp = myDomainFactory.getUser();
-    userTemp.setName(name);
-    userTemp.setSurname(firstname);
-    userTemp.setEmail(email);
-    userTemp.setPhone(telephone);
-    userTemp.setPassword(password);
-    userTemp.setRole(Role.valueOf(role));
 
-    UserDTO user = myAuthUCC.register(userTemp);
+    UserDTO user = myAuthUCC.register(userDTO);
 
     // Try to register
     ObjectNode publicUser = myJwt.createToken(user);
