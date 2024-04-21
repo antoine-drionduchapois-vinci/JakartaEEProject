@@ -81,8 +81,9 @@ public class AuthResource {
   /**
    * Endpoint for user registration.
    *
-   * @param userDTO dto containing user registration data (name, firstname, email, telephone,
-   *             password, role).
+   * @param userDTO dto containing user registration data (name, firstname, email,
+   *                telephone,
+   *                password, role).
    * @return JSON representing the registered user.
    */
   @POST
