@@ -6,9 +6,8 @@ package be.vinci.pae.domain;
 public interface Internship extends InternshipDTO {
 
   /**
-   * Accepts the contact.
+   * Accepts the internship.
    *
-   * @return True if the contact is successfully accepted, false otherwise.
    */
-  boolean accept();
+  void accept();
 }

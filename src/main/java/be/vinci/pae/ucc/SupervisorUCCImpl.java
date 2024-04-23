@@ -50,7 +50,6 @@ public class SupervisorUCCImpl implements SupervisorUCC {
   @Override
   public SupervisorDTO getResponsibleByEnterpriseId(int id) {
     try {
-
       myDALService.start();
       SupervisorDTO supervisor = supervisorDAO.getResponsibleByEnterpriseId(id);
       if (supervisor == null) {
@@ -64,5 +63,16 @@ public class SupervisorUCCImpl implements SupervisorUCC {
     }
   }
 
-
+  @Override
+  public SupervisorDTO addOne(SupervisorDTO supervisor) {
+    try {
+      myDALService.start();
+      supervisor = supervisorDAO.create(supervisor);
+      myDALService.commit();
+      return supervisor;
+    } catch (Throwable t) {
+      myDALService.rollback();
+      throw t;
+    }
+  }
 }

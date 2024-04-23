@@ -89,6 +89,8 @@ public interface ContactUCC {
    */
   ContactDTO unfollow(int userId, int contactId);
 
+  ContactDTO accept(int userId, int contactId);
+
   /**
    * Retrieves a list of contacts associated with the enterprise.
    *

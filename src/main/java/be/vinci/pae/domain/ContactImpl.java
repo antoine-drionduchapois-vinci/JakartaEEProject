@@ -55,6 +55,15 @@ public class ContactImpl implements Contact {
   }
 
   @Override
+  public boolean accept() {
+    if (!state.equals("meet")) {
+      return false;
+    }
+    state = "accepted";
+    return true;
+  }
+
+  @Override
   public int getContactId() {
     return contactId;
   }
