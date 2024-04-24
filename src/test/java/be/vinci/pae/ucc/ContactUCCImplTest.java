@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import be.vinci.pae.dao.ContactDAO;
 import be.vinci.pae.dao.EnterpriseDAO;
+import be.vinci.pae.domain.Contact;
 import be.vinci.pae.domain.ContactDTO;
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.EnterpriseDTO;
@@ -357,6 +358,37 @@ class ContactUCCImplTest {
   }
 
   @Test
+  void indicateAsSuspendedWithNoCorrespondingContact() {
+    ContactDTO contactDTO = domainFactory.getContact();
+    contactDTO.setContactId(2);
+    when(contactDAO.readOne(1)).thenReturn(contactDTO);
+    assertThrows(NotFoundException.class, () -> contactUCC.indicateAsSuspended(1));
+  }
+
+  @Test
+  void indicateAsSuspendedWithWrongState() {
+    ContactDTO contactDTO = domainFactory.getContact();
+    contactDTO.setContactId(1);
+    contactDTO.setState("accepted");
+    when(contactDAO.readOne(1)).thenReturn(contactDTO);
+    assertThrows(BusinessException.class, () -> contactUCC.indicateAsSuspended(1));
+  }
+
+  @Test
+  void indicateAsSuspendedWithNoCorrespondingEnterprise() {
+    ContactDTO contactDTO = domainFactory.getContact();
+    contactDTO.setContactId(1);
+    contactDTO.setState("meet");
+    contactDTO.setEnterprise(1);
+
+    when(contactDAO.readOne(1)).thenReturn(contactDTO);
+    when(contactDAO.update(contactDTO)).thenReturn(contactDTO);
+    when(enterpriseDAO.readOne(contactDTO.getEnterprise())).thenReturn(null);
+
+    assertThrows(NotFoundException.class, () -> contactUCC.indicateAsSuspended(1));
+  }
+
+  @Test
   void testUnfollowContactNotInitiated() {
     ContactDTO contactDTO = domainFactory.getContact();
     contactDTO.setUser(1);
@@ -438,6 +470,20 @@ class ContactUCCImplTest {
     verify(contactDAO, atLeastOnce()).readOne(1);
     verify(contactDAO, atLeastOnce()).update(contactDTO);
     verify(enterpriseDAO, atLeastOnce()).readOne(contactDTO.getEnterprise());
+  }
+
+  @Test
+  void testAcceptContactNotFound() {
+    when(contactDAO.readOne(1)).thenReturn(null);
+    assertThrows(NotFoundException.class, () -> contactUCC.accept(1, 1));
+  }
+
+  @Test
+  void testAcceptContactInWrongState() {
+    Contact contactDTO = (Contact) domainFactory.getContact();
+    contactDTO.setState("initiated");
+    when(contactDAO.readOne(1)).thenReturn(contactDTO);
+    assertThrows(BusinessException.class, () -> contactUCC.accept(1, 1));
   }
 
   @Test
