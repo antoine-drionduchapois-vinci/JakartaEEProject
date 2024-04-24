@@ -102,7 +102,7 @@ public class ResultSetMapper<T, U> {
     T object = factoryFunction.get();
     for (Field field : fields) {
       if (field.getType() != String.class && field.getType() != int.class
-          && field.getType() != Role.class) {
+          && field.getType() != boolean.class && field.getType() != Role.class) {
         continue;
       }
       field.setAccessible(true);
@@ -112,6 +112,7 @@ public class ResultSetMapper<T, U> {
         if (field.getType() == Role.class) {
           value = Role.valueOf((String) value);
         }
+        if (field.getType() == boolean.class && value == null) value = false;
         field.set(object, value);
       }
     }
