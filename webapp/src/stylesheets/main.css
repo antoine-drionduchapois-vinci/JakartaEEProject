@@ -3,7 +3,10 @@
   --primary-color: #3498db;
   --secondary-color: #e74c3c;
   --text-color: #333;
-  --background-color: #f5f5f5;
+  --background-color: url('../Components/img/background1.jpg');
+  --background-size: cover; /* ou contain selon tes préférences */
+  --background-repeat: no-repeat;
+  --background-position: center center;
   --font-family: 'Roboto', sans-serif;
   --button-padding: 10px 20px;
 }
@@ -12,7 +15,10 @@
 body {
   font-family: var(--font-family);
   color: var(--text-color);
-  background-color: var(--background-color);
+  background: var(--background-color);
+  background-size: var(--background-size);
+  background-repeat: var(--background-repeat);
+  background-position: var(--background-position);
 }
 
 .button {
@@ -122,18 +128,18 @@ tbody tr:hover {
   background: black;
 }
 
-#home1 {
-  margin-right: 350px;
+.site-title {
+  font-size: 24px; /* Tu peux ajuster cette valeur selon tes préférences */
 }
 
-/* CSS pour aligner les éléments horizontalement */
+/* CSS for Navbar */
 .navbar-nav .nav-link {
   display: flex;
-  align-items: center; /* Alignement vertical au centre */
+  align-items: center;
 }
 
-/* CSS pour agrandir l'icône */
+/* CSS for icon */
 .navbar-nav .nav-link .icon i {
-  font-size: 1.5em; /* Taille de l'icône */
-  margin-right: 5px; /* Marge à droite pour séparer l'icône de l'e-mail */
+  font-size: 1.5em;
+  margin-right: 5px;
 }

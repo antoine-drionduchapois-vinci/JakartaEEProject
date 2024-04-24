@@ -2,6 +2,7 @@ import Chart from 'chart.js/auto';
 import { clearPage, renderPageTitle } from '../../utils/render';
 import { getAuthenticatedUser } from '../../utils/auths';
 import autocomplete from '../../services/autocomplete';
+import translation from '../../utils/translation';
 import Navigate from '../Router/Navigate';
 
 // Fonction pour récupérer les données des entreprises
@@ -77,16 +78,19 @@ const fetchUsers = async () => {
     if (!response.ok) {
       throw new Error('Erreur lors de la récupération des données des utilisateurs');
     }
-
+    let translatedRole = '';
     let data = await response.json();
-    data = data.map((u) => ({
+    data = data.map((u) => {
+      translatedRole = translation[u.role] || u.role;
+      return {
       id: u.userId,
       nom: u.name,
       prenom: u.surname,
       email: u.email,
-      role: u.role,
+      role: translatedRole,
       année: u.year,
-    }));
+      };
+    });
 
     return data; // Retourner directement le tableau d'utilisateurs de la réponse JSON
   } catch (error) {
@@ -107,7 +111,7 @@ const renderChart = (chartContainer, noStage, total) => {
       {
         label: "Nombre d'étudiants",
         data: [noStage, total - noStage],
-        backgroundColor: ['rgb(255, 99, 132)', 'rgb(54, 162, 235)'],
+        backgroundColor: ['rgb(221,255,0)','rgb(69, 176, 103)'],
         hoverOffset: 4,
       },
     ],
@@ -155,7 +159,7 @@ const renderForm = (formContainer, users, tableUserContainer) => {
   form.style.display = 'flex'; // Utiliser Flexbox
   form.style.flexWrap = 'wrap'; // Permettre le retour à la ligne si nécessaire
   form.style.paddingBottom = '10px'; // Ajouter le padding-bottom
-  form.style.gap = '5%'; // Ajouter un espace entre les éléments
+  form.style.gap = '20px'; // Ajouter un espace entre les éléments
 
   // Créer le champ input avec Bulma
   const inputFieldDiv = document.createElement('div');
@@ -241,7 +245,7 @@ const renderForm = (formContainer, users, tableUserContainer) => {
       const filteredUsers = users.filter((user) => {
         const userName = user.name || '';
         const matchesName = !name || userName.toLowerCase().includes(name.toLowerCase());
-        const matchesIsStudent = !isStudent || user.role === 'STUDENT';
+        const matchesIsStudent = !isStudent || user.role === 'Etudiant';
 
         // Vérifier si selectedYear est null ou vide
         if (!selectedYear) {
