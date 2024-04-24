@@ -10,7 +10,7 @@ CREATE TABLE projetae.enterprises
     address            VARCHAR(80),
     phone              VARCHAR(50) NOT NULL,
     email              VARCHAR(50),
-    is_blacklisted     BOOLEAN,
+    is_blacklisted     BOOLEAN     NOT NULL,
     blacklisted_reason VARCHAR(200),
     version            INTEGER     NOT NULL
 );
@@ -66,11 +66,11 @@ CREATE TABLE projetae.internships
 
 -------------------------------------------------------------------------------
 
-INSERT INTO projetae.enterprises (name, phone, address, version)
-VALUES ('Assyst Europe', '02.609.25.00', 'Avenue du Japon, 1/B9, 1420 Braine-l''Alleud', 1),
-       ('LetsBuild', '014 54 67 54', 'Chaussée de Bruxelles, 135A, 1310 La Hulpe', 1),
-       ('Niboo', '0487 02 79 13', 'Boulevard du Souverain, 24, 1170 Watermael-Boisfort', 1),
-       ('Sopra Steria', '02 566 66 66', 'Avenue Arnaud Fraiteur, 15/23, 1050 Bruxelles', 1);
+INSERT INTO projetae.enterprises (name, phone, address, is_blacklisted, version)
+VALUES ('Assyst Europe', '02.609.25.00', 'Avenue du Japon, 1/B9, 1420 Braine-l''Alleud', false, 1),
+       ('LetsBuild', '014 54 67 54', 'Chaussée de Bruxelles, 135A, 1310 La Hulpe', false, 1),
+       ('Niboo', '0487 02 79 13', 'Boulevard du Souverain, 24, 1170 Watermael-Boisfort', false, 1),
+       ('Sopra Steria', '02 566 66 66', 'Avenue Arnaud Fraiteur, 15/23, 1050 Bruxelles', false, 1);
 
 INSERT INTO projetae.supervisors(name, surname, phone, email, enterprise, version)
 VALUES ('Dossche', 'Stéphanie', '014.54.67.54', 'stephanie.dossche@letsbuild.com', 2, 1),
@@ -147,18 +147,14 @@ SELECT year, COUNT (*) AS nombre_de_contacts
 FROM projetae.contacts
 GROUP BY year;
 
-SELECT
-    CASE
-        WHEN state = 'accepted' THEN 'Accepté'
-        WHEN state = 'refused' THEN 'Refusé'
-        WHEN state = 'suspended' THEN 'Suspendu'
-        WHEN state = 'meet' THEN 'Contacté'
-        WHEN state = 'initiated' THEN 'Initié'
-        WHEN state = 'unfollowed' THEN 'Non Suivis'
-        ELSE 'Inconnu'
-    END AS etat_contact,
-    COUNT(*) AS nombre_de_contacts
-FROM
-    projetae.contacts
-GROUP BY
-    state;
+SELECT CASE
+           WHEN state = 'accepted' THEN 'Accepté'
+           WHEN state = 'refused' THEN 'Refusé'
+           WHEN state = 'suspended' THEN 'Suspendu'
+           WHEN state = 'meet' THEN 'Contacté'
+           WHEN state = 'initiated' THEN 'Initié'
+           ELSE 'Inconnu'
+           END  AS etat_contact,
+       COUNT(*) AS nombre_de_contacts
+FROM projetae.contacts
+GROUP BY state;

@@ -15,13 +15,13 @@ public class EnterpriseImpl implements Enterprise {
   private String blacklistedReason;
   private int version;
 
-
   @Override
-  public boolean toBlacklist(String blacklistedReason) {
-    if (isBlacklisted) {
+  public boolean indicateAsBlacklisted(String blacklistedReason) {
+    if (this.isBlacklisted) {
       return false;
     }
-    this.blacklistedReason = blacklistedReason;
+    setBlacklisted(true);
+    setBlacklistedReason(blacklistedReason);
     return true;
   }
 
@@ -92,7 +92,7 @@ public class EnterpriseImpl implements Enterprise {
 
   @Override
   public void setBlacklisted(boolean blacklisted) {
-    isBlacklisted = blacklisted;
+    this.isBlacklisted = blacklisted;
   }
 
   @Override

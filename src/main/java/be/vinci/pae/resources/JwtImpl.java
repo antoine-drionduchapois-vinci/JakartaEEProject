@@ -35,8 +35,8 @@ public class JwtImpl implements Jwt {
       // Obtenir l'instant actuel
       Instant now = Instant.now();
 
-      // Ajouter 15 minutes à l'instant actuel pour obtenir la date d'expiration du token
-      Instant expirationTime = now.plusSeconds(900);
+      // Ajouter 8 heures à l'instant actuel pour obtenir la date d'expiration du token
+      Instant expirationTime = now.plusSeconds(28800);
 
       // Créer le JWT token avec la date d'expiration
       token = com.auth0.jwt.JWT.create()

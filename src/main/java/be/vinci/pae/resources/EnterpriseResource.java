@@ -46,6 +46,7 @@ public class EnterpriseResource {
   @GET
   @Path("enterprises")
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize()
   public List<EnterpriseDTO> getAllEnterprises() {
     ThreadContext.put("route", "/contact");
     ThreadContext.put("method", "Get");
@@ -68,6 +69,7 @@ public class EnterpriseResource {
   @Path("enterprise")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize()
   public ObjectNode getEnterprisesByUserId(@HeaderParam("Authorization") String token) {
     ThreadContext.put("route", "/contact");
     ThreadContext.put("method", "Get");
@@ -105,20 +107,19 @@ public class EnterpriseResource {
     int enterpriseId = enterprise.getEnterpriseId();
     String blacklistedReason = enterprise.getBlacklistedReason();
 
-    if (enterpriseId == 0 || blacklistedReason == null) {
+    if (enterpriseId == 0 || blacklistedReason == null || blacklistedReason.isEmpty()) {
       throw new WebApplicationException("enterpriseId and blacklistedReason required",
           Status.BAD_REQUEST);
     }
     ThreadContext.put("params",
-        "enterpriseId:" + enterpriseId + "blacklistedReason:" + blacklistedReason);
-    // Blacklist the enterprise
+        "enterpriseId:" + enterpriseId + ", blacklistedReason:" + blacklistedReason);
+
     enterprise = myEnterpriseUCC.blacklistEnterprise(enterpriseId,
         blacklistedReason);
     logger.info("Status: 200 {blacklist}");
     ThreadContext.clearAll();
     return enterprise;
   }
-
 
   private ObjectNode convertDTOToJson(EnterpriseDTO enterpriseDTO) {
     ObjectMapper mapper = new ObjectMapper();
@@ -133,6 +134,5 @@ public class EnterpriseResource {
     enterpriseNode.put("avis_professeur", enterpriseDTO.getBlacklistedReason());
     return enterpriseNode;
   }
-
 
 }

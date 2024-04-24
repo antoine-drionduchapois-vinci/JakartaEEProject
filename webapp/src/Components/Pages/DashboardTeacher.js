@@ -32,7 +32,6 @@ const fetchEnterprises = async () => {
       blacklist: enterprise.blacklisted,
       avisprofesseur: enterprise.blacklistedReason || '', // Utiliser une chaîne vide si la valeur est null
     }));
-
     return data;
   } catch (error) {
     console.error('Erreur lors de la récupération des données des entreprises : ', error);
@@ -130,14 +129,7 @@ const updateTable = (tableBody, list) => {
   list.forEach((e) => {
     const row = document.createElement('tr');
     row.addEventListener('click', () => {
-
-      if (e.blacklist === undefined){
-        Navigate(`/dashboardS?id=${e.id}`);
-      }else {
         Navigate(`/enterpriseDetails?id=${e.id}`);
-        
-      }
-      
     });
     const values = Object.values(e).slice(1);
     values.forEach((value) => {
