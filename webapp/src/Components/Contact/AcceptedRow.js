@@ -72,9 +72,11 @@ const AcceptedRow = async (htmlElement, contactData, internshipData) => {
 `;
 
   let supervisor = null;
-  supervisor = await fetch(`http://localhost:8080/res?enterprise=${contactData.enterprise}`)
-    .then((res) => (res.status === 200 ? res.json() : null))
-    .catch((error) => console.log(error));
+  if (contactData) {
+    supervisor = await fetch(`http://localhost:8080/res?enterprise=${contactData.enterprise}`)
+      .then((res) => (res.status === 200 ? res.json() : null))
+      .catch((error) => console.log(error));
+  }
 
   const acceptedCircle = document.querySelector('#accepted-circle');
   const nameInput = { element: document.querySelector('#supervisor-name'), isValid: false };
@@ -84,32 +86,42 @@ const AcceptedRow = async (htmlElement, contactData, internshipData) => {
   const subjectInput = { element: document.querySelector('#subject'), isValid: false };
   const submit = document.querySelector('#submit-accepted');
 
-  if (internshipData && internshipData.contact === contactData.contactId) {
-    acceptedCircle.removeAttribute('hidden');
-    nameInput.element.value = internshipData.supervisorDTO.name;
-    nameInput.element.setAttribute('disabled', true);
-    surnameInput.element.value = internshipData.supervisorDTO.surname;
-    surnameInput.element.setAttribute('disabled', true);
-    phoneInput.element.value = internshipData.supervisorDTO.phone;
-    phoneInput.element.setAttribute('disabled', true);
-    emailInput.element.value = internshipData.supervisorDTO.email;
-    emailInput.element.setAttribute('disabled', true);
-    subjectInput.element.value = internshipData.subject;
-    if (internshipData.subject) submit.textContent = 'Modifier le sujet';
-    else submit.textContent = 'Ajouter le sujet';
-  } else if (supervisor) {
-    nameInput.element.value = supervisor.name;
-    nameInput.element.setAttribute('disabled', true);
-    nameInput.isValid = true;
-    surnameInput.element.value = supervisor.surname;
-    surnameInput.element.setAttribute('disabled', true);
-    surnameInput.isValid = true;
-    phoneInput.element.value = supervisor.phone;
-    phoneInput.element.setAttribute('disabled', true);
-    phoneInput.isValid = true;
-    emailInput.element.value = supervisor.email;
-    emailInput.element.setAttribute('disabled', true);
-    emailInput.isValid = true;
+  if (contactData) {
+    if (contactData.state === 'refused' || contactData.state === 'unfollowed') {
+      nameInput.element.setAttribute('disabled', true);
+      surnameInput.element.setAttribute('disabled', true);
+      phoneInput.element.setAttribute('disabled', true);
+      emailInput.element.setAttribute('disabled', true);
+      subjectInput.element.setAttribute('disabled', true);
+      submit.setAttribute('disabled', true);
+    }
+    if (internshipData && internshipData.contact === contactData.contactId) {
+      acceptedCircle.removeAttribute('hidden');
+      nameInput.element.value = internshipData.supervisorDTO.name;
+      nameInput.element.setAttribute('disabled', true);
+      surnameInput.element.value = internshipData.supervisorDTO.surname;
+      surnameInput.element.setAttribute('disabled', true);
+      phoneInput.element.value = internshipData.supervisorDTO.phone;
+      phoneInput.element.setAttribute('disabled', true);
+      emailInput.element.value = internshipData.supervisorDTO.email;
+      emailInput.element.setAttribute('disabled', true);
+      subjectInput.element.value = internshipData.subject;
+      if (internshipData.subject) submit.textContent = 'Modifier le sujet';
+      else submit.textContent = 'Ajouter le sujet';
+    } else if (supervisor) {
+      nameInput.element.value = supervisor.name;
+      nameInput.element.setAttribute('disabled', true);
+      nameInput.isValid = true;
+      surnameInput.element.value = supervisor.surname;
+      surnameInput.element.setAttribute('disabled', true);
+      surnameInput.isValid = true;
+      phoneInput.element.value = supervisor.phone;
+      phoneInput.element.setAttribute('disabled', true);
+      phoneInput.isValid = true;
+      emailInput.element.value = supervisor.email;
+      emailInput.element.setAttribute('disabled', true);
+      emailInput.isValid = true;
+    }
   }
 
   nameInput.element.addEventListener('input', (e) => {
@@ -129,7 +141,7 @@ const AcceptedRow = async (htmlElement, contactData, internshipData) => {
   });
 
   submit.addEventListener('click', () => {
-    if (internshipData) {
+    if (internshipData && internshipData.contactId === contactData.contactId) {
       modifySubject({ subject: subjectInput.element.value });
       return;
     }
