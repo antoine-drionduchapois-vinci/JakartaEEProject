@@ -18,6 +18,7 @@ import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 class UserUCCImplTest {
 
@@ -54,6 +55,7 @@ class UserUCCImplTest {
   @Test
   void countStudents() {
     // Arrange
+    Mockito.reset(userDAO);
     when(userDAO.getTotalStudents()).thenReturn(10);
 
     // Act
@@ -62,6 +64,16 @@ class UserUCCImplTest {
     // Assert
     assertEquals(10, result);
     verify(userDAO, times(1)).getTotalStudents();
+  }
+
+  @Test
+  void testCountStudentsWithException() {
+    // Simuler une exception lors du comptage des étudiants
+    when(userDAO.getTotalStudents()).thenThrow(new RuntimeException("Database connection error"));
+
+    // Appeler la méthode à tester et vérifier que l'exception est levée
+    assertThrows(RuntimeException.class, () -> userUCC.countStudents());
+
   }
 
   @Test

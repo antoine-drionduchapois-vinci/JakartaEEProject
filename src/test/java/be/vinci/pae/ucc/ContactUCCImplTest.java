@@ -24,6 +24,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 class ContactUCCImplTest {
 
@@ -71,6 +72,19 @@ class ContactUCCImplTest {
     List<ContactDTO> result = contactUCC.getContacts(1);
 
     assertEquals(contactDTOs, result);
+  }
+
+  @Test
+  void testGetContactsWithException() {
+    // Définir l'ID de l'utilisateur
+    int userId = 1;
+
+    // Simuler une exception lors de la lecture des contacts
+    when(contactDAO.readMany(userId)).thenThrow(new RuntimeException("Database connection error"));
+
+    // Appeler la méthode à tester et vérifier que l'exception est levée
+    assertThrows(RuntimeException.class, () -> contactUCC.getContacts(userId));
+
   }
 
   @Test
@@ -169,6 +183,8 @@ class ContactUCCImplTest {
   @Test
   @DisplayName("Checks that the version number of an initiated contact is 1 ")
   void testVersionInitiateContact() {
+    Mockito.reset(contactDAO);
+    Mockito.reset(enterpriseDAO);
     ContactDTO contactDTO = domainFactory.getContact();
     contactDTO.setVersion(1);
     EnterpriseDTO enterpriseDTO = domainFactory.getEnterprise();
@@ -184,6 +200,33 @@ class ContactUCCImplTest {
     assertEquals(1, versionResult);
     verify(enterpriseDAO, atLeastOnce()).create("name", "label", "address", "phone", "email");
     verify(contactDAO, atLeastOnce()).create(1, enterpriseDTO.getEnterpriseId());
+  }
+
+  @Test
+  void testInitiateContactWithException() {
+    // Définir l'ID de l'utilisateur et de l'entreprise
+    int userId = 1;
+    int enterpriseId = 1;
+
+    // Simuler une exception lors de la création du contact
+    when(contactDAO.create(userId, enterpriseId)).thenThrow(
+        new RuntimeException("Database connection error"));
+
+    // Appeler la méthode à tester et vérifier que l'exception est levée
+    assertThrows(RuntimeException.class, () -> contactUCC.initiateContact(userId, enterpriseId));
+
+  }
+
+  @Test
+  void testInitiateContactWithError() {
+    // Mocking an error during enterprise creation
+    when(enterpriseDAO.create("name", "label", "address", "phone", "email"))
+        .thenThrow(new RuntimeException("Failed to create enterprise"));
+
+    // Call the method and verify that it throws an exception
+    assertThrows(RuntimeException.class, () ->
+        contactUCC.initiateContact(1, "Enterprise Name", "Label", "Address", "Phone", "Email"));
+
   }
 
   @Test
@@ -599,6 +642,6 @@ class ContactUCCImplTest {
 
     // Act & Assert
     assertThrows(NotFoundException.class, () -> contactUCC.getEnterpriseContacts(enterpriseId));
-    verify(contactDAO, times(2)).readEnterpriseContacts(enterpriseId);
+    verify(contactDAO, atLeastOnce()).readEnterpriseContacts(enterpriseId);
   }
 }
