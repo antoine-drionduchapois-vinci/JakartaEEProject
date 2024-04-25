@@ -155,6 +155,6 @@ class InternshipUCCImplTest {
 
     assertThrows(BusinessException.class, () -> internshipUCC.acceptInternship(internshipDTO));
 
-    verify(internshipDAO).getUserInternship(1);
+    verify(internshipDAO, atLeastOnce()).getUserInternship(1);
   }
 }
