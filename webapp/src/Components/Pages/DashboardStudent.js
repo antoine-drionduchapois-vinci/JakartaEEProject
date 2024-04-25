@@ -1,7 +1,8 @@
 /* eslint-disable camelcase */
 import { getAuthenticatedUser } from '../../utils/auths';
 
-import { clearPage, renderPageTitle } from '../../utils/render';
+import { clearPage} from '../../utils/render';
+import translation from '../../utils/translation';
 import Navigate from '../Router/Navigate';
 
 let urlId;
@@ -94,10 +95,11 @@ const fetchUserContacts = async () => {
       } = contactsArray[index];
       const reason = refusalReason === null ? '' : refusalReason;
       const meeting = meetingPoint === null ? '' : meetingPoint;
+      const translatedState = translation[state] || state;
       contactsHtml += `
             <tr>
             <td><a class="enterprise_link" data-contact-id="${contactId}">${enterprise_name}</a></td>
-            <td> ${state}</td>
+            <td> ${translatedState}</td>
             <td> ${meeting}</td>
             <td> ${reason}</td>
             <td> ${year}</td>
@@ -179,8 +181,6 @@ const DashboardStudent = async () => {
     } else {
       urlId = getAuthenticatedUser().id;
     }
-  // Rendu du titre de la page en 'Dashboard Teacher'
-  renderPageTitle('Tableau de bord étudiant');
 
   try {
     main.innerHTML = `<p>Loading Data...</p>`;
@@ -191,28 +191,32 @@ const DashboardStudent = async () => {
     const contactsHtml = await fetchUserContacts();
     // Combine all HTML segments
     const combinedHtml = `
-  <div class="tables-container" style="display: flex; justify-content: space-around;">
-    <div>${userHtml}</div>
-    <div>${internshipHtml}</div>
-    <div>
-      <h2 class="title is-3">Contact</h2>
-      <table class="table is-striped is-fullwidth">
-        <thead>
-          <tr>
-            <th>Entreprise</th>
-            <th>Etat</th>
-            <th>RDV</th>
-            <th>Raison refus</th>
-            <th>Année</th>
-            <th><a id="addContact"> + </a></th>
-          </tr>
-        </thead>
-        <tbody>
-          ${contactsHtml}
-        </tbody>
-      </table>
-    </div>
-  </div>
+    
+    <h2 class="title is-3 mt-3 mb-5 has-text-centered">Tableau de bord étudiant</h2>
+    <section class="hero is-text is-fullheight">
+      <div class="tables-container" style="display: flex; justify-content: space-around;">
+        <div>${userHtml}</div>
+        <div>${internshipHtml}</div>
+        <div>
+          <h2 class="title is-3">Contact</h2>
+          <table class="table is-striped is-fullwidth">
+            <thead>
+              <tr>
+                <th>Entreprise</th>
+                <th>Etat</th>
+                <th>RDV</th>
+                <th>Raison refus</th>
+                <th>Année</th>
+                <th><a id="addContact"> + </a></th>
+              </tr>
+            </thead>
+            <tbody>
+              ${contactsHtml}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
 `;
 
     main.innerHTML = combinedHtml;

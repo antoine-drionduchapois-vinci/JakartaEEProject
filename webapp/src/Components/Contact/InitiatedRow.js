@@ -31,22 +31,22 @@ const autoFillFields = (
   const phoneE = phoneElement;
   const emailE = emailElement;
   const foundEnterprises = enterprises.filter((e) => {
-    if (e.nom === enterpriseValue && e.appellation === null) {
-      e.appellation = '';
+    if (e.name === enterpriseValue && e.label === null) {
+      e.label = '';
     }
-    return e.nom === enterpriseValue;
+    return e.name === enterpriseValue;
   });
   if (foundEnterprises) {
     autocomplete(
       labelE,
-      foundEnterprises.map((e) => e.appellation),
+      foundEnterprises.map((e) => e.label),
     );
     const labelValue = labelE.value;
-    foundEnterprise = foundEnterprises.find((e) => e.appellation === labelValue);
+    foundEnterprise = foundEnterprises.find((e) => e.label === labelValue);
     if (foundEnterprise) {
-      addressE.value = foundEnterprise.adresse;
+      addressE.value = foundEnterprise.address;
       addressE.setAttribute('disabled', true);
-      phoneE.value = foundEnterprise.telephone;
+      phoneE.value = foundEnterprise.phone;
       phoneE.setAttribute('disabled', true);
       emailE.value = foundEnterprise.email;
       emailE.setAttribute('disabled', true);
@@ -129,7 +129,7 @@ const InitiatedRow = (htmlElement, userData, contactData, enterprisesData) => {
   }
 
   if (enterprisesData) {
-    autocomplete(enterpriseInput.element, [...new Set(enterprisesData.map((e) => e.nom))]);
+    autocomplete(enterpriseInput.element, [...new Set(enterprisesData.map((e) => e.name))]);
   }
 
   enterpriseInput.element.addEventListener('input', (e) => {
@@ -174,7 +174,7 @@ const InitiatedRow = (htmlElement, userData, contactData, enterprisesData) => {
 
   submit.addEventListener('click', () => {
     if (foundEnterprise) {
-      initiateContact({ enterprise: foundEnterprise.entreprise_id });
+      initiateContact({ enterprise: foundEnterprise.enterpriseId });
       return;
     }
 

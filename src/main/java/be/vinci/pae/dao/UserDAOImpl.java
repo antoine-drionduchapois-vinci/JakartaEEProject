@@ -30,7 +30,7 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public UserDTO getOneByEmail(String email) {
     try (PreparedStatement ps = myDalService.getPS(
-        "SELECT * FROM projetae.users WHERE email = ?");) {
+        "SELECT * FROM projetae.users WHERE LOWER(email) = LOWER(?)")) {
 
       ps.setString(1, email);
       ps.execute();
