@@ -17,6 +17,9 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class SupervisorUCCImplTest {
 
   private static ServiceLocator locator;
@@ -66,5 +69,19 @@ class SupervisorUCCImplTest {
       supervisorUCC.getResponsibleByEnterpriseId(enterpriseId);
     });
     verify(supervisorDAO, times(2)).getResponsibleByEnterpriseId(enterpriseId);
+  }
+
+  @Test
+  void testGetAll() {
+    List<SupervisorDTO> array = new ArrayList<>();
+    when(supervisorDAO.readAll()).thenReturn(array);
+    assertEquals(array, supervisorUCC.getAll());
+  }
+
+  @Test
+  void testAddOne() {
+    SupervisorDTO supervisorDTO = domainFactory.getSupervisor();
+    when(supervisorDAO.create(supervisorDTO)).thenReturn(supervisorDTO);
+    assertEquals(supervisorDTO, supervisorUCC.addOne(supervisorDTO));
   }
 }
