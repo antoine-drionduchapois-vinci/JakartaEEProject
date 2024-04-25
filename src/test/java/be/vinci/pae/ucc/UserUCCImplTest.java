@@ -65,6 +65,16 @@ class UserUCCImplTest {
   }
 
   @Test
+  void testCountStudentsWithException() {
+    // Simuler une exception lors du comptage des étudiants
+    when(userDAO.getTotalStudents()).thenThrow(new RuntimeException("Database connection error"));
+
+    // Appeler la méthode à tester et vérifier que l'exception est levée
+    assertThrows(RuntimeException.class, () -> userUCC.countStudents());
+
+  }
+
+  @Test
   void testCountStudentsWithoutStageThrowsException() {
 
     // Mock myUserDAO.getStudentsWithoutStage() to return the invalid count
