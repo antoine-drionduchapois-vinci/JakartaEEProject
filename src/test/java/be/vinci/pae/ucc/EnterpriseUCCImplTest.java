@@ -151,9 +151,6 @@ class EnterpriseUCCImplTest {
     contact2update.setEnterprise(1);
     contact2update.setState("suspended");
 
-    EnterpriseDTO enterpriseDTO = domainFactory.getEnterprise();
-    enterpriseDTO.setEnterpriseId(1);
-
     // Simuler la récupération de l'entreprise
     when(enterpriseDAO.readOne(1)).thenReturn(enterprise);
     when(enterpriseDAO.toBlacklist(enterprise)).thenReturn(enterprise1);
