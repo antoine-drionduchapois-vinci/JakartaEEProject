@@ -183,7 +183,12 @@ class InternshipUCCImplTest {
     when(internshipDAO.getUserInternship(1)).thenReturn(internshipDTO);
     when(internshipDAO.update(internshipDTO)).thenReturn(updatedInternship);
 
+    InternshipDTO result = internshipUCC.modifySubject(1, "New subject");
+
     // Vérifier que le sujet a été correctement mis à jour
-    assertEquals("New subject", updatedInternship.getSubject());
+    assertEquals("New subject", result.getSubject());
+
+    // Vérifier que la méthode update a été appelée avec le bon argument
+    verify(internshipDAO, atLeastOnce()).update(internshipDTO);
   }
 }
