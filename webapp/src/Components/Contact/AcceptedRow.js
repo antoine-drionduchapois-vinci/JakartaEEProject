@@ -141,10 +141,11 @@ const AcceptedRow = async (htmlElement, contactData, internshipData) => {
   });
 
   submit.addEventListener('click', () => {
-    if (internshipData && internshipData.contactId === contactData.contactId) {
+    if (internshipData && internshipData.contact === contactData.contactId) {
       modifySubject({ subject: subjectInput.element.value });
       return;
     }
+
     if (supervisor) {
       acceptInternship({
         contact: contactData.contactId,
