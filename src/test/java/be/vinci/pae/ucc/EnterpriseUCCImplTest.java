@@ -123,8 +123,14 @@ class EnterpriseUCCImplTest {
     enterprise.setEnterpriseId(1);
     enterprise.setName("Test Enterprise");
 
+    Enterprise enterprise1 = domainFactory.getEnterprise();
+    enterprise1.setEnterpriseId(1);
+    enterprise1.setBlacklisted(true);
+    enterprise1.setBlacklistedReason("Reason");
+
     // Simuler la récupération de l'entreprise
     when(enterpriseDAO.readOne(1)).thenReturn(enterprise);
+    when(enterpriseDAO.toBlacklist(enterprise)).thenReturn(enterprise1);
 
     // Appeler la méthode à tester
     EnterpriseDTO result = enterpriseUCC.blacklistEnterprise(1, "Reason");
