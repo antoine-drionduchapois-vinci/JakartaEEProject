@@ -65,6 +65,17 @@ class UserUCCImplTest {
   }
 
   @Test
+  void testCountStudentsWithoutStageThrowsException() {
+
+    // Mock myUserDAO.getStudentsWithoutStage() to return the invalid count
+    when(userDAO.getStudentsWithoutStage()).thenThrow(new RuntimeException("exception"));
+
+    // Act
+    // Assert that a RuntimeException is thrown when countStudentsWithoutStage is called
+    assertThrows(RuntimeException.class, () -> userUCC.countStudentsWithoutStage());
+  }
+
+  @Test
   void getUsersAsJson() {
     // Arrange
     UserDTO user1 = domainFactory.getUser();
@@ -111,6 +122,18 @@ class UserUCCImplTest {
       userUCC.getUsersByIdAsJson(1);
     });
   }
+
+  @Test
+  void testgetUsersAsJsonThrowsException() {
+
+    // Mock myUserDAO.getAllStudents() to return the empty list
+    when(userDAO.getAllStudents()).thenThrow(new RuntimeException("exception"));
+
+    // Act
+    // Assert that a RuntimeException is thrown when getUsersAsJson is called
+    assertThrows(RuntimeException.class, () -> userUCC.getUsersAsJson());
+  }
+
 
   @Test
   void testModifyPassword() {
@@ -173,4 +196,24 @@ class UserUCCImplTest {
     assertEquals(user2, result);
     verify(userDAO, times(1)).changePhoneNumber(user1);
   }
+
+  @Test
+  void testChangePhoneNumberThrowsException() {
+    // Arrange
+    UserDTO userDTO = domainFactory.getUser();
+    userDTO.setSurname("John");
+    userDTO.setName("Doe");
+    userDTO.setPhone("0484754512");
+
+    // Mock myUserDAO.changePhoneNumber() to throw a RuntimeException
+    when(userDAO.changePhoneNumber(userDTO)).thenThrow(
+        new RuntimeException("Failed to change phone number"));
+
+    // Act
+    // Assert that a RuntimeException is thrown when changePhoneNumber is called
+    assertThrows(RuntimeException.class, () -> userUCC.changePhoneNumber(userDTO));
+
+
+  }
+
 }
