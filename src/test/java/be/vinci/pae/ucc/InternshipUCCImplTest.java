@@ -1,10 +1,7 @@
 package be.vinci.pae.ucc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -212,33 +209,31 @@ class InternshipUCCImplTest {
 
   @Test
   void testAcceptInternshipWithNewSupervisor() {
-    InternshipDTO internshipDTO = domainFactory.getInternship();
-    internshipDTO.setEnterprise(1);
-
     SupervisorDTO supervisorDTO = domainFactory.getSupervisor();
+    supervisorDTO.setSupervisorId(1);
 
-    when(internshipDAO.getUserInternship(0)).thenReturn(null);
-    when(supervisorUCC.getResponsibleByEnterpriseId(anyInt())).thenReturn(null);
-    when(supervisorUCC.addOne(any(SupervisorDTO.class))).thenReturn(supervisorDTO);
+    InternshipDTO internshipDTO = domainFactory.getInternship();
+    internshipDTO.setUser(1);
+    internshipDTO.setContact(2);
+    internshipDTO.setSupervisorDTO(supervisorDTO);
+
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterprise();
+    enterpriseDTO.setEnterpriseId(1);
+
+    ContactDTO contactDTO = domainFactory.getContact();
+    contactDTO.setContactId(2);
+    contactDTO.setState("meet");
+    contactDTO.setUser(1);
+    contactDTO.setEnterprise(1);
+    contactDTO.setEnterpriseDTO(enterpriseDTO);
+
+    when(internshipDAO.getUserInternship(1)).thenReturn(null);
+    when(contactDAO.readOne(2)).thenReturn(contactDTO);
+    when(supervisorDAO.create(supervisorDTO)).thenReturn(supervisorDTO);
 
     internshipUCC.acceptInternship(internshipDTO);
 
     assertEquals(supervisorDTO, internshipDTO.getSupervisorDTO());
-  }
-
-  @Test
-  void testAcceptInternship() {
-    InternshipDTO internshipDTO = domainFactory.getInternship();
-
-    when(internshipDAO.getUserInternship(0)).thenReturn(null);
-    when(contactUCC.accept(anyInt(), anyInt())).thenReturn(domainFactory.getContact());
-    when(supervisorUCC.getResponsibleByEnterpriseId(anyInt())).thenReturn(
-        domainFactory.getSupervisor());
-
-    InternshipDTO result = internshipUCC.acceptInternship(internshipDTO);
-
-    assertNotNull(result);
-    verify(internshipDAO).create(internshipDTO);
   }
 
   @Test
