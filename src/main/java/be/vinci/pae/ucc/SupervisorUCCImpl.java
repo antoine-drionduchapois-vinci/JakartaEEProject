@@ -52,7 +52,6 @@ public class SupervisorUCCImpl implements SupervisorUCC {
     try {
       myDALService.start();
       SupervisorDTO supervisor = supervisorDAO.getResponsibleByEnterpriseId(id);
-      System.out.println(supervisor);
       if (supervisor == null) {
         throw new NotFoundException();
       }

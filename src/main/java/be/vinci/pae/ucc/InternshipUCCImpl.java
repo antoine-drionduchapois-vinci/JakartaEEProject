@@ -90,9 +90,7 @@ public class InternshipUCCImpl implements InternshipUCC {
       }
 
       // Set enterprise
-      System.out.println(contact.getEnterprise());
       internship.setEnterprise(contact.getEnterprise());
-      System.out.println(internship.getEnterprise());
       if (internship.getSupervisorDTO() != null) {
         internship.getSupervisorDTO().setEnterprise(contact.getEnterprise());
       }
