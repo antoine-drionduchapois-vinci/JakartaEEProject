@@ -71,7 +71,7 @@ class ContactUCCImplTest {
     List<ContactDTO> result = contactUCC.getContacts(1);
 
     assertEquals(contactDTOs, result);
-    verify(contactDAO).readMany(1);
+    verify(contactDAO, times(2)).readMany(1);
   }
 
   @Test
