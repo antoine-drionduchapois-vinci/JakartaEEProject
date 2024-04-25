@@ -183,12 +183,27 @@ class InternshipUCCImplTest {
   @Test
   void testAcceptInternshipWithExistingSupervisor() {
     InternshipDTO internshipDTO = domainFactory.getInternship();
+    internshipDTO.setUser(1);
     internshipDTO.setSupervisor(1);
+    internshipDTO.setContact(2);
 
     SupervisorDTO supervisorDTO = domainFactory.getSupervisor();
+    supervisorDTO.setSupervisorId(1);
 
-    when(internshipDAO.getUserInternship(0)).thenReturn(null);
-    when(supervisorUCC.getResponsibleByEnterpriseId(anyInt())).thenReturn(supervisorDTO);
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterprise();
+    enterpriseDTO.setEnterpriseId(1);
+
+    ContactDTO contactDTO = domainFactory.getContact();
+    contactDTO.setContactId(2);
+    contactDTO.setState("meet");
+    contactDTO.setUser(1);
+    contactDTO.setEnterprise(1);
+    contactDTO.setEnterpriseDTO(enterpriseDTO);
+
+    when(internshipDAO.getUserInternship(1)).thenReturn(null);
+    when(contactDAO.readOne(2)).thenReturn(contactDTO);
+    when(supervisorDAO.getResponsibleByEnterpriseId(1)).thenReturn(
+        supervisorDTO);
 
     internshipUCC.acceptInternship(internshipDTO);
 
