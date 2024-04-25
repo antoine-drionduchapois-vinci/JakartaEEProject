@@ -119,6 +119,12 @@ class ContactUCCImplTest {
   }
 
   @Test
+  void testGetContactsReadManyFail() {
+    when(contactDAO.readMany(1)).thenThrow(new RuntimeException("exception"));
+    assertThrows(RuntimeException.class, () -> contactUCC.getContact(1, 1));
+  }
+
+  @Test
   void testInitiateContactWithNoCorrespondingEnterprise() {
     EnterpriseDTO enterpriseDTO = domainFactory.getEnterprise();
     enterpriseDTO.setEnterpriseId(2);
