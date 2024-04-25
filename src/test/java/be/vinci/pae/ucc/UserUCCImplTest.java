@@ -18,6 +18,7 @@ import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 class UserUCCImplTest {
 
@@ -54,6 +55,7 @@ class UserUCCImplTest {
   @Test
   void countStudents() {
     // Arrange
+    Mockito.reset(userDAO);
     when(userDAO.getTotalStudents()).thenReturn(10);
 
     // Act
