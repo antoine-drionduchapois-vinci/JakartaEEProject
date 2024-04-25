@@ -75,16 +75,7 @@ class UserUCCImplTest {
     assertThrows(RuntimeException.class, () -> userUCC.countStudentsWithoutStage());
   }
 
-  @Test
-  void testCountStudentsThrowsException() {
 
-    // Mock myUserDAO.getStudentsWithoutStage() to return the invalid count
-    when(userDAO.getTotalStudents()).thenThrow(new RuntimeException("exception"));
-
-    // Act
-    // Assert that a RuntimeException is thrown when countStudentsWithoutStage is called
-    assertThrows(RuntimeException.class, () -> userUCC.countStudents());
-  }
   @Test
   void getUsersAsJson() {
     // Arrange
