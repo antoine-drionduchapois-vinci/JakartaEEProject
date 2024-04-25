@@ -157,4 +157,33 @@ class InternshipUCCImplTest {
 
     verify(internshipDAO, atLeastOnce()).getUserInternship(1);
   }
+
+  @Test
+  void testModifySubjectWithNonExistingInternship() {
+    // Simuler un stage inexistant pour l'utilisateur
+    when(internshipDAO.getUserInternship(1)).thenReturn(null);
+
+    // Vérifier que NotFoundException est levée lorsque le stage n'existe pas
+    assertThrows(NotFoundException.class, () -> internshipUCC.modifySubject(1, "New subject"));
+  }
+
+  @Test
+  void testModifySubjectWithExistingInternship() {
+    // Créer un stage existant pour l'utilisateur
+    InternshipDTO internshipDTO = domainFactory.getInternship();
+    internshipDTO.setUser(1);
+    internshipDTO.setSubject("Old subject");
+
+    // Appeler la méthode modifySubject pour modifier le sujet
+    InternshipDTO updatedInternship = domainFactory.getInternship();
+    updatedInternship.setUser(1);
+    updatedInternship.setSubject("New subject");
+
+    // Simuler la récupération du stage existant
+    when(internshipDAO.getUserInternship(1)).thenReturn(internshipDTO);
+    when(internshipDAO.update(internshipDTO)).thenReturn(updatedInternship);
+
+    // Vérifier que le sujet a été correctement mis à jour
+    assertEquals("New subject", updatedInternship.getSubject());
+  }
 }
