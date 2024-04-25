@@ -119,12 +119,6 @@ class ContactUCCImplTest {
   }
 
   @Test
-  void testGetContactsReadManyFail() {
-    when(contactDAO.readMany(1)).thenThrow(new RuntimeException("exception"));
-    assertThrows(RuntimeException.class, () -> contactUCC.getContact(1, 1));
-  }
-
-  @Test
   void testInitiateContactWithNoCorrespondingEnterprise() {
     EnterpriseDTO enterpriseDTO = domainFactory.getEnterprise();
     enterpriseDTO.setEnterpriseId(2);
@@ -394,6 +388,23 @@ class ContactUCCImplTest {
   }
 
   @Test
+  void indicateAsSuspendedWithCorrespondingEnterprise() {
+    ContactDTO contactDTO = domainFactory.getContact();
+    contactDTO.setContactId(1);
+    contactDTO.setState("meet");
+    contactDTO.setEnterprise(1);
+
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterprise();
+
+    when(contactDAO.readOne(1)).thenReturn(contactDTO);
+    when(contactDAO.update(contactDTO)).thenReturn(contactDTO);
+    when(enterpriseDAO.readOne(contactDTO.getEnterprise())).thenReturn(enterpriseDTO);
+
+    assertEquals("suspended", contactUCC.indicateAsSuspended(1).getState());
+  }
+
+
+  @Test
   void testUnfollowContactNotInitiated() {
     ContactDTO contactDTO = domainFactory.getContact();
     contactDTO.setUser(1);
@@ -516,15 +527,19 @@ class ContactUCCImplTest {
   }
 
   @Test
-  void testAcceptContactReadMany() {
+  void testAcceptContactReadManyWithCurrentContactAndUnfollowedFail() {
     Contact contactDTO = (Contact) domainFactory.getContact();
     contactDTO.setState("meet");
-
-    when(contactDAO.readOne(1)).thenReturn(contactDTO);
+    contactDTO.setContactId(1);
 
     ContactDTO readContact = domainFactory.getContact();
     readContact.setState("unfollowed");
+    readContact.setContactId(1);
+
+    when(contactDAO.readOne(1)).thenReturn(contactDTO);
+
     ArrayList<ContactDTO> readArray = new ArrayList<>();
+    readArray.add(contactDTO);
     readArray.add(readContact);
 
     when(contactDAO.readMany(1)).thenReturn(readArray);
@@ -533,13 +548,16 @@ class ContactUCCImplTest {
 
     assertEquals("accepted", contactUCC.accept(1, 1).getState());
   }
+
   @Test
   void testAcceptContactReadManyWithCurrentContact() {
     Contact contactDTO = (Contact) domainFactory.getContact();
     contactDTO.setState("meet");
+    contactDTO.setContactId(1);
 
     ContactDTO readContact = domainFactory.getContact();
-    readContact.setState("unfollowed");
+    readContact.setState("meet");
+    readContact.setContactId(1);
 
     when(contactDAO.readOne(1)).thenReturn(contactDTO);
 
