@@ -11,14 +11,13 @@ import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.SupervisorDTO;
 import be.vinci.pae.utils.NotFoundException;
 import be.vinci.pae.utils.TestBinder;
+import java.util.ArrayList;
+import java.util.List;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 class SupervisorUCCImplTest {
 
@@ -83,5 +82,18 @@ class SupervisorUCCImplTest {
     SupervisorDTO supervisorDTO = domainFactory.getSupervisor();
     when(supervisorDAO.create(supervisorDTO)).thenReturn(supervisorDTO);
     assertEquals(supervisorDTO, supervisorUCC.addOne(supervisorDTO));
+  }
+
+  @Test
+  void testAddOneWithException() {
+    // Créer un DTO de superviseur
+    SupervisorDTO supervisorDTO = domainFactory.getSupervisor();
+
+    // Simuler une exception lors de la création du superviseur
+    when(supervisorDAO.create(supervisorDTO)).thenThrow(
+        new RuntimeException("Database connection error"));
+
+    // Appeler la méthode à tester et vérifier que l'exception est levée
+    assertThrows(RuntimeException.class, () -> supervisorUCC.addOne(supervisorDTO));
   }
 }
