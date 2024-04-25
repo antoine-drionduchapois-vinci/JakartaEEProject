@@ -237,6 +237,67 @@ class InternshipUCCImplTest {
   }
 
   @Test
+  void testAcceptInternshipWithExistingSupervisorNull() {
+    // Créer un DTO de stage avec un superviseur existant
+    InternshipDTO internshipDTO = domainFactory.getInternship();
+    internshipDTO.setUser(1);
+    internshipDTO.setSupervisor(1);
+    internshipDTO.setContact(2);
+
+    // Créer un DTO de contact
+    ContactDTO contactDTO = domainFactory.getContact();
+    contactDTO.setContactId(2);
+    contactDTO.setState("meet");
+    contactDTO.setUser(1);
+    contactDTO.setEnterprise(1);
+    contactDTO.setEnterpriseDTO(domainFactory.getEnterprise());
+
+    // Simuler la récupération du stage
+    when(internshipDAO.getUserInternship(1)).thenReturn(null);
+
+    // Simuler la récupération du contact
+    when(contactDAO.readOne(2)).thenReturn(contactDTO);
+
+    // Simuler la récupération d'un superviseur null
+    when(supervisorDAO.getResponsibleByEnterpriseId(1)).thenReturn(null);
+
+    // Appeler la méthode à tester et vérifier que NotFoundException est levée
+    assertThrows(NotFoundException.class, () -> internshipUCC.acceptInternship(internshipDTO));
+  }
+
+  @Test
+  void testAcceptInternshipWithExistingSupervisorAlreadyAssigned() {
+
+    SupervisorDTO supervisorDTO = domainFactory.getSupervisor();
+    supervisorDTO.setSupervisorId(1);
+
+    // Créer un DTO de stage avec un superviseur existant
+    InternshipDTO internshipDTO = domainFactory.getInternship();
+    internshipDTO.setUser(1);
+    internshipDTO.setContact(2);
+
+    // Créer un DTO de contact
+    ContactDTO contactDTO = domainFactory.getContact();
+    contactDTO.setContactId(2);
+    contactDTO.setState("meet");
+    contactDTO.setUser(1);
+    contactDTO.setEnterprise(1);
+    contactDTO.setEnterpriseDTO(domainFactory.getEnterprise());
+
+    // Simuler la récupération du stage
+    when(internshipDAO.getUserInternship(1)).thenReturn(null);
+
+    // Simuler la récupération du contact
+    when(contactDAO.readOne(2)).thenReturn(contactDTO);
+
+    // Simuler la récupération d'un superviseur déjà assigné
+    when(supervisorDAO.getResponsibleByEnterpriseId(1)).thenReturn(supervisorDTO);
+
+    // Appeler la méthode à tester et vérifier que BusinessException est levée
+    assertThrows(BusinessException.class, () -> internshipUCC.acceptInternship(internshipDTO));
+  }
+
+  @Test
   void testModifySubjectWithNonExistingInternship() {
     // Simuler un stage inexistant pour l'utilisateur
     when(internshipDAO.getUserInternship(1)).thenReturn(null);
