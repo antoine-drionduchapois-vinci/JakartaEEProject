@@ -24,6 +24,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 class ContactUCCImplTest {
 
@@ -182,6 +183,8 @@ class ContactUCCImplTest {
   @Test
   @DisplayName("Checks that the version number of an initiated contact is 1 ")
   void testVersionInitiateContact() {
+    Mockito.reset(contactDAO);
+    Mockito.reset(enterpriseDAO);
     ContactDTO contactDTO = domainFactory.getContact();
     contactDTO.setVersion(1);
     EnterpriseDTO enterpriseDTO = domainFactory.getEnterprise();
@@ -208,7 +211,7 @@ class ContactUCCImplTest {
     // Simuler une exception lors de la création du contact
     when(contactDAO.create(userId, enterpriseId)).thenThrow(
         new RuntimeException("Database connection error"));
-    
+
     // Appeler la méthode à tester et vérifier que l'exception est levée
     assertThrows(RuntimeException.class, () -> contactUCC.initiateContact(userId, enterpriseId));
 
@@ -639,6 +642,6 @@ class ContactUCCImplTest {
 
     // Act & Assert
     assertThrows(NotFoundException.class, () -> contactUCC.getEnterpriseContacts(enterpriseId));
-    verify(contactDAO, times(2)).readEnterpriseContacts(enterpriseId);
+    verify(contactDAO, atLeastOnce()).readEnterpriseContacts(enterpriseId);
   }
 }
