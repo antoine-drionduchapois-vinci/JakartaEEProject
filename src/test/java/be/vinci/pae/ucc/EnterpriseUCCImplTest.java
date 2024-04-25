@@ -2,6 +2,7 @@ package be.vinci.pae.ucc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -64,6 +65,16 @@ class EnterpriseUCCImplTest {
   }
 
   @Test
+  void testGetAllEnterprisesWithException() {
+    // Simuler une exception lors de la récupération des entreprises
+    when(enterpriseDAO.getAllEnterprises()).thenThrow(new RuntimeException());
+
+    // Appeler la méthode à tester et vérifier qu'elle lance une exception
+    assertThrows(RuntimeException.class, () -> enterpriseUCC.getAllEnterprises());
+
+  }
+
+  @Test
   void getEnterprisesByUserId() {
     // Création d'un ID de test
     int userId = 123;
@@ -88,5 +99,15 @@ class EnterpriseUCCImplTest {
 
     assertNull(enterpriseUCC.getEnterprisesByUserId(1));
     verify(enterpriseDAO).getEnterpriseById(1);
+  }
+
+  @Test
+  void testGetEnterprisesByUserIdWithException() {
+    // Simuler une exception lors de la récupération des entreprises
+    when(enterpriseDAO.getEnterpriseById(1)).thenThrow(new RuntimeException());
+
+    // Appeler la méthode à tester et vérifier qu'elle lance une exception
+    assertThrows(RuntimeException.class, () -> enterpriseUCC.getEnterprisesByUserId(1));
+
   }
 }
