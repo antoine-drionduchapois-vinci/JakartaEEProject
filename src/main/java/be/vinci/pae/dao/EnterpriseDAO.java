@@ -68,11 +68,10 @@ public interface EnterpriseDAO {
   EnterpriseDTO getEnterpriseById(int id);
 
   /**
-   * Blacklist an enterprise.
+   * Update an enterprise.
    *
-   * @param blacklistedEnterpriseDTO the EnterpriseDTO of the enterprise to
-   *                                 blacklist
-   * @return The enterprise blacklisted
+   * @param newEnterprise the EnterpriseDTO of the enterprise to update
+   * @return An EnterpriseDTO object representing the updated enterprise
    */
-  EnterpriseDTO toBlacklist(EnterpriseDTO blacklistedEnterpriseDTO);
+  EnterpriseDTO update(EnterpriseDTO newEnterprise);
 }

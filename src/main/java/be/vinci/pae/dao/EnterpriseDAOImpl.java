@@ -21,8 +21,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
   @Inject
   private DALBackService myDalService;
 
-  private final ResultSetMapper<EnterpriseDTO, EnterpriseImpl> enterpriseMapper =
-      new ResultSetMapper<>();
+  private final ResultSetMapper<EnterpriseDTO, EnterpriseImpl> enterpriseMapper = new ResultSetMapper<>();
 
   @Inject
   private DomainFactory myDomainFactory;
@@ -63,14 +62,15 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
     }
     int initialVersion = 1;
     try (PreparedStatement ps = myDalService.getPS(
-        "INSERT INTO projetae.enterprises (name, label, address, phone, email, version)"
-            + "VALUES (?, ?, ?, ?, ?, ?) RETURNING *;")) {
+        "INSERT INTO projetae.enterprises (name, label, address, phone, email, is_blacklisted, version)"
+            + "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING *;")) {
       ps.setString(1, name);
       ps.setString(2, label);
       ps.setString(3, adress);
       ps.setString(4, phone);
       ps.setString(5, email);
-      ps.setInt(6, initialVersion);
+      ps.setBoolean(6, false);
+      ps.setInt(7, initialVersion);
 
       ps.execute();
       return enterpriseMapper.mapResultSetToObject(ps.getResultSet(), EnterpriseImpl.class,
@@ -91,11 +91,6 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
     }
   }
 
-  /**
-   * Retrieves the entrprise that corresponds to the users internship.
-   *
-   * @return enterprises.
-   */
   @Override
   public EnterpriseDTO getEnterpriseById(int id) {
     PreparedStatement ps = myDalService.getPS(
@@ -112,15 +107,21 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
   }
 
   @Override
-  public EnterpriseDTO toBlacklist(EnterpriseDTO blacklistedEnterpriseDTO) {
+  public EnterpriseDTO update(EnterpriseDTO newEnterprise) {
     try (PreparedStatement ps = myDalService.getPS(
-        "UPDATE projetae.enterprises SET is_blacklisted = ?, blacklisted_reason = ?"
-            + ", version = ? WHERE enterprise_id = ? AND version = ? RETURNING *;")) {
-      ps.setBoolean(1, blacklistedEnterpriseDTO.isBlacklisted());
-      ps.setString(2, blacklistedEnterpriseDTO.getBlacklistedReason());
-      ps.setInt(3, blacklistedEnterpriseDTO.getVersion() + 1);
-      ps.setInt(4, blacklistedEnterpriseDTO.getEnterpriseId());
-      ps.setInt(5, blacklistedEnterpriseDTO.getVersion());
+        "UPDATE projetae.enterprises SET name = ?, label = ?, address = ?, phone = ?,"
+            + " email = ?, is_blacklisted = ?, blacklisted_reason = ?, version = ?"
+            + " WHERE enterprise_id = ? AND version = ? RETURNING *;")) {
+      ps.setString(1, newEnterprise.getName());
+      ps.setString(2, newEnterprise.getLabel());
+      ps.setString(3, newEnterprise.getAddress());
+      ps.setString(4, newEnterprise.getPhone());
+      ps.setString(5, newEnterprise.getEmail());
+      ps.setBoolean(6, newEnterprise.isBlacklisted());
+      ps.setString(7, newEnterprise.getBlacklistedReason());
+      ps.setInt(8, newEnterprise.getVersion() + 1);
+      ps.setInt(9, newEnterprise.getEnterpriseId());
+      ps.setInt(10, newEnterprise.getVersion());
       ps.execute();
       return enterpriseMapper.mapResultSetToObject(ps.getResultSet(), EnterpriseImpl.class,
           myDomainFactory::getEnterprise);

@@ -240,7 +240,7 @@ const renderForm = (formContainer, users, tableUserContainer) => {
       const name = inputField.value.trim();
       const isStudent = checkboxField.checked;
       const selectedYear = selectField.value;
-      console.log('input');
+
       // Filtrer les utilisateurs en fonction des critères
       const filteredUsers = users.filter((user) => {
         const userName = user.name || '';
@@ -314,7 +314,7 @@ const renderEnterpriseTable = (tableContainer, enterprises) => {
 
     // Mettre à jour le tableau avec les entreprises triées
     updateTable(tbody, enterprises);
-  };
+};
 
   // Créer la première ligne pour les en-têtes de colonne
   const thead = document.createElement('thead');

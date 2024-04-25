@@ -59,20 +59,19 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
   public EnterpriseDTO blacklistEnterprise(int enterpriseId, String blacklistedReason) {
     try {
       myDALService.start();
-
       Enterprise enterprise = (Enterprise) myEnterpriseDAO.readOne(enterpriseId);
 
       if (enterprise.getEnterpriseId() != enterpriseId) {
         throw new NotFoundException();
       }
 
-      if (!enterprise.toBlacklist(blacklistedReason)) {
-        throw new BusinessException(403, "enterprise must not be already blacklisted");
+      if (!enterprise.indicateAsBlacklisted(blacklistedReason)) {
+        throw new BusinessException(403,
+            "This enterprise is already blacklisted");
       }
 
-      EnterpriseDTO blacklistedEnterpriseDTO = myEnterpriseDAO.toBlacklist(enterprise);
+      Enterprise blacklistedEnterpriseDTO = (Enterprise) myEnterpriseDAO.update(enterprise);
 
-      //Solution avec UCC Imbriqués !!!
       List<ContactDTO> contactDTOS = myContactDAO.readEnterpriseInitiatedOrMeetContacts(
           enterpriseId);
       if (contactDTOS != null) {

@@ -173,8 +173,8 @@ public class ContactResource {
   /**
    * Indicates that a contact has been refused.
    *
-   * @param token          The authorization token.
-   * @param contact        The contact information to be refused.
+   * @param token   The authorization token.
+   * @param contact The contact information to be refused.
    * @return The updated contact after indicating refusal.
    */
   @POST
@@ -233,7 +233,7 @@ public class ContactResource {
     }
     ThreadContext.put("params", "contactId:" + contactId);
     contact = myContactUCC.unfollow(userId, contactId);
-    logger.info("Status: 200 {refuse}");
+    logger.info("Status: 200 {unfollow}");
     ThreadContext.clearAll();
     return contact;
   }
@@ -242,7 +242,7 @@ public class ContactResource {
    * Retrieves contacts for a specific user.
    *
    * @param token The JSON containing the user ID.
-   * @param id the query id
+   * @param id    the query id
    * @return The user's contacts as JSON.
    */
   @GET

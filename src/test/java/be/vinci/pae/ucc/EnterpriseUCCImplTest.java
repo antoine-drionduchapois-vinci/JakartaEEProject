@@ -153,7 +153,7 @@ class EnterpriseUCCImplTest {
 
     // Simuler la récupération de l'entreprise
     when(enterpriseDAO.readOne(1)).thenReturn(enterprise);
-    when(enterpriseDAO.toBlacklist(enterprise)).thenReturn(enterprise1);
+    when(enterpriseDAO.update(enterprise)).thenReturn(enterprise1);
 
     // Simuler la récupération des contacts de l'entreprise
     when(contactDAO.readEnterpriseInitiatedOrMeetContacts(1)).thenReturn(contactDTOS);
@@ -166,7 +166,7 @@ class EnterpriseUCCImplTest {
     EnterpriseDTO result = enterpriseUCC.blacklistEnterprise(1, "Reason");
 
     // Vérifier que la méthode toBlacklist de enterpriseDAO a été appelée
-    verify(enterpriseDAO).toBlacklist(enterprise);
+    verify(enterpriseDAO).update(enterprise);
 
     // Vérifier que la méthode readEnterpriseInitiatedOrMeetContacts de contactDAO a été appelée
     verify(contactDAO).readEnterpriseInitiatedOrMeetContacts(1);
