@@ -15,6 +15,7 @@ import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.domain.InternshipDTO;
 import be.vinci.pae.domain.SupervisorDTO;
+import be.vinci.pae.utils.BusinessException;
 import be.vinci.pae.utils.NotFoundException;
 import be.vinci.pae.utils.TestBinder;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -32,6 +33,8 @@ class InternshipUCCImplTest {
   private static SupervisorDAO supervisorDAO;
   private static DomainFactory domainFactory;
   private static InternshipUCC internshipUCC;
+  private static ContactUCC contactUCC;
+  private static SupervisorUCC supervisorUCC;
 
   @BeforeAll
   static void setUp() {
@@ -42,6 +45,8 @@ class InternshipUCCImplTest {
     contactDAO = locator.getService(ContactDAO.class);
     supervisorDAO = locator.getService(SupervisorDAO.class);
     internshipUCC = locator.getService(InternshipUCC.class);
+    contactUCC = locator.getService(ContactUCC.class);
+    supervisorUCC = locator.getService(SupervisorUCC.class);
   }
 
   @AfterAll
@@ -138,6 +143,18 @@ class InternshipUCCImplTest {
     // Vérification qu'une NotFoundException est bien lancée
     assertThrows(NotFoundException.class, () -> internshipUCC.getUserInternship(userId));
     verify(internshipDAO, atLeastOnce()).getUserInternship(userId);
-    verify(supervisorDAO).readOne(1);
+    verify(supervisorDAO, atLeastOnce()).readOne(1);
+  }
+
+  @Test
+  void testAcceptInternshipWithUserAlreadyHavingInternship() {
+    InternshipDTO internshipDTO = domainFactory.getInternship();
+    internshipDTO.setUser(1);
+
+    when(internshipDAO.getUserInternship(1)).thenReturn(internshipDTO);
+
+    assertThrows(BusinessException.class, () -> internshipUCC.acceptInternship(internshipDTO));
+
+    verify(internshipDAO).getUserInternship(1);
   }
 }
