@@ -134,6 +134,27 @@ class UserUCCImplTest {
   }
 
   @Test
+  void testModifyPasswordThrowsException() {
+    // Arrange
+    UserDTO user1 = domainFactory.getUser();
+    user1.setSurname("John");
+    user1.setName("Doe");
+    user1.setPassword("password");
+    String newPassword = "newPassword";
+
+    // Mock myUserDAO.modifyPassword() to throw a RuntimeException
+    when(userDAO.modifyPassword(user1)).thenThrow(
+        new RuntimeException("Failed to modify password"));
+
+    // Act
+    // Assert that a RuntimeException is thrown when modifyPassword is called
+    assertThrows(RuntimeException.class, () -> userUCC.modifyPassword(user1, newPassword));
+
+    // No need to verify myDALService since it's not used directly
+  }
+
+
+  @Test
   void testChangePhoneNumber() {
     // Arrange
     UserDTO user1 = domainFactory.getUser();
