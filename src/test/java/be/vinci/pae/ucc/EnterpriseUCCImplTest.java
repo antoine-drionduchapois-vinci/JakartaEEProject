@@ -6,10 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import be.vinci.pae.dao.ContactDAO;
 import be.vinci.pae.dao.EnterpriseDAO;
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.Enterprise;
 import be.vinci.pae.domain.EnterpriseDTO;
+import be.vinci.pae.utils.BusinessException;
+import be.vinci.pae.utils.NotFoundException;
 import be.vinci.pae.utils.TestBinder;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +27,7 @@ class EnterpriseUCCImplTest {
   private static ServiceLocator locator;
   private static EnterpriseUCC enterpriseUCC;
   private static EnterpriseDAO enterpriseDAO;
+  private static ContactDAO contactDAO;
   private static DomainFactory domainFactory;
 
   @BeforeAll
@@ -33,6 +37,7 @@ class EnterpriseUCCImplTest {
     // Récupération des instances des classes mockées à partir du ServiceLocator
     enterpriseDAO = locator.getService(EnterpriseDAO.class);
     enterpriseUCC = locator.getService(EnterpriseUCC.class);
+    contactDAO = locator.getService((ContactDAO.class));
     domainFactory = locator.getService(DomainFactory.class);
 
   }
@@ -109,5 +114,56 @@ class EnterpriseUCCImplTest {
     // Appeler la méthode à tester et vérifier qu'elle lance une exception
     assertThrows(RuntimeException.class, () -> enterpriseUCC.getEnterprisesByUserId(1));
 
+  }
+
+  @Test
+  void testBlacklistEnterpriseWithValidData() {
+    // Créer une entreprise valide
+    Enterprise enterprise = domainFactory.getEnterprise();
+    enterprise.setEnterpriseId(1);
+    enterprise.setName("Test Enterprise");
+
+    // Simuler la récupération de l'entreprise
+    when(enterpriseDAO.readOne(1)).thenReturn(enterprise);
+
+    // Appeler la méthode à tester
+    EnterpriseDTO result = enterpriseUCC.blacklistEnterprise(1, "Reason");
+
+    // Vérifier le résultat
+    assertEquals(enterprise.getEnterpriseId(), result.getEnterpriseId());
+
+    // Vérifier que la méthode toBlacklist de enterpriseDAO a été appelée
+    verify(enterpriseDAO).toBlacklist(enterprise);
+
+    // Vérifier que la méthode readEnterpriseInitiatedOrMeetContacts de contactDAO a été appelée
+    verify(contactDAO).readEnterpriseInitiatedOrMeetContacts(1);
+
+  }
+
+  @Test
+  void testBlacklistEnterpriseWithInvalidEnterpriseId() {
+    Enterprise enterprise = domainFactory.getEnterprise();
+    enterprise.setEnterpriseId(1);
+    enterprise.setName("Test Enterprise");
+    // Simuler la récupération d'une entreprise inexistante
+    when(enterpriseDAO.readOne(2)).thenReturn(enterprise);
+
+    // Vérifier que NotFoundException est levée lorsque l'entreprise n'existe pas
+    assertThrows(NotFoundException.class, () -> enterpriseUCC.blacklistEnterprise(2, "Reason"));
+
+  }
+
+  @Test
+  void testBlacklistEnterpriseWithAlreadyBlacklistedEnterprise() {
+    // Créer une entreprise déjà blacklistée
+    Enterprise enterprise = domainFactory.getEnterprise();
+    enterprise.setEnterpriseId(1);
+    enterprise.setBlacklisted(true);
+
+    // Simuler la récupération de l'entreprise
+    when(enterpriseDAO.readOne(1)).thenReturn(enterprise);
+
+    // Vérifier que BusinessException est levée lorsque l'entreprise est déjà blacklistée
+    assertThrows(BusinessException.class, () -> enterpriseUCC.blacklistEnterprise(1, "Reason"));
   }
 }
