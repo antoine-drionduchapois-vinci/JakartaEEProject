@@ -2,7 +2,7 @@ package be.vinci.pae.ucc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -15,6 +15,7 @@ import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.domain.InternshipDTO;
 import be.vinci.pae.domain.SupervisorDTO;
+import be.vinci.pae.utils.BusinessException;
 import be.vinci.pae.utils.NotFoundException;
 import be.vinci.pae.utils.TestBinder;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -32,6 +33,8 @@ class InternshipUCCImplTest {
   private static SupervisorDAO supervisorDAO;
   private static DomainFactory domainFactory;
   private static InternshipUCC internshipUCC;
+  private static ContactUCC contactUCC;
+  private static SupervisorUCC supervisorUCC;
 
   @BeforeAll
   static void setUp() {
@@ -42,12 +45,13 @@ class InternshipUCCImplTest {
     contactDAO = locator.getService(ContactDAO.class);
     supervisorDAO = locator.getService(SupervisorDAO.class);
     internshipUCC = locator.getService(InternshipUCC.class);
+    contactUCC = locator.getService(ContactUCC.class);
+    supervisorUCC = locator.getService(SupervisorUCC.class);
   }
 
   @AfterAll
   static void tearDown() {
     // Fermeture du ServiceLocator
-    verify(internshipDAO, times(2)).getUserInternship(1);
     locator.shutdown();
   }
 
@@ -83,5 +87,247 @@ class InternshipUCCImplTest {
     when(internshipDAO.getUserInternship(userId)).thenReturn(null);
 
     assertThrows(NotFoundException.class, () -> internshipUCC.getUserInternship(userId));
+  }
+
+  @Test
+  void testGetUserInternshipWithNonExistingEnterprise() {
+    int userId = 1;
+    InternshipDTO internshipDTO = domainFactory.getInternship();
+    internshipDTO.setEnterprise(1);
+
+    // Configuration du comportement simulé du DAO pour retourner null
+    when(internshipDAO.getUserInternship(userId)).thenReturn(internshipDTO);
+    when(enterpriseDAO.readOne(1)).thenReturn(null);
+
+    // Vérification qu'une NotFoundException est bien lancée
+    assertThrows(NotFoundException.class, () -> internshipUCC.getUserInternship(userId));
+    verify(internshipDAO, atLeastOnce()).getUserInternship(userId);
+    verify(enterpriseDAO, atLeastOnce()).readOne(1);
+  }
+
+  @Test
+  void testGetUserInternshipWithNonExistingContact() {
+    int userId = 1;
+    InternshipDTO internshipDTO = domainFactory.getInternship();
+    internshipDTO.setEnterprise(1);
+    internshipDTO.setContact(1);
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterprise();
+
+    // Configuration du comportement simulé du DAO pour retourner null
+    when(internshipDAO.getUserInternship(userId)).thenReturn(internshipDTO);
+    when(enterpriseDAO.readOne(1)).thenReturn(enterpriseDTO);
+    when(contactDAO.readOne(1)).thenReturn(null);
+
+    // Vérification qu'une NotFoundException est bien lancée
+    assertThrows(NotFoundException.class, () -> internshipUCC.getUserInternship(userId));
+    verify(internshipDAO, atLeastOnce()).getUserInternship(userId);
+    verify(contactDAO, atLeastOnce()).readOne(1);
+  }
+
+  @Test
+  void testGetUserInternshipWithNonExistingSupervisor() {
+    int userId = 1;
+    InternshipDTO internshipDTO = domainFactory.getInternship();
+    internshipDTO.setEnterprise(1);
+    internshipDTO.setContact(1);
+    internshipDTO.setSupervisor(1);
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterprise();
+    ContactDTO contactDTO = domainFactory.getContact();
+
+    // Configuration du comportement simulé du DAO pour retourner null
+    when(internshipDAO.getUserInternship(userId)).thenReturn(internshipDTO);
+    when(enterpriseDAO.readOne(1)).thenReturn(enterpriseDTO);
+    when(contactDAO.readOne(1)).thenReturn(contactDTO);
+    when(supervisorDAO.readOne(1)).thenReturn(null);
+
+    // Vérification qu'une NotFoundException est bien lancée
+    assertThrows(NotFoundException.class, () -> internshipUCC.getUserInternship(userId));
+    verify(internshipDAO, atLeastOnce()).getUserInternship(userId);
+    verify(supervisorDAO, atLeastOnce()).readOne(1);
+  }
+
+  @Test
+  void testAcceptInternshipWithUserAlreadyHavingInternship() {
+    InternshipDTO internshipDTO = domainFactory.getInternship();
+    internshipDTO.setUser(1);
+
+    when(internshipDAO.getUserInternship(1)).thenReturn(internshipDTO);
+
+    assertThrows(BusinessException.class, () -> internshipUCC.acceptInternship(internshipDTO));
+
+    verify(internshipDAO, atLeastOnce()).getUserInternship(1);
+  }
+
+  @Test
+  void testAcceptInternshipWithInvalidContactUserMismatch() {
+    InternshipDTO internshipDTO = domainFactory.getInternship();
+    internshipDTO.setUser(1);
+    internshipDTO.setContact(2);
+
+    ContactDTO contactDTO = domainFactory.getContact();
+    contactDTO.setContactId(2);
+    contactDTO.setState("meet");
+    contactDTO.setUser(3);
+
+    when(internshipDAO.getUserInternship(1)).thenReturn(null);
+    when(contactDAO.readOne(2)).thenReturn(contactDTO);
+
+    assertThrows(NotFoundException.class, () -> internshipUCC.acceptInternship(internshipDTO));
+
+    verify(internshipDAO, atLeastOnce()).getUserInternship(1);
+  }
+
+  @Test
+  void testAcceptInternshipWithExistingSupervisor() {
+    InternshipDTO internshipDTO = domainFactory.getInternship();
+    internshipDTO.setUser(1);
+    internshipDTO.setSupervisor(1);
+    internshipDTO.setContact(2);
+
+    SupervisorDTO supervisorDTO = domainFactory.getSupervisor();
+    supervisorDTO.setSupervisorId(1);
+
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterprise();
+    enterpriseDTO.setEnterpriseId(1);
+
+    ContactDTO contactDTO = domainFactory.getContact();
+    contactDTO.setContactId(2);
+    contactDTO.setState("meet");
+    contactDTO.setUser(1);
+    contactDTO.setEnterprise(1);
+    contactDTO.setEnterpriseDTO(enterpriseDTO);
+
+    when(internshipDAO.getUserInternship(1)).thenReturn(null);
+    when(contactDAO.readOne(2)).thenReturn(contactDTO);
+    when(supervisorDAO.getResponsibleByEnterpriseId(1)).thenReturn(
+        supervisorDTO);
+
+    internshipUCC.acceptInternship(internshipDTO);
+
+    assertEquals(supervisorDTO, internshipDTO.getSupervisorDTO());
+  }
+
+  @Test
+  void testAcceptInternshipWithNewSupervisor() {
+    SupervisorDTO supervisorDTO = domainFactory.getSupervisor();
+    supervisorDTO.setSupervisorId(1);
+
+    InternshipDTO internshipDTO = domainFactory.getInternship();
+    internshipDTO.setUser(1);
+    internshipDTO.setContact(2);
+    internshipDTO.setSupervisorDTO(supervisorDTO);
+
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterprise();
+    enterpriseDTO.setEnterpriseId(1);
+
+    ContactDTO contactDTO = domainFactory.getContact();
+    contactDTO.setContactId(2);
+    contactDTO.setState("meet");
+    contactDTO.setUser(1);
+    contactDTO.setEnterprise(1);
+    contactDTO.setEnterpriseDTO(enterpriseDTO);
+
+    when(internshipDAO.getUserInternship(1)).thenReturn(null);
+    when(contactDAO.readOne(2)).thenReturn(contactDTO);
+    when(supervisorDAO.create(supervisorDTO)).thenReturn(supervisorDTO);
+
+    internshipUCC.acceptInternship(internshipDTO);
+
+    assertEquals(supervisorDTO, internshipDTO.getSupervisorDTO());
+  }
+
+  @Test
+  void testAcceptInternshipWithExistingSupervisorNull() {
+    // Créer un DTO de stage avec un superviseur existant
+    InternshipDTO internshipDTO = domainFactory.getInternship();
+    internshipDTO.setUser(1);
+    internshipDTO.setSupervisor(1);
+    internshipDTO.setContact(2);
+
+    // Créer un DTO de contact
+    ContactDTO contactDTO = domainFactory.getContact();
+    contactDTO.setContactId(2);
+    contactDTO.setState("meet");
+    contactDTO.setUser(1);
+    contactDTO.setEnterprise(1);
+    contactDTO.setEnterpriseDTO(domainFactory.getEnterprise());
+
+    // Simuler la récupération du stage
+    when(internshipDAO.getUserInternship(1)).thenReturn(null);
+
+    // Simuler la récupération du contact
+    when(contactDAO.readOne(2)).thenReturn(contactDTO);
+
+    // Simuler la récupération d'un superviseur null
+    when(supervisorDAO.getResponsibleByEnterpriseId(1)).thenReturn(null);
+
+    // Appeler la méthode à tester et vérifier que NotFoundException est levée
+    assertThrows(NotFoundException.class, () -> internshipUCC.acceptInternship(internshipDTO));
+  }
+
+  @Test
+  void testAcceptInternshipWithExistingSupervisorAlreadyAssigned() {
+
+    SupervisorDTO supervisorDTO = domainFactory.getSupervisor();
+    supervisorDTO.setSupervisorId(1);
+
+    // Créer un DTO de stage avec un superviseur existant
+    InternshipDTO internshipDTO = domainFactory.getInternship();
+    internshipDTO.setUser(1);
+    internshipDTO.setContact(2);
+
+    // Créer un DTO de contact
+    ContactDTO contactDTO = domainFactory.getContact();
+    contactDTO.setContactId(2);
+    contactDTO.setState("meet");
+    contactDTO.setUser(1);
+    contactDTO.setEnterprise(1);
+    contactDTO.setEnterpriseDTO(domainFactory.getEnterprise());
+
+    // Simuler la récupération du stage
+    when(internshipDAO.getUserInternship(1)).thenReturn(null);
+
+    // Simuler la récupération du contact
+    when(contactDAO.readOne(2)).thenReturn(contactDTO);
+
+    // Simuler la récupération d'un superviseur déjà assigné
+    when(supervisorDAO.getResponsibleByEnterpriseId(1)).thenReturn(supervisorDTO);
+
+    // Appeler la méthode à tester et vérifier que BusinessException est levée
+    assertThrows(BusinessException.class, () -> internshipUCC.acceptInternship(internshipDTO));
+  }
+
+  @Test
+  void testModifySubjectWithNonExistingInternship() {
+    // Simuler un stage inexistant pour l'utilisateur
+    when(internshipDAO.getUserInternship(1)).thenReturn(null);
+
+    // Vérifier que NotFoundException est levée lorsque le stage n'existe pas
+    assertThrows(NotFoundException.class, () -> internshipUCC.modifySubject(1, "New subject"));
+  }
+
+  @Test
+  void testModifySubjectWithExistingInternship() {
+    // Créer un stage existant pour l'utilisateur
+    InternshipDTO internshipDTO = domainFactory.getInternship();
+    internshipDTO.setUser(1);
+    internshipDTO.setSubject("Old subject");
+
+    // Appeler la méthode modifySubject pour modifier le sujet
+    InternshipDTO updatedInternship = domainFactory.getInternship();
+    updatedInternship.setUser(1);
+    updatedInternship.setSubject("New subject");
+
+    // Simuler la récupération du stage existant
+    when(internshipDAO.getUserInternship(1)).thenReturn(internshipDTO);
+    when(internshipDAO.update(internshipDTO)).thenReturn(updatedInternship);
+
+    InternshipDTO result = internshipUCC.modifySubject(1, "New subject");
+
+    // Vérifier que le sujet a été correctement mis à jour
+    assertEquals("New subject", result.getSubject());
+
+    // Vérifier que la méthode update a été appelée avec le bon argument
+    verify(internshipDAO, atLeastOnce()).update(internshipDTO);
   }
 }
