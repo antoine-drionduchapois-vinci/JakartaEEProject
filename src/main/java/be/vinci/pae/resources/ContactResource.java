@@ -1,6 +1,8 @@
 package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.ContactDTO;
+import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.resources.filters.Authorize;
 import be.vinci.pae.resources.filters.RoleId;
 import be.vinci.pae.ucc.ContactUCC;
 import be.vinci.pae.ucc.EnterpriseUCC;
@@ -55,6 +57,7 @@ public class ContactResource {
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize()
   public ContactDTO getOne(@HeaderParam("Authorization") String token,
       @DefaultValue("-1") @QueryParam("contactId") int contactId) {
     ThreadContext.put("route", "/contact");
@@ -86,6 +89,7 @@ public class ContactResource {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(UserDTO.Role.STUDENT)
   public ContactDTO initiate(@HeaderParam("Authorization") String token, ContactDTO contact) {
     int userId = myJwt.getUserIdFromToken(token);
 
@@ -144,6 +148,7 @@ public class ContactResource {
   @Path("/meet")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(UserDTO.Role.STUDENT)
   public ContactDTO meet(@HeaderParam("Authorization") String token, ContactDTO contact) {
     ThreadContext.put("route", "/contact/meet");
     ThreadContext.put("method", "Post");
@@ -176,6 +181,7 @@ public class ContactResource {
   @Path("/refuse")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(UserDTO.Role.STUDENT)
   public ContactDTO refuse(@HeaderParam("Authorization") String token, ContactDTO contact) {
     ThreadContext.put("route", "/contact/refuse");
     ThreadContext.put("method", "Post");
@@ -210,6 +216,7 @@ public class ContactResource {
   @Path("/unfollow")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(UserDTO.Role.STUDENT)
   public ContactDTO unfollow(@HeaderParam("Authorization") String token, ContactDTO contact) {
     ThreadContext.put("route", "/contact/unfollow");
     ThreadContext.put("method", "Post");
@@ -242,6 +249,7 @@ public class ContactResource {
   @Path("getUserContacts")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize()
   public List<ContactDTO> getUsersByIdAsJson(@HeaderParam("Authorization") String token,
       @DefaultValue("-1") @QueryParam("id") int id) {
     ThreadContext.put("route", "/contact/getUserContacts");
@@ -273,6 +281,7 @@ public class ContactResource {
   @Path("getEnterpriseContacts/{entrepriseId}")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize()
   public List<ContactDTO> getEnterpriseContact(
       @PathParam("entrepriseId") int enterpriseId) {
     ThreadContext.put("route", "/contact/getEnterpriseContacts");
@@ -283,5 +292,4 @@ public class ContactResource {
     return contacts;
 
   }
-
 }
