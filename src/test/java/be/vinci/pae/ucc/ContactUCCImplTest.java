@@ -557,7 +557,7 @@ class ContactUCCImplTest {
 
     ContactDTO readContact = domainFactory.getContact();
     readContact.setState("meet");
-    readContact.setContactId(1);
+    readContact.setContactId(2);
 
     when(contactDAO.readOne(1)).thenReturn(contactDTO);
 
