@@ -528,17 +528,22 @@ class ContactUCCImplTest {
     assertEquals("accepted", contactUCC.accept(1, 1).getState());
   }
   @Test
-  void testAcceptContactReadManyEmpty() {
+  void testAcceptContactReadManyWithCurrentContact() {
     Contact contactDTO = (Contact) domainFactory.getContact();
     contactDTO.setState("meet");
+
+    ContactDTO readContact = domainFactory.getContact();
+    readContact.setState("unfollowed");
 
     when(contactDAO.readOne(1)).thenReturn(contactDTO);
 
     ArrayList<ContactDTO> readArray = new ArrayList<>();
     readArray.add(contactDTO);
+    readArray.add(readContact);
 
     when(contactDAO.readMany(1)).thenReturn(readArray);
     when(contactDAO.update(contactDTO)).thenReturn(contactDTO);
+    when(contactDAO.update(readContact)).thenReturn(readContact);
 
     assertEquals("accepted", contactUCC.accept(1, 1).getState());
   }
