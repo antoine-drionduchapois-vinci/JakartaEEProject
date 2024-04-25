@@ -74,6 +74,19 @@ class ContactUCCImplTest {
   }
 
   @Test
+  void testGetContactsWithException() {
+    // Définir l'ID de l'utilisateur
+    int userId = 1;
+
+    // Simuler une exception lors de la lecture des contacts
+    when(contactDAO.readMany(userId)).thenThrow(new RuntimeException("Database connection error"));
+
+    // Appeler la méthode à tester et vérifier que l'exception est levée
+    assertThrows(RuntimeException.class, () -> contactUCC.getContacts(userId));
+
+  }
+
+  @Test
   void testGetContactWithNoCorrespondingContact() {
     ContactDTO contactDTO = createcontactDTO(2, 1, 2);
     when(contactDAO.readOne(1)).thenReturn(contactDTO);
@@ -184,6 +197,21 @@ class ContactUCCImplTest {
     assertEquals(1, versionResult);
     verify(enterpriseDAO, atLeastOnce()).create("name", "label", "address", "phone", "email");
     verify(contactDAO, atLeastOnce()).create(1, enterpriseDTO.getEnterpriseId());
+  }
+
+  @Test
+  void testInitiateContactWithException() {
+    // Définir l'ID de l'utilisateur et de l'entreprise
+    int userId = 1;
+    int enterpriseId = 1;
+
+    // Simuler une exception lors de la création du contact
+    when(contactDAO.create(userId, enterpriseId)).thenThrow(
+        new RuntimeException("Database connection error"));
+
+    // Appeler la méthode à tester et vérifier que l'exception est levée
+    assertThrows(RuntimeException.class, () -> contactUCC.initiateContact(userId, enterpriseId));
+
   }
 
   @Test
