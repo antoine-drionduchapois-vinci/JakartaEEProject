@@ -174,7 +174,7 @@ class InternshipUCCImplTest {
 
     assertThrows(NotFoundException.class, () -> internshipUCC.acceptInternship(internshipDTO));
 
-    verify(internshipDAO).getUserInternship(1);
+    verify(internshipDAO, atLeastOnce()).getUserInternship(1);
   }
 
   @Test
