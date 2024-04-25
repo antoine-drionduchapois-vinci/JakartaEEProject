@@ -1,7 +1,10 @@
 package be.vinci.pae.ucc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -156,6 +159,71 @@ class InternshipUCCImplTest {
     assertThrows(BusinessException.class, () -> internshipUCC.acceptInternship(internshipDTO));
 
     verify(internshipDAO, atLeastOnce()).getUserInternship(1);
+  }
+
+  @Test
+  void testAcceptInternshipWithInvalidContactUserMismatch() {
+    InternshipDTO internshipDTO = domainFactory.getInternship();
+    internshipDTO.setUser(1);
+    internshipDTO.setContact(2);
+
+    ContactDTO contactDTO = domainFactory.getContact();
+    contactDTO.setContactId(2);
+    contactDTO.setState("meet");
+    contactDTO.setUser(3);
+
+    when(internshipDAO.getUserInternship(1)).thenReturn(null);
+    when(contactDAO.readOne(2)).thenReturn(contactDTO);
+
+    assertThrows(NotFoundException.class, () -> internshipUCC.acceptInternship(internshipDTO));
+
+    verify(internshipDAO).getUserInternship(1);
+  }
+
+  @Test
+  void testAcceptInternshipWithExistingSupervisor() {
+    InternshipDTO internshipDTO = domainFactory.getInternship();
+    internshipDTO.setSupervisor(1);
+
+    SupervisorDTO supervisorDTO = domainFactory.getSupervisor();
+
+    when(internshipDAO.getUserInternship(0)).thenReturn(null);
+    when(supervisorUCC.getResponsibleByEnterpriseId(anyInt())).thenReturn(supervisorDTO);
+
+    internshipUCC.acceptInternship(internshipDTO);
+
+    assertEquals(supervisorDTO, internshipDTO.getSupervisorDTO());
+  }
+
+  @Test
+  void testAcceptInternshipWithNewSupervisor() {
+    InternshipDTO internshipDTO = domainFactory.getInternship();
+    internshipDTO.setEnterprise(1);
+
+    SupervisorDTO supervisorDTO = domainFactory.getSupervisor();
+
+    when(internshipDAO.getUserInternship(0)).thenReturn(null);
+    when(supervisorUCC.getResponsibleByEnterpriseId(anyInt())).thenReturn(null);
+    when(supervisorUCC.addOne(any(SupervisorDTO.class))).thenReturn(supervisorDTO);
+
+    internshipUCC.acceptInternship(internshipDTO);
+
+    assertEquals(supervisorDTO, internshipDTO.getSupervisorDTO());
+  }
+
+  @Test
+  void testAcceptInternship() {
+    InternshipDTO internshipDTO = domainFactory.getInternship();
+
+    when(internshipDAO.getUserInternship(0)).thenReturn(null);
+    when(contactUCC.accept(anyInt(), anyInt())).thenReturn(domainFactory.getContact());
+    when(supervisorUCC.getResponsibleByEnterpriseId(anyInt())).thenReturn(
+        domainFactory.getSupervisor());
+
+    InternshipDTO result = internshipUCC.acceptInternship(internshipDTO);
+
+    assertNotNull(result);
+    verify(internshipDAO).create(internshipDTO);
   }
 
   @Test
