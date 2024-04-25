@@ -120,36 +120,36 @@ async function handleSubmit(e) {
   const errorMessage = document.getElementById('errorMessage');
   // Getting form input values
   const name = document.getElementById('nameInput').value;
-  const firstname = document.getElementById('firstnameInput').value;
+  const surname = document.getElementById('firstnameInput').value;
   const email = document.getElementById('emailInput').value;
-  const telephone = document.getElementById('telInput').value;
+  const phone = document.getElementById('telInput').value;
   const password = document.getElementById('passwordInput').value;
   let role = 'STUDENT';
   if (email.endsWith('@vinci.be')) {
     role = document.getElementById('roleSelect').value;
   }
   // Validating form inputs
-  if (!name || !firstname || !email || !telephone || !password || !role) {
+  if (!name || !surname || !email || !phone || !password || !role) {
     errorMessage.textContent = 'Veuillez remplir tous les champs obligatoires';
     errorMessage.style.display = 'block';
     errorMessage.style.fontSize = '16px';
 
     if (!name) addRedBorder('nameInput');
-    if (!firstname) addRedBorder('firstnameInput');
+    if (!surname) addRedBorder('firstnameInput');
     if (!email) addRedBorder('emailInput');
-    if (!telephone) addRedBorder('telInput');
+    if (!phone) addRedBorder('telInput');
     if (!password) addRedBorder('passwordInput');
     if (!role) addRedBorder('roleInput');
 
-  return;
-}
+    return;
+  }
 
   // Creating data object
   const data = {
     name,
-    firstname,
+    surname,
     email,
-    telephone,
+    phone,
     password,
     role,
   };

@@ -1,5 +1,6 @@
+import Navbar from '../Components/Navbar/Navbar';
 import Navigate from '../Components/Router/Navigate';
-import { getAuthenticatedUser } from './auths';
+import { clearAuthenticatedUser, getAuthenticatedUser } from './auths';
 
 async function fetchUserOnRefresh() {
   if (window.location.pathname === '/login' || window.location.pathname === '/register') {
@@ -11,7 +12,9 @@ async function fetchUserOnRefresh() {
   // Check if the user object or token is undefined
   if (!user || !user.token) {
     console.error('No authenticated user found.');
-    Navigate('/'); // Redirect to homepage or login page
+    clearAuthenticatedUser();
+    Navbar();
+    Navigate('/'); // Redirect to homepage or login pag
     return; // Exit the function to prevent further execution
   }
 

@@ -20,13 +20,8 @@ public class InternshipImpl implements Internship {
   private int version;
 
   @Override
-  public boolean accept() {
-    if (!contactDTO.getState().equals("initiated") && !contactDTO.getState().equals("meet")) {
-      return false;
-    }
-    contactDTO.setState("accepted");
+  public void accept() {
     year = getCurrentYearString();
-    return true;
   }
 
   @Override

@@ -213,6 +213,37 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
+  public ContactDTO accept(int userId, int contactId) {
+    try {
+      myDALService.start();
+
+      Contact contact = (Contact) myContactDAO.readOne(contactId);
+      System.out.println(contact);
+      if (contact == null) {
+        throw new NotFoundException();
+      }
+
+      if (!contact.accept()) {
+        throw new BusinessException(403, "contact must be in meet state");
+      }
+
+      for (ContactDTO c : myContactDAO.readMany(userId)) {
+        if (c.getContactId() != contact.getContactId() && ((Contact) c).unfollow()) {
+          myContactDAO.update(c);
+        }
+      }
+
+      myContactDAO.update(contact);
+
+      myDALService.commit();
+      return contact;
+    } catch (Throwable t) {
+      myDALService.rollback();
+      throw t;
+    }
+  }
+
+  @Override
   public List<ContactDTO> getEnterpriseContacts(int enterpriseId) {
     try {
       myDALService.start();
@@ -231,5 +262,4 @@ public class ContactUCCImpl implements ContactUCC {
       throw t;
     }
   }
-
 }

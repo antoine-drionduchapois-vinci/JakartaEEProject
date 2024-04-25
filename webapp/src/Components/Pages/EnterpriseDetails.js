@@ -1,5 +1,6 @@
 import { getAuthenticatedUser } from '../../utils/auths';
 import { clearPage } from '../../utils/render';
+import stateTranslation from "../../utils/translation";
 
 let enterprise;
 let blacklistedState;
@@ -15,7 +16,7 @@ const fetchEnterpriseContacts = async (id) => {
     }
 
     const contactsArray = await response.json(); // Assume this response is an array
-    console.log(contactsArray);
+
     let contactsHtml = ''; // Initialize an empty string to accumulate HTML content
     for (let index = 0; index < contactsArray.length; index += 1) {
       const {
@@ -33,14 +34,16 @@ const fetchEnterpriseContacts = async (id) => {
       blacklistedState = isBlacklist;
       enterprise = enterpriseName;
 
-      contactsHtml += `
+      const translatedState = stateTranslation[state] || state;
+
+          contactsHtml += `
               <tr>
               <td>${enterpriseName}</td>
               <td>${studentName}</td>
               <td>${studentSurname}</td>
               <td>${year}</td>
               <td>${meeting}</td>
-              <td>${state}</td>
+              <td>${translatedState}</td>
               <td>${reason}</td>
               </tr>
           `;
@@ -62,7 +65,7 @@ const renderEnterprisePageDetails = (enterpriseContacts) => {
     const combinedHtml = `
     <h2 class="title is-3 mt-3 mb-3 has-text-centered">Contacts avec l'entreprise ${enterprise}</h2>
     <h3 class="title is-4 mt-3 mb-3 has-text-centered">${blacklistedMessage}</h3>
-      <table class="table is-striped is-fullwidth">
+      <table class="table is-striped ">
         <thead>
           <tr>
             <th>Entreprise</th>

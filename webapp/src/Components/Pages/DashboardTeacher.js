@@ -2,6 +2,7 @@ import Chart from 'chart.js/auto';
 import { clearPage, renderPageTitle } from '../../utils/render';
 import { getAuthenticatedUser } from '../../utils/auths';
 import autocomplete from '../../services/autocomplete';
+import translation from '../../utils/translation';
 import Navigate from '../Router/Navigate';
 
 // Fonction pour récupérer les données des entreprises
@@ -32,6 +33,7 @@ const fetchEnterprises = async () => {
       blacklist: enterprise.blacklisted,
       avisprofesseur: enterprise.blacklistedReason || '', // Utiliser une chaîne vide si la valeur est null
     }));
+
     return data;
   } catch (error) {
     console.error('Erreur lors de la récupération des données des entreprises : ', error);
@@ -76,16 +78,19 @@ const fetchUsers = async () => {
     if (!response.ok) {
       throw new Error('Erreur lors de la récupération des données des utilisateurs');
     }
-
+    let translatedRole = '';
     let data = await response.json();
-    data = data.map((u) => ({
+    data = data.map((u) => {
+      translatedRole = translation[u.role] || u.role;
+      return {
       id: u.userId,
       nom: u.name,
       prenom: u.surname,
       email: u.email,
-      role: u.role,
+      role: translatedRole,
       année: u.year,
-    }));
+      };
+    });
 
     return data; // Retourner directement le tableau d'utilisateurs de la réponse JSON
   } catch (error) {
@@ -106,7 +111,7 @@ const renderChart = (chartContainer, noStage, total) => {
       {
         label: "Nombre d'étudiants",
         data: [noStage, total - noStage],
-        backgroundColor: ['rgb(255, 99, 132)', 'rgb(54, 162, 235)'],
+        backgroundColor: ['rgb(221,255,0)','rgb(69, 176, 103)'],
         hoverOffset: 4,
       },
     ],
@@ -129,7 +134,13 @@ const updateTable = (tableBody, list) => {
   list.forEach((e) => {
     const row = document.createElement('tr');
     row.addEventListener('click', () => {
+      if (e.blacklist === undefined) {
+        if (e.role === 'STUDENT') {
+          Navigate(`/dashboardS?id=${e.id}`);
+        }
+      } else {
         Navigate(`/enterpriseDetails?id=${e.id}`);
+      }
     });
     const values = Object.values(e).slice(1);
     values.forEach((value) => {
@@ -148,7 +159,7 @@ const renderForm = (formContainer, users, tableUserContainer) => {
   form.style.display = 'flex'; // Utiliser Flexbox
   form.style.flexWrap = 'wrap'; // Permettre le retour à la ligne si nécessaire
   form.style.paddingBottom = '10px'; // Ajouter le padding-bottom
-  form.style.gap = '5%'; // Ajouter un espace entre les éléments
+  form.style.gap = '20px'; // Ajouter un espace entre les éléments
 
   // Créer le champ input avec Bulma
   const inputFieldDiv = document.createElement('div');
@@ -232,8 +243,9 @@ const renderForm = (formContainer, users, tableUserContainer) => {
 
       // Filtrer les utilisateurs en fonction des critères
       const filteredUsers = users.filter((user) => {
-        const matchesName = !name || user.name.toLowerCase().includes(name.toLowerCase());
-        const matchesIsStudent = !isStudent || user.role === 'STUDENT';
+        const userName = user.name || '';
+        const matchesName = !name || userName.toLowerCase().includes(name.toLowerCase());
+        const matchesIsStudent = !isStudent || user.role === 'Etudiant';
 
         // Vérifier si selectedYear est null ou vide
         if (!selectedYear) {
@@ -275,8 +287,11 @@ const renderEnterpriseTable = (tableContainer, enterprises) => {
   const tbody = document.createElement('tbody');
   // Fonction pour trier les colonnes
   const sortColumn = (columnName) => {
-    const lowerColumnName = columnName.trim().toLowerCase().replace(/\s/g, '');
-    
+    const lowerColumnName = columnName
+      .trim()
+      .toLowerCase()
+      .replace(/\s/g, '');
+
     enterprises.sort((a, b) => {
       const valueA = a[lowerColumnName];
       const valueB = b[lowerColumnName];
