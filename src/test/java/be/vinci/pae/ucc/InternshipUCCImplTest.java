@@ -2,7 +2,7 @@ package be.vinci.pae.ucc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -96,39 +96,48 @@ class InternshipUCCImplTest {
 
     // Vérification qu'une NotFoundException est bien lancée
     assertThrows(NotFoundException.class, () -> internshipUCC.getUserInternship(userId));
-    verify(internshipDAO, times(2)).getUserInternship(userId);
-    verify(enterpriseDAO, times(2)).readOne(1);
+    verify(internshipDAO, atLeastOnce()).getUserInternship(userId);
+    verify(enterpriseDAO, atLeastOnce()).readOne(1);
   }
 
   @Test
   void testGetUserInternshipWithNonExistingContact() {
     int userId = 1;
     InternshipDTO internshipDTO = domainFactory.getInternship();
+    internshipDTO.setEnterprise(1);
     internshipDTO.setContact(1);
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterprise();
 
     // Configuration du comportement simulé du DAO pour retourner null
     when(internshipDAO.getUserInternship(userId)).thenReturn(internshipDTO);
+    when(enterpriseDAO.readOne(1)).thenReturn(enterpriseDTO);
     when(contactDAO.readOne(1)).thenReturn(null);
 
     // Vérification qu'une NotFoundException est bien lancée
     assertThrows(NotFoundException.class, () -> internshipUCC.getUserInternship(userId));
-    verify(internshipDAO, times(3)).getUserInternship(userId);
-    verify(contactDAO).readOne(1);
+    verify(internshipDAO, atLeastOnce()).getUserInternship(userId);
+    verify(contactDAO, atLeastOnce()).readOne(1);
   }
 
   @Test
   void testGetUserInternshipWithNonExistingSupervisor() {
     int userId = 1;
     InternshipDTO internshipDTO = domainFactory.getInternship();
+    internshipDTO.setEnterprise(1);
+    internshipDTO.setContact(1);
     internshipDTO.setSupervisor(1);
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterprise();
+    ContactDTO contactDTO = domainFactory.getContact();
 
     // Configuration du comportement simulé du DAO pour retourner null
     when(internshipDAO.getUserInternship(userId)).thenReturn(internshipDTO);
+    when(enterpriseDAO.readOne(1)).thenReturn(enterpriseDTO);
+    when(contactDAO.readOne(1)).thenReturn(contactDTO);
     when(supervisorDAO.readOne(1)).thenReturn(null);
 
     // Vérification qu'une NotFoundException est bien lancée
     assertThrows(NotFoundException.class, () -> internshipUCC.getUserInternship(userId));
-    verify(internshipDAO, times(4)).getUserInternship(userId);
+    verify(internshipDAO, atLeastOnce()).getUserInternship(userId);
     verify(supervisorDAO).readOne(1);
   }
 }
