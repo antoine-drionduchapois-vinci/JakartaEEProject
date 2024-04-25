@@ -47,7 +47,6 @@ class InternshipUCCImplTest {
   @AfterAll
   static void tearDown() {
     // Fermeture du ServiceLocator
-    verify(internshipDAO, times(2)).getUserInternship(1);
     locator.shutdown();
   }
 
@@ -83,5 +82,53 @@ class InternshipUCCImplTest {
     when(internshipDAO.getUserInternship(userId)).thenReturn(null);
 
     assertThrows(NotFoundException.class, () -> internshipUCC.getUserInternship(userId));
+  }
+
+  @Test
+  void testGetUserInternshipWithNonExistingEnterprise() {
+    int userId = 1;
+    InternshipDTO internshipDTO = domainFactory.getInternship();
+    internshipDTO.setEnterprise(1);
+
+    // Configuration du comportement simulé du DAO pour retourner null
+    when(internshipDAO.getUserInternship(userId)).thenReturn(internshipDTO);
+    when(enterpriseDAO.readOne(1)).thenReturn(null);
+
+    // Vérification qu'une NotFoundException est bien lancée
+    assertThrows(NotFoundException.class, () -> internshipUCC.getUserInternship(userId));
+    verify(internshipDAO, times(2)).getUserInternship(userId);
+    verify(enterpriseDAO, times(2)).readOne(1);
+  }
+
+  @Test
+  void testGetUserInternshipWithNonExistingContact() {
+    int userId = 1;
+    InternshipDTO internshipDTO = domainFactory.getInternship();
+    internshipDTO.setContact(1);
+
+    // Configuration du comportement simulé du DAO pour retourner null
+    when(internshipDAO.getUserInternship(userId)).thenReturn(internshipDTO);
+    when(contactDAO.readOne(1)).thenReturn(null);
+
+    // Vérification qu'une NotFoundException est bien lancée
+    assertThrows(NotFoundException.class, () -> internshipUCC.getUserInternship(userId));
+    verify(internshipDAO, times(3)).getUserInternship(userId);
+    verify(contactDAO).readOne(1);
+  }
+
+  @Test
+  void testGetUserInternshipWithNonExistingSupervisor() {
+    int userId = 1;
+    InternshipDTO internshipDTO = domainFactory.getInternship();
+    internshipDTO.setSupervisor(1);
+
+    // Configuration du comportement simulé du DAO pour retourner null
+    when(internshipDAO.getUserInternship(userId)).thenReturn(internshipDTO);
+    when(supervisorDAO.readOne(1)).thenReturn(null);
+
+    // Vérification qu'une NotFoundException est bien lancée
+    assertThrows(NotFoundException.class, () -> internshipUCC.getUserInternship(userId));
+    verify(internshipDAO, times(4)).getUserInternship(userId);
+    verify(supervisorDAO).readOne(1);
   }
 }
