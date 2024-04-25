@@ -99,9 +99,6 @@ public class InternshipUCCImpl implements InternshipUCC {
       SupervisorDTO supervisor;
       if (internship.getSupervisor() != 0) {
         supervisor = supervisorUCC.getResponsibleByEnterpriseId(internship.getEnterprise());
-        if (supervisor == null) {
-          throw new NotFoundException();
-        }
       } else {
         if (supervisorDAO.getResponsibleByEnterpriseId(internship.getEnterprise()) != null) {
           throw new BusinessException(409, "supervisor already exists for this enterprise");
