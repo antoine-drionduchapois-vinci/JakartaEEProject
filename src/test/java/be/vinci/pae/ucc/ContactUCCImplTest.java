@@ -483,7 +483,47 @@ class ContactUCCImplTest {
     Contact contactDTO = (Contact) domainFactory.getContact();
     contactDTO.setState("initiated");
     when(contactDAO.readOne(1)).thenReturn(contactDTO);
+
+    ContactDTO readContact = domainFactory.getContact();
+    readContact.setState("unfollowed");
+    ArrayList<ContactDTO> readArray = new ArrayList<>();
+
+    when(contactDAO.readMany(1)).thenReturn(readArray);
+    when(contactDAO.update(readContact)).thenReturn(readContact);
     assertThrows(BusinessException.class, () -> contactUCC.accept(1, 1));
+  }
+
+  @Test
+  void testAcceptContactInCorrectState() {
+    Contact contactDTO = (Contact) domainFactory.getContact();
+    contactDTO.setState("meet");
+    when(contactDAO.readOne(1)).thenReturn(contactDTO);
+
+    ContactDTO readContact = domainFactory.getContact();
+    readContact.setState("unfollowed");
+    ArrayList<ContactDTO> readArray = new ArrayList<>();
+
+    when(contactDAO.readMany(1)).thenReturn(readArray);
+    when(contactDAO.update(readContact)).thenReturn(readContact);
+
+    assertEquals("accepted", contactUCC.accept(1, 1).getState());
+  }
+
+  @Test
+  void testAcceptContactReadManyUpdateFail() {
+    Contact contactDTO = (Contact) domainFactory.getContact();
+    contactDTO.setState("meet");
+
+    when(contactDAO.readOne(1)).thenReturn(contactDTO);
+
+    ContactDTO readContact = domainFactory.getContact();
+    readContact.setState("unfollowed");
+    ArrayList<ContactDTO> readArray = new ArrayList<>();
+
+    when(contactDAO.readMany(1)).thenReturn(readArray);
+    when(contactDAO.update(readContact)).thenReturn(readContact);
+
+    assertEquals("accepted", contactUCC.accept(1, 1).getState());
   }
 
   @Test
