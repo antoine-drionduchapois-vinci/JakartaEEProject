@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import be.vinci.pae.dao.ContactDAO;
 import be.vinci.pae.dao.EnterpriseDAO;
+import be.vinci.pae.domain.ContactDTO;
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.Enterprise;
 import be.vinci.pae.domain.EnterpriseDTO;
@@ -29,6 +30,7 @@ class EnterpriseUCCImplTest {
   private static EnterpriseDAO enterpriseDAO;
   private static ContactDAO contactDAO;
   private static DomainFactory domainFactory;
+  private static ContactUCC contactUCC;
 
   @BeforeAll
   static void setUp() {
@@ -39,6 +41,7 @@ class EnterpriseUCCImplTest {
     enterpriseUCC = locator.getService(EnterpriseUCC.class);
     contactDAO = locator.getService((ContactDAO.class));
     domainFactory = locator.getService(DomainFactory.class);
+    contactUCC = locator.getService(ContactUCC.class);
 
   }
 
@@ -128,15 +131,42 @@ class EnterpriseUCCImplTest {
     enterprise1.setBlacklisted(true);
     enterprise1.setBlacklistedReason("Reason");
 
+    // Créer des contacts pour l'entreprise
+    ContactDTO contact1 = domainFactory.getContact();
+    contact1.setContactId(1);
+    contact1.setState("meet");
+    ContactDTO contact2 = domainFactory.getContact();
+    contact2.setContactId(2);
+    contact2.setState("meet");
+    List<ContactDTO> contactDTOS = new ArrayList<>();
+    contactDTOS.add(contact1);
+    contactDTOS.add(contact2);
+
+    ContactDTO contact1update = domainFactory.getContact();
+    contact1update.setContactId(1);
+    contact1update.setEnterprise(1);
+    contact1update.setState("suspended");
+    ContactDTO contact2update = domainFactory.getContact();
+    contact2update.setContactId(2);
+    contact2update.setEnterprise(1);
+    contact2update.setState("suspended");
+
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterprise();
+    enterpriseDTO.setEnterpriseId(1);
+
     // Simuler la récupération de l'entreprise
     when(enterpriseDAO.readOne(1)).thenReturn(enterprise);
     when(enterpriseDAO.toBlacklist(enterprise)).thenReturn(enterprise1);
 
+    // Simuler la récupération des contacts de l'entreprise
+    when(contactDAO.readEnterpriseInitiatedOrMeetContacts(1)).thenReturn(contactDTOS);
+    when(contactDAO.readOne(1)).thenReturn(contact1);
+    when(contactDAO.readOne(2)).thenReturn(contact2);
+    when(contactDAO.update(contact1)).thenReturn(contact1update);
+    when(contactDAO.update(contact2)).thenReturn(contact2update);
+
     // Appeler la méthode à tester
     EnterpriseDTO result = enterpriseUCC.blacklistEnterprise(1, "Reason");
-
-    // Vérifier le résultat
-    assertEquals(enterprise.getEnterpriseId(), result.getEnterpriseId());
 
     // Vérifier que la méthode toBlacklist de enterpriseDAO a été appelée
     verify(enterpriseDAO).toBlacklist(enterprise);
@@ -144,6 +174,8 @@ class EnterpriseUCCImplTest {
     // Vérifier que la méthode readEnterpriseInitiatedOrMeetContacts de contactDAO a été appelée
     verify(contactDAO).readEnterpriseInitiatedOrMeetContacts(1);
 
+    //Vérifier les résultats
+    assertEquals(enterprise.getEnterpriseId(), result.getEnterpriseId());
   }
 
   @Test
