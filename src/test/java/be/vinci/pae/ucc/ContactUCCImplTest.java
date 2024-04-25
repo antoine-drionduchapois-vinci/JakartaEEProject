@@ -208,6 +208,8 @@ class ContactUCCImplTest {
     // Simuler une exception lors de la création du contact
     when(contactDAO.create(userId, enterpriseId)).thenThrow(
         new RuntimeException("Database connection error"));
+    when(enterpriseDAO.create("name", "label", "address", "phone", "email")).thenThrow(
+        new RuntimeException("Entreprise false"));
 
     // Appeler la méthode à tester et vérifier que l'exception est levée
     assertThrows(RuntimeException.class, () -> contactUCC.initiateContact(userId, enterpriseId));
