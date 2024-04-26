@@ -8,9 +8,16 @@ let blacklistedState;
 const main = document.querySelector('main');
 
 const fetchEnterpriseContacts = async (id) => {
+  const user = getAuthenticatedUser();
   console.log(id);
   try {
-    const response = await fetch(`http://localhost:8080/contact/getEnterpriseContacts/${id}`);
+    const response = await fetch(`http://localhost:8080/contact/getEnterpriseContacts/${id}`, {
+      method: 'GET',
+      headers: {
+          'Authorization': user.token
+      },
+  });
+    console.log(response);
     if (!response.ok) {
       throw new Error('Error retrieving enterprise contacts');
     }
