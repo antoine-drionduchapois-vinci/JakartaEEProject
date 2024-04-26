@@ -23,9 +23,9 @@ const fetchUser = async () => {
     if (!response.ok) {
       throw new Error('Erreur lors de la récupération des données du user');
     }
-
+    
     const userData = await response.json();
-
+   
     const blocUser = `
       <h2 class="title is-3">Profil</h2>
       <table class="table is-striped is-fullwidth">
@@ -63,7 +63,7 @@ const fetchUser = async () => {
 };
 
 const fetchUserContacts = async () => {
-  console.log(getAuthenticatedUser().token);
+
 
   const options = {
     method: 'GET',
@@ -82,7 +82,7 @@ const fetchUserContacts = async () => {
     const contactsInfo = await response.json();
  
     const contactsArray = contactsInfo;  // Assuming the array is now directly the response JSON
-    console.log(contactsArray);
+   
     let contactsHtml = ''; // Initialize an empty string to accumulate HTML content
     for (let index = 0; index < contactsArray.length; index += 1) {
       const {
@@ -93,8 +93,8 @@ const fetchUserContacts = async () => {
         refusalReason,
         year,
       } = contactsArray[index];
-      const reason = refusalReason === null ? '' : refusalReason;
-      const meeting = meetingPoint === null ? '' : meetingPoint;
+      const reason = refusalReason === null ? '/' : refusalReason;
+      const meeting = meetingPoint === null ? '/' : meetingPoint;
       const translatedState = translation[state] || state;
       contactsHtml += `
             <tr>
@@ -125,33 +125,34 @@ const fetchUserInternship = async () => {
   try {
     const url = `http://localhost:8080/int?id=${urlId}`
     const response = await fetch(url, options);
-
+    
     if (!response.ok) {
       throw new Error('Error retrieving user internships');
     }
     const internshipData = await response.json();
+    console.log(internshipData);
     const blocInternship = `
       <h2 class="title is-3">Stage</h2>
       <table class="table is-striped is-fullwidth">
         <tbody>
           <tr>
             <th>Entreprise</th>
-            <td>${internshipData.enterprise}</td>
+            <td>${internshipData.enterpriseDTO.name}</td>
           </tr>
           <tr>
             <th>Année</th>
-            <td>${internshipData.year}</td>
+            <td>${internshipData.year ? internshipData.year : '/'}</td>
           </tr>
           <tr>
-            <th>Responsable</th>
-            <td>${internshipData.responsbile}</td> 
-          <tr>
+          <th>Responsable</th>
+          <td>${internshipData.supervisorDTO.name ? internshipData.supervisorDTO.name : '/'}</td> 
+           <tr>
             <th>Téléphone</th>
-            <td>${internshipData.phone}</td>
+            <td>${internshipData.supervisorDTO.phone ? internshipData.supervisorDTO.phone : '/'}</td>
           </tr>
           <tr>
-            <th>Contact Entreprise</th>
-            <td>${internshipData.contact}</td>
+            <th>Email responsable</th>
+            <td>${internshipData.supervisorDTO.email ? internshipData.supervisorDTO.email : '/'}</td>
           </tr>
         </tbody>
       </table>
@@ -198,7 +199,7 @@ const DashboardStudent = async () => {
         <div>${userHtml}</div>
         <div>${internshipHtml}</div>
         <div>
-          <h2 class="title is-3">Contact</h2>
+          <h2 class="title is-3">Contacts</h2>
           <table class="table is-striped is-fullwidth">
             <thead>
               <tr>
