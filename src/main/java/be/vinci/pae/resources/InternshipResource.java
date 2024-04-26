@@ -1,6 +1,8 @@
 package be.vinci.pae.resources;
 
 import be.vinci.pae.domain.InternshipDTO;
+import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.resources.filters.Authorize;
 import be.vinci.pae.resources.filters.RoleId;
 import be.vinci.pae.ucc.InternshipUCC;
 import jakarta.inject.Inject;
@@ -49,15 +51,14 @@ public class InternshipResource {
   @Path("/accept")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(UserDTO.Role.STUDENT)
   public InternshipDTO accept(@HeaderParam("Authorization") String token,
       InternshipDTO internship) {
     ThreadContext.put("route", "/int/accept");
-    ThreadContext.put("method", "Post");
+    ThreadContext.put("method", "POST");
+    ThreadContext.put("params", internship.toString());
 
     int userId = myJwt.getUserIdFromToken(token);
-    if (userId == 0) {
-      throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
-    }
 
     internship.setUser(userId);
 
@@ -66,19 +67,15 @@ public class InternshipResource {
     }
 
     if (internship.getSupervisor() != 0) {
-      ThreadContext.put("params",
-          "userId:" + userId + "responsibleId:" + internship.getSupervisor() + "subject "
-              + internship.getSubject());
       internship = myInternshipUCC.acceptInternship(internship);
       logger.info("Status: 200 {accept}");
+      ThreadContext.clearAll();
       return internship;
     }
 
     String supervisorName = internship.getSupervisorDTO().getName();
     String supervisorSurname = internship.getSupervisorDTO().getSurname();
-    String supervisorEmail = internship.getSupervisorDTO().getEmail();
     String supervisorPhone = internship.getSupervisorDTO().getPhone();
-    String subject = internship.getSubject();
 
     if (supervisorName == null || supervisorName.isBlank() || supervisorSurname == null
         || supervisorSurname.isBlank() || supervisorPhone == null || supervisorPhone.isBlank()) {
@@ -86,11 +83,6 @@ public class InternshipResource {
           "name, surname, phone fields are required",
           Status.BAD_REQUEST);
     }
-
-    ThreadContext.put("params",
-        "userId:" + userId + "supervisorName:" + supervisorName + "supervisorSurname:"
-            + supervisorSurname + "supervisorEmail:" + supervisorEmail + "supervisorPhone:"
-            + supervisorPhone + "subject:" + subject);
 
     internship = myInternshipUCC.acceptInternship(internship);
 
@@ -109,17 +101,14 @@ public class InternshipResource {
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize()
   public InternshipDTO getUserInternship(@HeaderParam("Authorization") String token,
       @DefaultValue("-1") @QueryParam("id") int id) {
     ThreadContext.put("route", "/int");
-    ThreadContext.put("method", "Get");
-    ThreadContext.put("params", "id:" + id);
+    ThreadContext.put("method", "GET");
+    ThreadContext.put("params", "id: " + id);
 
     int userId = myRoleId.chooseId(token, id);
-
-    if (userId == 0) {
-      throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
-    }
 
     InternshipDTO internship = myInternshipUCC.getUserInternship(userId);
     logger.info("Status: 200 {getUserInternship}");
@@ -140,16 +129,14 @@ public class InternshipResource {
   @Path("/subject")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(UserDTO.Role.STUDENT)
   public InternshipDTO modifySubject(@HeaderParam("Authorization") String token,
       InternshipDTO internship) {
     ThreadContext.put("route", "/int");
     ThreadContext.put("method", "Get");
-    ThreadContext.put("params", "subject:" + internship.getSubject());
+    ThreadContext.put("params", "subject:" + internship.toString());
 
     int userId = myJwt.getUserIdFromToken(token);
-    if (userId == 0) {
-      throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
-    }
 
     String subject = internship.getSubject();
     if (subject == null || subject.isBlank()) {
