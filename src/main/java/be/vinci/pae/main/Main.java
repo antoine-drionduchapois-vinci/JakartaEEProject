@@ -56,7 +56,7 @@ public class Main {
   public static void main(String[] args) throws IOException {
 
     final HttpServer server = startServer();
-    System.out.println(String.format("Jersey 0.< app started with WADL available at "
+    System.out.println(String.format("Jersey app started with WADL available at "
         + BASE_URI + "\nHit enter to stop it..."));
     Path logPath = Paths.get("logs");
     if (Files.notExists(logPath)) {
