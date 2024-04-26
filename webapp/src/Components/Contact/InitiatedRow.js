@@ -180,7 +180,6 @@ const InitiatedRow = (htmlElement, userData, contactData, enterprisesData) => {
 
     if (
       !enterpriseInput.isValid ||
-      !labelInput.isValid ||
       !addressInput.isValid ||
       !phoneInput.isValid ||
       !emailInput.isValid
@@ -194,7 +193,7 @@ const InitiatedRow = (htmlElement, userData, contactData, enterprisesData) => {
     initiateContact({
       enterpriseDTO: {
         name: enterpriseInput.element.value,
-        label: labelInput.element.value,
+        label: labelInput.element.value === '' ? null : labelInput.element.value,
         address: addressInput.element.value,
         phone: phoneInput.element.value,
         email: emailInput.element.value,

@@ -87,7 +87,7 @@ const AcceptedRow = async (htmlElement, contactData, internshipData) => {
   const submit = document.querySelector('#submit-accepted');
 
   if (contactData) {
-    if (contactData.state === 'refused' || contactData.state === 'unfollowed') {
+    if (contactData.state !== 'meet') {
       nameInput.element.setAttribute('disabled', true);
       surnameInput.element.setAttribute('disabled', true);
       phoneInput.element.setAttribute('disabled', true);

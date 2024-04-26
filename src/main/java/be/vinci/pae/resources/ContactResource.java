@@ -26,6 +26,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
 
+import javax.swing.plaf.TableHeaderUI;
+
 /**
  * Resource class for managing contacts between users and enterprises.
  */
@@ -39,11 +41,6 @@ public class ContactResource {
   private Jwt myJwt;
   @Inject
   private ContactUCC myContactUCC;
-  @Inject
-  private EnterpriseUCC myEnterpriseUCC;
-
-  @Inject
-  private UserUCC myUserUCC;
 
   @Inject
   private RoleId myRoleId;
@@ -61,13 +58,10 @@ public class ContactResource {
   public ContactDTO getOne(@HeaderParam("Authorization") String token,
       @DefaultValue("-1") @QueryParam("contactId") int contactId) {
     ThreadContext.put("route", "/contact");
-    ThreadContext.put("method", "Get");
-    ThreadContext.put("params", "contactId:" + contactId);
+    ThreadContext.put("method", "GET");
+    ThreadContext.put("params", "contactId: " + contactId);
 
     int userId = myJwt.getUserIdFromToken(token);
-    if (userId == 0) {
-      throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
-    }
 
     if (contactId == -1) {
       throw new WebApplicationException("contactId required", Status.BAD_REQUEST);
@@ -94,11 +88,8 @@ public class ContactResource {
     int userId = myJwt.getUserIdFromToken(token);
 
     ThreadContext.put("route", "/contact");
-    ThreadContext.put("method", "Post");
-
-    if (userId == 0) {
-      throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
-    }
+    ThreadContext.put("method", "POST");
+    ThreadContext.put("params", contact.toString());
 
     if (contact.getEnterprise() != 0) {
       int enterpriseId = contact.getEnterprise();
@@ -121,7 +112,7 @@ public class ContactResource {
             + enterpriseLabel + "enterpriseAddress:" + enterpriseAddress + "enterprisePhone:"
             + enterprisePhone + "enterpriseEmail:" + enterpriseEmail);
 
-    if (enterpriseName == null || enterpriseLabel == null || enterpriseAddress == null
+    if (enterpriseName == null || enterpriseAddress == null
         || enterprisePhone == null && enterpriseEmail == null) {
       throw new WebApplicationException(
           "contactId, enterpriseName, enterpriseLabel, enterpriseAddress and"
@@ -151,12 +142,10 @@ public class ContactResource {
   @Authorize(UserDTO.Role.STUDENT)
   public ContactDTO meet(@HeaderParam("Authorization") String token, ContactDTO contact) {
     ThreadContext.put("route", "/contact/meet");
-    ThreadContext.put("method", "Post");
+    ThreadContext.put("method", "POST");
+    ThreadContext.put("params", contact.toString());
 
     int userId = myJwt.getUserIdFromToken(token);
-    if (userId == 0) {
-      throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
-    }
 
     int contactId = contact.getContactId();
     String meetingPoint = contact.getMeetingPoint();
@@ -184,12 +173,10 @@ public class ContactResource {
   @Authorize(UserDTO.Role.STUDENT)
   public ContactDTO refuse(@HeaderParam("Authorization") String token, ContactDTO contact) {
     ThreadContext.put("route", "/contact/refuse");
-    ThreadContext.put("method", "Post");
+    ThreadContext.put("method", "POST");
+    ThreadContext.put("params", contact.toString());
 
     int userId = myJwt.getUserIdFromToken(token);
-    if (userId == 0) {
-      throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
-    }
 
     int contactId = contact.getContactId();
     String refusalReason = contact.getRefusalReason();
@@ -219,12 +206,10 @@ public class ContactResource {
   @Authorize(UserDTO.Role.STUDENT)
   public ContactDTO unfollow(@HeaderParam("Authorization") String token, ContactDTO contact) {
     ThreadContext.put("route", "/contact/unfollow");
-    ThreadContext.put("method", "Post");
+    ThreadContext.put("method", "POST");
+    ThreadContext.put("params", contact.toString());
 
     int userId = myJwt.getUserIdFromToken(token);
-    if (userId == 0) {
-      throw new WebApplicationException("user must be authenticated", Status.BAD_REQUEST);
-    }
 
     int contactId = contact.getContactId();
 
@@ -253,8 +238,8 @@ public class ContactResource {
   public List<ContactDTO> getUsersByIdAsJson(@HeaderParam("Authorization") String token,
       @DefaultValue("-1") @QueryParam("id") int id) {
     ThreadContext.put("route", "/contact/getUserContacts");
-    ThreadContext.put("method", "Get");
-    ThreadContext.put("params", "id:" + id);
+    ThreadContext.put("method", "GET");
+    ThreadContext.put("params", "id: " + id);
 
     int userId = myRoleId.chooseId(token, id);
 
@@ -286,10 +271,13 @@ public class ContactResource {
       @PathParam("entrepriseId") int enterpriseId) {
     ThreadContext.put("route", "/contact/getEnterpriseContacts");
     ThreadContext.put("method", "GET");
+    ThreadContext.put("params", "entrepriseId: " + enterpriseId);
 
     List<ContactDTO> contacts = myContactUCC.getEnterpriseContacts(enterpriseId);
 
-    return contacts;
+    logger.info("Status: 200 {getEnterpriseContact}");
+    ThreadContext.clearAll();
 
+    return contacts;
   }
 }

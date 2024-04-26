@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * Implementation of the EnterpriseUCC interface.
  */
-@Singleton
 public class ContactUCCImpl implements ContactUCC {
 
   @Inject
