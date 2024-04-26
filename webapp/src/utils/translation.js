@@ -4,6 +4,7 @@ const stateTranslation = {
     refused: 'Refusé',
     meet: 'Rencontré',
     initiated: 'Initié',
+    unfollowed: 'Non suivi',
     TEACHER: 'Professeur',
     ADMIN: 'Administrateur',
     STUDENT: 'Etudiant',
