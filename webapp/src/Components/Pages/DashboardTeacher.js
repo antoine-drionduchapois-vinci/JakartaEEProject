@@ -83,12 +83,12 @@ const fetchUsers = async () => {
     data = data.map((u) => {
       translatedRole = translation[u.role] || u.role;
       return {
-      id: u.userId,
-      nom: u.name,
-      prenom: u.surname,
-      email: u.email,
-      role: translatedRole,
-      année: u.year,
+        id: u.userId,
+        nom: u.name,
+        prenom: u.surname,
+        email: u.email,
+        role: translatedRole,
+        année: u.year,
       };
     });
 
@@ -111,7 +111,7 @@ const renderChart = (chartContainer, noStage, total) => {
       {
         label: "Nombre d'étudiants",
         data: [noStage, total - noStage],
-        backgroundColor: ['rgb(221,255,0)','rgb(69, 176, 103)'],
+        backgroundColor: ['rgb(221,255,0)', 'rgb(69, 176, 103)'],
         hoverOffset: 4,
       },
     ],
@@ -130,12 +130,13 @@ const renderChart = (chartContainer, noStage, total) => {
 const updateTable = (tableBody, list) => {
   const tbody = tableBody; // Nouvelle variable pour stocker la référence à tableBody
   tbody.innerHTML = ''; // Effacer le contenu actuel du tableau
-
+ 
   list.forEach((e) => {
     const row = document.createElement('tr');
     row.addEventListener('click', () => {
       if (e.blacklist === undefined) {
-        if (e.role === 'STUDENT') {
+        if (e.role === 'Etudiant') {
+          
           Navigate(`/dashboardS?id=${e.id}`);
         }
       } else {
@@ -173,10 +174,10 @@ const renderForm = (formContainer, users, tableUserContainer) => {
   inputField.className = 'input';
   inputField.type = 'text';
   inputField.placeholder = 'Entrez le nom';
-
+  
   autocomplete(
     inputField,
-    users.map((u) => u.name),
+    users.map((u) => u.nom),
   );
   inputControlDiv.appendChild(inputField);
   inputFieldDiv.appendChild(inputLabel);
@@ -208,22 +209,20 @@ const renderForm = (formContainer, users, tableUserContainer) => {
   const selectField = document.createElement('select');
   selectField.className = 'input';
   // Récupérer l'année actuelle
-  const currentYear = new Date().getFullYear();
-  // Créer une option vide par défaut
-  const defaultOption = document.createElement('option');
-  defaultOption.textContent = 'Sélectionnez une année';
-  defaultOption.value = ''; // Valeur vide
-  selectField.appendChild(defaultOption);
+  const currentYear = new Date().getFullYear() - 1;
 
   // Générer les options pour les années de l'année actuelle à 2000
-  for (let year = currentYear; year >= 2000; year -= 1) {
+  for (let year = currentYear; year >= 2015; year -= 1) {
     const option = document.createElement('option');
     const nextYear = year + 1;
     option.textContent = `${year}-${nextYear}`; // Format "2000-2001"
     option.value = `${year}-${nextYear}`;
     selectField.appendChild(option);
   }
-
+  const clearOption = document.createElement('option');
+  clearOption.textContent = 'Sélectionnez une année';
+  clearOption.value = '';
+  selectField.appendChild(clearOption);
   selectControlDiv.appendChild(selectField);
   selectDiv.appendChild(selectLabel);
   selectDiv.appendChild(selectControlDiv);
@@ -240,10 +239,10 @@ const renderForm = (formContainer, users, tableUserContainer) => {
       const name = inputField.value.trim();
       const isStudent = checkboxField.checked;
       const selectedYear = selectField.value;
-
+      
       // Filtrer les utilisateurs en fonction des critères
       const filteredUsers = users.filter((user) => {
-        const userName = user.name || '';
+        const userName = user.nom || '';
         const matchesName = !name || userName.toLowerCase().includes(name.toLowerCase());
         const matchesIsStudent = !isStudent || user.role === 'Etudiant';
 
@@ -314,7 +313,7 @@ const renderEnterpriseTable = (tableContainer, enterprises) => {
 
     // Mettre à jour le tableau avec les entreprises triées
     updateTable(tbody, enterprises);
-};
+  };
 
   // Créer la première ligne pour les en-têtes de colonne
   const thead = document.createElement('thead');
@@ -345,6 +344,7 @@ const renderEnterpriseTable = (tableContainer, enterprises) => {
 
 const renderUserTable = (tableUserContainer, users) => {
   // Conteneur pour le formulaire
+  
   const formContainer = document.createElement('div');
   tableUserContainer.appendChild(formContainer);
 
@@ -383,9 +383,15 @@ const renderUserTable = (tableUserContainer, users) => {
 
   // Ajouter le conteneur de défilement au conteneur principal
   tableUserContainer.appendChild(scrollContainer);
+  const filteredUsers = users.filter((user) => {
+    const userYearParts = user.année.split('-');
 
+    // Vérifier si les parties des années correspondent
+    const matchesYear = userYearParts[0] === '2023' && userYearParts[1] === '2024';
+    return matchesYear;
+  });
   // Afficher les utilisateurs dans le tableau
-  updateTable(tbody, users);
+  updateTable(tbody, filteredUsers);
 };
 
 // Fonction pour rendre le tableau de bord de l'enseignant

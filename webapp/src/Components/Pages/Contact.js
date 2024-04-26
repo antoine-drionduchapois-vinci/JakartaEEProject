@@ -37,7 +37,11 @@ const Contact = async () => {
   }
 
   let enterprises = null;
-  enterprises = await fetch('http://localhost:8080/ent/enterprises')
+  enterprises = await fetch('http://localhost:8080/ent/enterprises', {
+    headers: {
+      Authorization: user.token,
+    },
+  })
     .then((res) => (res.ok ? res.json() : null))
     .catch((error) => console.error(error));
 
