@@ -326,7 +326,6 @@ const renderEnterpriseTable = (tableContainer, enterprises) => {
     const header = document.createElement('th');
     header.textContent = headerText;
     header.addEventListener('click', () => {
-      console.log(headerText);
       sortColumn(headerText); // Fonction pour trier les colonnes
     });
     headerRow.appendChild(header);
