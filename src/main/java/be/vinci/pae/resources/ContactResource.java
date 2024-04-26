@@ -5,8 +5,6 @@ import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.resources.filters.Authorize;
 import be.vinci.pae.resources.filters.RoleId;
 import be.vinci.pae.ucc.ContactUCC;
-import be.vinci.pae.ucc.EnterpriseUCC;
-import be.vinci.pae.ucc.UserUCC;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
@@ -25,8 +23,6 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
-
-import javax.swing.plaf.TableHeaderUI;
 
 /**
  * Resource class for managing contacts between users and enterprises.

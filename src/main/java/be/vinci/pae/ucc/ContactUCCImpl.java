@@ -10,7 +10,6 @@ import be.vinci.pae.domain.EnterpriseDTO;
 import be.vinci.pae.utils.BusinessException;
 import be.vinci.pae.utils.NotFoundException;
 import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import java.util.List;
 
 /**
