@@ -130,13 +130,12 @@ const renderChart = (chartContainer, noStage, total) => {
 const updateTable = (tableBody, list) => {
   const tbody = tableBody; // Nouvelle variable pour stocker la référence à tableBody
   tbody.innerHTML = ''; // Effacer le contenu actuel du tableau
- 
+
   list.forEach((e) => {
     const row = document.createElement('tr');
     row.addEventListener('click', () => {
       if (e.blacklist === undefined) {
         if (e.role === 'Etudiant') {
-          
           Navigate(`/dashboardS?id=${e.id}`);
         }
       } else {
@@ -174,7 +173,7 @@ const renderForm = (formContainer, users, tableUserContainer) => {
   inputField.className = 'input';
   inputField.type = 'text';
   inputField.placeholder = 'Entrez le nom';
-  
+
   autocomplete(
     inputField,
     users.map((u) => u.nom),
@@ -194,7 +193,7 @@ const renderForm = (formContainer, users, tableUserContainer) => {
   checkboxField.type = 'checkbox';
   checkboxField.id = 'isStudent'; // Modifier l'ID de la case à cocher
   checkboxLabel.appendChild(checkboxField);
-  checkboxLabel.append(' Is Student'); // Modifier le texte de l'étiquette
+  checkboxLabel.append(' Etudiant'); // Modifier le texte de l'étiquette
   checkboxControlDiv.appendChild(checkboxLabel);
   checkboxDiv.appendChild(checkboxControlDiv);
 
@@ -239,7 +238,7 @@ const renderForm = (formContainer, users, tableUserContainer) => {
       const name = inputField.value.trim();
       const isStudent = checkboxField.checked;
       const selectedYear = selectField.value;
-      
+
       // Filtrer les utilisateurs en fonction des critères
       const filteredUsers = users.filter((user) => {
         const userName = user.nom || '';
@@ -344,7 +343,7 @@ const renderEnterpriseTable = (tableContainer, enterprises) => {
 
 const renderUserTable = (tableUserContainer, users) => {
   // Conteneur pour le formulaire
-  
+
   const formContainer = document.createElement('div');
   tableUserContainer.appendChild(formContainer);
 

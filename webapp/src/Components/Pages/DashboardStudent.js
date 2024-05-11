@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import { getAuthenticatedUser } from '../../utils/auths';
 
-import { clearPage} from '../../utils/render';
+import { clearPage } from '../../utils/render';
 import translation from '../../utils/translation';
 import Navigate from '../Router/Navigate';
 
@@ -17,15 +17,14 @@ const fetchUser = async () => {
   };
 
   try {
-
     const url = `http://localhost:8080/users/getUserInfoById?id=${urlId}`;
     const response = await fetch(url, options);
     if (!response.ok) {
       throw new Error('Erreur lors de la récupération des données du user');
     }
-    
+
     const userData = await response.json();
-   
+
     const blocUser = `
       <h2 class="title is-3">Profil</h2>
       <table class="table is-striped is-fullwidth">
@@ -63,8 +62,6 @@ const fetchUser = async () => {
 };
 
 const fetchUserContacts = async () => {
-
-
   const options = {
     method: 'GET',
     headers: {
@@ -80,14 +77,14 @@ const fetchUserContacts = async () => {
     }
 
     const contactsInfo = await response.json();
- 
-    const contactsArray = contactsInfo;  // Assuming the array is now directly the response JSON
-   
+
+    const contactsArray = contactsInfo; // Assuming the array is now directly the response JSON
+
     let contactsHtml = ''; // Initialize an empty string to accumulate HTML content
     for (let index = 0; index < contactsArray.length; index += 1) {
       const {
         contactId,
-        enterpriseDTO: { name: enterprise_name },
+        enterpriseDTO: { name: enterprise_name, label: enterprise_label },
         state,
         meetingPoint,
         refusalReason,
@@ -98,7 +95,9 @@ const fetchUserContacts = async () => {
       const translatedState = translation[state] || state;
       contactsHtml += `
             <tr>
-            <td><a class="enterprise_link" data-contact-id="${contactId}">${enterprise_name}</a></td>
+            <td><a class="enterprise_link" data-contact-id="${contactId}">${enterprise_name}${
+        enterprise_label ? ` - ${enterprise_label}` : ''
+      }</a></td>
             <td> ${translatedState}</td>
             <td> ${meeting}</td>
             <td> ${reason}</td>
@@ -107,12 +106,11 @@ const fetchUserContacts = async () => {
         `;
     }
     return contactsHtml;
-    } catch (error) {
-      console.error('Failed to load contacts:', error);
-    }
-    return "Pas de contact pour l'instant";
-  };
-
+  } catch (error) {
+    console.error('Failed to load contacts:', error);
+  }
+  return "Pas de contact pour l'instant";
+};
 
 const fetchUserInternship = async () => {
   const options = {
@@ -123,9 +121,9 @@ const fetchUserInternship = async () => {
   };
 
   try {
-    const url = `http://localhost:8080/int?id=${urlId}`
+    const url = `http://localhost:8080/int?id=${urlId}`;
     const response = await fetch(url, options);
-    
+
     if (!response.ok) {
       throw new Error('Error retrieving user internships');
     }
@@ -148,11 +146,15 @@ const fetchUserInternship = async () => {
           <td>${internshipData.supervisorDTO.name ? internshipData.supervisorDTO.name : '/'}</td> 
            <tr>
             <th>Téléphone</th>
-            <td>${internshipData.supervisorDTO.phone ? internshipData.supervisorDTO.phone : '/'}</td>
+            <td>${
+              internshipData.supervisorDTO.phone ? internshipData.supervisorDTO.phone : '/'
+            }</td>
           </tr>
           <tr>
             <th>Email responsable</th>
-            <td>${internshipData.supervisorDTO.email ? internshipData.supervisorDTO.email : '/'}</td>
+            <td>${
+              internshipData.supervisorDTO.email ? internshipData.supervisorDTO.email : '/'
+            }</td>
           </tr>
         </tbody>
       </table>
@@ -174,14 +176,14 @@ const DashboardStudent = async () => {
   // Nettoyage de la page
   clearPage();
   const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const id = urlParams.get('id');
-    
-    if (id) {
-      urlId = id;
-    } else {
-      urlId = getAuthenticatedUser().id;
-    }
+  const urlParams = new URLSearchParams(queryString);
+  const id = urlParams.get('id');
+
+  if (id) {
+    urlId = id;
+  } else {
+    urlId = getAuthenticatedUser().id;
+  }
 
   try {
     main.innerHTML = `<p>Loading Data...</p>`;
