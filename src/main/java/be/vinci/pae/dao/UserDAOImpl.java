@@ -137,7 +137,8 @@ public class UserDAOImpl implements UserDAO {
 
   @Override
   public UserDTO modifyPassword(UserDTO userDTO) {
-    String sql = "UPDATE projetae.users  SET password = ?, version = ? WHERE user_id = ? AND version = ? RETURNING *;";
+    String sql = "UPDATE projetae.users  SET password = ?, version = ? WHERE user_id = ? "
+        + "AND version = ? RETURNING *;";
 
     try (PreparedStatement ps = myDalService.getPS(sql)) {
       ps.setString(1, userDTO.getPassword());
@@ -154,7 +155,8 @@ public class UserDAOImpl implements UserDAO {
 
   @Override
   public UserDTO changePhoneNumber(UserDTO userDTO) {
-    String sql = "UPDATE projetae.users SET phone = ?, version = ? WHERE user_id = ? AND version = ? RETURNING *;";
+    String sql = "UPDATE projetae.users SET phone = ?, version = ? WHERE user_id = ?"
+        + "AND version = ? RETURNING *;";
 
     try (PreparedStatement ps = myDalService.getPS(sql)) {
       ps.setString(1, userDTO.getPhone());
