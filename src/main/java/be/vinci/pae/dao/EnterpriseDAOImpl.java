@@ -60,7 +60,6 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       throw new BusinessException(409,
           "enterprise with name: " + name + " and label: " + label + " already exists!");
     }
-    int initialVersion = 1;
     try (PreparedStatement ps = myDalService.getPS(
         "INSERT INTO projetae.enterprises (name, label, address, phone, email, is_blacklisted, version)"
             + "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING *;")) {
@@ -70,7 +69,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       ps.setString(4, phone);
       ps.setString(5, email);
       ps.setBoolean(6, false);
-      ps.setInt(7, initialVersion);
+      ps.setInt(7, 1);
 
       ps.execute();
       return enterpriseMapper.mapResultSetToObject(ps.getResultSet(), EnterpriseImpl.class,

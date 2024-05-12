@@ -46,24 +46,6 @@ public class ContactDAOImpl implements ContactDAO {
   }
 
   @Override
-  public ContactDTO readOne(int userId, int enterpriseId) {
-    try (PreparedStatement ps = myDalService.getPS(
-        "SELECT * FROM projetae.contacts WHERE \"user\" = ? AND enterprise = ?;")) {
-      ps.setInt(1, userId);
-      ps.setInt(2, enterpriseId);
-      ps.execute();
-      ContactDTO contact = contactMapper.mapResultSetToObject(ps.getResultSet(), ContactImpl.class,
-          myDomainFactory::getContact);
-      if (contact == null) {
-        throw new NotFoundException();
-      }
-      return contact;
-    } catch (SQLException | IllegalAccessException e) {
-      throw new FatalErrorException(e);
-    }
-  }
-
-  @Override
   public List<ContactDTO> readMany(int userId) {
     try (PreparedStatement ps = myDalService.getPS(
         "SELECT * FROM projetae.contacts WHERE \"user\" = ?")) {
@@ -82,7 +64,6 @@ public class ContactDAOImpl implements ContactDAO {
       throw new BusinessException(409,
           "contact with user: " + userId + " and enterprise " + enterpriseId + " already exists");
     }
-    int initialVersion = 1;
     try (PreparedStatement ps = myDalService.getPS(
         "INSERT INTO projetae.contacts (state, year, \"user\", enterprise, version)"
             + "VALUES (?, ?, ?, ?, ?) RETURNING *;")) {
@@ -90,7 +71,7 @@ public class ContactDAOImpl implements ContactDAO {
       ps.setString(2, getCurrentYearString());
       ps.setInt(3, userId);
       ps.setInt(4, enterpriseId);
-      ps.setInt(5, initialVersion);
+      ps.setInt(5, 1);
 
       ps.execute();
       return contactMapper.mapResultSetToObject(ps.getResultSet(), ContactImpl.class,
@@ -140,13 +121,6 @@ public class ContactDAOImpl implements ContactDAO {
     return false;
   }
 
-  private String getCurrentYearString() {
-    LocalDate currentDate = LocalDate.now();
-    LocalDate startDate = LocalDate.of(currentDate.getYear() - 1, 9, 1);
-    LocalDate endDate = LocalDate.of(currentDate.getYear(), 9, 1);
-    return startDate.getYear() + "-" + endDate.getYear();
-  }
-
   @Override
   public List<ContactDTO> readEnterpriseContacts(int enterpriseId) {
     try (PreparedStatement ps = myDalService.getPS(
@@ -177,5 +151,10 @@ public class ContactDAOImpl implements ContactDAO {
     }
   }
 
-
+  private String getCurrentYearString() {
+    LocalDate currentDate = LocalDate.now();
+    LocalDate startDate = LocalDate.of(currentDate.getYear() - 1, 9, 1);
+    LocalDate endDate = LocalDate.of(currentDate.getYear(), 9, 1);
+    return startDate.getYear() + "-" + endDate.getYear();
+  }
 }

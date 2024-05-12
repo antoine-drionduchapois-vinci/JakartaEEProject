@@ -66,7 +66,6 @@ public class UserDAOImpl implements UserDAO {
     int currentYear = currentDate.getYear();
     int previousYear = currentYear - 1;
     String academicYear = previousYear + "-" + currentYear;
-    int initialVersion = 1;
 
     try {
       ps.setString(1, userDTO.getName());
@@ -77,7 +76,7 @@ public class UserDAOImpl implements UserDAO {
       ps.setString(6, academicYear);
       ps.setDate(7, curDate);
       ps.setString(8, userDTO.getRole().name());
-      ps.setInt(9, initialVersion);
+      ps.setInt(9, 1);
       ps.execute();
       return userMapper.mapResultSetToObject(ps.getResultSet(), UserImpl.class,
           myDomainFactory::getUser);
@@ -138,11 +137,13 @@ public class UserDAOImpl implements UserDAO {
 
   @Override
   public UserDTO modifyPassword(UserDTO userDTO) {
-    String sql = "UPDATE projetae.users  SET password = ? WHERE user_id = ? RETURNING *;";
+    String sql = "UPDATE projetae.users  SET password = ?, version = ? WHERE user_id = ?, version = ? RETURNING *;";
 
     try (PreparedStatement ps = myDalService.getPS(sql)) {
       ps.setString(1, userDTO.getPassword());
-      ps.setInt(2, userDTO.getUserId());
+      ps.setInt(2, userDTO.getVersion() + 1);
+      ps.setInt(3, userDTO.getUserId());
+      ps.setInt(4, userDTO.getVersion());
       ps.execute();
       return userMapper.mapResultSetToObject(ps.getResultSet(), UserImpl.class,
           myDomainFactory::getUser);
@@ -153,11 +154,13 @@ public class UserDAOImpl implements UserDAO {
 
   @Override
   public UserDTO changePhoneNumber(UserDTO userDTO) {
-    String sql = "UPDATE projetae.users SET phone = ? WHERE user_id = ? RETURNING *;";
+    String sql = "UPDATE projetae.users SET phone = ?, version = ? WHERE user_id = ?, version = ? RETURNING *;";
 
     try (PreparedStatement ps = myDalService.getPS(sql)) {
       ps.setString(1, userDTO.getPhone());
-      ps.setInt(2, userDTO.getUserId());
+      ps.setInt(2, userDTO.getVersion() + 1);
+      ps.setInt(3, userDTO.getUserId());
+      ps.setInt(4, userDTO.getVersion() + 1);
       ps.execute();
       return userMapper.mapResultSetToObject(ps.getResultSet(), UserImpl.class,
           myDomainFactory::getUser);

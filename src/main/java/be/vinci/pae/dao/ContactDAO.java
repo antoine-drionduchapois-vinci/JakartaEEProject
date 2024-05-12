@@ -24,20 +24,10 @@ public interface ContactDAO {
    *
    * @param contactId The ID of the contact to retrieve.
    * @return The Contact object representing the contact information, or null if
-   *         no contact with the given ID is found.
+   *         no contact with the
+   *         given ID is found.
    */
   ContactDTO readOne(int contactId);
-
-  /**
-   * Retrieves the contact information associated with the specified user ID and
-   * enterprise ID.
-   *
-   * @param userId       The ID of the user associated with the contact.
-   * @param enterpriseId The ID of the enterprise associated with the contact.
-   * @return The Contact object representing the contact information, or null if
-   *         no contact with the given user ID and enterprise ID is found.
-   */
-  ContactDTO readOne(int userId, int enterpriseId);
 
   /**
    * Creates a new contact between a user and an enterprise.
