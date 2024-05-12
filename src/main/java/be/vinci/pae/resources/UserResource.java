@@ -192,7 +192,8 @@ public class UserResource {
     String newPassword = json.get("newPassword1").asText();
 
     //Check if mdp in front same as mdp in db
-    authUCC.login(userDTO);
+    UserDTO userTemp = authUCC.login(userDTO);
+    userDTO.setVersion(userTemp.getVersion());
     //Modify password
     UserDTO userDTO1 = myUserUCC.modifyPassword(userDTO, newPassword);
 
@@ -228,7 +229,8 @@ public class UserResource {
     }
 
     //Check if mdp in front same as mdp in db
-    authUCC.login(userDTO);
+    UserDTO userTemp = authUCC.login(userDTO);
+    userDTO.setVersion(userTemp.getVersion());
 
     UserDTO userDTO1 = myUserUCC.changePhoneNumber(userDTO);
 
