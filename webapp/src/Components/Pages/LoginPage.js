@@ -9,8 +9,8 @@ import Navigate from '../Router/Navigate';
 const LoginPage = () => {
   // Clear the page
   clearPage();
-  // Render page title as "Login"
-  renderPageTitle('Login');
+  // Render page title as "Connexion"
+  renderPageTitle('Connexion');
   // Render login form
   renderLoginForm();
 };
@@ -49,10 +49,21 @@ function renderLoginForm() {
   const registerLink = document.createElement('p');
   registerLink.innerHTML = `Vous n'avez pas de compte ? <a id="registerLink" style="color: blue; cursor: pointer;">S'enregistrer</a>`;
   // Add event listener for redirection to registration page
-  registerLink.querySelector('#registerLink').addEventListener('click', () => Navigate('/register'));
+  registerLink
+    .querySelector('#registerLink')
+    .addEventListener('click', () => Navigate('/register'));
 
   // Add elements to form
-  form.append(username.label, username.input, password.label, password.input, formCheckWrapper, errorMessageElement, submit, registerLink);
+  form.append(
+    username.label,
+    username.input,
+    password.label,
+    password.input,
+    formCheckWrapper,
+    errorMessageElement,
+    submit,
+    registerLink,
+  );
 
   // Add form to container
   container.appendChild(form);
@@ -116,8 +127,6 @@ function onCheckboxClicked(e) {
   setRememberMe(e.target.checked);
 }
 
-
-
 // Handle login form submission
 async function onLogin(e) {
   e.preventDefault();
@@ -126,7 +135,7 @@ async function onLogin(e) {
   const email = document.querySelector('#emailInput').value;
   const password = document.querySelector('#passwordInput').value;
 
-  if (!email || !password){
+  if (!email || !password) {
     const errorMessageElement = document.getElementById('loginErrorMessage');
     errorMessageElement.textContent = 'Veuillez remplir tous les champs';
     errorMessageElement.style.display = 'block';
@@ -135,7 +144,7 @@ async function onLogin(e) {
     if (!email) addRedBorder('emailInput');
     if (!password) addRedBorder('passwordInput');
     return;
-  } 
+  }
 
   const options = {
     method: 'POST',
@@ -149,26 +158,26 @@ async function onLogin(e) {
     const response = await fetch(`http://localhost:8080/auths/login`, options);
     const errorMessageElement = document.getElementById('loginErrorMessage');
 
-    if (!response.ok){
-      if(response.status === 401){
-        errorMessageElement.textContent = 'Mauvais mot de passe'
+    if (!response.ok) {
+      if (response.status === 401) {
+        errorMessageElement.textContent = 'Mauvais mot de passe';
         errorMessageElement.style.display = 'block';
         errorMessageElement.style.fontSize = '16px';
-      }else{
+      } else {
         errorMessageElement.textContent = 'Email incorrect';
         errorMessageElement.style.display = 'block';
         errorMessageElement.style.fontSize = '16px';
       }
-      
+
       return;
-    } 
-  
+    }
+
     const authenticatedUser = await response.json();
     console.log(authenticatedUser.role);
     setAuthenticatedUser(authenticatedUser);
     Navbar();
     Redirect.redirect(authenticatedUser.role);
-  } catch (error){
+  } catch (error) {
     console.error('Error during login:', error);
   }
 }
@@ -177,7 +186,7 @@ function addRedBorder(elementId) {
   const element = document.getElementById(elementId);
   if (element) {
     element.style.border = '1px solid red';
-  } 
+  }
 }
 
 function resetFormErrors() {
@@ -186,7 +195,7 @@ function resetFormErrors() {
   errorMessage.style.display = 'none';
 
   const inputs = document.querySelectorAll('input');
-  inputs.forEach(input => {
+  inputs.forEach((input) => {
     const inputElement = input;
     inputElement.style.border = '1px solid lightgray';
   });

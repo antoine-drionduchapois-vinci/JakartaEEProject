@@ -48,7 +48,7 @@ function renderNavbar() {
             <!-- Nav items for authenticated users -->
             <li class="nav-item">
               <a class="nav-link text-white" href="#" data-uri="/logout">
-                  Logout<i class="fas fa-sign-out-alt ml-1"></i> 
+                  Déconnexion<i class="fas fa-sign-out-alt ml-1"></i> 
               </a>
             </li>    
             <li class="nav-item">
@@ -70,23 +70,21 @@ function renderNavbar() {
   // Setting innerHTML based on authentication status
   navbar.innerHTML = isAuthenticated() ? authenticatedUserNavbar : anonymousUserNavbar;
 
-  
-  if(isAuthenticated() === false){
+  if (isAuthenticated() === false) {
     const renderHome = document.getElementById('home');
     renderHome.addEventListener('click', () => Navigate('/'));
   }
 
-  if(isAuthenticated() === true){
+  if (isAuthenticated() === true) {
     const profile = document.getElementById('profileRedirect');
     profile.addEventListener('click', () => Navigate('/profile'));
-    const renderHome1 = document.getElementById('home1')
-    if(authenticatedUser?.role === 'STUDENT'){
+    const renderHome1 = document.getElementById('home1');
+    if (authenticatedUser?.role === 'STUDENT') {
       renderHome1.addEventListener('click', () => Navigate('/dashboardS'));
     } else {
       renderHome1.addEventListener('click', () => Navigate('/dashboardT'));
     }
   }
-  
 }
 
 // Exporting Navbar component

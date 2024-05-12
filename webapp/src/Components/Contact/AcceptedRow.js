@@ -43,23 +43,23 @@ const AcceptedRow = async (htmlElement, contactData, internshipData) => {
         </div>
     </div>
     <div class="column">
-        <label for="supervisor-name">Nom</label>
+        <label for="supervisor-name">Nom du responsable</label>
         <div class="autocomplete">
             <input autocomplete="off" class="input is-primary" type="text" id="supervisor-name">
         </div>
     </div>
     <div class="column">
-        <label for="supervisor-surname">Prénom</label>
+        <label for="supervisor-surname">Prénom du responsable</label>
         <div class="autocomplete">
           <input autocomplete="off" class="input is-primary" type="text" id="supervisor-surname">
         </div>
     </div>
     <div class="column">
-        <label for="supervisor-phone">Téléphone</label>
+        <label for="supervisor-phone">Téléphone du responsable</label>
         <input class="input is-primary" type="text" id="supervisor-phone">
     </div>
     <div class="column">
-        <label for="supervisor-email">Email</label>
+        <label for="supervisor-email">Email du responsable</label>
         <input class="input is-primary" type="text" id="supervisor-email">
     </div>
     <div class="column">
@@ -87,7 +87,7 @@ const AcceptedRow = async (htmlElement, contactData, internshipData) => {
   const submit = document.querySelector('#submit-accepted');
 
   if (contactData) {
-    if (contactData.state !== 'meet') {
+    if (contactData.state !== 'meet' && contactData.state !== 'accepted') {
       nameInput.element.setAttribute('disabled', true);
       surnameInput.element.setAttribute('disabled', true);
       phoneInput.element.setAttribute('disabled', true);
